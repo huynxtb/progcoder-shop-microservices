@@ -1,0 +1,58 @@
+.fz-3-layer-cake-section {
+    padding: 97px 0 117px;
+    isolation: isolate;
+
+    @include lg {
+        padding: 57px 0 77px;
+    }
+
+    @include md {
+        padding: 37px 0 57px;
+    }
+
+    .fz-3-section-heading {
+        border-bottom: 1px solid rgb(112 112 112 / 25%);
+        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        @include md {
+            margin-bottom: 20px;
+        }
+
+        @include xxs {
+            flex-direction: column;
+            justify-content: center;
+            row-gap: 12px;
+        }
+
+        .section-heading__txt {
+            @include xxs {
+                text-align: center;
+            }
+        }
+    }
+
+}
+
+
+.fz-3-slider-nav {
+    display: flex;
+    gap: 10px;
+
+    button {
+        background-color: #f1f1f1;
+        color: $black;
+        width: 30px;
+        height: 30px;
+        line-height: 32px;
+        border-radius: 4px;
+        font-size: 14px;
+
+        &:hover {
+            color: $white;
+            background-color: $black;
+        }
+    }
+}

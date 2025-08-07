@@ -1,0 +1,174 @@
+.fz-3-video-section {
+    padding: 200px 0;
+    background: url(/assets/images/video-bg.png) no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+    position: relative;
+    z-index: 0;
+    color: $white;
+    text-align: center;
+
+    @include xl {
+        padding: 150px 0;
+    }
+
+    @include lg {
+        padding: 120px 0;
+    }
+
+    @include md {
+        padding: 80px 0;
+    }
+
+    @include sm {
+        padding: 60px 0;
+    }
+
+    @include xxs {
+        padding: 40px 0;
+    }
+
+    &::before {
+        position: absolute;
+        inset: 0;
+        content: "";
+        background-color: rgba(0 0 0/ 60%);
+        z-index: -1;
+    }
+
+    h2 {
+        font-size: 60px;
+        margin-bottom: 40px;
+        margin-top: -30px;
+
+        @include xl {
+            font-size: 55px;
+            margin-bottom: 35px;
+            margin-top: -27px;
+        }
+
+        @include lg {
+            font-size: 50px;
+            margin-bottom: 30px;
+        }
+
+        @include md {
+            font-size: 45px;
+            margin-bottom: 25px;
+        }
+
+        @include sm {
+            margin-top: -15px;
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        @include xs {
+            font-size: 35px;
+            margin-bottom: 15px;
+        }
+
+        @include xxs {
+            font-size: 30px;
+        }
+    }
+
+    button {
+        color: $white;
+        border: 1px solid $white;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        font-size: 30px;
+        animation: shadowFadeOut 1.6s linear infinite;
+
+        @include lg {
+            width: 90px;
+            height: 90px;
+        }
+
+        @include md {
+            width: 80px;
+            height: 80px;
+            font-size: 25px;
+        }
+
+        @include xs {
+            width: 70px;
+            height: 70px;
+            font-size: 20px;
+        }
+
+        @include xs {
+            width: 65px;
+            height: 65px;
+        }
+
+        &:hover {
+            color: $color-3;
+            background-color: $white;
+        }
+    }
+}
+
+// fz-10 VIDEO SECTION STARTS HERE
+.fz-10-video-section {
+    background: #ECCBAA;
+    text-align: center;
+    padding: 100px 0;
+
+    @include xl {
+        padding: 60px 0;
+    }
+
+    @include md {
+        padding: 40px 0;
+    }
+
+    .fz-10-video-area {
+        background: url(/assets/images/fz-10-video.png) no-repeat center center;
+        background-size: cover;
+        position: relative;
+        padding: 350px 0;
+        z-index: 1;
+
+        @include lg {
+            padding: 200px 0;
+        }
+
+        @include md {
+            padding: 150px 0;
+        }
+
+        @include xs {
+            padding: 100px 0;
+        }
+
+        &::after {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            content: '';
+            background-image: linear-gradient(#00000000 31%, #000000);
+            z-index: -1;
+        }
+
+        button {
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            font-size: 30px;
+            animation: shadowFadeOut 1.6s linear infinite;
+
+            @include md {
+                height: 80px;
+                width: 80px;
+                font-size: 18px;
+            }
+        }
+    }
+}

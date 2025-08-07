@@ -1,0 +1,160 @@
+services:
+
+  user-write-db:
+    image: ${POSTGRES_IMAGE_NAME}
+    container_name: user-write-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_WRITE_DB}
+    ports:
+      - ${POSTGRES_WRITE_DB_PORT}:5432
+    volumes:
+      - ./data/user-service/writedb:/var/lib/postgresql/data
+    networks:
+      - prog_coder_network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "user_admin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  user-read-db:
+    image: ${POSTGRES_IMAGE_NAME}
+    container_name: user-read-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_READ_DB}
+    ports:
+      - ${POSTGRES_READ_DB_PORT}:5432
+    volumes:
+      - ./data/user-service/readdb:/var/lib/postgresql/data
+    networks:
+      - prog_coder_network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "user_admin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  keycloak-db:
+    image: ${POSTGRES_IMAGE_NAME}
+    container_name: keycloak-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_KEYCLOAK_DB}
+    ports:
+      - ${POSTGRES_KEYCLOAK_DB_PORT}:5432
+    volumes:
+      - ./data/keycloakdb:/var/lib/postgresql/data
+    networks:
+      - prog_coder_network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "user_admin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  keycloak:
+    image: ${KEYCLOAK_IMAGE_NAME}
+    container_name: keycloak
+    restart: unless-stopped
+    command:
+      - start
+    volumes:
+      - ./config/keycloak/providers:/opt/keycloak/providers
+    environment:
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: ${KEYCLOAK_PORT}
+      KC_HOSTNAME_STRICT_BACKCHANNEL: false
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HEALTH_ENABLED: true
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db/${POSTGRES_KEYCLOAK_DB}
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      WEBHOOK_URL: ${WEBHOOK_URL}
+    ports:
+      - ${KEYCLOAK_PORT}:8080
+    depends_on:
+      - keycloak-db
+    networks:
+      - prog_coder_network
+
+  redis:
+    image: ${REDIS_IMAGE_NAME}
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - ${REDIS_PORT}:6379
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    volumes: 
+      - ./data/redis:/data
+    networks:
+      - prog_coder_network
+
+  minio:
+    image: ${MINIO_IMAGE_NAME}
+    container_name: minio
+    command: server --console-address ":9001" /data
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_PROMETHEUS_AUTH_TYPE: public
+    hostname: minio
+    ports:
+      - ${MINIO_API_PORT}:9000
+      - ${MINIO_UI_PORT}:9001
+    volumes:
+      - ./data/minio:/data
+    networks:
+      - prog_coder_network
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  
+  rabbitmq:
+    image: ${RABBITMQ_IMAGE_NAME}
+    container_name: rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - ${RABBITMQ_CONNECT_PORT}:5672
+      - ${RABBITMQ_UI_PORT}:15672
+      - ${RABBITMQ_METRICS_PORT}:15692
+    volumes:
+      - ./data/rabbitmq:/var/lib/rabbitmq
+      - ./config/rabbitmq/rabbitmq_enabled_plugins:/etc/rabbitmq/enabled_plugins
+    networks:
+      - prog_coder_network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  mailhog:
+    image: ${MAILHOG_IMAGE_NAME}
+    container_name: mailhog
+    restart: unless-stopped
+    ports:
+      - ${MAILHOG_SMTP_PORT}:1025
+      - ${MAILHOG_WEB_UI}:8025
+    networks:
+      - prog_coder_network
+      
+networks:
+  prog_coder_network:

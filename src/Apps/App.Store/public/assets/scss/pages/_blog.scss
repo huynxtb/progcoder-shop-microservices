@@ -1,0 +1,299 @@
+.blog-page-content {
+    padding: 100px 0;
+    display: flex;
+    gap: 25px;
+    align-items: flex-start;
+
+    @include lg {
+        padding: 50px 0;
+    }
+
+    @include md {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.blogs-container {
+    width: 70%;
+
+    @include xl {
+        width: 65%;
+    }
+
+    @include lg {
+        width: 62%;
+    }
+
+    @include md {
+        width: 100%;
+    }
+}
+
+.fz-single-blog.fz-inner-page-blog {
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+
+    &:not(:last-child) {
+        margin-bottom: 50px;
+
+        @include lg {
+            margin-bottom: 30px;
+        }
+    }
+
+    &:hover {
+        .fz-single-blog__img {
+            img {
+                transform: scale(1.1) rotate(1.5deg);
+            }
+        }
+    }
+
+    .fz-single-blog {
+        &__img {
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 550px;
+                object-fit: cover;
+                transition: transform 0.4s ease;
+
+                @include xl {
+                    height: 400px;
+                }
+
+                @include lg {
+                    height: 320px;
+                }
+
+                @include xxs {
+                    height: 180px;
+                }
+            }
+        }
+
+        &__txt {
+            padding: 40px;
+
+            @include xl {
+                padding: 30px;
+            }
+
+            @include lg {
+                padding: 25px;
+            }
+
+            @include xs {
+                padding: 20px;
+            }
+
+            @include xxs {
+                padding: 15px;
+            }
+        }
+
+        &__infos {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            line-height: 1;
+            font-family: $roboto;
+            font-size: 14px;
+            margin-bottom: 20px;
+
+            @include lg {
+                margin-bottom: 12px;
+            }
+
+            @include xxs {
+                font-size: 12px;
+            }
+        }
+
+        &__category {
+            text-transform: uppercase;
+            color: $color-3;
+            font-weight: 700;
+            border-right: 1px solid #777;
+            padding-right: 10px;
+
+            @include xs {
+                font-weight: 600;
+            }
+        }
+
+        &__date {
+            color: #777;
+            font-weight: 400;
+        }
+
+        &__title {
+            font-family: $poppins;
+            font-size: 34px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            line-height: 1.4;
+
+            @include xl {
+                font-size: 28px;
+            }
+
+            @include lg {
+                font-size: 23px;
+                margin-bottom: 15px;
+            }
+
+            @include sm {
+                font-size: 20px;
+            }
+
+            @include xs {
+                font-size: 18px;
+                font-weight: 500;
+            }
+
+            @include xxs {
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+
+            a {
+                &:hover {
+                    color: $color-3;
+                }
+            }
+        }
+
+        &__desc {
+            margin-bottom: 27px;
+            color: #777;
+            font-weight: 300;
+
+            @include lg {
+                margin-bottom: 17px;
+            }
+
+            @include xxs {
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
+        }
+
+        &__btn {
+            height: 45px;
+            padding: 0 35px;
+            background-color: $black;
+            color: $white;
+            line-height: 43px;
+            border-radius: 5px;
+            border: 1px solid $black;
+            font-size: 16px;
+
+            @include lg {
+                padding: 0 25px;
+            }
+
+            @include sm {
+                height: 40px;
+                line-height: 40px;
+            }
+
+            @include xxs {
+                height: 35px;
+                line-height: 35px;
+                padding: 0 20px;
+                font-size: 14px;
+            }
+
+            &:hover {
+                color: $black;
+            }
+
+            &::before {
+                background-color: $white;
+                border-radius: 5px;
+            }
+        }
+    }
+}
+
+.blog-page-sidebar {
+    width: 30%;
+
+    @include xl {
+        width: 35%;
+    }
+
+    @include md {
+        width: 50%;
+    }
+
+    @include sm {
+        width: 70%;
+    }
+
+    @include xxs {
+        width: 100%;
+    }
+
+    .fz-sidebar-single-blog {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+
+        @include lg {
+            gap: 15px;
+        }
+
+        &:not(:last-child) {
+            margin-bottom: 25px;
+        }
+
+        &__img {
+            min-width: 80px;
+            min-height: 80px;
+
+            img {
+                width: 80px;
+                height: 80px;
+                object-fit: cover;
+            }
+        }
+
+        &__txt {
+            border-radius: 0;
+            border: none;
+        }
+
+        &__infos.fz-single-blog__infos {
+            margin-bottom: 10px;
+
+            @include xl {
+                margin-bottom: 6px;
+            }
+        }
+
+
+        .fz-single-blog__category {
+            font-weight: 400;
+        }
+
+        &__title {
+            font-family: $poppins;
+            font-size: 16px;
+            font-weight: 500;
+
+            a:hover {
+                color: $color-3;
+            }
+
+            @include xl {
+                font-size: 14px;
+            }
+        }
+    }
+}

@@ -1,0 +1,184 @@
+.fz-1-brands-section {
+    .fz-5-brands {
+        .swiper-wrapper {
+            align-items: center;
+        }
+    }
+}
+
+.fz-7-brands {
+    padding-bottom: 120px;
+
+    @include xl {
+        padding-bottom: 80px;
+    }
+
+    @include md {
+        padding-bottom: 60px;
+    }
+
+    &-bg {
+        background-color: #F7F8F9;
+        padding: 80px 90px;
+        position: relative;
+
+        @include lg {
+            padding: 60px;
+        }
+
+        @include md {
+            padding: 45px;
+        }
+
+        @include sm {
+            padding: 30px;
+        }
+
+        @include xxs {
+            padding: 20px;
+        }
+    }
+
+    &-heading {
+        border: 5px solid #C7C7C7;
+        padding: 50px 45px;
+        width: max-content;
+        max-width: 100%;
+
+        @include lg {
+            padding: 40px 35px;
+        }
+
+        @include md {
+            padding: 30px 25px;
+        }
+
+        @include xxs {
+            padding: 15px;
+        }
+    }
+
+    &-title {
+        width: 90%;
+        margin-bottom: 87px;
+
+        @include lg {
+            margin-bottom: 37px;
+        }
+
+
+        @include sm {
+            margin-bottom: 17px;
+        }
+    }
+
+    &-row {
+        margin-top: -115px;
+        margin-left: 50px;
+        padding: 65px;
+        background-color: $white;
+
+        @include lg {
+            margin-top: -65px;
+            padding: 45px;
+        }
+
+        @include md {
+            padding: 30px 25px;
+        }
+
+        @include sm {
+            margin-top: -45px;
+            padding: 25px;
+        }
+
+        @include xxs {
+            padding: 10px 15px;
+            margin-left: 0;
+            margin-top: -30px;
+        }
+    }
+}
+
+.fz-4-brands {
+    .swiper-wrapper {
+        align-items: center;
+    }
+}
+
+// INDEX-8 BRANDS
+.fz-8-brands {
+    background-color: #F7F8F9;
+
+    &.py-120 {
+        @include xl {
+            padding: 70px 0;
+        }
+
+        @include xs {
+            padding: 40px 0;
+        }
+
+        @include xxs {
+            padding: 30px 0;
+        }
+    }
+
+    a {
+        vertical-align: top;
+    }
+}
+
+// INDEX-9 BRAND SECTION 
+.fz-9-brands {
+    &-section {
+        background-color: #fff;
+        padding: 100px 0;
+
+        @include xl {
+            padding: 60px 0;
+        }
+
+        @include md {
+            padding: 40px 0;
+        }
+
+        .fz-9-brand-items {
+            text-align: center;
+        }
+    }
+
+    &-row {
+        a {
+            display: block;
+
+            img {
+                margin: auto;
+            }
+        }
+    }
+}
+
+// FZ-10 BRAND 
+.fz-10-brands-row {
+    padding-top: 100px;
+
+    @include xl {
+        padding-top: 60px;
+    }
+
+    @include md {
+        padding-top: 40px;
+    }
+}
+
+// FZ-12 Brand
+
+.fz-12-brands-slider {
+    .swiper-slide {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: auto;
+    }
+}

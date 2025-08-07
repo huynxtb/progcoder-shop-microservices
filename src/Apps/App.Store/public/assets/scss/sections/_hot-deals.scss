@@ -1,0 +1,108 @@
+.hot-selling-section {
+    padding: 97px 0 120px;
+
+    @include md {
+        padding: 37px 0 60px;
+    }
+
+    .fz-3-section-heading {
+        margin-bottom: 1px;
+        text-align: center;
+    }
+
+    .nav.nav-tabs {
+        justify-content: center;
+        border-bottom: none;
+        margin-bottom: 40px;
+        gap: 10px;
+
+        .nav-link {
+            border: 1px solid #e2e2e2;
+            border-radius: 4px;
+            text-transform: capitalize;
+            color: #8a8a8a;
+            padding: 0 15px;
+            height: 35px;
+            line-height: 35px;
+            @include xxs {
+                height: 30px;
+                line-height: 30px;
+                font-size: 14px;
+                padding: 0 10px;
+            }
+
+            &.active {
+                background-color: $black;
+                color: $white;
+            }
+        }
+    }
+
+    .fz-3-hot-sell__btn {
+        border: 1px solid #e2e2e2;
+        border-radius: 4px;
+        height: 50px;
+        padding: 0 50px;
+        line-height: 47px;
+        display: block;
+        width: max-content;
+        margin: auto;
+        margin-top: 40px;
+
+        @include md {
+            height: 40px;
+            padding: 0 30px;
+            line-height: 37px;
+        }
+
+        &:hover {
+            color: $white;
+            background-color: $black;
+        }
+    }
+}
+
+
+.fz-2-hot-deal-section {
+    padding: 120px 0 100px;
+
+    @include md {
+        padding: 60px 0 40px;
+    }
+
+    .fz-hot-deal-countdown {
+        .syotimer {
+            &__body {
+                display: flex;
+                gap: 35px;
+                justify-content: flex-end;
+
+                @include sm {
+                    justify-content: center;
+                    gap: 20px;
+                }
+            }
+
+            &-cell {
+                &__value {
+                    background: var(--clr-gray-soft);
+                    width: 50px;
+                    height: 50px;
+                    text-align: center;
+                    line-height: 50px;
+                    font-size: 25px;
+                    font-family: $soligant;
+                    color: var(--clr-body-dark);
+                }
+
+                &__unit {
+                    font-weight: 400;
+                    color: var(--clr-body-text);
+                    font-size: 14px;
+                    text-transform: capitalize;
+                    text-align: center;
+                }
+            }
+        }
+    }
+}

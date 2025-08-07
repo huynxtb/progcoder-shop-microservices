@@ -1,0 +1,522 @@
+.fz-6-sub-banners {
+    padding-bottom: 120px;
+    background-color: $white;
+
+    @include xl {
+        padding-bottom: 80px;
+    }
+
+    @include lg {
+        padding-bottom: 60px;
+    }
+}
+
+.fz-6-sub-banner {
+    display: flex;
+    align-items: center;
+    background-color: #F7F8F9;
+    padding: 40px 30px;
+    gap: 80px;
+    justify-content: space-between;
+
+    @include xxl {
+        gap: 70px;
+    }
+
+    @include lg {
+        padding: 30px;
+        gap: 40px;
+    }
+
+    @include md {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 25px;
+    }
+
+    @include sm {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    @include xxs {
+        flex-direction: column;
+    }
+
+    &-sub-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #2B2C34;
+        position: relative;
+        padding-left: 80px;
+        margin-bottom: 3px;
+
+        @include lg {
+            font-size: 18px;
+            padding-left: 40px;
+        }
+
+        &::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            translate: 0 -50%;
+            height: 4px;
+            width: 66px;
+            background-color: #fb2f29;
+
+            @include lg {
+                width: 30px;
+            }
+        }
+    }
+
+    &-title {
+        font-size: 30px;
+        font-weight: 700;
+        color: #2B2C34;
+        margin-bottom: 21px;
+
+        @include xl {
+            font-size: 28px;
+        }
+
+        @include lg {
+            font-size: 26px;
+        }
+
+        @include sm {
+            font-size: 24px;
+        }
+    }
+
+    &-btn {
+        padding: 0 28px;
+        height: 45px;
+        color: #2B2C34;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #6D6D6D;
+        border-radius: 5px;
+
+        &:hover {
+            background-color: #6D6D6D;
+            color: $white;
+        }
+    }
+
+    &-img {
+        flex-shrink: 0;
+
+        @include md {
+            align-self: flex-end;
+        }
+
+        img {
+            @include xl {
+                max-width: 150px;
+            }
+
+            @include lg {
+                max-width: 130px;
+            }
+        }
+    }
+
+    &-1 {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0;
+        background: url(/assets/images/fz-6-sub-banner-bg.jpg) no-repeat center center;
+        background-size: cover;
+        height: 100%;
+        justify-content: space-between;
+
+        @include xxl {
+            gap: 10px;
+        }
+
+        @include lg {
+            flex-direction: row;
+
+            >* {
+                width: 50%;
+            }
+        }
+
+        @include xxs {
+            flex-direction: column;
+
+            >* {
+                width: 100%;
+            }
+        }
+
+        .fz-6-sub-banner {
+            &-txt {
+                padding: 0 40px;
+                padding-top: 90px;
+
+                @include xl {
+                    padding-top: 70px;
+                }
+
+                @include md {
+                    padding: 40px;
+                    padding-right: 0;
+                }
+
+                @include sm {
+                    padding: 30px;
+                    padding-right: 0;
+                }
+            }
+
+            &-img {
+                align-self: flex-end;
+
+                img {
+                    @include xl {
+                        max-width: 100%;
+                    }
+                }
+            }
+        }
+    }
+
+    &-right-col {
+        @include lg {
+            display: flex;
+            gap: 24px;
+        }
+
+        @include sm {
+            flex-direction: column;
+        }
+    }
+
+    &.mb-30 {
+        @include lg {
+            margin-bottom: 0;
+        }
+    }
+}
+
+
+// INDEX-7 SUB BANNER 
+.fz-7-sub-banner {
+    padding: 0;
+    overflow: hidden;
+
+    @include md {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    @include xxs {
+        flex-direction: column;
+    }
+
+    .fz-6-sub-banner {
+        &-txt {
+            padding: 68px 90px;
+            padding-right: 0;
+            width: 50%;
+
+            @include xl {
+                padding: 68px 60px;
+                padding-right: 0;
+            }
+
+            @include lg {
+                padding: 48px 40px;
+                padding-right: 0;
+            }
+
+            @include md {
+                width: 60%;
+            }
+
+            @include xxs {
+                width: 100%;
+                padding: 33px 30px;
+                padding-bottom: 0;
+            }
+        }
+
+        &-title {
+            font-size: 30px;
+            font-weight: 700;
+            color: #2B2C34;
+            margin-bottom: 5px;
+
+            @include sm {
+                font-size: 27px;
+            }
+        }
+
+    }
+
+    &-price {
+        font-size: 20px;
+        font-weight: 600;
+        color: #FB2F29;
+        margin-bottom: 21px;
+    }
+
+    .fz-6-sub-banner-img {
+        max-width: 50%;
+        max-height: 320px;
+
+        @include lg {
+            max-height: 280px;
+        }
+
+        @include xxs {
+            max-width: 85%;
+        }
+
+        img {
+            @include xl {
+                max-width: 100%;
+            }
+        }
+    }
+}
+
+// INDEX-9 SUB BANNER 
+.bootstrap-custom-col {
+    --bs-gutter-x: 30px;
+    --bs-gutter-y: 30px;
+}
+
+.fz-9-sub-banner-section {
+    padding-bottom: 120px;
+    overflow: hidden;
+
+    @include xl {
+        padding-bottom: 80px;
+    }
+
+    @include md {
+        padding-bottom: 60px;
+    }
+
+    .fz-9-sub-banner-thumb {
+        background-position: center right;
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 100%;
+        width: auto;
+
+        .fz-9-sub-banner-content {
+            width: 50%;
+            padding: 60px 0 70px 70px;
+
+            @include xl {
+                padding: 50px 0 60px 50px;
+            }
+
+            @include lg {
+                padding: 40px 0 50px 40px;
+                width: 65%;
+            }
+
+            @include xxs {
+                padding: 25px;
+                padding-bottom: 30px;
+                width: 100%;
+            }
+
+            .title {
+                color: #253B70;
+                font-size: 40px;
+                font-weight: 700;
+                line-height: 1.2;
+
+                @include lg {
+                    font-size: 35px;
+                }
+
+                @include sm {
+                    font-size: 30px;
+                }
+
+                @include xxs {
+                    font-size: 25px;
+                }
+            }
+
+            .subtitle {
+                color: #4BC8C8;
+                font-size: 20px;
+                font-weight: 500;
+
+                span {
+                    font-size: 27px;
+                    color: #FF7C7C;
+                    font-weight: 600;
+                }
+            }
+
+            .fz-9-btn {
+                margin-top: 20px;
+                position: relative;
+                background: #ffffff;
+                color: #253B70;
+                padding: 15px 45px;
+                text-transform: capitalize;
+                font-weight: 500;
+                font-size: 16px;
+                border-radius: 3px;
+                transition: 0.4s;
+
+                @include xl {
+                    margin-top: 10px;
+                }
+
+                @include lg {
+                    padding: 12px 30px;
+                }
+
+                &:hover {
+                    background-color: #FF7C7C;
+                    color: #ffffff;
+
+                    &::before {
+                        border: 1px dashed #ffffff;
+                    }
+                }
+
+                &:before {
+                    transition: 0.4s;
+                    content: "";
+                    position: absolute;
+                    top: 6px;
+                    left: 6px;
+                    bottom: 6px;
+                    right: 6px;
+                    border: 1px dashed #253B70;
+                }
+            }
+        }
+    }
+}
+
+// INDEX-12 SUB BANNER
+
+.fz-12-sub-banner {
+    >.container {
+        @media screen and (min-width: 1400px) {
+            max-width: 100%;
+        }
+    }
+
+    &-area {
+
+        &,
+        * {
+            height: 100%;
+        }
+
+        a {
+            @include md {
+                width: 100%;
+            }
+        }
+
+        img {
+            object-fit: cover;
+
+            @include md {
+                height: 500px;
+                width: 100%;
+            }
+
+            @include sm {
+                height: 400px;
+            }
+
+            @include xs {
+                height: 300px;
+            }
+        }
+    }
+
+    &-card {
+        img {
+            width: 100%;
+            height: 100%;
+        }
+
+        &-txt {
+            padding: 80px;
+
+            @include xl {
+                padding: 40px;
+            }
+
+            @include lg {
+                padding: 30px;
+            }
+
+            @include sm {
+                padding: 25px;
+            }
+        }
+
+        &-sub-title {
+            font-family: $nunito;
+            font-size: 20px;
+            font-weight: 400;
+            margin-bottom: 8px;
+
+            @include lg {
+                margin-bottom: 5px;
+            }
+
+            @include sm {
+                margin-bottom: 0;
+            }
+        }
+
+        &-title {
+            font-size: 50px;
+            font-weight: 600;
+            color: #191919;
+            margin-bottom: 25px;
+            line-height: 1.2;
+
+            @include xl {
+                font-size: 40px;
+            }
+
+            @include lg {
+                font-size: 35px;
+                margin-bottom: 15px;
+            }
+
+            @include sm {
+                font-size: 32px;
+                margin-bottom: 8px;
+            }
+
+            @include xs {
+                font-size: 30px;
+            }
+        }
+
+        a {
+            font-family: $nunito;
+            font-weight: 600;
+            border-bottom: 1px solid #010108;
+
+            &:hover {
+                color: #DBC996;
+                border-color: #DBC996;
+            }
+        }
+    }
+}

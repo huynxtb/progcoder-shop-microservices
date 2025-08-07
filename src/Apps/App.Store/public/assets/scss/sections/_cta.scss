@@ -1,0 +1,680 @@
+.subs-section {
+    background: url(/assets/images/fz-3-subs-bg.png) no-repeat center center;
+    background-size: cover;
+    padding: 100px 0;
+    color: $white;
+
+    @include lg {
+        padding: 70px 0;
+    }
+
+    @include sm {
+        padding: 50px 0;
+    }
+
+    @include xs {
+        padding: 25px 0;
+    }
+
+    &__txt {
+        h2 {
+            font-size: 48px;
+            margin-bottom: 13px;
+
+            @include xl {
+                font-size: 40px;
+            }
+
+            @include lg {
+                font-size: 35px;
+            }
+
+            @include md {
+                font-size: 30px;
+            }
+
+            @include sm {
+                font-size: 27px;
+            }
+
+            @include xs {
+                font-size: 25px;
+            }
+        }
+
+        h3 {
+            font-size: 34px;
+
+            @include lg {
+                font-size: 30px;
+            }
+
+            @include md {
+                font-size: 25px;
+            }
+
+            @include sm {
+                font-size: 22px;
+            }
+
+            @include xs {
+                font-size: 20px;
+            }
+
+            @include xxs {
+                font-size: 20px;
+            }
+        }
+    }
+
+    &__form {
+        form {
+            display: flex;
+            border: 1px solid $white;
+
+            @include xxs {
+                flex-direction: column;
+                border: none;
+                row-gap: 10px;
+            }
+
+            input {
+                height: 60px;
+                padding: 0 20px;
+                color: $white;
+                width: 100%;
+
+                @include md {
+                    height: 50px;
+                    border: 1px solid $white;
+                }
+
+                &::placeholder {
+                    color: #cfcfcf;
+                }
+            }
+
+            button {
+                background-color: $white;
+                height: 60px;
+                padding: 0 65px;
+                border-left: 1px solid $white;
+
+                &:hover {
+                    background-color: $black;
+                    color: $white;
+                    border-left: 1px solid $white;
+                }
+
+                @include lg {
+                    padding: 0 45px;
+                }
+
+                @include md {
+                    height: 50px;
+                }
+            }
+        }
+    }
+}
+
+.fz-4-subs-section {
+    background: url(/assets/images/fz-4-subs-bg.png) no-repeat center center;
+    background-size: cover;
+    padding: 100px 0;
+    border-radius: 10px;
+    color: $white;
+    position: relative;
+    overflow: hidden;
+    z-index: 2;
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--clr-body-dark);
+        opacity: 0.6;
+        z-index: -1;
+    }
+
+    @include lg {
+        padding: 80px 0;
+    }
+
+    @include md {
+        padding: 50px 20px;
+    }
+
+    &__txt {
+        margin-bottom: 32px;
+
+        @include md {
+            margin-bottom: 22px;
+        }
+
+        h2 {
+            font-size: 34px;
+            line-height: 44px;
+            font-weight: 700;
+            margin-top: -7px;
+            margin-bottom: 8px;
+
+            @include xl {
+                font-size: 30px;
+            }
+
+            @include md {
+                font-size: 20px;
+                line-height: 30px;
+                margin-bottom: 6px;
+            }
+        }
+    }
+
+    &__form {
+        form {
+            display: flex;
+            gap: 10px;
+
+            @include xxs {
+                flex-direction: column;
+                border: none;
+                row-gap: 10px;
+            }
+
+            input {
+                height: 60px;
+                padding: 0 20px;
+                color: $white;
+                width: 100%;
+                border: 1px solid $white;
+                border-radius: 5px;
+
+                @include md {
+                    height: 50px;
+                }
+
+                &::placeholder {
+                    color: #cfcfcf;
+                }
+            }
+
+            button {
+                background-color: $white;
+                height: 60px;
+                padding: 0 65px;
+                border-radius: 5px;
+                color: $fz-4-color-2;
+                font-size: 16px;
+                font-weight: 600;
+
+                &:hover {
+                    background-color: $black;
+                    color: $white;
+                }
+
+                @include lg {
+                    padding: 0 45px;
+                }
+
+                @include md {
+                    height: 50px;
+                }
+            }
+        }
+    }
+
+}
+
+.fz-5-cta-section {
+    background: url(/assets/images/fz-5-cta-bg.png) center center no-repeat;
+    background-size: cover;
+
+    &.fz-5-cta-section-2 {
+        background: url(/assets/images/fz-5-cta-bg-2.png) center center no-repeat;
+        background-size: cover;
+        overflow: hidden;
+
+        .fz-5-cta-logo {
+            @include sm {
+                text-align: center;
+                padding-top: 50px;
+
+                img {
+                    max-width: 120px;
+                }
+            }
+        }
+
+        .fz-5-cta-img {
+            margin-top: -40px;
+            margin-left: -47px;
+
+            @include xl {
+                margin-top: 0;
+                margin-bottom: -29px;
+            }
+
+            @include lg {
+                margin-top: -40px;
+                margin-bottom: 0;
+            }
+
+            @include md {
+                margin-top: 0;
+                margin-left: -100px;
+                margin-bottom: -11px;
+            }
+
+            @include sm {
+                text-align: center;
+                margin-top: 0;
+                margin-left: 0;
+            }
+        }
+    }
+
+    &.fz-5-cta-section-3 {
+        background: url(/assets/images/fz-5-cta-bg-3.png) center center no-repeat;
+        background-size: cover;
+
+        @include xl {
+            background-position-x: 70%;
+        }
+
+        @include lg {
+            background-position-x: 80%;
+        }
+
+        .fz-5-cta-logo {
+            @include sm {
+                text-align: center;
+                padding-top: 50px;
+
+                img {
+                    max-width: 120px;
+                }
+            }
+        }
+    }
+
+    .fz-5-cta-txt {
+        padding: 50px 0;
+
+        h3 {
+            font-size: 34px;
+            line-height: 1;
+            font-weight: 400;
+            color: $white;
+            margin-top: -2px;
+            margin-bottom: 21px;
+
+            @include lg {
+                font-size: 25px;
+                margin-bottom: 15px;
+            }
+
+            @include md {
+                font-size: 18px;
+                margin-top: -1px;
+                margin-bottom: 4px;
+            }
+        }
+
+        h2 {
+            font-size: 60px;
+            line-height: 70px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: $white;
+            margin-bottom: 27px;
+
+            @include lg {
+                font-size: 45px;
+                line-height: 55px;
+                margin-bottom: 18px;
+            }
+
+            @include md {
+                font-size: 30px;
+                margin-bottom: 5px;
+            }
+        }
+
+        @include sm {
+            text-align: center;
+        }
+    }
+
+    .fz-5-cta-img {
+        margin-top: -50px;
+
+        @include xl {
+            margin-top: -40px;
+        }
+
+        @include lg {
+            margin-top: -21px;
+        }
+
+        @include md {
+            margin-top: -18px;
+        }
+
+        @include sm {
+            margin-top: 0;
+        }
+    }
+}
+
+@media screen and (max-width:1629px) and (min-width:1400px) {
+    .fz-5-category-slider {
+        .owl-nav {
+            display: none;
+        }
+    }
+
+    .fz-5-cta-section .fz-5-cta-img {
+        margin-top: -33px;
+    }
+
+    .fz-5-cta-section.fz-5-cta-section-2 .fz-5-cta-img {
+        margin-left: -63px;
+    }
+}
+
+// INDEX-6 CTA
+.fz-6-cta {
+    .fz-6-section-title {
+        @include xl {
+            font-size: 35px;
+        }
+
+        @include sm {
+            font-size: 32px;
+        }
+
+        @include xs {
+            font-size: 30px;
+        }
+
+        @include xxs {
+            font-size: 28px;
+        }
+    }
+
+    &-row {
+        background-color: #F7F8F9;
+
+        @include lg {
+            background: none;
+        }
+    }
+
+    &.pb-120 {
+        @include xl {
+            padding-bottom: 80px;
+        }
+
+        @include md {
+            padding-bottom: 60px;
+        }
+    }
+}
+
+.fz-6-brands {
+    padding: 85px 80px 95px;
+
+    @include xxl {
+        padding: 75px 50px 85px;
+    }
+
+    @include xl {
+        padding: 45px 50px 55px;
+    }
+
+    @include lg {
+        background-color: #F7F8F9;
+    }
+
+    @include sm {
+        padding: 35px 40px 45px;
+    }
+
+    @include xxs {
+        padding: 25px 20px 30px;
+    }
+
+    .fz-6-products-heading {
+        @include xl {
+            margin-bottom: 30px;
+        }
+
+        @include xs {
+            flex-direction: column;
+        }
+    }
+
+    &-row {
+        --bs-gutter-x: 30px;
+        --bs-gutter-y: 30px;
+
+        @include xl {
+            --bs-gutter-x: 20px;
+            --bs-gutter-y: 20px;
+        }
+
+        @include xs {
+            --bs-gutter-x: 10px;
+            --bs-gutter-y: 10px;
+        }
+
+        a {
+            display: block;
+
+            img {
+                width: 100%;
+            }
+        }
+    }
+
+    &-heading-btn {
+        color: #2B2C34;
+        font-weight: 500;
+
+        &:hover {
+            color: #FC0012;
+        }
+
+        i {
+            padding-left: 5px;
+            font-size: 15px;
+        }
+    }
+}
+
+.fz-6-subs {
+    padding: 103px 80px 116px;
+    background: url(/assets/images/fz-6-cta-bg.jpg) no-repeat center center;
+    background-size: cover;
+    height: 100%;
+    color: $white;
+
+    @include xxl {
+        padding: 93px 50px 106px;
+    }
+
+    @include xl {
+        padding: 63px 50px 76px;
+    }
+
+    @include sm {
+        padding: 53px 40px 66px;
+    }
+
+    @include xxs {
+        padding: 33px 20px 46px;
+    }
+
+    .fz-6-section-title {
+        color: $white;
+        width: 85%;
+        margin-bottom: 13px;
+
+        @include xl {
+            width: 100%;
+        }
+    }
+
+    &-descr {
+        width: 70%;
+        margin-bottom: 48px;
+
+        @include xl {
+            margin-bottom: 33px;
+        }
+
+        @include xxs {
+            width: 100%;
+        }
+    }
+
+    &-form {
+        display: flex;
+        gap: 10px;
+
+        @include xs {
+            flex-direction: column;
+        }
+
+        input {
+            border: 1px solid $white;
+            border-radius: 5px;
+            padding: 15px 30px;
+            width: 100%;
+            color: $white;
+
+            @include xl {
+                padding: 15px 20px;
+            }
+
+            @include xxs {
+                padding: 10px 15px;
+            }
+
+            &::placeholder {
+                color: $white;
+            }
+        }
+
+        button {
+            background-color: $white;
+            border: 1px solid $white;
+            color: #FC0012;
+            padding: 0 30px;
+            flex-shrink: 0;
+            border-radius: 5px;
+            transition: 0.4s ease;
+
+            @include xs {
+                height: 56px;
+            }
+
+            @include xxs {
+                height: 46px;
+            }
+
+            &:hover {
+                background-color: transparent;
+                color: $white;
+            }
+        }
+    }
+}
+
+// INDEX-7 CTA 
+.fz-7-cta {
+    background: url(/assets/images/fz-7-cta-bg.jpg) no-repeat center center;
+    background-size: cover;
+    padding: 90px 0;
+
+    @include xl {
+        padding: 80px 0;
+    }
+
+    @include md {
+        padding: 60px 0;
+    }
+
+    &-img {
+        text-align: center;
+        background: url(/assets/images/fz-7-cta-img-bg.png) no-repeat center center;
+        background-size: contain;
+
+        img {
+            @include lg {
+                width: 250px;
+            }
+        }
+    }
+}
+
+.fz-7-subs {
+    padding-right: 60px;
+    text-align: center;
+
+    @include lg {
+        padding-right: 0;
+    }
+
+    .fz-7-section-title {
+        font-size: 50px;
+        color: #191919;
+
+        @include xxl {
+            font-size: 44px;
+        }
+
+        @include xl {
+            font-size: 38px;
+        }
+
+        @include xs {
+            font-size: 35px;
+        }
+
+        @include xxs {
+            font-size: 30px;
+        }
+    }
+
+    .fz-7-section-descr {
+        font-size: 18px;
+        font-family: $jost;
+        margin-bottom: 58px;
+
+        @include md {
+            margin-bottom: 35px;
+        }
+    }
+
+    &-form {
+
+        input {
+            border-color: #A1A1A1;
+            color: #191919;
+
+            &::placeholder {
+                color: #191919;
+            }
+        }
+
+        button {
+            background-color: #191919;
+            color: $white;
+        }
+    }
+}

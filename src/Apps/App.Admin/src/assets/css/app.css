@@ -1,0 +1,5349 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+
+@theme {
+  --color-primary-50: var(--primary-50);
+  --color-primary-100: var(--primary-100);
+  --color-primary-200: var(--primary-200);
+  --color-primary-300: var(--primary-300);
+  --color-primary-400: var(--primary-400);
+  --color-primary-500: var(--primary-500);
+  --color-primary-600: var(--primary-600);
+  --color-primary-700: var(--primary-700);
+  --color-primary-800: var(--primary-800);
+  --color-primary-900: var(--primary-900);
+
+  --color-secondary-50: var(--secondary-50);
+  --color-secondary-100: var(--secondary-100);
+  --color-secondary-200: var(--secondary-200);
+  --color-secondary-300: var(--secondary-300);
+  --color-secondary-400: var(--secondary-400);
+  --color-secondary-500: var(--secondary-500);
+  --color-secondary-600: var(--secondary-600);
+  --color-secondary-700: var(--secondary-700);
+  --color-secondary-800: var(--secondary-800);
+  --color-secondary-900: var(--secondary-900);
+
+  --color-danger-50: var(--danger-50);
+  --color-danger-100: var(--danger-100);
+  --color-danger-200: var(--danger-200);
+  --color-danger-300: var(--danger-300);
+  --color-danger-400: var(--danger-400);
+  --color-danger-500: var(--danger-500);
+  --color-danger-600: var(--danger-600);
+  --color-danger-700: var(--danger-700);
+  --color-danger-800: var(--danger-800);
+  --color-danger-900: var(--danger-900);
+
+  --color-black-50: var(--black-50);
+  --color-black-100: var(--black-100);
+  --color-black-200: var(--black-200);
+  --color-black-300: var(--black-300);
+  --color-black-400: var(--black-400);
+  --color-black-500: var(--black-500);
+  --color-black-600: var(--black-600);
+  --color-black-700: var(--black-700);
+  --color-black-800: var(--black-800);
+  --color-black-900: var(--black-900);
+
+  --color-warning-50: var(--warning-50);
+  --color-warning-100: var(--warning-100);
+  --color-warning-200: var(--warning-200);
+  --color-warning-300: var(--warning-300);
+  --color-warning-400: var(--warning-400);
+  --color-warning-500: var(--warning-500);
+  --color-warning-600: var(--warning-600);
+  --color-warning-700: var(--warning-700);
+  --color-warning-800: var(--warning-800);
+  --color-warning-900: var(--warning-900);
+
+  --color-info-50: var(--info-50);
+  --color-info-100: var(--info-100);
+  --color-info-200: var(--info-200);
+  --color-info-300: var(--info-300);
+  --color-info-400: var(--info-400);
+  --color-info-500: var(--info-500);
+  --color-info-600: var(--info-600);
+  --color-info-700: var(--info-700);
+  --color-info-800: var(--info-800);
+  --color-info-900: var(--info-900);
+
+  --color-success-50: var(--success-50);
+  --color-success-100: var(--success-100);
+  --color-success-200: var(--success-200);
+  --color-success-300: var(--success-300);
+  --color-success-400: var(--success-400);
+  --color-success-500: var(--success-500);
+  --color-success-600: var(--success-600);
+  --color-success-700: var(--success-700);
+  --color-success-800: var(--success-800);
+  --color-success-900: var(--success-900);
+
+  --color-gray-50: var(--gray-50);
+  --color-gray-100: var(--gray-100);
+  --color-gray-200: var(--gray-200);
+  --color-gray-300: var(--gray-300);
+  --color-gray-400: var(--gray-400);
+  --color-gray-500: var(--gray-500);
+  --color-gray-600: var(--gray-600);
+  --color-gray-700: var(--gray-700);
+  --color-gray-800: var(--gray-800);
+  --color-gray-900: var(--gray-900);
+}
+
+:root {
+  --primary-50: hsl(228, 100%, 97%);
+  --primary-100: hsl(228, 100%, 95%);
+  --primary-200: hsl(228, 96%, 89%);
+  --primary-300: hsl(228, 90%, 84%);
+  --primary-400: hsl(228, 100%, 75%);
+  --primary-500: hsl(229, 95%, 61%);
+  --primary-600: hsl(229, 82%, 56%);
+  --primary-700: hsl(229, 55%, 38%);
+  --primary-800: hsl(229, 56%, 28%);
+  --primary-900: hsl(229, 54%, 19%);
+
+  --secondary-50: hsl(210, 20%, 98%);
+  --secondary-100: hsl(210, 20%, 96%);
+  --secondary-200: hsl(210, 17%, 90%);
+  --secondary-300: hsl(210, 15%, 85%);
+  --secondary-400: hsl(217, 11%, 66%);
+  --secondary-500: hsl(218, 20%, 70%);
+  --secondary-600: hsl(217, 19%, 35%);
+  --secondary-700: hsl(217, 26%, 27%);
+  --secondary-800: hsl(217, 36%, 17%);
+  --secondary-900: hsl(217, 50%, 11%);
+
+  --danger-50: hsl(0, 100%, 98%);
+  --danger-100: hsl(0, 100%, 97%);
+  --danger-200: hsl(359, 92%, 87%);
+  --danger-300: hsl(359, 90%, 83%);
+  --danger-400: hsl(359, 85%, 76%);
+  --danger-500: hsl(0, 88%, 65%);
+  --danger-600: hsl(0, 66%, 58%);
+  --danger-700: hsl(0, 41%, 39%);
+  --danger-800: hsl(0, 45%, 28%);
+  --danger-900: hsl(0, 45%, 19%);
+
+  --black-50: hsl(210, 20%, 98%);
+  --black-100: hsl(210, 20%, 96%);
+  --black-200: hsl(210, 17%, 90%);
+  --black-300: hsl(210, 15%, 85%);
+  --black-400: hsl(217, 11%, 66%);
+  --black-500: hsl(240, 1%, 7%);
+  --black-600: hsl(217, 19%, 35%);
+  --black-700: hsl(217, 26%, 27%);
+  --black-800: hsl(217, 36%, 17%);
+  --black-900: hsl(217, 50%, 11%);
+
+  --warning-50: hsl(18, 100%, 98%);
+  --warning-100: hsl(18, 100%, 97%);
+  --warning-200: hsl(18, 93%, 90%);
+  --warning-300: hsl(18, 92%, 83%);
+  --warning-400: hsl(18, 94%, 79%);
+  --warning-500: hsl(18, 94%, 69%);
+  --warning-600: hsl(18, 65%, 62%);
+  --warning-700: hsl(18, 37%, 42%);
+  --warning-800: hsl(18, 39%, 31%);
+  --warning-900: hsl(18, 42%, 21%);
+
+  --info-50: hsl(182, 100%, 98%);
+  --info-100: hsl(182, 100%, 97%);
+  --info-200: hsl(182, 100%, 88%);
+  --info-300: hsl(182, 100%, 80%);
+  --info-400: hsl(182, 100%, 69%);
+  --info-500: hsl(185, 93%, 49%);
+  --info-600: hsl(186, 100%, 41%);
+  --info-700: hsl(186, 100%, 28%);
+  --info-800: hsl(186, 100%, 21%);
+  --info-900: hsl(186, 100%, 14%);
+
+  --success-50: hsl(155, 85%, 97%);
+  --success-100: hsl(155, 86%, 95%);
+  --success-200: hsl(155, 87%, 88%);
+  --success-300: hsl(155, 88%, 80%);
+  --success-400: hsl(155, 87%, 67%);
+  --success-500: hsl(155, 44%, 54%);
+  --success-600: hsl(155, 40%, 42%);
+  --success-700: hsl(155, 39%, 30%);
+  --success-800: hsl(155, 41%, 21%);
+  --success-900: hsl(155, 46%, 12%);
+
+  --gray-50: hsl(210, 20%, 98%);
+  --gray-100: hsl(210, 20%, 96%);
+  --gray-200: hsl(210, 17%, 90%);
+  --gray-300: hsl(210, 15%, 85%);
+  --gray-400: hsl(217, 11%, 66%);
+  --gray-500: hsl(217, 13%, 48%);
+  --gray-600: hsl(217, 19%, 35%);
+  --gray-700: hsl(217, 26%, 27%);
+  --gray-800: hsl(217, 36%, 17%);
+  --gray-900: hsl(217, 50%, 11%);
+
+  --border: hsl(215.3 25% 26.7%);
+
+  font-family: "Inter", sans-serif;
+}
+
+*,
+::after,
+::before,
+::backdrop,
+::file-selector-button {
+  border-color: --color-border, currentcolor;
+}
+button {
+  cursor: pointer;
+}
+
+@utility shadow-base {
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.08),
+    0px 0.5px 2px rgba(96, 97, 112, 0.16);
+}
+@utility shadow-base2 {
+  box-shadow: 0px 2px 4px rgba(40, 41, 61, 0.04),
+    0px 8px 16px rgba(96, 97, 112, 0.16);
+}
+
+/* Container Settings */
+@utility container {
+  margin-inline: auto;
+
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+  }
+  @media (width >= 640px) {
+    max-width: 640px;
+  }
+  @media (width >= 768px) {
+    max-width: 768px;
+  }
+  @media (width >= 1024px) {
+    max-width: 1024px;
+  }
+  @media (width >= 1280px) {
+    max-width: 1280px;
+    padding-inline: 0;
+  }
+  @media (width >= 1392px) {
+    max-width: 1392px;
+    padding-inline: 0;
+  }
+}
+
+.table-th {
+  @apply text-slate-600 dark:text-slate-300 text-xs  font-semibold  uppercase py-5 px-6 ltr:text-left rtl:text-right;
+}
+.table-td {
+  @apply text-slate-600 dark:text-slate-300 text-sm font-normal capitalize px-6 py-5   border-slate-100 dark:border-slate-700;
+}
+.table-checkbox {
+  @apply relative before:flex before:flex-col before:items-center before:justify-center   
+  before:w-[18px] before:h-[18px] before:m-[-0.7px] before:bg-slate-100 dark:before:bg-slate-500  before:absolute
+    before:inset-0 before:rounded-sm w-4 h-4 rounded-sm checked:before:bg-slate-900 
+    checked:before:content-[url("https://api.iconify.design/heroicons-outline/check.svg?color=white")] checked:before:leading-[10px]
+    checked:before:ring-2 checked:before:ring-black-500
+    checked:before:ring-offset-2 dark:checked:before:ring-slate-700 
+    dark:checked:before:ring-offset-0;
+}
+.dash-codevmap {
+  & path {
+    @apply fill-[#6794DC];
+  }
+  & .svg-map__location[aria-checked="true"] {
+    @apply fill-primary-500;
+  }
+}
+.svg-map__location {
+  .dash-codevmap &[aria-checked="true"] {
+    @apply fill-primary-500;
+  }
+}
+.progress {
+  @apply bg-slate-300 dark:bg-slate-700 h-2;
+  & .progress-bar.stripes {
+    background-image: linear-gradient(
+      45deg,
+      hsla(0, 0%, 100%, 0.15) 25%,
+      transparent 0,
+      transparent 50%,
+      hsla(0, 0%, 100%, 0.15) 0,
+      hsla(0, 0%, 100%, 0.15) 75%,
+      transparent 0,
+      transparent
+    );
+    background-size: 0.857rem 0.857rem;
+  }
+}
+@utility progress-bar {
+  .progress &.stripes {
+    background-image: linear-gradient(
+      45deg,
+      hsla(0, 0%, 100%, 0.15) 25%,
+      transparent 0,
+      transparent 50%,
+      hsla(0, 0%, 100%, 0.15) 0,
+      hsla(0, 0%, 100%, 0.15) 75%,
+      transparent 0,
+      transparent
+    );
+    background-size: 0.857rem 0.857rem;
+  }
+}
+@utility stripes {
+  .progress &.progress-bar {
+    background-image: linear-gradient(
+      45deg,
+      hsla(0, 0%, 100%, 0.15) 25%,
+      transparent 0,
+      transparent 50%,
+      hsla(0, 0%, 100%, 0.15) 0,
+      hsla(0, 0%, 100%, 0.15) 75%,
+      transparent 0,
+      transparent
+    );
+    background-size: 0.857rem 0.857rem;
+  }
+}
+@utility animate-stripes {
+  animation: progress-bar-stripes 1s linear infinite;
+}
+
+.tooltip-class {
+  transform-origin: var(--radix-tooltip-content-transform-origin);
+  animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.main-caro {
+  /* Swiper next/prev buttons */
+  .swiper-button-next::after,
+  .swiper-button-prev::after {
+    font-family: unset !important;
+  }
+
+  .swiper-button-next::after {
+    content: url("https://api.iconify.design/heroicons-outline/chevron-right.svg?color=white&width=24");
+  }
+
+  .swiper-button-prev::after {
+    content: url("https://api.iconify.design/heroicons-outline/chevron-left.svg?color=white&width=24");
+  }
+
+  [dir="rtl"] .swiper-button-next::after,
+  [dir="rtl"] .swiper-button-prev::after {
+    transform: rotate(180deg);
+  }
+
+  /* Swiper pagination bullet styles */
+  .swiper-pagination-bullet {
+    height: 2px;
+    width: 24px;
+    border-radius: 1px;
+    background-color: rgba(255, 255, 255, 0.7);
+  }
+
+  .swiper-pagination-bullet.swiper-pagination-bullet-active {
+    background-color: #fff;
+  }
+}
+
+/* Optional: add RTL rotation to buttons themselves */
+[dir="rtl"] .swiper-button-next,
+[dir="rtl"] .swiper-button-prev {
+  transform: rotate(180deg);
+}
+
+.swiper-pagination-bullet {
+  .main-caro & {
+    @apply rounded-[1px] bg-white/70;
+    height: 2px;
+    width: 24px;
+  }
+  .main-caro &.swiper-pagination-bullet-active {
+    @apply bg-white;
+  }
+}
+.swiper-pagination-bullet-active {
+  .main-caro &.swiper-pagination-bullet {
+    @apply opacity-100;
+  }
+}
+.alert {
+  @apply py-[18px] px-6 font-normal text-sm rounded-md;
+}
+.alert-primary {
+  @apply bg-primary-500 text-white;
+  &.light-mode {
+    @apply bg-primary-500/[14%] text-primary-500;
+  }
+}
+.light-mode {
+  &.alert-primary {
+    @apply bg-primary-500/[14%] text-primary-500;
+  }
+  &.alert-secondary {
+    @apply bg-secondary-500/[14%] text-slate-900;
+  }
+  &.alert-success {
+    @apply bg-success-500/[14%] text-success-500;
+  }
+  &.alert-danger {
+    @apply bg-danger-500/[14%] text-danger-500;
+  }
+  &.alert-warning {
+    @apply bg-warning-500/[14%] text-warning-500;
+  }
+  &.alert-info {
+    @apply bg-info-500/[14%] text-info-500;
+  }
+  &.alert-light {
+    @apply text-slate-500;
+  }
+  &.alert-dark {
+    @apply bg-slate-900/[54%] text-slate-100;
+  }
+}
+.alert-secondary {
+  @apply bg-secondary-500 text-white;
+  &.light-mode {
+    @apply bg-secondary-500/[14%] text-slate-900;
+  }
+}
+.alert-success {
+  @apply bg-success-500 text-white;
+  &.light-mode {
+    @apply bg-success-500/[14%] text-success-500;
+  }
+}
+.alert-danger {
+  @apply bg-danger-500 text-white;
+  &.light-mode {
+    @apply bg-danger-500/[14%] text-danger-500;
+  }
+}
+.alert-warning {
+  @apply bg-warning-500 text-white;
+  &.light-mode {
+    @apply bg-warning-500/[14%] text-warning-500;
+  }
+}
+.alert-info {
+  @apply bg-info-500 text-white;
+  &.light-mode {
+    @apply bg-info-500/[14%] text-info-500;
+  }
+}
+.alert-light {
+  @apply bg-slate-100 text-slate-900;
+  &.light-mode {
+    @apply text-slate-500;
+  }
+}
+.alert-dark {
+  @apply bg-slate-900 text-white;
+  &.light-mode {
+    @apply bg-slate-900/[54%] text-slate-100;
+  }
+}
+.alert-outline-primary {
+  @apply border border-primary-500 text-primary-500;
+}
+.alert-outline-secondary {
+  @apply border border-secondary-500 text-secondary-500;
+}
+.alert-outline-success {
+  @apply border border-success-500 text-success-500;
+}
+.alert-outline-danger {
+  @apply border border-danger-500 text-danger-500;
+}
+.alert-outline-warning {
+  @apply border border-warning-500 text-warning-500;
+}
+.alert-outline-info {
+  @apply border border-info-500 text-info-500;
+}
+.alert-outline-light {
+  @apply border border-slate-200 text-slate-600;
+}
+.alert-outline-dark {
+  @apply border border-slate-900 text-slate-900;
+}
+.card-title {
+  @apply font-medium  capitalize md:text-xl md:leading-[28px] text-lg leading-[24px];
+}
+.card-subtitle {
+  @apply text-sm leading-5 font-medium text-slate-600 dark:text-slate-300 mt-1;
+}
+.card-header {
+  @apply flex items-center justify-between px-6 pt-6;
+  &:not(.no-border) {
+    @apply border-b border-slate-200 dark:border-slate-700 pb-5;
+  }
+}
+.card-footer {
+  @apply flex items-center justify-between px-6 pt-6 border-t border-slate-200 dark:border-slate-700 pb-5;
+}
+.card-height-auto {
+  & .card {
+    @apply h-min;
+  }
+}
+.card {
+  .card-height-auto & {
+    @apply h-min;
+  }
+}
+.loginwrapper {
+  @apply flex w-full items-center overflow-hidden;
+  min-height: 100vh;
+  min-height: calc(var(--vh, 1vh) * 100);
+  height: 100vh;
+  flex-basis: 100%;
+  & .lg-inner-column {
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+    @apply overflow-y-auto flex flex-wrap w-full;
+  }
+  & .left-column {
+    @apply bg-slate-100 dark:bg-slate-900  lg:block hidden flex-1 overflow-hidden;
+  }
+  & .left-column h4 {
+    @apply text-[40px] leading-[48px] text-slate-600 dark:text-slate-400;
+  }
+  & .right-column {
+    @apply flex-1;
+  }
+  & .black-500-title {
+    @apply text-[40px] leading-[48px] text-white;
+  }
+}
+.lg-inner-column {
+  .loginwrapper & {
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+    @apply overflow-y-auto flex flex-wrap w-full;
+  }
+}
+.left-column {
+  .loginwrapper & {
+    @apply bg-slate-100 dark:bg-slate-900  lg:block hidden flex-1 overflow-hidden;
+  }
+  .loginwrapper & h4 {
+    @apply text-[40px] leading-[48px] text-slate-600 dark:text-slate-400;
+  }
+}
+.right-column {
+  .loginwrapper & {
+    @apply flex-1;
+  }
+}
+.black-500-title {
+  .loginwrapper & {
+    @apply text-[40px] leading-[48px] text-white;
+  }
+}
+.auth-box {
+  @apply max-w-[524px] md:px-[42px] md:py-[44px] p-7  mx-auto w-full;
+  & h4 {
+    @apply text-2xl text-slate-900 dark:text-white mb-3;
+  }
+}
+.auth-box2 {
+  @apply max-w-[524px] mx-auto  w-full  md:px-[42px] md:py-[44px] p-7;
+  & h4 {
+    @apply text-2xl text-slate-900 dark:text-white mb-3;
+  }
+}
+.auth-box-3 {
+  & h4 {
+    @apply text-2xl text-slate-900 dark:text-white mb-3;
+  }
+  @apply bg-white dark:bg-slate-800 relative h-auto  lg:mr-[150px] mr-auto p-10 md:rounded-md max-w-[520px] w-full ml-auto;
+}
+.auth-footer {
+  @apply text-xs font-normal text-secondary-500 dark:text-slate-400 z-999 pb-10;
+}
+.logo-box-3 {
+  @apply flex justify-center items-center min-h-screen;
+}
+.v3-right-column {
+  @apply flex flex-col items-center justify-center;
+}
+.auth-footer3 {
+  @apply absolute bottom-0 lg:block hidden;
+}
+.btn {
+  @apply font-semibold  text-sm leading-6 md:px-6 md:py-3 px-4 py-[10px] rounded-sm capitalize  transition-all duration-150 md:whitespace-nowrap whitespace-normal relative;
+  &.btn-xl {
+    @apply text-[16px] md:px-10 px-7 md:py-4 py-3;
+  }
+  &.btn-sm {
+    @apply text-xs md:px-4 py-2 px-3;
+  }
+  &.block-btn {
+    @apply block w-full text-center;
+  }
+  &.block-btn span {
+    @apply justify-center;
+  }
+  &.light {
+    @apply bg-white/[15%]  ring-white/30 dark:hover:bg-white/10;
+  }
+  .split-btngroup & {
+    @apply ltr:rounded-r-none rtl:rounded-l-none hover:ring-0;
+  }
+  .prepend-slot & {
+    @apply pt-0 pb-0 h-full items-center hover:ring-0 rounded-tr-[0] rounded-br-[0] -mx-3;
+  }
+
+  .append-slot & {
+    @apply pt-0 pb-0 h-full items-center hover:ring-0 rounded-tr-[0] rounded-br-[0] -mx-3;
+  }
+  .input-group-addon.right .append-slot & {
+    @apply rounded-tl-[0] rounded-bl-[0] rounded-tr rounded-br  -mx-3;
+  }
+}
+.btn-xl {
+  &.btn {
+    @apply text-[16px] md:px-10 px-7 md:py-4 py-3;
+  }
+}
+.btn-sm {
+  &.btn {
+    @apply text-xs md:px-4 py-2 px-3;
+  }
+}
+.block-btn {
+  &.btn {
+    @apply block w-full text-center;
+  }
+  &.btn span {
+    @apply justify-center;
+  }
+}
+.btn-dark {
+  @apply bg-slate-900 dark:bg-slate-900 dark:hover:bg-slate-900/70   text-white  hover:ring-2 hover:ring-slate-900/80 ring-black-900   hover:ring-offset-1 dark:hover:ring-0 dark:hover:ring-offset-0;
+}
+.btn-primary {
+  @apply bg-primary-500 dark:hover:bg-primary-500/70  text-white hover:ring-2 hover:ring-primary-500/80 ring-primary-500 hover:ring-offset-1 dark:hover:ring-0 dark:hover:ring-offset-0;
+  &.light {
+    @apply text-primary-500 dark:hover:dark:hover:bg-primary-500/10;
+  }
+}
+.btn-secondary {
+  @apply bg-secondary-500 dark:hover:bg-secondary-500/70  text-white hover:ring-2 hover:ring-secondary-500/80 ring-secondary-500 hover:ring-offset-1 dark:hover:ring-0 dark:hover:ring-offset-0;
+  &.light {
+    @apply text-secondary-500 dark:hover:bg-secondary-500/10;
+  }
+}
+.btn-success {
+  @apply bg-success-500 dark:hover:bg-success-500/70  text-white hover:ring-2 hover:ring-success-500/80 ring-success-500 hover:ring-offset-1 dark:hover:ring-0 dark:hover:ring-offset-0;
+  &.light {
+    @apply text-success-500 dark:hover:text-success-500/10;
+  }
+}
+.btn-info {
+  @apply bg-[#0CE7FA] dark:hover:bg-[#0CE7FA]/70  text-white hover:ring-2 hover:ring-[#0CE7FA]/80 ring-[#0CE7FA] hover:ring-offset-1 dark:hover:ring-0 dark:hover:ring-offset-0;
+  &.light {
+    @apply text-[#0CE7FA] dark:hover:bg-[#0CE7FA]/10;
+  }
+}
+.btn-warning {
+  @apply bg-[#FA916B] dark:hover:bg-[#FA916B]/70  text-white hover:ring-2 hover:ring-[#FA916B]/80 ring-[#FA916B] hover:ring-offset-1 dark:hover:ring-0 dark:hover:ring-offset-0;
+  &.light {
+    @apply text-[#FA916B] dark:hover:bg-[#FA916B]/10;
+  }
+}
+.btn-danger {
+  @apply bg-danger-500 dark:hover:bg-danger-500/70  text-white hover:ring-2 hover:ring-danger-500/80 ring-danger-500 hover:ring-offset-1 dark:hover:ring-0 dark:hover:ring-offset-0;
+  &.light {
+    @apply text-danger-500 dark:hover:bg-danger-500/10;
+  }
+}
+.btn-light {
+  @apply bg-slate-100 dark:hover:bg-slate-100/70  text-slate-900 hover:ring-2 hover:ring-[#E0EAFF]/80 ring-[#E0EAFF] hover:ring-offset-1 dark:hover:ring-0 dark:hover:ring-offset-0;
+  &.light {
+    @apply text-slate-900/80 dark:text-slate-300 dark:hover:bg-slate-100/10;
+  }
+}
+.btn-outline-dark {
+  @apply bg-transparent text-slate-900 dark:text-slate-300 border border-black-500 dark:border-slate-600! hover:border-black-500   hover:dark:bg-slate-900 hover:bg-white/5;
+  &.active {
+    @apply bg-slate-900 text-white dark:bg-slate-900 dark:text-slate-300;
+  }
+  [aria-expanded="true"] > & {
+    @apply bg-slate-900 text-white;
+  }
+}
+.active {
+  &.btn-outline-dark {
+    @apply bg-slate-900 text-white dark:bg-slate-900 dark:text-slate-300;
+  }
+  &.btn-outline-primary {
+    @apply bg-primary-500 text-white;
+  }
+  &.btn-outline-secondary {
+    @apply bg-secondary-500 text-white;
+  }
+  &.btn-outline-success {
+    @apply bg-success-500 text-white;
+  }
+  &.btn-outline-info {
+    @apply bg-[#0CE7FA] text-white;
+  }
+  &.btn-outline-warning {
+    @apply bg-[#FA916B] text-white;
+  }
+  &.btn-outline-danger {
+    @apply bg-danger-500 text-white;
+  }
+  &.btn-outline-light {
+    @apply bg-[#E0EAFF] text-slate-900;
+  }
+  .pagination li &a {
+    @apply bg-slate-900 dark:bg-slate-600  dark:text-slate-200 text-white font-medium;
+  }
+
+  .pagination li &div {
+    @apply bg-slate-900 dark:bg-slate-600  dark:text-slate-200 text-white font-medium;
+  }
+
+  .pagination li &.page-link {
+    @apply bg-slate-900 dark:bg-slate-600  dark:text-slate-200 text-white font-medium;
+  }
+  .pagination.bordered li &a {
+    @apply bg-slate-900 text-white;
+  }
+
+  .pagination.bordered li &div {
+    @apply bg-slate-900 text-white;
+  }
+
+  .pagination.bordered li &.page-link {
+    @apply bg-slate-900 text-white;
+  }
+  .pagination.border-group li &a {
+    @apply text-slate-900 dark:text-white text-lg;
+  }
+
+  .pagination.border-group li &div {
+    @apply text-slate-900 dark:text-white text-lg;
+  }
+
+  .pagination.border-group li &.page-link {
+    @apply text-slate-900 dark:text-white text-lg;
+  }
+}
+.btn-outline-primary {
+  @apply bg-transparent text-primary-500 border border-primary-500 hover:border-primary-500  hover:bg-primary-500 hover:bg-transparent/5;
+  &.active {
+    @apply bg-primary-500 text-white;
+  }
+  [aria-expanded="true"] > & {
+    @apply bg-primary-500 text-white;
+  }
+  .split-btngroup & {
+    @apply focus:text-primary-500 last:border-primary-500;
+  }
+}
+.btn-outline-secondary {
+  @apply bg-transparent text-secondary-500 border border-secondary-500 hover:border-secondary-500  hover:bg-secondary-500 hover:bg-transparent/5;
+  &.active {
+    @apply bg-secondary-500 text-white;
+  }
+  [aria-expanded="true"] > & {
+    @apply bg-secondary-500 text-white;
+  }
+  .split-btngroup & {
+    @apply focus:text-secondary-500 last:border-secondary-500;
+  }
+}
+.btn-outline-success {
+  @apply bg-transparent text-success-500 border border-success-500 hover:border-success-500  hover:bg-success-500 hover:bg-transparent/5;
+  &.active {
+    @apply bg-success-500 text-white;
+  }
+  [aria-expanded="true"] > & {
+    @apply bg-success-500 text-white;
+  }
+  .split-btngroup & {
+    @apply focus:text-success-500 last:border-success-500;
+  }
+}
+.btn-outline-info {
+  @apply bg-transparent text-[#0CE7FA] border border-[#0CE7FA] hover:border-[#0CE7FA]  hover:bg-[#0CE7FA] hover:bg-transparent/5;
+  &.active {
+    @apply bg-[#0CE7FA] text-white;
+  }
+  [aria-expanded="true"] > & {
+    @apply bg-info-500 text-white;
+  }
+  .split-btngroup & {
+    @apply focus:text-info-500 last:border-info-500;
+  }
+}
+.btn-outline-warning {
+  @apply bg-transparent text-[#FA916B] border border-[#FA916B] hover:border-[#FA916B]  hover:bg-[#FA916B] hover:bg-transparent/5;
+  &.active {
+    @apply bg-[#FA916B] text-white;
+  }
+  [aria-expanded="true"] > & {
+    @apply bg-warning-500 text-white;
+  }
+  .split-btngroup & {
+    @apply focus:text-warning-500 last:border-warning-500;
+  }
+}
+.btn-outline-danger {
+  @apply bg-transparent text-danger-500 border border-danger-500 hover:border-danger-500  hover:bg-danger-500 hover:bg-transparent/5;
+  &.active {
+    @apply bg-danger-500 text-white;
+  }
+  [aria-expanded="true"] > & {
+    @apply bg-danger-500 text-white;
+  }
+  .split-btngroup & {
+    @apply focus:text-danger-500 last:border-danger-500;
+  }
+}
+.btn-outline-light {
+  @apply bg-transparent  border border-[#E0EAFF] dark:text-white hover:border-[#E0EAFF] text-slate-900 hover:bg-[#E0EAFF] hover:bg-transparent/5;
+  &.active {
+    @apply bg-[#E0EAFF] text-slate-900;
+  }
+  [aria-expanded="true"] > & {
+    @apply bg-[#E0EAFF] text-slate-900;
+  }
+  .split-btngroup & {
+    @apply focus:text-slate-600 last:border-[#E0EAFF];
+  }
+}
+.light {
+  &.btn {
+    @apply bg-white/[15%]  ring-white/30 dark:hover:bg-white/10;
+  }
+  &.btn-primary {
+    @apply text-primary-500 dark:hover:bg-primary-500/10;
+  }
+  &.btn-secondary {
+    @apply text-secondary-500 dark:hover:bg-secondary-500/10;
+  }
+  &.btn-success {
+    @apply text-success-500 dark:hover:bg-success-500/10;
+  }
+  &.btn-info {
+    @apply text-[#0CE7FA] dark:hover:bg-[#0CE7FA]/10;
+  }
+  &.btn-warning {
+    @apply text-[#FA916B] dark:hover:bg-[#FA916B]/10;
+  }
+  &.btn-danger {
+    @apply text-danger-500 dark:hover:bg-danger-500/10;
+  }
+  &.btn-light {
+    @apply text-slate-50/80 dark:text-slate-300 dark:hover:bg-white/10;
+  }
+}
+.split-btngroup {
+  & .btn {
+    @apply ltr:rounded-r-none rtl:rounded-l-none hover:ring-0;
+  }
+  & button {
+    @apply last:ltr:rounded-r-md last:rtl:rounded-l-md  last:border-l last:border-white/[0.10];
+  }
+  & button:hover {
+    box-shadow: none !important;
+  }
+  & [class*="btn-outline-"] {
+    @apply last:ltr:border-l-0 last:rtl:border-r-0  focus:bg-transparent focus:text-inherit;
+  }
+  & .btn-outline-primary {
+    @apply focus:text-primary-500 last:border-primary-500;
+  }
+  & .btn-outline-secondary {
+    @apply focus:text-secondary-500 last:border-secondary-500;
+  }
+  & .btn-outline-success {
+    @apply focus:text-success-500 last:border-success-500;
+  }
+  & .btn-outline-danger {
+    @apply focus:text-danger-500 last:border-danger-500;
+  }
+  & .btn-outline-warning {
+    @apply focus:text-warning-500 last:border-warning-500;
+  }
+  & .btn-outline-info {
+    @apply focus:text-info-500 last:border-info-500;
+  }
+  & .btn-outline-light {
+    @apply focus:text-slate-600 last:border-[#E0EAFF];
+  }
+}
+.btn-link {
+  @apply text-slate-900 font-medium underline text-sm dark:text-white;
+  &.white {
+    @apply text-white;
+  }
+}
+.white {
+  &.btn-link {
+    @apply text-white;
+  }
+}
+.action-btn {
+  @apply h-6 w-6 flex flex-col items-center justify-center border border-slate-200 dark:border-slate-700 rounded-sm;
+}
+.invocie-btn {
+  @apply hover:bg-slate-900 hover:text-slate-100 dark:hover:bg-slate-600 mr-3 mb-4;
+  @media print {
+    display: none;
+  }
+}
+.badge {
+  @apply py-1 px-2 text-xs  capitalize font-semibold rounded-[.358rem] whitespace-nowrap  align-baseline inline-flex;
+  &.pill {
+    @apply rounded-[999px];
+  }
+}
+.pill {
+  &.badge {
+    @apply rounded-[999px];
+  }
+}
+.display-1 {
+  @apply text-[70px] leading-[80px] text-slate-900 dark:text-slate-300 font-semibold;
+}
+.display-2 {
+  @apply text-[48px] leading-[58px] text-slate-900 dark:text-slate-300 font-semibold;
+}
+.display-3 {
+  @apply text-[40px] leading-[48px] text-slate-900 dark:text-slate-300 font-semibold;
+}
+.display-4 {
+  @apply text-[40px] leading-[48px] text-slate-900 dark:text-slate-300 font-normal;
+}
+.gradient-1 {
+  background: linear-gradient(96.2deg, #0575e6 0%, #021b79 100%);
+}
+.gradient-2 {
+  background: linear-gradient(96.01deg, #00c9ff 0.29%, #fff94c 100%);
+}
+.gradient-3 {
+  background: linear-gradient(96.01deg, #aaffa9 0.29%, #11ffbd 100%);
+}
+.custom-list {
+  @apply relative pl-4 -mx-1 list-none;
+
+  & li {
+    @apply relative;
+  }
+
+  & li::before {
+    position: absolute;
+    left: 0; /* or use logical properties with LTR/RTL logic manually */
+    right: auto;
+  }
+
+  & ol ol {
+    @apply mt-3;
+  }
+
+  & ul ul {
+    @apply mt-3;
+  }
+  & ol ol li {
+    @apply ltr:pl-6 rtl:pr-6;
+  }
+
+  & ul ul li {
+    @apply ltr:pl-6 rtl:pr-6;
+  }
+}
+
+.lits-by-numbaring {
+  counter-reset: listitem;
+  & li {
+    @apply ltr:pl-[1.3em] rtl:pr-[1.3em] relative -mx-1;
+  }
+  & li::before {
+    counter-increment: listitem;
+    content: counters(listitem, ".") ".";
+  }
+}
+.lits-by-slash {
+  & li {
+    @apply pl-4 relative;
+  }
+  & li::before {
+    left: 6px;
+    content: "-";
+  }
+}
+.form-label {
+  @apply mb-2 text-slate-600 dark:text-slate-300 text-sm leading-6 capitalize cursor-pointer block w-full font-medium rtl:text-right rtl:block;
+}
+.form-control {
+  @apply bg-white dark:bg-slate-900  transition duration-300 ease-in-out border border-slate-200
+   dark:border-slate-700 dark:text-slate-300  focus:ring-1 focus:ring-slate-600
+   dark:focus:ring-slate-900 focus:outline-hidden focus:ring-slate-900/90 rounded-sm
+    placeholder:text-slate-400 text-slate-900 text-sm px-3  placeholder:font-normal dark:placeholder:text-slate-400 block w-full;
+  .fromGroup.has-error & {
+    @apply border-danger-500 focus:ring-danger-500/90 focus:ring-1;
+  }
+  .fromGroup.is-valid & {
+    @apply border-success-500 focus:ring-success-500/90 focus:ring-1;
+  }
+  &[readonly] {
+    @apply bg-slate-200 text-slate-400 dark:bg-slate-600 cursor-pointer placeholder:text-slate-400;
+  }
+  &[disabled] {
+    @apply cursor-not-allowed bg-slate-50 text-slate-800 placeholder:text-slate-800/60 dark:bg-slate-600;
+  }
+}
+.input-description {
+  @apply block text-secondary-500 font-light leading-4 text-xs mt-2;
+}
+.fromGroup {
+  @apply relative;
+  &.has-error .form-control {
+    @apply border-danger-500 focus:ring-danger-500/90 focus:ring-1;
+  }
+  &.is-valid .form-control {
+    @apply border-success-500 focus:ring-success-500/90 focus:ring-1;
+  }
+}
+.has-error {
+  &.fromGroup .form-control {
+    @apply border-danger-500 focus:ring-danger-500/90 focus:ring-1;
+  }
+  &.fromGroup2 .input-group-control {
+    @apply border-danger-500 focus:ring-danger-500/90 focus:ring-1;
+  }
+  .dashcode-app & .select__control {
+    @apply border-danger-500;
+  }
+  .dashcode-app & .select__control .select__indicator svg {
+    @apply text-danger-500;
+  }
+
+  .dashcode-app & .react-select__control .select__indicator svg {
+    @apply text-danger-500;
+  }
+}
+.is-valid {
+  &.fromGroup .form-control {
+    @apply border-success-500 focus:ring-success-500/90 focus:ring-1;
+  }
+  &.fromGroup2 .input-group-control {
+    @apply border-success-500 focus:ring-success-500/90 focus:ring-1;
+  }
+  &.inputGroup .input-group-text {
+    @apply border-success-500;
+  }
+  &.inputGroup:focus-within .input-group-text {
+    @apply ring-success-500;
+  }
+}
+.text-vtd-primary-500-600 {
+  color: #0f172a !important;
+  .dark & {
+    color: #f8fafc !important;
+  }
+}
+.bg-vtd-primary-500-500 {
+  background-color: #0f172a !important;
+  .dark & {
+    background-color: #334155 !important;
+  }
+}
+.text-vtd-primary-500-500 {
+  color: #0f172a !important;
+  .dark & {
+    color: #f8fafc !important;
+  }
+}
+.dark {
+  & .text-vtd-primary-500-600 {
+    color: #f8fafc !important;
+  }
+  & .text-vtd-primary-500-500 {
+    color: #f8fafc !important;
+  }
+  & .bg-vtd-primary-500-500 {
+    background-color: #334155 !important;
+  }
+  & .select__control {
+    @apply bg-slate-900 border-slate-700;
+  }
+  & .select__control .select__indicator svg {
+    @apply fill-slate-500;
+  }
+  & .select__control .select__input {
+    color: #cbd5e1 !important;
+  }
+  & .select__control .select__indicator span {
+    color: #cbd5e1;
+  }
+  & .select__control .select__single-value {
+    color: #cbd5e1;
+  }
+  & .select__control .select__multi-value {
+    @apply bg-slate-700;
+  }
+  & .select__control .select__multi-value .select__multi-value__label {
+    @apply text-slate-300;
+  }
+  & .select__control .select__multi-value__remove svg {
+    fill: #cbd5e1;
+  }
+  & .select__control .select__multi-value__remove:hover {
+    background-color: transparent !important;
+  }
+  & .select__control .select__placeholder {
+    @apply text-slate-400;
+  }
+  & .select__menu {
+    @apply bg-slate-800;
+  }
+  &
+    .select__menu
+    .select__menu-list
+    .select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+  &
+    .select__menu
+    .select__menu-list
+    .react-select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+  &
+    .select__menu
+    .react-select__menu-list
+    .select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+  &
+    .select__menu
+    .react-select__menu-list
+    .react-select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+  &
+    .react-select__menu
+    .select__menu-list
+    .select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+  &
+    .react-select__menu
+    .select__menu-list
+    .react-select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+  &
+    .react-select__menu
+    .react-select__menu-list
+    .select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+  &
+    .react-select__menu
+    .react-select__menu-list
+    .react-select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+  &
+    .select__menu
+    .select__menu-list
+    .select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+  &
+    .select__menu
+    .select__menu-list
+    .react-select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+  &
+    .select__menu
+    .react-select__menu-list
+    .select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+  &
+    .select__menu
+    .react-select__menu-list
+    .react-select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+  &
+    .react-select__menu
+    .select__menu-list
+    .select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+  &
+    .react-select__menu
+    .select__menu-list
+    .react-select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+  &
+    .react-select__menu
+    .react-select__menu-list
+    .select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+  &
+    .react-select__menu
+    .react-select__menu-list
+    .react-select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+  & .nav-shadow {
+    background: linear-gradient(
+      #1e293b 5%,
+      rgba(30, 41, 59, 0.75) 45%,
+      rgba(30, 41, 59, 0.2) 80%,
+      transparent
+    );
+  }
+  & .ql-snow .ql-stroke {
+    @apply stroke-slate-300;
+  }
+  & .ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-label {
+    @apply bg-slate-700;
+  }
+  & .ql-snow.ql-toolbar button:hover {
+    @apply bg-slate-700;
+  }
+  & .ql-snow .ql-toolbar button:hover {
+    @apply bg-slate-700;
+  }
+  & .ql-snow.ql-toolbar button:focus {
+    @apply bg-slate-700;
+  }
+  & .ql-snow .ql-toolbar button:focus {
+    @apply bg-slate-700;
+  }
+  & .ql-snow.ql-toolbar .ql-picker-label:hover {
+    @apply bg-slate-700;
+  }
+  & .ql-snow .ql-toolbar .ql-picker-label:hover {
+    @apply bg-slate-700;
+  }
+  & .ql-snow.ql-toolbar .ql-picker-item:hover {
+    @apply bg-slate-700;
+  }
+  & .ql-snow .ql-toolbar .ql-picker-item:hover {
+    @apply bg-slate-700;
+  }
+  & .ql-picker-label {
+    @apply text-slate-300;
+  }
+  & .ql-snow .ql-picker.ql-expanded .ql-picker-label {
+    @apply bg-slate-300 border-slate-700;
+  }
+  & .date-range-custom .container-class::before {
+    @apply text-slate-300;
+  }
+  & .date-range-custom .container-class::after {
+    @apply text-slate-300;
+  }
+  & .date-range-custom2 .container-class::before {
+    @apply text-slate-300;
+  }
+  & .date-range-custom2 .container-class::after {
+    @apply text-slate-300;
+  }
+  & .date-range-custom .container-class:after {
+    content: url("https://api.iconify.design/heroicons/calendar.svg?color=white&width=18&height=18");
+  }
+  & .date-range-custom2 .container-class:after {
+    content: url("https://api.iconify.design/heroicons-outline/filter.svg?color=white&width=18&height=18");
+  }
+  &.dashcode-app .react-calendar {
+    @apply bg-slate-800;
+  }
+  &.dashcode-app .react-calendar__navigation__label {
+    @apply text-slate-300;
+  }
+  &.dashcode-app .react-calendar__month-view__weekdays__weekday {
+    @apply text-slate-300;
+  }
+  &.dashcode-app .react-calendar__tile {
+    @apply text-slate-400;
+  }
+  &.dashcode-app
+    .react-calendar__tile.react-calendar__month-view__days__day--weekend {
+    @apply text-danger-500;
+  }
+  &.dashcode-app .react-calendar__tile:enabled:hover {
+    @apply bg-slate-700;
+  }
+  & .dashcode-app .react-calendar__tile:enabled:focus {
+    @apply bg-slate-700;
+  }
+  & .fc-col-header-cell .fc-scrollgrid-sync-inner {
+    @apply bg-slate-700 text-slate-300;
+  }
+  & .fc-daygrid-day-top {
+    @apply text-slate-300;
+  }
+  & .fc .fc-day-other .fc-daygrid-day-top {
+    @apply opacity-70;
+  }
+  & .fc .fc-button-primary {
+    @apply border-slate-600 text-slate-300;
+  }
+  & .fc-theme-standard td {
+    @apply border-slate-700;
+  }
+  & .fc-theme-standard th {
+    @apply border-slate-700;
+  }
+  & .fc .fc-toolbar-title {
+    @apply text-slate-300;
+  }
+  & .fc .fc-button-primary:not(:disabled):active {
+    background: #0f172a !important;
+  }
+  & .fc .fc-button-primary:not(:disabled).fc-button-active {
+    background: #0f172a !important;
+  }
+  & .fc .fc-button-primary:hover {
+    background: #0f172a !important;
+  }
+  & .fc .fc-button-primary:disabled {
+    background: #334155 !important;
+    border-color: #334155 !important;
+  }
+  & .fc .fc-daygrid-day.fc-day-today {
+    background: #334155 !important;
+  }
+  & .fc-theme-standard .fc-scrollgrid {
+    border-color: #334155 !important;
+  }
+  .dashcode-calender & {
+    @apply bg-[#222] border-none text-white text-center px-2 font-medium text-sm;
+  }
+}
+.file-control {
+  @apply bg-transparent dark:bg-slate-900 dark:text-white transition duration-300 ease-in-out border border-slate-200 dark:border-slate-700 focus:ring-1 focus:ring-slate-900/90 dark:focus:ring-slate-900 focus:outline-hidden rounded-sm   text-sm ltr:pl-3 rtl:pr-3   placeholder:font-normal;
+}
+.badge-title {
+  @apply bg-slate-900 text-white px-2 py-[3px] rounded-sm text-sm;
+}
+.flatpickr-day {
+  &.selected {
+    @apply bg-slate-900 border-black-500;
+  }
+  &.startRange {
+    @apply bg-slate-900 border-black-500;
+  }
+  &.endRange {
+    @apply bg-slate-900 border-black-500;
+  }
+  &.selected.inRange {
+    @apply bg-slate-900 border-black-500;
+  }
+  &.startRange.inRange {
+    @apply bg-slate-900 border-black-500;
+  }
+  &.endRange.inRange {
+    @apply bg-slate-900 border-black-500;
+  }
+  &.selected:focus {
+    @apply bg-slate-900 border-black-500;
+  }
+  &.startRange:focus {
+    @apply bg-slate-900 border-black-500;
+  }
+  &.endRange:focus {
+    @apply bg-slate-900 border-black-500;
+  }
+  &.selected:hover {
+    @apply bg-slate-900 border-black-500;
+  }
+  &.startRange:hover {
+    @apply bg-slate-900 border-black-500;
+  }
+  &.endRange:hover {
+    @apply bg-slate-900 border-black-500;
+  }
+  &.selected.prevMonthDay {
+    @apply bg-slate-900 border-black-500;
+  }
+  &.startRange.prevMonthDay {
+    @apply bg-slate-900 border-black-500;
+  }
+  &.endRange.prevMonthDay {
+    @apply bg-slate-900 border-black-500;
+  }
+  &.selected.nextMonthDay {
+    @apply bg-slate-900 border-black-500;
+  }
+  &.startRange.nextMonthDay {
+    @apply bg-slate-900 border-black-500;
+  }
+  &.endRange.nextMonthDay {
+    @apply bg-slate-900 border-black-500;
+  }
+}
+.selected {
+  &.flatpickr-day {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day.inRange {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day:focus {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day:hover {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day.prevMonthDay {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day.nextMonthDay {
+    @apply bg-slate-900 border-black-500;
+  }
+}
+.startRange {
+  & .flatpickr-day {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day.inRange {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day:focus {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day:hover {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day.prevMonthDay {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day.nextMonthDay {
+    @apply bg-slate-900 border-black-500;
+  }
+}
+.endRange {
+  & .flatpickr-day {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day.inRange {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day:focus {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day:hover {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day.prevMonthDay {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day.nextMonthDay {
+    @apply bg-slate-900 border-black-500;
+  }
+}
+.inRange {
+  & .flatpickr-day.selected {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day.startRange {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day.endRange {
+    @apply bg-slate-900 border-black-500;
+  }
+}
+.prevMonthDay {
+  & .flatpickr-day.selected {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day.startRange {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day.endRange {
+    @apply bg-slate-900 border-black-500;
+  }
+}
+.nextMonthDay {
+  & .flatpickr-day.selected {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day.startRange {
+    @apply bg-slate-900 border-black-500;
+  }
+  & .flatpickr-day.endRange {
+    @apply bg-slate-900 border-black-500;
+  }
+}
+.input-group-control {
+  @apply bg-white dark:bg-slate-900 dark:placeholder:text-slate-400 transition duration-300 ease-in-out border border-slate-200 dark:border-slate-700 focus:ring-0  focus:outline-hidden  
+  rounded-sm placeholder:text-slate-400 text-slate-900 text-sm px-3  placeholder:font-light focus:border-slate-600  dark:focus:border-slate-900 dark:text-white;
+  .fromGroup2.has-error & {
+    @apply border-danger-500 focus:ring-danger-500/90 focus:ring-1;
+  }
+  .fromGroup2.is-valid & {
+    @apply border-success-500 focus:ring-success-500/90 focus:ring-1;
+  }
+  &[readonly] {
+    @apply bg-slate-200 text-slate-400 dark:bg-slate-600;
+  }
+  &[disabled] {
+    @apply cursor-not-allowed bg-slate-50 text-slate-400 placeholder:text-slate-400/60 dark:bg-slate-600;
+  }
+  .inputGroup.has-prepend & {
+    @apply ltr:border-l-0 rtl:border-r-0 ltr:rounded-tl-[0] rtl:rounded-tr-[0] ltr:rounded-bl-[0] rtl:rounded-br-[0];
+  }
+  .inputGroup.has-prepend-slot & {
+    @apply ltr:border-l-0 rtl:border-r-0 ltr:rounded-tl-[0] rtl:rounded-tr-[0] ltr:rounded-bl-[0] rtl:rounded-br-[0] focus:ring-0 focus:border-slate-600 dark:focus:border-slate-700;
+  }
+  .inputGroup.has-append-slot & {
+    @apply ltr:border-r-0 rtl:border-l-0 ltr:rounded-tr-[0] rtl:rounded-tl-[0] ltr:rounded-br-[0] rtl:rounded-bl-[0] focus:ring-0 focus:border-slate-600 dark:focus:border-slate-700;
+  }
+  .inputGroup.has-append & {
+    @apply ltr:border-r-0 rtl:border-l-0 ltr:rounded-tr-[0] rtl:rounded-tl-[0] rounded-br-[0] rtl:rounded-bl-[0];
+  }
+}
+.fromGroup2 {
+  &.has-error .input-group-control {
+    @apply border-danger-500 focus:ring-danger-500/90 focus:ring-1;
+  }
+  &.is-valid .input-group-control {
+    @apply border-success-500 focus:ring-success-500/90 focus:ring-1;
+  }
+}
+.input-group-text {
+  @apply bg-white dark:bg-slate-900 transition duration-300 ease-in-out  flex items-center justify-center px-3 border
+   border-slate-200 dark:border-slate-700 ltr:rounded-tl rtl:rounded-tr rtl:rounded-br ltr:rounded-bl text-slate-400 text-base font-light;
+  .inputGroup.has-append .input-group-addon.right & {
+    @apply ltr:rounded-tl-[0] ltr:rounded-bl-[0] ltr:rounded-tr ltr:rounded-br rtl:rounded-tl  rtl:rounded-bl rtl:rounded-tr-[0] rtl:rounded-br-[0];
+  }
+  .inputGroup:focus-within & {
+    @apply border-black-500 dark:border-slate-900;
+  }
+  /* .merged .inputGroup:focus-within .input-group-text {
+  } */
+  .inputGroup.is-invalid & {
+    @apply border-danger-500;
+  }
+  .inputGroup.is-invalid:focus-within & {
+    @apply ring-danger-500;
+  }
+  .inputGroup.is-valid & {
+    @apply border-success-500;
+  }
+  .inputGroup.is-valid:focus-within & {
+    @apply ring-success-500;
+  }
+  .merged .input-group-addon & {
+    @apply ltr:border-r-0  ltr:pr-0 rtl:border-l-0 rtl:pl-0;
+  }
+  .merged .input-group-addon.right & {
+    @apply ltr:border-l-0 rtl:border-r-0 ltr:border-r rtl:border-l ltr:pr-3 rtl:pl-3 ltr:pl-0 rtl:pr-0;
+  }
+}
+.inputGroup {
+  &.has-prepend .input-group-control {
+    @apply ltr:border-l-0 rtl:border-r-0 ltr:rounded-tl-[0] rtl:rounded-tr-[0] ltr:rounded-bl-[0] rtl:rounded-br-[0];
+  }
+  &.has-prepend-slot .input-group-control {
+    @apply ltr:border-l-0 rtl:border-r-0 ltr:rounded-tl-[0] rtl:rounded-tr-[0] ltr:rounded-bl-[0] rtl:rounded-br-[0] focus:ring-0 focus:border-slate-600 dark:focus:border-slate-700;
+  }
+  &.has-append-slot .input-group-control {
+    @apply ltr:border-r-0 rtl:border-l-0 ltr:rounded-tr-[0] rtl:rounded-tl-[0] ltr:rounded-br-[0] rtl:rounded-bl-[0] focus:ring-0 focus:border-slate-600 dark:focus:border-slate-700;
+  }
+  &.has-append .input-group-control {
+    @apply ltr:border-r-0 rtl:border-l-0 ltr:rounded-tr-[0] rtl:rounded-tl-[0] rounded-br-[0] rtl:rounded-bl-[0];
+  }
+  &.has-append .input-group-addon.right .input-group-text {
+    @apply ltr:rounded-tl-[0] ltr:rounded-bl-[0] ltr:rounded-tr ltr:rounded-br rtl:rounded-tl  rtl:rounded-bl rtl:rounded-tr-[0] rtl:rounded-br-[0];
+  }
+  &:focus-within .input-group-text {
+    @apply border-black-500 dark:border-slate-900;
+  }
+  /* .merged .inputGroup:focus-within .input-group-text {
+  } */
+  &.is-invalid .input-group-text {
+    @apply border-danger-500;
+  }
+  &.is-invalid:focus-within .input-group-text {
+    @apply ring-danger-500;
+  }
+  &.is-valid .input-group-text {
+    @apply border-success-500;
+  }
+  &.is-valid:focus-within .input-group-text {
+    @apply ring-success-500;
+  }
+}
+.has-prepend {
+  &.inputGroup .input-group-control {
+    @apply ltr:border-l-0 rtl:border-r-0 ltr:rounded-tl-[0] rtl:rounded-tr-[0] ltr:rounded-bl-[0] rtl:rounded-br-[0];
+  }
+}
+.has-prepend-slot {
+  &.inputGroup .input-group-control {
+    @apply ltr:border-l-0 rtl:border-r-0 ltr:rounded-tl-[0] rtl:rounded-tr-[0] ltr:rounded-bl-[0] rtl:rounded-br-[0] focus:ring-0 focus:border-slate-600 dark:focus:border-slate-700;
+  }
+}
+.has-append-slot {
+  &.inputGroup .input-group-control {
+    @apply ltr:border-r-0 rtl:border-l-0 ltr:rounded-tr-[0] rtl:rounded-tl-[0] ltr:rounded-br-[0] rtl:rounded-bl-[0] focus:ring-0 focus:border-slate-600 dark:focus:border-slate-700;
+  }
+}
+.has-append {
+  &.inputGroup .input-group-control {
+    @apply ltr:border-r-0 rtl:border-l-0 ltr:rounded-tr-[0] rtl:rounded-tl-[0] rounded-br-[0] rtl:rounded-bl-[0];
+  }
+  &.inputGroup .input-group-addon.right .input-group-text {
+    @apply ltr:rounded-tl-[0] ltr:rounded-bl-[0] ltr:rounded-tr ltr:rounded-br rtl:rounded-tl  rtl:rounded-bl rtl:rounded-tr-[0] rtl:rounded-br-[0];
+  }
+}
+.input-group-addon {
+  .inputGroup.has-append &.right .input-group-text {
+    @apply ltr:rounded-tl-[0] ltr:rounded-bl-[0] ltr:rounded-tr ltr:rounded-br rtl:rounded-tl  rtl:rounded-bl rtl:rounded-tr-[0] rtl:rounded-br-[0];
+  }
+  &.right .append-slot .btn {
+    @apply rounded-tl-[0] rounded-bl-[0] rounded-tr rounded-br  -mx-3;
+  }
+  .merged & .input-group-text {
+    @apply ltr:border-r-0  ltr:pr-0 rtl:border-l-0 rtl:pl-0;
+  }
+  .merged &.right .input-group-text {
+    @apply ltr:border-l-0 rtl:border-r-0 ltr:border-r rtl:border-l ltr:pr-3 rtl:pl-3 ltr:pl-0 rtl:pr-0;
+  }
+}
+.right {
+  .inputGroup.has-append &.input-group-addon .input-group-text {
+    @apply ltr:rounded-tl-[0] ltr:rounded-bl-[0] ltr:rounded-tr ltr:rounded-br rtl:rounded-tl  rtl:rounded-bl rtl:rounded-tr-[0] rtl:rounded-br-[0];
+  }
+  &.input-group-addon .append-slot .btn {
+    @apply rounded-tl-[0] rounded-bl-[0] rounded-tr rounded-br  -mx-3;
+  }
+  .merged &.input-group-addon .input-group-text {
+    @apply ltr:border-l-0 rtl:border-r-0 ltr:border-r rtl:border-l ltr:pr-3 rtl:pl-3 ltr:pl-0 rtl:pr-0;
+  }
+}
+.is-invalid {
+  /* .merged .inputGroup:focus-within .input-group-text {
+  } */
+  &.inputGroup .input-group-text {
+    @apply border-danger-500;
+  }
+  &.inputGroup:focus-within .input-group-text {
+    @apply ring-danger-500;
+  }
+  .dashcode-app &.react-select .select__control {
+    border-color: none !important;
+  }
+}
+.prepend-slot {
+  & .btn {
+    @apply pt-0 pb-0 h-full items-center hover:ring-0 rounded-tr-[0] rounded-br-[0] -mx-3;
+  }
+  & > div {
+    @apply h-full;
+  }
+  & button {
+    @apply h-full;
+  }
+}
+.append-slot {
+  & .btn {
+    @apply pt-0 pb-0 h-full items-center hover:ring-0 rounded-tr-[0] rounded-br-[0] -mx-3;
+  }
+  & > div {
+    @apply h-full;
+  }
+  & button {
+    @apply h-full;
+  }
+  .input-group-addon.right & .btn {
+    @apply rounded-tl-[0] rounded-bl-[0] rounded-tr rounded-br  -mx-3;
+  }
+}
+.merged {
+  & .input-group-addon .input-group-text {
+    @apply ltr:border-r-0  ltr:pr-0 rtl:border-l-0 rtl:pl-0;
+  }
+  & .input-group-addon.right .input-group-text {
+    @apply ltr:border-l-0 rtl:border-r-0 ltr:border-r rtl:border-l ltr:pr-3 rtl:pl-3 ltr:pl-0 rtl:pr-0;
+  }
+}
+.dashcode-app {
+  & .react-select.is-invalid .select__control {
+    border-color: none !important;
+  }
+  & .select__control {
+    @apply border-slate-200;
+  }
+  & .has-error .select__control {
+    @apply border-danger-500;
+  }
+  & .select__control .select__input {
+    @apply text-slate-500;
+  }
+  & .react-select__control .select__input {
+    @apply text-slate-500;
+  }
+  & .select__control.select__control--is-disabled {
+    @apply cursor-not-allowed;
+  }
+  & .react-select__control.select__control--is-disabled {
+    @apply cursor-not-allowed;
+  }
+  & .select__control.select__control--is-disabled .select__indicator-separator {
+    @apply bg-slate-50 text-slate-800 placeholder:text-slate-800/60;
+  }
+  &
+    .react-select__control.select__control--is-disabled
+    .select__indicator-separator {
+    @apply bg-slate-50 text-slate-800 placeholder:text-slate-800/60;
+  }
+  & .select__control.select__control--is-focused {
+    box-shadow: none;
+    @apply border-slate-600;
+  }
+  & .select__control.react-select__control--is-focused {
+    box-shadow: none;
+    @apply border-slate-600;
+  }
+  & .react-select__control.select__control--is-focused {
+    box-shadow: none;
+    @apply border-slate-600;
+  }
+  & .react-select__control.react-select__control--is-focused {
+    box-shadow: none;
+    @apply border-slate-600;
+  }
+  & .select__control .select__indicator svg {
+    cursor: pointer;
+    @apply text-slate-600;
+  }
+  & .react-select__control .select__indicator svg {
+    cursor: pointer;
+    @apply text-slate-600;
+  }
+  & .select__control .select__indicator-separator {
+    display: none;
+  }
+  & .react-select__control .select__indicator-separator {
+    display: none;
+  }
+  & .select__control .select__single-value {
+    @apply text-slate-600   text-sm;
+  }
+  & .react-select__control .select__single-value {
+    @apply text-slate-600   text-sm;
+  }
+  & .select__control .select__placeholder {
+    @apply text-slate-400;
+  }
+  & .react-select__control .select__placeholder {
+    @apply text-slate-400;
+  }
+  & .has-error .select__control .select__indicator svg {
+    @apply text-danger-500;
+  }
+  & .has-error .react-select__control .select__indicator svg {
+    @apply text-danger-500;
+  }
+  & .select__menu .select__menu-list .select__option {
+    cursor: pointer;
+  }
+  & .select__menu .select__menu-list .react-select__option {
+    cursor: pointer;
+  }
+  & .select__menu .react-select__menu-list .select__option {
+    cursor: pointer;
+  }
+  & .select__menu .react-select__menu-list .react-select__option {
+    cursor: pointer;
+  }
+  & .react-select__menu .select__menu-list .select__option {
+    cursor: pointer;
+  }
+  & .react-select__menu .select__menu-list .react-select__option {
+    cursor: pointer;
+  }
+  & .react-select__menu .react-select__menu-list .select__option {
+    cursor: pointer;
+  }
+  & .react-select__menu .react-select__menu-list .react-select__option {
+    cursor: pointer;
+  }
+  &
+    .select__menu
+    .select__menu-list
+    .select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+  &
+    .select__menu
+    .select__menu-list
+    .react-select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+  &
+    .select__menu
+    .react-select__menu-list
+    .select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+  &
+    .select__menu
+    .react-select__menu-list
+    .react-select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+  &
+    .react-select__menu
+    .select__menu-list
+    .select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+  &
+    .react-select__menu
+    .select__menu-list
+    .react-select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+  &
+    .react-select__menu
+    .react-select__menu-list
+    .select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+  &
+    .react-select__menu
+    .react-select__menu-list
+    .react-select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+  &
+    .select__menu
+    .select__menu-list
+    .select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+  &
+    .select__menu
+    .select__menu-list
+    .react-select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+  &
+    .select__menu
+    .react-select__menu-list
+    .select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+  &
+    .select__menu
+    .react-select__menu-list
+    .react-select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+  &
+    .react-select__menu
+    .select__menu-list
+    .select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+  &
+    .react-select__menu
+    .select__menu-list
+    .react-select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+  &
+    .react-select__menu
+    .react-select__menu-list
+    .select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+  &
+    .react-select__menu
+    .react-select__menu-list
+    .react-select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+  & .select__menu .select__menu-list .select__group .select__group-heading {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+  &
+    .select__menu
+    .react-select__menu-list
+    .select__group
+    .select__group-heading {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+  &
+    .react-select__menu
+    .select__menu-list
+    .select__group
+    .select__group-heading {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+  &
+    .react-select__menu
+    .react-select__menu-list
+    .select__group
+    .select__group-heading {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+  & .select__multi-value {
+    @apply text-white bg-slate-900;
+    border-radius: 3px;
+    margin: 0 0.7rem 0 0;
+  }
+  & .react-select__multi-value {
+    @apply text-white bg-slate-900;
+    border-radius: 3px;
+    margin: 0 0.7rem 0 0;
+  }
+  & .select__multi-value .select__multi-value__label {
+    @apply text-white;
+    font-size: 0.85rem;
+    border-radius: 10px;
+    padding: 0.26rem 0.6rem;
+  }
+  & .react-select__multi-value .select__multi-value__label {
+    @apply text-white;
+    font-size: 0.85rem;
+    border-radius: 10px;
+    padding: 0.26rem 0.6rem;
+  }
+  & .select__multi-value .select__multi-value__remove {
+    padding-left: 0;
+    padding-right: 0.5rem;
+  }
+  & .react-select__multi-value .select__multi-value__remove {
+    padding-left: 0;
+    padding-right: 0.5rem;
+  }
+  & .select__multi-value .select__multi-value__remove:hover {
+    background-color: inherit;
+    color: inherit;
+  }
+  & .react-select__multi-value .select__multi-value__remove:hover {
+    background-color: inherit;
+    color: inherit;
+  }
+  & .select__multi-value .select__multi-value__remove svg {
+    height: 0.85rem;
+    width: 0.85rem;
+  }
+  & .react-select__multi-value .select__multi-value__remove svg {
+    height: 0.85rem;
+    width: 0.85rem;
+  }
+  & .select__multi-value .select__multi-value__remove svg:hover {
+    cursor: pointer;
+  }
+  & .react-select__multi-value .select__multi-value__remove svg:hover {
+    cursor: pointer;
+  }
+  & .ql-editor {
+    min-height: 120px;
+  }
+  & .ql-toolbar.ql-snow {
+    @apply border-none p-0 mb-2;
+  }
+  & .ql-container.ql-snow {
+    @apply bg-[#FBFBFB] dark:bg-slate-900 border-none text-base;
+  }
+  & .ql-editor {
+    @apply border-slate-200 dark:border-slate-700 border rounded-sm text-base;
+  }
+  & .react-calendar {
+    @apply w-full bg-white border-none;
+  }
+  & .react-calendar__navigation__prev2-button {
+    @apply hidden;
+  }
+  & .react-calendar__navigation__next2-button {
+    @apply hidden;
+  }
+  & .react-calendar__navigation__label {
+    @apply text-slate-900  text-2xl;
+  }
+  & .react-calendar__navigation button:enabled:hover {
+    @apply bg-transparent;
+  }
+  & .react-calendar__navigation button:enabled:focus {
+    @apply bg-transparent;
+  }
+  & .react-calendar__navigation {
+    @apply mb-2;
+  }
+  & .react-calendar__navigation__arrow {
+    @apply text-4xl;
+  }
+  & .react-calendar__month-view__weekdays__weekday {
+    @apply text-sm font-normal text-slate-600  capitalize p-0 mb-2;
+  }
+  & .react-calendar__month-view__weekdays__weekday abbr {
+    @apply no-underline;
+  }
+  & .react-calendar__month-view__weekdays__weekday .react-calendar__tile {
+    @apply text-slate-600;
+  }
+  &
+    .react-calendar__month-view__weekdays__weekday
+    .react-calendar__tile.react-calendar__month-view__days__day--weekend {
+    @apply text-danger-500;
+  }
+  & .react-calendar__tile {
+    @apply text-sm font-normal  capitalize w-8 h-8 flex flex-col  items-center  justify-center  rounded-sm;
+  }
+  &.dark .react-calendar {
+    @apply bg-slate-800;
+  }
+  &.dark .react-calendar__navigation__label {
+    @apply text-slate-300;
+  }
+  &.dark .react-calendar__month-view__weekdays__weekday {
+    @apply text-slate-300;
+  }
+  &.dark .react-calendar__tile {
+    @apply text-slate-400;
+  }
+  &.dark .react-calendar__tile.react-calendar__month-view__days__day--weekend {
+    @apply text-danger-500;
+  }
+  &.dark .react-calendar__tile:enabled:hover {
+    @apply bg-slate-700;
+  }
+  &.dark .react-calendar__tile:enabled:focus {
+    @apply bg-slate-700;
+  }
+  & .react-calendar__tile--active {
+    @apply bg-slate-900 text-white;
+  }
+  & .fc-toolbar-chunk button {
+    height: 50px;
+  }
+  & .fc-toolbar-chunk button.fc-prev-button:after {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  & .fc-toolbar-chunk button.fc-next-button:after {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  & .fc-button {
+    font-size: 14px !important;
+    line-height: 14px !important;
+    height: auto !important;
+    text-transform: capitalize !important;
+    font-family: Inter !important;
+    padding: 12px 20px 12px 20px !important;
+  }
+  & .fc .fc-button-primary {
+    background: transparent !important;
+    @apply text-slate-900 dark:text-white border-slate-100;
+  }
+  & .fc .fc-button-primary:not(:disabled):active {
+    background: #111112 !important;
+    color: #fff !important;
+  }
+  & .fc .fc-button-primary:not(:disabled).fc-button-active {
+    background: #111112 !important;
+    color: #fff !important;
+  }
+  & .fc .fc-button-primary:hover {
+    background: #111112 !important;
+    color: #fff !important;
+  }
+  & .fc .fc-button-primary:disabled {
+    background: #a0aec0 !important;
+    border-color: #a0aec0 !important;
+    @apply cursor-not-allowed;
+  }
+  & .fc .fc-daygrid-day.fc-day-today {
+    background: rgba(95, 99, 242, 0.04) !important;
+  }
+  & .fc .fc-button-primary:focus {
+    box-shadow: none !important;
+  }
+  & .fc-theme-standard .fc-scrollgrid {
+    border-color: #eef1f9 !important;
+  }
+  & .fc-theme-standard td {
+    @apply border-slate-100 dark:border-slate-700;
+  }
+  & .fc-theme-standard th {
+    @apply border-slate-100 dark:border-slate-700;
+  }
+  & .fc-col-header-cell .fc-scrollgrid-sync-inner {
+    @apply bg-slate-50 dark:bg-slate-700  text-xs text-slate-500 dark:text-slate-300 font-normal py-3;
+  }
+  & .fc-daygrid-day-top {
+    @apply text-sm px-3 py-2  text-slate-900 dark:text-white font-normal;
+  }
+  & .fc-h-event .fc-event-main-frame {
+    @apply justify-center text-center w-max mx-auto;
+  }
+  & .fc-h-event .fc-event-main-frame .fc-event-time {
+    @apply font-normal flex-none;
+  }
+  & .fc-event-time {
+    @apply text-sm font-normal;
+  }
+  & .fc-event-title {
+    font-size: 14px !important;
+    font-weight: 300 !important;
+  }
+  & .fc .fc-toolbar-title {
+    @apply text-lg font-normal text-slate-600 dark:text-slate-300;
+  }
+  & .fc-daygrid-event-dot {
+    @apply hidden;
+  }
+  @media (max-width: 981px) {
+    & .fc-button-group {
+      display: block !important;
+    }
+    & .fc .fc-toolbar {
+      display: block !important;
+    }
+    & .fc .fc-toolbar {
+      @apply space-y-4;
+    }
+    & .fc-toolbar-chunk {
+      @apply space-y-4;
+    }
+    & .fc .fc-button {
+      padding: 0.4em 0.65em !important;
+    }
+  }
+  & .fc .fc-timegrid-axis-cushion {
+    @apply dark:text-slate-300;
+  }
+  & .fc .fc-timegrid-slot-label-cushion {
+    @apply dark:text-slate-300;
+  }
+  & .fc .fc-list-event:hover td {
+    @apply bg-inherit;
+  }
+  & .fc .fc-list-event-dot {
+    @apply hidden;
+  }
+  & .fc-direction-ltr .fc-list-day-text {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  & .fc-direction-rtl .fc-list-day-side-text {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  & .fc-direction-ltr .fc-list-day-side-text {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  & .fc-direction-rtl .fc-list-day-text {
+    font-size: 16px;
+    font-weight: 500;
+  }
+}
+.react-select {
+  .dashcode-app &.is-invalid .select__control {
+    border-color: none !important;
+  }
+}
+.select__control {
+  .dashcode-app .react-select.is-invalid & {
+    border-color: none !important;
+  }
+  .dashcode-app & {
+    @apply border-slate-200;
+  }
+  .dashcode-app .has-error & {
+    @apply border-danger-500;
+  }
+  .dashcode-app & .select__input {
+    @apply text-slate-500;
+  }
+  .dashcode-app &.select__control--is-disabled {
+    @apply cursor-not-allowed;
+  }
+  .dashcode-app &.select__control--is-disabled .select__indicator-separator {
+    @apply bg-slate-50 text-slate-800 placeholder:text-slate-800/60;
+  }
+  .dashcode-app &.select__control--is-focused {
+    box-shadow: none;
+    @apply border-slate-600;
+  }
+  .dashcode-app &.react-select__control--is-focused {
+    box-shadow: none;
+    @apply border-slate-600;
+  }
+  .dashcode-app & .select__indicator svg {
+    cursor: pointer;
+    @apply text-slate-600;
+  }
+  .dashcode-app & .select__indicator-separator {
+    display: none;
+  }
+  .dashcode-app & .select__single-value {
+    @apply text-slate-600   text-sm;
+  }
+  .dashcode-app & .select__placeholder {
+    @apply text-slate-400;
+  }
+  .dashcode-app .has-error & .select__indicator svg {
+    @apply text-danger-500;
+  }
+  .select-borderless & {
+    border: 0;
+  }
+  .select-borderless & .select__indicators {
+    display: none;
+  }
+  .dark & {
+    @apply bg-slate-900 border-slate-700;
+  }
+  .dark & .select__indicator svg {
+    @apply fill-slate-500;
+  }
+  .dark & .select__input {
+    color: #cbd5e1 !important;
+  }
+  .dark & .select__indicator span {
+    color: #cbd5e1;
+  }
+
+  .dark & .select__single-value {
+    color: #cbd5e1;
+  }
+  .dark & .select__multi-value {
+    @apply bg-slate-700;
+  }
+  .dark & .select__multi-value .select__multi-value__label {
+    @apply text-slate-300;
+  }
+  .dark & .select__multi-value__remove svg {
+    fill: #cbd5e1;
+  }
+  .dark & .select__multi-value__remove:hover {
+    background-color: transparent !important;
+  }
+  .dark & .select__placeholder {
+    @apply text-slate-400;
+  }
+  html[dir="rtl"] & .select__loading-indicator {
+    flex-direction: row-reverse;
+  }
+}
+.select__input {
+  .dashcode-app .select__control & {
+    @apply text-slate-500;
+  }
+
+  .dashcode-app .react-select__control & {
+    @apply text-slate-500;
+  }
+  .dark .select__control & {
+    color: #cbd5e1 !important;
+  }
+}
+.react-select__control {
+  .dashcode-app & .select__input {
+    @apply text-slate-500;
+  }
+
+  .dashcode-app &.select__control--is-disabled {
+    @apply cursor-not-allowed;
+  }
+
+  .dashcode-app &.select__control--is-disabled .select__indicator-separator {
+    @apply bg-slate-50 text-slate-800 placeholder:text-slate-800/60;
+  }
+
+  .dashcode-app &.select__control--is-focused {
+    box-shadow: none;
+    @apply border-slate-600;
+  }
+
+  .dashcode-app &.react-select__control--is-focused {
+    box-shadow: none;
+    @apply border-slate-600;
+  }
+
+  .dashcode-app & .select__indicator svg {
+    cursor: pointer;
+    @apply text-slate-600;
+  }
+
+  .dashcode-app & .select__indicator-separator {
+    display: none;
+  }
+
+  .dashcode-app & .select__single-value {
+    @apply text-slate-600   text-sm;
+  }
+
+  .dashcode-app & .select__placeholder {
+    @apply text-slate-400;
+  }
+
+  .dashcode-app .has-error & .select__indicator svg {
+    @apply text-danger-500;
+  }
+}
+.select__control--is-disabled {
+  .dashcode-app &.select__control {
+    @apply cursor-not-allowed;
+  }
+
+  .dashcode-app &.react-select__control {
+    @apply cursor-not-allowed;
+  }
+  .dashcode-app &.select__control .select__indicator-separator {
+    @apply bg-slate-50 text-slate-800 placeholder:text-slate-800/60;
+  }
+
+  .dashcode-app &.react-select__control .select__indicator-separator {
+    @apply bg-slate-50 text-slate-800 placeholder:text-slate-800/60;
+  }
+}
+.select__indicator-separator {
+  .dashcode-app .select__control.select__control--is-disabled & {
+    @apply bg-slate-50 text-slate-800 placeholder:text-slate-800/60;
+  }
+
+  .dashcode-app .react-select__control.select__control--is-disabled & {
+    @apply bg-slate-50 text-slate-800 placeholder:text-slate-800/60;
+  }
+  .dashcode-app .select__control & {
+    display: none;
+  }
+
+  .dashcode-app .react-select__control & {
+    display: none;
+  }
+}
+.select__control--is-focused {
+  .dashcode-app &.select__control {
+    box-shadow: none;
+    @apply border-slate-600;
+  }
+
+  .dashcode-app &.react-select__control {
+    box-shadow: none;
+    @apply border-slate-600;
+  }
+}
+.react-select__control--is-focused {
+  .dashcode-app &.select__control {
+    box-shadow: none;
+    @apply border-slate-600;
+  }
+
+  .dashcode-app &.react-select__control {
+    box-shadow: none;
+    @apply border-slate-600;
+  }
+}
+.select__indicator {
+  .dashcode-app .select__control & svg {
+    cursor: pointer;
+    @apply text-slate-600;
+  }
+
+  .dashcode-app .react-select__control & svg {
+    cursor: pointer;
+    @apply text-slate-600;
+  }
+  .dashcode-app .has-error .select__control & svg {
+    @apply text-danger-500;
+  }
+
+  .dashcode-app .has-error .react-select__control & svg {
+    @apply text-danger-500;
+  }
+  .dark .select__control & svg {
+    @apply fill-slate-500;
+  }
+  .dark .select__control & span {
+    color: #cbd5e1;
+  }
+}
+.select__single-value {
+  .dashcode-app .select__control & {
+    @apply text-slate-600   text-sm;
+  }
+
+  .dashcode-app .react-select__control & {
+    @apply text-slate-600   text-sm;
+  }
+
+  .dark .select__control & {
+    color: #cbd5e1;
+  }
+}
+.select__placeholder {
+  .dashcode-app .select__control & {
+    @apply text-slate-400;
+  }
+
+  .dashcode-app .react-select__control & {
+    @apply text-slate-400;
+  }
+  .dark .select__control & {
+    @apply text-slate-400;
+  }
+}
+.select__menu {
+  .dashcode-app & .select__menu-list .select__option {
+    cursor: pointer;
+  }
+
+  .dashcode-app & .select__menu-list .react-select__option {
+    cursor: pointer;
+  }
+
+  .dashcode-app & .react-select__menu-list .select__option {
+    cursor: pointer;
+  }
+
+  .dashcode-app & .react-select__menu-list .react-select__option {
+    cursor: pointer;
+  }
+  .dashcode-app
+    &
+    .select__menu-list
+    .select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    &
+    .select__menu-list
+    .react-select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    &
+    .react-select__menu-list
+    .select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    &
+    .react-select__menu-list
+    .react-select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+  .dashcode-app
+    &
+    .select__menu-list
+    .select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app
+    &
+    .select__menu-list
+    .react-select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app
+    &
+    .react-select__menu-list
+    .select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app
+    &
+    .react-select__menu-list
+    .react-select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+  .dashcode-app & .select__menu-list .select__group .select__group-heading {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+
+  .dashcode-app
+    &
+    .react-select__menu-list
+    .select__group
+    .select__group-heading {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+  .dark & {
+    @apply bg-slate-800;
+  }
+  .dark & .select__menu-list .select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark & .select__menu-list .react-select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark & .react-select__menu-list .select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark
+    &
+    .react-select__menu-list
+    .react-select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+  .dark & .select__menu-list .select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark & .select__menu-list .react-select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark & .react-select__menu-list .select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark
+    &
+    .react-select__menu-list
+    .react-select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+}
+.select__menu-list {
+  .dashcode-app .select__menu & .select__option {
+    cursor: pointer;
+  }
+
+  .dashcode-app .select__menu & .react-select__option {
+    cursor: pointer;
+  }
+
+  .dashcode-app .react-select__menu & .select__option {
+    cursor: pointer;
+  }
+
+  .dashcode-app .react-select__menu & .react-select__option {
+    cursor: pointer;
+  }
+  .dashcode-app .select__menu & .select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    .select__menu
+    &
+    .react-select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    &
+    .select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    &
+    .react-select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+  .dashcode-app .select__menu & .select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app
+    .select__menu
+    &
+    .react-select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    &
+    .select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    &
+    .react-select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+  .dashcode-app .select__menu & .select__group .select__group-heading {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+
+  .dashcode-app .react-select__menu & .select__group .select__group-heading {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+  .dark .select__menu & .select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark .select__menu & .react-select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark .react-select__menu & .select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark .react-select__menu & .react-select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+  .dark .select__menu & .select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark .select__menu & .react-select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark .react-select__menu & .select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark
+    .react-select__menu
+    &
+    .react-select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+}
+.select__option {
+  .dashcode-app .select__menu .select__menu-list & {
+    cursor: pointer;
+  }
+
+  .dashcode-app .select__menu .react-select__menu-list & {
+    cursor: pointer;
+  }
+
+  .dashcode-app .react-select__menu .select__menu-list & {
+    cursor: pointer;
+  }
+
+  .dashcode-app .react-select__menu .react-select__menu-list & {
+    cursor: pointer;
+  }
+  .dashcode-app .select__menu .select__menu-list &.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    .select__menu
+    .react-select__menu-list
+    &.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    .select__menu-list
+    &.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    .react-select__menu-list
+    &.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+  .dashcode-app .select__menu .select__menu-list &.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app
+    .select__menu
+    .react-select__menu-list
+    &.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    .select__menu-list
+    &.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    .react-select__menu-list
+    &.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+  .dark .select__menu .select__menu-list &.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark .select__menu .react-select__menu-list &.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark .react-select__menu .select__menu-list &.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark
+    .react-select__menu
+    .react-select__menu-list
+    &.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+  .dark .select__menu .select__menu-list &.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark .select__menu .react-select__menu-list &.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark .react-select__menu .select__menu-list &.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark
+    .react-select__menu
+    .react-select__menu-list
+    &.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+}
+.react-select__option {
+  .dashcode-app .select__menu .select__menu-list & {
+    cursor: pointer;
+  }
+
+  .dashcode-app .select__menu .react-select__menu-list & {
+    cursor: pointer;
+  }
+
+  .dashcode-app .react-select__menu .select__menu-list & {
+    cursor: pointer;
+  }
+
+  .dashcode-app .react-select__menu .react-select__menu-list & {
+    cursor: pointer;
+  }
+
+  .dashcode-app .select__menu .select__menu-list &.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    .select__menu
+    .react-select__menu-list
+    &.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    .select__menu-list
+    &.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    .react-select__menu-list
+    &.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app .select__menu .select__menu-list &.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app
+    .select__menu
+    .react-select__menu-list
+    &.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    .select__menu-list
+    &.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    .react-select__menu-list
+    &.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dark .select__menu .select__menu-list &.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark .select__menu .react-select__menu-list &.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark .react-select__menu .select__menu-list &.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark
+    .react-select__menu
+    .react-select__menu-list
+    &.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark .select__menu .select__menu-list &.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark .select__menu .react-select__menu-list &.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark .react-select__menu .select__menu-list &.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark
+    .react-select__menu
+    .react-select__menu-list
+    &.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+}
+.react-select__menu-list {
+  .dashcode-app .select__menu & .select__option {
+    cursor: pointer;
+  }
+
+  .dashcode-app .select__menu & .react-select__option {
+    cursor: pointer;
+  }
+
+  .dashcode-app .react-select__menu & .select__option {
+    cursor: pointer;
+  }
+
+  .dashcode-app .react-select__menu & .react-select__option {
+    cursor: pointer;
+  }
+
+  .dashcode-app .select__menu & .select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    .select__menu
+    &
+    .react-select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    &
+    .select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    &
+    .react-select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app .select__menu & .select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app
+    .select__menu
+    &
+    .react-select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    &
+    .select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    &
+    .react-select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app .select__menu & .select__group .select__group-heading {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+
+  .dashcode-app .react-select__menu & .select__group .select__group-heading {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+
+  .dark .select__menu & .select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark .select__menu & .react-select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark .react-select__menu & .select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark .react-select__menu & .react-select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark .select__menu & .select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark .select__menu & .react-select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark .react-select__menu & .select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark
+    .react-select__menu
+    &
+    .react-select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+}
+.react-select__menu {
+  .dashcode-app & .select__menu-list .select__option {
+    cursor: pointer;
+  }
+
+  .dashcode-app & .select__menu-list .react-select__option {
+    cursor: pointer;
+  }
+
+  .dashcode-app & .react-select__menu-list .select__option {
+    cursor: pointer;
+  }
+
+  .dashcode-app & .react-select__menu-list .react-select__option {
+    cursor: pointer;
+  }
+
+  .dashcode-app
+    &
+    .select__menu-list
+    .select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    &
+    .select__menu-list
+    .react-select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    &
+    .react-select__menu-list
+    .select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    &
+    .react-select__menu-list
+    .react-select__option.select__option--is-focused {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    &
+    .select__menu-list
+    .select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app
+    &
+    .select__menu-list
+    .react-select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app
+    &
+    .react-select__menu-list
+    .select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app
+    &
+    .react-select__menu-list
+    .react-select__option.select__option--is-selected {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app & .select__menu-list .select__group .select__group-heading {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+
+  .dashcode-app
+    &
+    .react-select__menu-list
+    .select__group
+    .select__group-heading {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+
+  .dark & .select__menu-list .select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark & .select__menu-list .react-select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark & .react-select__menu-list .select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark
+    &
+    .react-select__menu-list
+    .react-select__option.select__option--is-focused {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark & .select__menu-list .select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark & .select__menu-list .react-select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark & .react-select__menu-list .select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark
+    &
+    .react-select__menu-list
+    .react-select__option.select__option--is-selected {
+    @apply bg-slate-900 text-slate-200;
+  }
+}
+.select__option--is-focused {
+  .dashcode-app .select__menu .select__menu-list &.select__option {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app .select__menu .select__menu-list &.react-select__option {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app .select__menu .react-select__menu-list &.select__option {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app .select__menu .react-select__menu-list &.react-select__option {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app .react-select__menu .select__menu-list &.select__option {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app .react-select__menu .select__menu-list &.react-select__option {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app .react-select__menu .react-select__menu-list &.select__option {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    .react-select__menu-list
+    &.react-select__option {
+    @apply bg-secondary-500/30 text-slate-900;
+  }
+  .dark .select__menu .select__menu-list &.select__option {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark .select__menu .select__menu-list &.react-select__option {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark .select__menu .react-select__menu-list &.select__option {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark .select__menu .react-select__menu-list &.react-select__option {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark .react-select__menu .select__menu-list &.select__option {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark .react-select__menu .select__menu-list &.react-select__option {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark .react-select__menu .react-select__menu-list &.select__option {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+
+  .dark .react-select__menu .react-select__menu-list &.react-select__option {
+    @apply bg-slate-500/50 text-slate-300;
+  }
+}
+.select__option--is-selected {
+  .dashcode-app .select__menu .select__menu-list &.select__option {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app .select__menu .select__menu-list &.react-select__option {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app .select__menu .react-select__menu-list &.select__option {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app .select__menu .react-select__menu-list &.react-select__option {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app .react-select__menu .select__menu-list &.select__option {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app .react-select__menu .select__menu-list &.react-select__option {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app .react-select__menu .react-select__menu-list &.select__option {
+    @apply bg-secondary-900 text-slate-200;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    .react-select__menu-list
+    &.react-select__option {
+    @apply bg-secondary-900 text-slate-200;
+  }
+  .dark .select__menu .select__menu-list &.select__option {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark .select__menu .select__menu-list &.react-select__option {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark .select__menu .react-select__menu-list &.select__option {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark .select__menu .react-select__menu-list &.react-select__option {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark .react-select__menu .select__menu-list &.select__option {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark .react-select__menu .select__menu-list &.react-select__option {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark .react-select__menu .react-select__menu-list &.select__option {
+    @apply bg-slate-900 text-slate-200;
+  }
+
+  .dark .react-select__menu .react-select__menu-list &.react-select__option {
+    @apply bg-slate-900 text-slate-200;
+  }
+}
+.select__group {
+  .dashcode-app .select__menu .select__menu-list & .select__group-heading {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+
+  .dashcode-app
+    .select__menu
+    .react-select__menu-list
+    &
+    .select__group-heading {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    .select__menu-list
+    &
+    .select__group-heading {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+
+  .dashcode-app
+    .react-select__menu
+    .react-select__menu-list
+    &
+    .select__group-heading {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+}
+.select__group-heading {
+  .dashcode-app .select__menu .select__menu-list .select__group & {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+
+  .dashcode-app .select__menu .react-select__menu-list .select__group & {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+
+  .dashcode-app .react-select__menu .select__menu-list .select__group & {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+
+  .dashcode-app .react-select__menu .react-select__menu-list .select__group & {
+    margin-bottom: 0.5rem;
+    @apply text-slate-900 capitalize;
+    font-weight: bolder;
+    font-size: inherit;
+  }
+}
+.select__multi-value {
+  .dashcode-app & {
+    @apply text-white bg-slate-900;
+    border-radius: 3px;
+    margin: 0 0.7rem 0 0;
+  }
+  .dashcode-app & .select__multi-value__label {
+    @apply text-white;
+    font-size: 0.85rem;
+    border-radius: 10px;
+    padding: 0.26rem 0.6rem;
+  }
+  .dashcode-app & .select__multi-value__remove {
+    padding-left: 0;
+    padding-right: 0.5rem;
+  }
+  .dashcode-app & .select__multi-value__remove:hover {
+    background-color: inherit;
+    color: inherit;
+  }
+  .dashcode-app & .select__multi-value__remove svg {
+    height: 0.85rem;
+    width: 0.85rem;
+  }
+  .dashcode-app & .select__multi-value__remove svg:hover {
+    cursor: pointer;
+  }
+  .dark .select__control & {
+    @apply bg-slate-700;
+  }
+  .dark .select__control & .select__multi-value__label {
+    @apply text-slate-300;
+  }
+}
+.react-select__multi-value {
+  .dashcode-app & {
+    @apply text-white bg-slate-900;
+    border-radius: 3px;
+    margin: 0 0.7rem 0 0;
+  }
+
+  .dashcode-app & .select__multi-value__label {
+    @apply text-white;
+    font-size: 0.85rem;
+    border-radius: 10px;
+    padding: 0.26rem 0.6rem;
+  }
+
+  .dashcode-app & .select__multi-value__remove {
+    padding-left: 0;
+    padding-right: 0.5rem;
+  }
+
+  .dashcode-app & .select__multi-value__remove:hover {
+    background-color: inherit;
+    color: inherit;
+  }
+
+  .dashcode-app & .select__multi-value__remove svg {
+    height: 0.85rem;
+    width: 0.85rem;
+  }
+
+  .dashcode-app & .select__multi-value__remove svg:hover {
+    cursor: pointer;
+  }
+}
+.select__multi-value__label {
+  .dashcode-app .select__multi-value & {
+    @apply text-white;
+    font-size: 0.85rem;
+    border-radius: 10px;
+    padding: 0.26rem 0.6rem;
+  }
+
+  .dashcode-app .react-select__multi-value & {
+    @apply text-white;
+    font-size: 0.85rem;
+    border-radius: 10px;
+    padding: 0.26rem 0.6rem;
+  }
+  .dark .select__control .select__multi-value & {
+    @apply text-slate-300;
+  }
+}
+.select__multi-value__remove {
+  .dashcode-app .select__multi-value & {
+    padding-left: 0;
+    padding-right: 0.5rem;
+  }
+
+  .dashcode-app .react-select__multi-value & {
+    padding-left: 0;
+    padding-right: 0.5rem;
+  }
+  .dashcode-app .select__multi-value &:hover {
+    background-color: inherit;
+    color: inherit;
+  }
+
+  .dashcode-app .react-select__multi-value &:hover {
+    background-color: inherit;
+    color: inherit;
+  }
+  .dashcode-app .select__multi-value & svg {
+    height: 0.85rem;
+    width: 0.85rem;
+  }
+
+  .dashcode-app .react-select__multi-value & svg {
+    height: 0.85rem;
+    width: 0.85rem;
+  }
+  .dashcode-app .select__multi-value & svg:hover {
+    cursor: pointer;
+  }
+
+  .dashcode-app .react-select__multi-value & svg:hover {
+    cursor: pointer;
+  }
+  .dark .select__control & svg {
+    fill: #cbd5e1;
+  }
+  .dark .select__control &:hover {
+    background-color: transparent !important;
+  }
+}
+.select-borderless {
+  & .select__control {
+    border: 0;
+  }
+  & .select__control .select__indicators {
+    display: none;
+  }
+}
+.select__indicators {
+  .select-borderless .select__control & {
+    display: none;
+  }
+}
+.select__loading-indicator {
+  html[dir="rtl"] .select__control & {
+    flex-direction: row-reverse;
+  }
+}
+.pagination {
+  @apply flex items-center space-x-4 flex-wrap rtl:space-x-reverse;
+  & li .prev-next-btn:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+  & li a {
+    @apply bg-slate-100 dark:bg-slate-700 dark:text-slate-400 text-slate-900 text-sm font-normal rounded-sm leading-[16px] flex h-6 w-6 items-center justify-center transition-all duration-150;
+  }
+  & li div {
+    @apply bg-slate-100 dark:bg-slate-700 dark:text-slate-400 text-slate-900 text-sm font-normal rounded-sm leading-[16px] flex h-6 w-6 items-center justify-center transition-all duration-150;
+  }
+  & li .page-link {
+    @apply bg-slate-100 dark:bg-slate-700 dark:text-slate-400 text-slate-900 text-sm font-normal rounded-sm leading-[16px] flex h-6 w-6 items-center justify-center transition-all duration-150;
+  }
+  & li a.active {
+    @apply bg-slate-900 dark:bg-slate-600  dark:text-slate-200 text-white font-medium;
+  }
+  & li div.active {
+    @apply bg-slate-900 dark:bg-slate-600  dark:text-slate-200 text-white font-medium;
+  }
+  & li .page-link.active {
+    @apply bg-slate-900 dark:bg-slate-600  dark:text-slate-200 text-white font-medium;
+  }
+  &.bordered {
+    @apply border border-[#D8DEE6] rounded-[3px] py-1 px-2;
+  }
+  &.bordered li {
+    @apply text-slate-500;
+  }
+  &.bordered li:first-child button {
+    @apply hover:bg-slate-900 hover:text-white transition duration-150 text-slate-500 h-6 w-6 flex items-center justify-center rounded-sm;
+  }
+  &.bordered li:last-child button {
+    @apply hover:bg-slate-900 hover:text-white transition duration-150 text-slate-500 h-6 w-6 flex items-center justify-center rounded-sm;
+  }
+  &.bordered li a {
+    @apply bg-transparent text-slate-500;
+  }
+  &.bordered li div {
+    @apply bg-transparent text-slate-500;
+  }
+  &.bordered li .page-link {
+    @apply bg-transparent text-slate-500;
+  }
+  &.bordered li a.active {
+    @apply bg-slate-900 text-white;
+  }
+  &.bordered li div.active {
+    @apply bg-slate-900 text-white;
+  }
+  &.bordered li .page-link.active {
+    @apply bg-slate-900 text-white;
+  }
+  &.border-group {
+    @apply border border-[#D8DEE6] rounded-[3px]  px-0 space-x-0 rtl:space-x-reverse;
+  }
+  &.border-group li {
+    @apply border-r border-[#D8DEE5] h-full flex flex-col  justify-center px-3  last:border-none text-slate-500;
+  }
+  &.border-group li a {
+    @apply bg-transparent text-slate-500 dark:text-white h-auto w-auto;
+  }
+  &.border-group li div {
+    @apply bg-transparent text-slate-500 dark:text-white h-auto w-auto;
+  }
+  &.border-group li .page-link {
+    @apply bg-transparent text-slate-500 dark:text-white h-auto w-auto;
+  }
+  &.border-group li a.active {
+    @apply text-slate-900 dark:text-white text-lg;
+  }
+  &.border-group li div.active {
+    @apply text-slate-900 dark:text-white text-lg;
+  }
+  &.border-group li .page-link.active {
+    @apply text-slate-900 dark:text-white text-lg;
+  }
+}
+.prev-next-btn {
+  .pagination li &:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+}
+.page-link {
+  .pagination li & {
+    @apply bg-slate-100 dark:bg-slate-700 dark:text-slate-400 text-slate-900 text-sm font-normal rounded-sm leading-[16px] flex h-6 w-6 items-center justify-center transition-all duration-150;
+  }
+
+  .pagination li &.active {
+    @apply bg-slate-900 dark:bg-slate-600  dark:text-slate-200 text-white font-medium;
+  }
+
+  .pagination.bordered li & {
+    @apply bg-transparent text-slate-500;
+  }
+
+  .pagination.bordered li &.active {
+    @apply bg-slate-900 text-white;
+  }
+
+  .pagination.border-group li & {
+    @apply bg-transparent text-slate-500 dark:text-white h-auto w-auto;
+  }
+
+  .pagination.border-group li &.active {
+    @apply text-slate-900 dark:text-white text-lg;
+  }
+}
+.bordered {
+  &.pagination {
+    @apply border border-[#D8DEE6] rounded-[3px] py-1 px-2;
+  }
+  &.pagination li {
+    @apply text-slate-500;
+  }
+  &.pagination li:first-child button {
+    @apply hover:bg-slate-900 hover:text-white transition duration-150 text-slate-500 h-6 w-6 flex items-center justify-center rounded-sm;
+  }
+  & .pagination li:last-child button {
+    @apply hover:bg-slate-900 hover:text-white transition duration-150 text-slate-500 h-6 w-6 flex items-center justify-center rounded-sm;
+  }
+  &.pagination li a {
+    @apply bg-transparent text-slate-500;
+  }
+  & .pagination li div {
+    @apply bg-transparent text-slate-500;
+  }
+  & .pagination li .page-link {
+    @apply bg-transparent text-slate-500;
+  }
+  &.pagination li a.active {
+    @apply bg-slate-900 text-white;
+  }
+  & .pagination li div.active {
+    @apply bg-slate-900 text-white;
+  }
+  & .pagination li .page-link.active {
+    @apply bg-slate-900 text-white;
+  }
+}
+.border-group {
+  &.pagination {
+    @apply border border-[#D8DEE6] rounded-[3px]  px-0 space-x-0 rtl:space-x-reverse;
+  }
+  &.pagination li {
+    @apply border-r border-[#D8DEE5] h-full flex flex-col  justify-center px-3  last:border-none text-slate-500;
+  }
+  &.pagination li a {
+    @apply bg-transparent text-slate-500 dark:text-white h-auto w-auto;
+  }
+  & .pagination li div {
+    @apply bg-transparent text-slate-500 dark:text-white h-auto w-auto;
+  }
+  & .pagination li .page-link {
+    @apply bg-transparent text-slate-500 dark:text-white h-auto w-auto;
+  }
+  &.pagination li a.active {
+    @apply text-slate-900 dark:text-white text-lg;
+  }
+  & .pagination li div.active {
+    @apply text-slate-900 dark:text-white text-lg;
+  }
+  & .pagination li .page-link.active {
+    @apply text-slate-900 dark:text-white text-lg;
+  }
+}
+.breadcrumbs {
+  @apply flex text-sm space-x-2 items-center;
+  & li {
+    @apply relative flex items-center space-x-2 capitalize font-normal rtl:space-x-reverse;
+  }
+  & li .breadcrumbs-icon {
+    @apply text-lg text-secondary-500 dark:text-slate-500;
+  }
+}
+.breadcrumbs-icon {
+  .breadcrumbs li & {
+    @apply text-lg text-secondary-500 dark:text-slate-500;
+  }
+}
+.has-sticky-header {
+  @apply my-5 top-5 rounded-md sticky  z-999;
+  & .app-header {
+    @apply md:mx-6 mx-[15px] rounded-md;
+  }
+  &::after {
+    position: absolute;
+    z-index: -10;
+    --tw-backdrop-blur: blur(12px);
+    -webkit-backdrop-filter: var(--tw-backdrop-blur)
+      var(--tw-backdrop-brightness) var(--tw-backdrop-contrast)
+      var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate)
+      var(--tw-backdrop-invert) var(--tw-backdrop-opacity)
+      var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+    backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness)
+      var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale)
+      var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert)
+      var(--tw-backdrop-opacity) var(--tw-backdrop-saturate)
+      var(--tw-backdrop-sepia);
+    --tw-content: "";
+    content: var(--tw-content);
+    background: linear-gradient(
+      180deg,
+      rgba(var(--v-theme-background), 70%) 44%,
+      rgba(var(--v-theme-background), 43%) 73%,
+      rgba(var(--v-theme-background), 0%)
+    );
+    background-repeat: repeat;
+    block-size: 5.5rem;
+    inset-block-start: -1.5rem;
+    inset-inline-end: 0;
+    inset-inline-start: 0;
+    -webkit-mask: linear-gradient(black, black 18%, transparent 100%);
+    mask: linear-gradient(black, black 18%, transparent 100%);
+  }
+}
+.app-header {
+  .has-sticky-header & {
+    @apply md:mx-6 mx-[15px] rounded-md;
+  }
+}
+.main-menu {
+  & > ul > li {
+    @apply inline-block relative;
+  }
+  & > ul > li > a {
+    @apply relative flex capitalize items-start text-sm font-medium leading-6 text-slate-600 dark:text-slate-300 2xl:px-6 xl:px-5 py-6  transition-all duration-150;
+  }
+  & > ul > li > a .icon-box {
+    @apply text-slate-500 dark:text-slate-300 transition-all duration-150 text-lg;
+  }
+  & > ul > li:hover > a {
+    @apply text-primary-500;
+  }
+  & > ul > li:hover > a .icon-box {
+    @apply text-primary-500;
+  }
+  & > ul > li.has-megamenu {
+    @apply static;
+  }
+  & > ul > li.menu-item-has-children > ul.sub-menu {
+    @apply absolute  left-0 min-w-[178px] w-max top-[110%] px-4 py-3  bg-white  
+  rounded-[4px] dark:bg-slate-800 z-999 invisible opacity-0 transition-all duration-150
+  shadow-base2;
+  }
+  & > ul > li.menu-item-has-children > .rt-mega-menu {
+    @apply absolute  left-0 min-w-[178px] w-max top-[110%] px-4 py-3  bg-white  
+  rounded-[4px] dark:bg-slate-800 z-999 invisible opacity-0 transition-all duration-150
+  shadow-base2;
+  }
+  & > ul > li.menu-item-has-children > .rt-mega-menu {
+    @apply max-w-[1170px]  left-1/2  -translate-x-1/2;
+  }
+  & > ul > li.menu-item-has-children > .rt-mega-menu {
+    @apply w-full;
+  }
+  & > ul > li.menu-item-has-children:hover > ul.sub-menu {
+    @apply top-full visible opacity-100;
+  }
+  & > ul > li.menu-item-has-children:hover > .rt-mega-menu {
+    @apply top-full visible opacity-100;
+  }
+  & > ul > li.menu-item-has-children > ul.sub-menu li {
+    @apply relative pb-2 last:pb-0;
+  }
+  & > ul > li.menu-item-has-children > ul.sub-menu li a {
+    @apply text-sm  font-normal   text-slate-600 dark:text-slate-300 dark:hover:text-primary-500 capitalize py-1 last:pb-0 block hover:text-primary-500;
+  }
+}
+@utility icon-box {
+  .main-menu > ul > li > a & {
+    @apply text-slate-500 dark:text-slate-300 transition-all duration-150 text-lg;
+  }
+  .main-menu > ul > li:hover > a & {
+    @apply text-primary-500;
+  }
+  .item-has-children .parent_active & {
+    @apply text-slate-700 dark:text-slate-200;
+  }
+  .menu-item-active .menu-link & {
+    @apply text-white dark:text-slate-300;
+  }
+}
+.has-megamenu {
+  .main-menu > ul > &li {
+    @apply static;
+  }
+}
+.menu-item-has-children {
+  .main-menu > ul > &li > ul.sub-menu {
+    @apply absolute  left-0 min-w-[178px] w-max top-[110%] px-4 py-3  bg-white  
+  rounded-[4px] dark:bg-slate-800 z-999 invisible opacity-0 transition-all duration-150
+  shadow-base2;
+  }
+
+  .main-menu > ul > &li > .rt-mega-menu {
+    @apply absolute  left-0 min-w-[178px] w-max top-[110%] px-4 py-3  bg-white  
+  rounded-[4px] dark:bg-slate-800 z-999 invisible opacity-0 transition-all duration-150
+  shadow-base2;
+  }
+  .main-menu > ul > &li > .rt-mega-menu {
+    @apply max-w-[1170px]  left-1/2  -translate-x-1/2;
+  }
+  .main-menu > ul > &li > .rt-mega-menu {
+    @apply w-full;
+  }
+  .main-menu > ul > &li:hover > ul.sub-menu {
+    @apply top-full visible opacity-100;
+  }
+
+  .main-menu > ul > &li:hover > .rt-mega-menu {
+    @apply top-full visible opacity-100;
+  }
+  .main-menu > ul > &li > ul.sub-menu li {
+    @apply relative pb-2 last:pb-0;
+  }
+  .main-menu > ul > &li > ul.sub-menu li a {
+    @apply text-sm  font-normal   text-slate-600 dark:text-slate-300 dark:hover:text-primary-500 capitalize py-1 last:pb-0 block hover:text-primary-500;
+  }
+}
+.sub-menu {
+  .main-menu > ul > li.menu-item-has-children > &ul {
+    @apply absolute  left-0 min-w-[178px] w-max top-[110%] px-4 py-3  bg-white  
+  rounded-[4px] dark:bg-slate-800 z-999 invisible opacity-0 transition-all duration-150
+  shadow-base2;
+  }
+  .main-menu > ul > li.menu-item-has-children:hover > &ul {
+    @apply top-full visible opacity-100;
+  }
+  .main-menu > ul > li.menu-item-has-children > &ul li {
+    @apply relative pb-2 last:pb-0;
+  }
+  .main-menu > ul > li.menu-item-has-children > &ul li a {
+    @apply text-sm  font-normal   text-slate-600 dark:text-slate-300 dark:hover:text-primary-500 capitalize py-1 last:pb-0 block hover:text-primary-500;
+  }
+  .close_sidebar:not(.sidebar-hovered) .item-has-children &ul {
+    @apply ml-4 absolute left-full top-0 w-[230px] bg-white shadow-sm rounded-[4px] dark:bg-slate-800 z-999 px-4 pt-3 transition-all duration-150 invisible opacity-0;
+    display: block !important;
+  }
+}
+.rt-mega-menu {
+  .main-menu > ul > li.menu-item-has-children > & {
+    @apply absolute  left-0 min-w-[178px] w-max top-[110%] px-4 py-3  bg-white  
+  rounded-[4px] dark:bg-slate-800 z-999 invisible opacity-0 transition-all duration-150
+  shadow-base2;
+  }
+  .main-menu > ul > li.menu-item-has-children > & {
+    @apply max-w-[1170px]  left-1/2  -translate-x-1/2;
+  }
+  .main-menu > ul > li.menu-item-has-children > & {
+    @apply w-full;
+  }
+
+  .main-menu > ul > li.menu-item-has-children:hover > & {
+    @apply top-full visible opacity-100;
+  }
+  & a {
+    @apply dark:text-slate-300 dark:hover:text-primary-500 text-sm  py-[6px] block;
+  }
+}
+.sidebar-wrapper {
+  @apply fixed ltr:left-0 rtl:right-0 top-0   h-screen   z-999;
+  transition: width 0.2s cubic-bezier(0.39, 0.575, 0.565, 1);
+  will-change: width;
+  &.sidebar-hovered {
+    width: 248px !important;
+  }
+  @media print {
+    @apply hidden;
+  }
+}
+@utility nav-shadow {
+  background: linear-gradient(
+    rgb(255, 255, 255) 5%,
+    rgba(255, 255, 255, 0.75) 45%,
+    rgba(255, 255, 255, 0.2) 80%,
+    transparent
+  );
+  .dark & {
+    background: linear-gradient(
+      #1e293b 5%,
+      rgba(30, 41, 59, 0.75) 45%,
+      rgba(30, 41, 59, 0.2) 80%,
+      transparent
+    );
+  }
+}
+.sidebar-hovered {
+  &.sidebar-wrapper {
+    width: 248px !important;
+  }
+}
+.logo-segment {
+  &.logo-hovered {
+    width: 248px !important;
+  }
+}
+.logo-hovered {
+  &.logo-segment {
+    width: 248px !important;
+  }
+}
+.sidebar-menu-container {
+  height: calc(100% - 4.45rem) !important;
+}
+.submenu_enter-active {
+  overflow: hidden;
+  transition: all 0.34s linear;
+}
+.submenu_leave-active {
+  overflow: hidden;
+  transition: all 0.34s linear;
+}
+.not-collapsed {
+  & .has-icon {
+    transition: all 0.34s linear;
+  }
+  & .has-icon {
+    @apply transform rotate-180;
+  }
+}
+.has-icon {
+  .not-collapsed & {
+    transition: all 0.34s linear;
+  }
+  .not-collapsed & {
+    @apply transform rotate-180;
+  }
+}
+.single-sidebar-menu {
+  @apply relative;
+  & .menulabel {
+    @apply text-slate-800 dark:text-slate-300 text-xs font-semibold uppercase mb-4 mt-4;
+  }
+  & > .menu-link {
+    @apply flex text-slate-600 font-medium dark:text-slate-300 text-sm capitalize px-[10px] py-3 rounded-[4px] cursor-pointer;
+  }
+  & .menu-icon {
+    @apply icon-box inline-flex items-center text-slate-600 dark:text-slate-300 text-lg ltr:mr-3 rtl:ml-3;
+  }
+  .close_sidebar:not(.sidebar-hovered) & .text-box {
+    @apply absolute  left-full ml-5 w-[180px] top-0 px-4 py-3 bg-white shadow-sm rounded-[4px] dark:bg-slate-800 z-999 invisible opacity-0 transition-all duration-150;
+  }
+  .close_sidebar:not(.sidebar-hovered) &:hover .text-box {
+    @apply visible opacity-100;
+  }
+}
+.menulabel {
+  .single-sidebar-menu & {
+    @apply text-slate-800 dark:text-slate-300 text-xs font-semibold uppercase mb-4 mt-4;
+  }
+  .close_sidebar & {
+    @apply hidden;
+  }
+}
+.menu-link {
+  .single-sidebar-menu > & {
+    @apply flex text-slate-600 font-medium dark:text-slate-300 text-sm capitalize px-[10px] py-3 rounded-[4px] cursor-pointer;
+  }
+  .menu-item-active & {
+    @apply bg-slate-800 dark:bg-slate-700;
+  }
+  .menu-item-active & .icon-box {
+    @apply text-white dark:text-slate-300;
+  }
+
+  .menu-item-active & .menu-icon {
+    @apply text-white dark:text-slate-300;
+  }
+
+  .menu-item-active & .text-box {
+    @apply text-white dark:text-slate-300;
+  }
+}
+.menu-icon {
+  .single-sidebar-menu & {
+    @apply icon-box inline-flex items-center text-slate-600 dark:text-slate-300 text-lg ltr:mr-3 rtl:ml-3;
+  }
+
+  .item-has-children .parent_active & {
+    @apply text-slate-700 dark:text-slate-200;
+  }
+
+  .menu-item-active .menu-link & {
+    @apply text-white dark:text-slate-300;
+  }
+}
+.item-has-children {
+  & .menu-arrow {
+    @apply h-5 w-5 text-base text-slate-300 bg-slate-100 dark:bg-[#334155] dark:text-slate-300 rounded-full flex justify-center items-center;
+  }
+  .close_sidebar:not(.sidebar-hovered) & .text-box {
+    @apply hidden;
+  }
+  .close_sidebar:not(.sidebar-hovered) & ul.sub-menu {
+    @apply ml-4 absolute left-full top-0 w-[230px] bg-white shadow-sm rounded-[4px] dark:bg-slate-800 z-999 px-4 pt-3 transition-all duration-150 invisible opacity-0;
+    display: block !important;
+  }
+  .close_sidebar:not(.sidebar-hovered) &:hover > ul {
+    @apply visible opacity-100;
+  }
+  & .parent_active {
+    @apply bg-secondary-500/20;
+  }
+  & .parent_active .icon-box {
+    @apply text-slate-700 dark:text-slate-200;
+  }
+  & .parent_active .menu-icon {
+    @apply text-slate-700 dark:text-slate-200;
+  }
+  & .parent_active .text-box {
+    @apply text-slate-700 dark:text-slate-200;
+  }
+  & .parent_active .menu-arrow {
+    @apply bg-secondary-500/30 text-slate-600/70 dark:text-white;
+  }
+}
+.menu-arrow {
+  .item-has-children & {
+    @apply h-5 w-5 text-base text-slate-300 bg-slate-100 dark:bg-[#334155] dark:text-slate-300 rounded-full flex justify-center items-center;
+  }
+  .close_sidebar:not(.sidebar-hovered) & {
+    @apply hidden;
+  }
+  .item-has-children .parent_active & {
+    @apply bg-secondary-500/30 text-slate-600/70 dark:text-white;
+  }
+}
+.close_sidebar {
+  & .menulabel {
+    @apply hidden;
+  }
+  &:not(.sidebar-hovered) .menu-arrow {
+    @apply hidden;
+  }
+  &:not(.sidebar-hovered) .single-sidebar-menu .text-box {
+    @apply absolute  left-full ml-5 w-[180px] top-0 px-4 py-3 bg-white shadow-sm rounded-[4px] dark:bg-slate-800 z-999 invisible opacity-0 transition-all duration-150;
+  }
+  &:not(.sidebar-hovered) .single-sidebar-menu:hover .text-box {
+    @apply visible opacity-100;
+  }
+  &:not(.sidebar-hovered) .item-has-children .text-box {
+    @apply hidden;
+  }
+  &:not(.sidebar-hovered) .item-has-children ul.sub-menu {
+    @apply ml-4 absolute left-full top-0 w-[230px] bg-white shadow-sm rounded-[4px] dark:bg-slate-800 z-999 px-4 pt-3 transition-all duration-150 invisible opacity-0;
+    display: block !important;
+  }
+  &:not(.sidebar-hovered) .item-has-children:hover > ul {
+    @apply visible opacity-100;
+  }
+  &:not(.sidebar-hovered) .menu-badge {
+    @apply hidden;
+  }
+}
+.menu-badge {
+  @apply py-1 px-2 text-xs capitalize font-semibold rounded-[.358rem] whitespace-nowrap align-baseline inline-flex bg-slate-900 text-slate-50 dark:bg-slate-700 dark:text-slate-300;
+  .close_sidebar:not(.sidebar-hovered) & {
+    @apply hidden;
+  }
+  .menu-item-active & {
+    @apply bg-slate-100  text-slate-900;
+  }
+}
+.text-box {
+  .close_sidebar:not(.sidebar-hovered) .single-sidebar-menu & {
+    @apply absolute  left-full ml-5 w-[180px] top-0 px-4 py-3 bg-white shadow-sm rounded-[4px] dark:bg-slate-800 z-999 invisible opacity-0 transition-all duration-150;
+  }
+  .close_sidebar:not(.sidebar-hovered) .single-sidebar-menu:hover & {
+    @apply visible opacity-100;
+  }
+  .close_sidebar:not(.sidebar-hovered) .item-has-children & {
+    @apply hidden;
+  }
+
+  .item-has-children .parent_active & {
+    @apply text-slate-700 dark:text-slate-200;
+  }
+
+  .menu-item-active .menu-link & {
+    @apply text-white dark:text-slate-300;
+  }
+}
+.parent_active {
+  .item-has-children & {
+    @apply bg-secondary-500/20;
+  }
+  .item-has-children & .icon-box {
+    @apply text-slate-700 dark:text-slate-200;
+  }
+
+  .item-has-children & .menu-icon {
+    @apply text-slate-700 dark:text-slate-200;
+  }
+
+  .item-has-children & .text-box {
+    @apply text-slate-700 dark:text-slate-200;
+  }
+  .item-has-children & .menu-arrow {
+    @apply bg-secondary-500/30 text-slate-600/70 dark:text-white;
+  }
+}
+.menu-item-active {
+  & .menu-link {
+    @apply bg-slate-800 dark:bg-slate-700;
+  }
+  & .menu-link .icon-box {
+    @apply text-white dark:text-slate-300;
+  }
+  & .menu-link .menu-icon {
+    @apply text-white dark:text-slate-300;
+  }
+  & .menu-link .text-box {
+    @apply text-white dark:text-slate-300;
+  }
+  & .menu-badge {
+    @apply bg-slate-100  text-slate-900;
+  }
+}
+@utility settings-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+@utility settings-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}
+@utility settings-exit {
+  opacity: 1;
+}
+@utility settings-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 300ms, transform 300ms;
+}
+.page-content {
+  @apply md:pt-6 md:pb-[37px] md:px-6 pt-[15px] px-[15px] pb-24;
+}
+@utility page-min-height {
+  min-height: calc(var(--vh, 1vh) * 100 - 133px);
+}
+.social-link {
+  @apply h-8 w-8 flex flex-col items-center justify-center border-black-500 dark:border-slate-700 border rounded-full text-slate-900 dark:text-slate-300 leading-none hover:bg-slate-900 dark:hover:bg-slate-700 hover:text-white transition duration-150;
+}
+.legend-ring {
+  & .apexcharts-legend-series:nth-child(1) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-primary-500/30 rtl:ml-4;
+  }
+  & .apexcharts-legend-series:nth-child(2) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-info-500/30 rtl:ml-4;
+  }
+  & .apexcharts-legend-series:nth-child(3) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-warning-500/30 rtl:ml-4;
+  }
+}
+.apexcharts-legend-series {
+  .legend-ring &:nth-child(1) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-primary-500/30 rtl:ml-4;
+  }
+  .legend-ring &:nth-child(2) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-info-500/30 rtl:ml-4;
+  }
+  .legend-ring &:nth-child(3) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-warning-500/30 rtl:ml-4;
+  }
+  .legend-ring2 &:nth-child(1) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-info-500/30 rtl:ml-4;
+  }
+  .legend-ring2 &:nth-child(2) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-warning-500/30 rtl:ml-4;
+  }
+  .legend-ring3 &:nth-child(1) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-success-500/30 rtl:ml-4;
+  }
+  .legend-ring3 &:nth-child(2) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-warning-500/30 rtl:ml-4;
+  }
+  .legend-ring3 &:nth-child(3) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-secondary-500/30 rtl:ml-4;
+  }
+  .legend-ring4 &:nth-child(1) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-primary-500/30 rtl:ml-4;
+  }
+  .legend-ring4 &:nth-child(2) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-warning-500/30 rtl:ml-4;
+  }
+}
+.apexcharts-legend-marker {
+  @apply h-[7px]! w-[7px]! top-0!;
+}
+.apexcharts-legend-marker > svg {
+  @apply rounded-full!;
+}
+
+.legend-ring .apexcharts-legend-series:nth-child(1) .apexcharts-legend-marker {
+  @apply ring-4 rounded-full ring-primary-500/30 rtl:ml-4;
+}
+.legend-ring .apexcharts-legend-series:nth-child(2) .apexcharts-legend-marker {
+  @apply ring-4 rounded-full ring-info-500/30 rtl:ml-4;
+}
+.legend-ring .apexcharts-legend-series:nth-child(3) .apexcharts-legend-marker {
+  @apply ring-4 rounded-full ring-warning-500/30 rtl:ml-4;
+}
+
+.legend-ring2 .apexcharts-legend-series:nth-child(1) .apexcharts-legend-marker {
+  @apply ring-4 rounded-full ring-info-500/30 rtl:ml-4;
+}
+.legend-ring2 .apexcharts-legend-series:nth-child(2) .apexcharts-legend-marker {
+  @apply ring-4 rounded-full ring-warning-500/30 rtl:ml-4;
+}
+
+.legend-ring3 .apexcharts-legend-series:nth-child(1) .apexcharts-legend-marker {
+  @apply ring-4 rounded-full ring-success-500/30 rtl:ml-4;
+}
+.legend-ring3 .apexcharts-legend-series:nth-child(2) .apexcharts-legend-marker {
+  @apply ring-4 rounded-full ring-warning-500/30 rtl:ml-4;
+}
+.legend-ring3 .apexcharts-legend-series:nth-child(3) .apexcharts-legend-marker {
+  @apply ring-4 rounded-full ring-secondary-500/30 rtl:ml-4;
+}
+
+.legend-ring4 .apexcharts-legend-series:nth-child(1) .apexcharts-legend-marker {
+  @apply ring-4 rounded-full ring-primary-500/30 rtl:ml-4;
+}
+.legend-ring4 .apexcharts-legend-series:nth-child(2) .apexcharts-legend-marker {
+  @apply ring-4 rounded-full ring-warning-500/30 rtl:ml-4;
+}
+
+/* RTL Margin fix */
+[dir="rtl"] .charts .apexcharts-legend-marker {
+  margin-left: 10px !important;
+}
+
+.legend-ring2 {
+  & .apexcharts-legend-series:nth-child(1) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-info-500/30 rtl:ml-4;
+  }
+  & .apexcharts-legend-series:nth-child(2) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-warning-500/30 rtl:ml-4;
+  }
+}
+.legend-ring3 {
+  & .apexcharts-legend-series:nth-child(1) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-success-500/30 rtl:ml-4;
+  }
+  & .apexcharts-legend-series:nth-child(2) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-warning-500/30 rtl:ml-4;
+  }
+  & .apexcharts-legend-series:nth-child(3) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-secondary-500/30 rtl:ml-4;
+  }
+}
+.legend-ring4 {
+  & .apexcharts-legend-series:nth-child(1) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-primary-500/30 rtl:ml-4;
+  }
+  & .apexcharts-legend-series:nth-child(2) .apexcharts-legend-marker {
+    @apply ring-4 rounded-full ring-warning-500/30 rtl:ml-4;
+  }
+}
+.charts {
+  [dir="rtl"] & .apexcharts-legend-marker {
+    margin-left: 10px !important;
+  }
+}
+@utility app_height {
+  height: calc(var(--vh, 1vh) * 100 - 12.2rem);
+}
+.email-icon {
+  @apply h-8 w-8 bg-slate-100 dark:bg-slate-900 dark:text-slate-200 text-slate-600 flex flex-col justify-center items-center text-base rounded-full cursor-pointer;
+}
+@utility chat-height {
+  height: calc(var(--vh, 1vh) * 100 - 12.1rem);
+  @media (max-width: 770px) {
+    height: calc(var(--vh, 1vh) * 100 - 10.5rem);
+  }
+}
+@utility contact-height {
+  height: calc(100% - 140px);
+}
+@utility msg-height {
+  height: calc(100% - 0px);
+}
+@utility parent-height {
+  height: calc(100% - 170px);
+}
+.msg-action-btn {
+  @apply md:h-8 md:w-8 h-6 w-6 cursor-pointer bg-slate-100 dark:bg-slate-900 dark:text-slate-400 text-slate-900 flex flex-col justify-center items-center md:text-xl text-sm rounded-full;
+}
+.info-500-list {
+  @apply text-xs text-slate-600;
+  & li {
+    @apply flex space-x-2;
+  }
+  & li span:nth-child(1) {
+    @apply font-medium flex-none text-right;
+  }
+  & li span:nth-child(2) {
+    @apply flex-1 text-right;
+  }
+}
+.ql-editor {
+  .dashcode-app & {
+    min-height: 120px;
+  }
+  .dashcode-app & {
+    @apply border-slate-200 dark:border-slate-700 border rounded-sm text-base;
+  }
+}
+.ql-toolbar {
+  .dashcode-app &.ql-snow {
+    @apply border-none p-0 mb-2;
+  }
+  .dark &.ql-snow .ql-picker.ql-expanded .ql-picker-label {
+    @apply bg-slate-700;
+  }
+  .dark &.ql-snow button:hover {
+    @apply bg-slate-700;
+  }
+
+  .dark .ql-snow & button:hover {
+    @apply bg-slate-700;
+  }
+
+  .dark &.ql-snow button:focus {
+    @apply bg-slate-700;
+  }
+
+  .dark .ql-snow & button:focus {
+    @apply bg-slate-700;
+  }
+
+  .dark &.ql-snow .ql-picker-label:hover {
+    @apply bg-slate-700;
+  }
+
+  .dark .ql-snow & .ql-picker-label:hover {
+    @apply bg-slate-700;
+  }
+
+  .dark &.ql-snow .ql-picker-item:hover {
+    @apply bg-slate-700;
+  }
+
+  .dark .ql-snow & .ql-picker-item:hover {
+    @apply bg-slate-700;
+  }
+}
+.ql-snow {
+  .dashcode-app &.ql-toolbar {
+    @apply border-none p-0 mb-2;
+  }
+  .dashcode-app &.ql-container {
+    @apply bg-[#FBFBFB] dark:bg-slate-900 border-none text-base;
+  }
+  .dark & .ql-stroke {
+    @apply stroke-slate-300;
+  }
+  .dark &.ql-toolbar .ql-picker.ql-expanded .ql-picker-label {
+    @apply bg-slate-700;
+  }
+  .dark &.ql-toolbar button:hover {
+    @apply bg-slate-700;
+  }
+
+  .dark & .ql-toolbar button:hover {
+    @apply bg-slate-700;
+  }
+
+  .dark &.ql-toolbar button:focus {
+    @apply bg-slate-700;
+  }
+
+  .dark & .ql-toolbar button:focus {
+    @apply bg-slate-700;
+  }
+
+  .dark &.ql-toolbar .ql-picker-label:hover {
+    @apply bg-slate-700;
+  }
+
+  .dark & .ql-toolbar .ql-picker-label:hover {
+    @apply bg-slate-700;
+  }
+
+  .dark &.ql-toolbar .ql-picker-item:hover {
+    @apply bg-slate-700;
+  }
+
+  .dark & .ql-toolbar .ql-picker-item:hover {
+    @apply bg-slate-700;
+  }
+  .dark & .ql-picker.ql-expanded .ql-picker-label {
+    @apply bg-slate-300 border-slate-700;
+  }
+}
+.ql-container {
+  .dashcode-app &.ql-snow {
+    @apply bg-[#FBFBFB] dark:bg-slate-900 border-none text-base;
+  }
+}
+.ql-stroke {
+  .dark .ql-snow & {
+    @apply stroke-slate-300;
+  }
+}
+.ql-picker {
+  .dark .ql-toolbar.ql-snow &.ql-expanded .ql-picker-label {
+    @apply bg-slate-700;
+  }
+  .dark .ql-snow &.ql-expanded .ql-picker-label {
+    @apply bg-slate-300 border-slate-700;
+  }
+}
+.ql-expanded {
+  .dark .ql-toolbar.ql-snow &.ql-picker .ql-picker-label {
+    @apply bg-slate-700;
+  }
+  .dark .ql-snow &.ql-picker .ql-picker-label {
+    @apply bg-slate-300 border-slate-700;
+  }
+}
+.ql-picker-label {
+  .dark .ql-toolbar.ql-snow .ql-picker.ql-expanded & {
+    @apply bg-slate-700;
+  }
+
+  .dark .ql-snow.ql-toolbar &:hover {
+    @apply bg-slate-700;
+  }
+
+  .dark .ql-snow .ql-toolbar &:hover {
+    @apply bg-slate-700;
+  }
+  .dark & {
+    @apply text-slate-300;
+  }
+  .dark .ql-snow .ql-picker.ql-expanded & {
+    @apply bg-slate-300 border-slate-700;
+  }
+}
+.ql-picker-item {
+  .dark .ql-snow.ql-toolbar &:hover {
+    @apply bg-slate-700;
+  }
+
+  .dark .ql-snow .ql-toolbar &:hover {
+    @apply bg-slate-700;
+  }
+}
+.date-label {
+  @apply text-xs text-slate-400 dark:text-slate-400 mb-1;
+}
+.date-text {
+  @apply text-xs text-slate-600 dark:text-slate-300 font-medium;
+}
+.icon-lists {
+  & li {
+    margin-right: 12px;
+    margin-bottom: 12px;
+  }
+}
+.date-range-custom {
+  @apply relative w-[140px]!;
+
+  & .input-class {
+    @apply opacity-0 cursor-pointer;
+  }
+  & .container-class {
+    @apply w-full h-[44px] bg-white dark:bg-slate-800 before:px-3  before:text-sm before:text-slate-900 rounded-sm cursor-pointer;
+  }
+  & .container-class:before {
+    content: "Weekly";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    left: calc(50% + 10px);
+  }
+  & .container-class:after {
+    content: url("https://api.iconify.design/heroicons/calendar.svg?width=18&height=18");
+    height: 20px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    left: calc(50% - 30px);
+  }
+  & .container-class > button {
+    @apply hidden;
+  }
+  .dark & .container-class::before {
+    @apply text-slate-300;
+  }
+  .dark & .container-class::after {
+    @apply text-slate-300;
+  }
+  .dark & .container-class:after {
+    content: url("https://api.iconify.design/heroicons/calendar.svg?color=white&width=18&height=18");
+  }
+}
+.input-class {
+  .date-range-custom & {
+    @apply opacity-0 cursor-pointer;
+  }
+  .date-range-custom2 & {
+    @apply opacity-0 cursor-pointer;
+  }
+}
+.container-class {
+  .date-range-custom & {
+    @apply w-full h-[44px] bg-white dark:bg-slate-800 before:px-3  before:text-sm before:text-slate-900 rounded-sm cursor-pointer;
+  }
+  .date-range-custom &:before {
+    content: "Weekly";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    left: calc(50% + 10px);
+  }
+  .date-range-custom &:after {
+    content: url("https://api.iconify.design/heroicons/calendar.svg?width=18&height=18");
+    height: 20px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    left: calc(50% - 30px);
+  }
+  .date-range-custom & > button {
+    @apply hidden;
+  }
+  .date-range-custom2 & {
+    @apply w-full h-[44px] bg-white dark:bg-slate-800 before:px-3  before:text-sm before:text-slate-900 rounded-sm cursor-pointer;
+  }
+  .date-range-custom2 &:before {
+    content: "Select date";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    padding-left: 30px;
+    width: 100%;
+    text-align: center;
+  }
+  .date-range-custom2 &:after {
+    content: url("https://api.iconify.design/heroicons-outline/filter.svg?width=18&height=18");
+    height: 20px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    left: calc(50% - 43px);
+  }
+  .date-range-custom2 & > button {
+    @apply hidden;
+  }
+  .dark .date-range-custom &::before {
+    @apply text-slate-300;
+  }
+  .dark .date-range-custom &::after {
+    @apply text-slate-300;
+  }
+
+  .dark .date-range-custom2 &::before {
+    @apply text-slate-300;
+  }
+
+  .dark .date-range-custom2 &::after {
+    @apply text-slate-300;
+  }
+  .dark .date-range-custom &:after {
+    content: url("https://api.iconify.design/heroicons/calendar.svg?color=white&width=18&height=18");
+  }
+  .dark .date-range-custom2 &:after {
+    content: url("https://api.iconify.design/heroicons-outline/filter.svg?color=white&width=18&height=18");
+  }
+}
+.date-range-custom2 {
+  @apply relative w-[160px];
+  & .input-class {
+    @apply opacity-0 cursor-pointer;
+  }
+  & .container-class {
+    @apply w-full h-[44px] bg-white dark:bg-slate-800 before:px-3  before:text-sm before:text-slate-900 rounded-sm cursor-pointer;
+  }
+  & .container-class:before {
+    content: "Select date";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    padding-left: 30px;
+    width: 100%;
+    text-align: center;
+  }
+  & .container-class:after {
+    content: url("https://api.iconify.design/heroicons-outline/filter.svg?width=18&height=18");
+    height: 20px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    left: calc(50% - 43px);
+  }
+  & .container-class > button {
+    @apply hidden;
+  }
+
+  .dark & .container-class::before {
+    @apply text-slate-300;
+  }
+
+  .dark & .container-class::after {
+    @apply text-slate-300;
+  }
+  .dark & .container-class:after {
+    content: url("https://api.iconify.design/heroicons-outline/filter.svg?color=white&width=18&height=18");
+  }
+}
+@utility profileAnimation-enter {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+@utility profileAnimation-enter-active {
+  opacity: 1;
+  transform: translateX(-120px);
+  transition: opacity 300ms, transform 300ms;
+}
+@utility profileAnimation-exit {
+  opacity: 1;
+}
+@utility profileAnimation-exit-active {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity 300ms, transform 300ms;
+}
+@utility slide-in-left-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+@utility slide-in-left-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}
+@utility slide-in-left-exit {
+  opacity: 1;
+}
+@utility slide-in-left-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 300ms, transform 300ms;
+}
+/*react date range picker*/
+.rdrDateRangePickerWrapper {
+  @apply bg-white dark:bg-slate-800 border-none;
+  .rdrDefinedRangesWrapper {
+    @apply bg-white dark:bg-slate-800 border-none;
+    .rdrStaticRanges {
+      @apply bg-white dark:bg-slate-800 border-none;
+      .rdrStaticRange {
+        @apply bg-white dark:bg-slate-800 border-none;
+      }
+      .rdrStaticRange:hover .rdrStaticRangeLabel,
+      .rdrStaticRange:focus .rdrStaticRangeLabel {
+        @apply bg-slate-900 text-white dark:bg-slate-700 dark:text-slate-300;
+      }
+    }
+  }
+}
+.rdrDateRangePickerWrapper {
+  @apply bg-white dark:bg-slate-800 border-none;
+  .rdrDateDisplayWrapper {
+    @apply bg-white dark:bg-slate-800 border-none;
+  }
+  .rdrCalendarWrapper {
+    @apply bg-white dark:bg-slate-800 border-none;
+    .rdrDay:not(.rdrDayPassive).rdrDayNumber span,
+    span {
+      &:where(.dark, .dark *) {
+        color: white;
+      }
+    }
+  }
+}
+
+.rdrCalendarWrapper {
+  .rdrMonthAndYearWrapper {
+    @apply bg-white dark:bg-slate-800 border-none;
+  }
+  .rdrMonth {
+    @apply bg-white dark:bg-slate-800 border-none;
+    .rdrDay:not(.rdrDayPassive).rdrDayNumber span,
+    span {
+      &:where(.dark, .dark *) {
+        color: white;
+      }
+    }
+  }
+}
+
+/*react date range picker*/
+
+.react-calendar {
+  @apply w-full! bg-white dark:bg-slate-800! border-none!;
+}
+.react-calendar {
+  .dashcode-app & {
+    @apply w-full! bg-white border-none!;
+  }
+  .dashcode-app.dark & {
+    @apply bg-slate-800;
+  }
+}
+.react-calendar__navigation__prev2-button {
+  .dashcode-app & {
+    @apply hidden;
+  }
+}
+.react-calendar__navigation__next2-button {
+  .dashcode-app & {
+    @apply hidden;
+  }
+}
+.react-calendar__navigation__label {
+  .dashcode-app & {
+    @apply text-slate-900  text-2xl;
+  }
+  .dashcode-app.dark & {
+    @apply text-slate-300;
+  }
+}
+.react-calendar__navigation {
+  .dashcode-app & button:enabled:hover {
+    @apply bg-transparent;
+  }
+
+  .dashcode-app & button:enabled:focus {
+    @apply bg-transparent;
+  }
+  .dashcode-app & {
+    @apply mb-2;
+  }
+}
+.react-calendar__navigation__arrow {
+  .dashcode-app & {
+    @apply text-4xl;
+  }
+}
+.react-calendar__month-view__weekdays__weekday {
+  .dashcode-app & {
+    @apply text-sm font-normal text-slate-600  capitalize p-0 mb-2;
+  }
+  .dashcode-app & abbr {
+    @apply no-underline;
+  }
+  .dashcode-app & .react-calendar__tile {
+    @apply text-slate-600;
+  }
+  .dashcode-app
+    &
+    .react-calendar__tile.react-calendar__month-view__days__day--weekend {
+    @apply text-danger-500;
+  }
+  .dashcode-app.dark & {
+    @apply text-slate-300;
+  }
+}
+.react-calendar__tile {
+  .dashcode-app .react-calendar__month-view__weekdays__weekday & {
+    @apply text-slate-600;
+  }
+  .dashcode-app
+    .react-calendar__month-view__weekdays__weekday
+    &.react-calendar__month-view__days__day--weekend {
+    @apply text-danger-500;
+  }
+  .dashcode-app & {
+    @apply text-sm font-normal  capitalize w-8 h-8 flex flex-col  items-center  justify-center  rounded-sm;
+  }
+  .dashcode-app.dark & {
+    @apply text-slate-400;
+  }
+  .dashcode-app.dark &.react-calendar__month-view__days__day--weekend {
+    @apply text-danger-500;
+  }
+  .dashcode-app.dark &:enabled:hover {
+    @apply bg-slate-700;
+  }
+
+  .dashcode-app.dark &:enabled:focus {
+    @apply bg-slate-700;
+  }
+}
+.react-calendar__month-view__days__day--weekend {
+  .dashcode-app
+    .react-calendar__month-view__weekdays__weekday
+    &.react-calendar__tile {
+    @apply text-danger-500;
+  }
+  .dashcode-app.dark &.react-calendar__tile {
+    @apply text-danger-500;
+  }
+}
+.react-calendar__tile--active {
+  .dashcode-app & {
+    @apply bg-slate-900 text-white;
+  }
+}
+.fc-toolbar-chunk {
+  .dashcode-app & button {
+    height: 50px;
+  }
+  .dashcode-app & button.fc-prev-button:after {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .dashcode-app & button.fc-next-button:after {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  @media (max-width: 981px) {
+    .dashcode-app & {
+      @apply space-y-4;
+    }
+  }
+}
+.fc-prev-button {
+  .dashcode-app .fc-toolbar-chunk &button:after {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+.fc-next-button {
+  .dashcode-app .fc-toolbar-chunk &button:after {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+.fc-button {
+  .dashcode-app & {
+    font-size: 14px !important;
+    line-height: 14px !important;
+    height: auto !important;
+    text-transform: capitalize !important;
+    font-family: Inter !important;
+    padding: 12px 20px 12px 20px !important;
+  }
+  @media (max-width: 981px) {
+    .dashcode-app .fc & {
+      padding: 0.4em 0.65em !important;
+    }
+  }
+}
+.fc {
+  .dashcode-app & .fc-button-primary {
+    background: transparent !important;
+    @apply text-slate-900 dark:text-white border-slate-100;
+  }
+  .dashcode-app & .fc-button-primary:not(:disabled):active {
+    background: #111112 !important;
+    color: #fff !important;
+  }
+
+  .dashcode-app & .fc-button-primary:not(:disabled).fc-button-active {
+    background: #111112 !important;
+    color: #fff !important;
+  }
+
+  .dashcode-app & .fc-button-primary:hover {
+    background: #111112 !important;
+    color: #fff !important;
+  }
+  .dashcode-app & .fc-button-primary:disabled {
+    background: #a0aec0 !important;
+    border-color: #a0aec0 !important;
+    @apply cursor-not-allowed;
+  }
+  .dashcode-app & .fc-daygrid-day.fc-day-today {
+    background: rgba(95, 99, 242, 0.04) !important;
+  }
+  .dashcode-app & .fc-button-primary:focus {
+    box-shadow: none !important;
+  }
+  .dashcode-app & .fc-toolbar-title {
+    @apply text-lg font-normal text-slate-600 dark:text-slate-300;
+  }
+  @media (max-width: 981px) {
+    .dashcode-app & .fc-toolbar {
+      display: block !important;
+    }
+    .dashcode-app & .fc-toolbar {
+      @apply space-y-4;
+    }
+    .dashcode-app & .fc-button {
+      padding: 0.4em 0.65em !important;
+    }
+  }
+  .dashcode-app & .fc-timegrid-axis-cushion {
+    @apply dark:text-slate-300;
+  }
+
+  .dashcode-app & .fc-timegrid-slot-label-cushion {
+    @apply dark:text-slate-300;
+  }
+  .dashcode-app & .fc-list-event:hover td {
+    @apply bg-inherit;
+  }
+  .dashcode-app & .fc-list-event-dot {
+    @apply hidden;
+  }
+  .dark & .fc-day-other .fc-daygrid-day-top {
+    @apply opacity-70;
+  }
+  .dark & .fc-button-primary {
+    @apply border-slate-600 text-slate-300;
+  }
+  .dark & .fc-toolbar-title {
+    @apply text-slate-300;
+  }
+  .dark & .fc-button-primary:not(:disabled):active {
+    background: #0f172a !important;
+  }
+
+  .dark & .fc-button-primary:not(:disabled).fc-button-active {
+    background: #0f172a !important;
+  }
+
+  .dark & .fc-button-primary:hover {
+    background: #0f172a !important;
+  }
+  .dark & .fc-button-primary:disabled {
+    background: #334155 !important;
+    border-color: #334155 !important;
+  }
+  .dark & .fc-daygrid-day.fc-day-today {
+    background: #334155 !important;
+  }
+}
+.fc-button-primary {
+  .dashcode-app .fc & {
+    background: transparent !important;
+    @apply text-slate-900 dark:text-white border-slate-100;
+  }
+  .dashcode-app .fc &:not(:disabled):active {
+    background: #111112 !important;
+    color: #fff !important;
+  }
+
+  .dashcode-app .fc &:not(:disabled).fc-button-active {
+    background: #111112 !important;
+    color: #fff !important;
+  }
+
+  .dashcode-app .fc &:hover {
+    background: #111112 !important;
+    color: #fff !important;
+  }
+  .dashcode-app .fc &:disabled {
+    background: #a0aec0 !important;
+    border-color: #a0aec0 !important;
+    @apply cursor-not-allowed;
+  }
+  .dashcode-app .fc &:focus {
+    box-shadow: none !important;
+  }
+  .dark .fc & {
+    @apply border-slate-600 text-slate-300;
+  }
+  .dark .fc &:not(:disabled):active {
+    background: #0f172a !important;
+  }
+
+  .dark .fc &:not(:disabled).fc-button-active {
+    background: #0f172a !important;
+  }
+
+  .dark .fc &:hover {
+    background: #0f172a !important;
+  }
+  .dark .fc &:disabled {
+    background: #334155 !important;
+    border-color: #334155 !important;
+  }
+}
+.fc-button-active {
+  .dashcode-app .fc &.fc-button-primary:not(:disabled) {
+    background: #111112 !important;
+    color: #fff !important;
+  }
+
+  .dark .fc &.fc-button-primary:not(:disabled) {
+    background: #0f172a !important;
+  }
+}
+.fc-daygrid-day {
+  .dashcode-app .fc &.fc-day-today {
+    background: rgba(95, 99, 242, 0.04) !important;
+  }
+  .dark .fc &.fc-day-today {
+    background: #334155 !important;
+  }
+}
+.fc-day-today {
+  .dashcode-app .fc &.fc-daygrid-day {
+    background: rgba(95, 99, 242, 0.04) !important;
+  }
+  .dark .fc &.fc-daygrid-day {
+    background: #334155 !important;
+  }
+}
+.fc-theme-standard {
+  .dashcode-app & .fc-scrollgrid {
+    border-color: #eef1f9 !important;
+  }
+  .dashcode-app & td {
+    @apply border-slate-100 dark:border-slate-700;
+  }
+
+  .dashcode-app & th {
+    @apply border-slate-100 dark:border-slate-700;
+  }
+  .dark & td {
+    @apply border-slate-700;
+  }
+
+  .dark & th {
+    @apply border-slate-700;
+  }
+  .dark & .fc-scrollgrid {
+    border-color: #334155 !important;
+  }
+}
+.fc-scrollgrid {
+  .dashcode-app .fc-theme-standard & {
+    border-color: #eef1f9 !important;
+  }
+  .dark .fc-theme-standard & {
+    border-color: #334155 !important;
+  }
+}
+.fc-col-header-cell {
+  .dashcode-app & .fc-scrollgrid-sync-inner {
+    @apply bg-slate-50 dark:bg-slate-700  text-xs text-slate-500 dark:text-slate-300 font-normal py-3;
+  }
+  .dark & .fc-scrollgrid-sync-inner {
+    @apply bg-slate-700 text-slate-300;
+  }
+}
+.fc-scrollgrid-sync-inner {
+  .dashcode-app .fc-col-header-cell & {
+    @apply bg-slate-50 dark:bg-slate-700  text-xs text-slate-500 dark:text-slate-300 font-normal py-3;
+  }
+  .dark .fc-col-header-cell & {
+    @apply bg-slate-700 text-slate-300;
+  }
+}
+.fc-daygrid-day-top {
+  .dashcode-app & {
+    @apply text-sm px-3 py-2  text-slate-900 dark:text-white font-normal;
+  }
+  .dark & {
+    @apply text-slate-300;
+  }
+  .dark .fc .fc-day-other & {
+    @apply opacity-70;
+  }
+}
+.fc-h-event {
+  .dashcode-app & .fc-event-main-frame {
+    @apply justify-center text-center w-max mx-auto;
+  }
+  .dashcode-app & .fc-event-main-frame .fc-event-time {
+    @apply font-normal flex-none;
+  }
+}
+.fc-event-main-frame {
+  .dashcode-app .fc-h-event & {
+    @apply justify-center text-center w-max mx-auto;
+  }
+  .dashcode-app .fc-h-event & .fc-event-time {
+    @apply font-normal flex-none;
+  }
+}
+.fc-event-time {
+  .dashcode-app .fc-h-event .fc-event-main-frame & {
+    @apply font-normal flex-none;
+  }
+  .dashcode-app & {
+    @apply text-sm font-normal;
+  }
+}
+.fc-event-title {
+  .dashcode-app & {
+    font-size: 14px !important;
+    font-weight: 300 !important;
+  }
+}
+.fc-toolbar-title {
+  .dashcode-app .fc & {
+    @apply text-lg font-normal text-slate-600 dark:text-slate-300;
+  }
+  .dark .fc & {
+    @apply text-slate-300;
+  }
+}
+.fc-daygrid-event-dot {
+  .dashcode-app & {
+    @apply hidden;
+  }
+}
+.fc-button-group {
+  @media (max-width: 981px) {
+    .dashcode-app & {
+      display: block !important;
+    }
+  }
+}
+.fc-toolbar {
+  @media (max-width: 981px) {
+    .dashcode-app .fc & {
+      display: block !important;
+    }
+    .dashcode-app .fc & {
+      @apply space-y-4;
+    }
+  }
+}
+.fc-timegrid-axis-cushion {
+  .dashcode-app .fc & {
+    @apply dark:text-slate-300;
+  }
+}
+.fc-timegrid-slot-label-cushion {
+  .dashcode-app .fc & {
+    @apply dark:text-slate-300;
+  }
+}
+.fc-list-event {
+  .dashcode-app .fc &:hover td {
+    @apply bg-inherit;
+  }
+}
+.fc-list-event-dot {
+  .dashcode-app .fc & {
+    @apply hidden;
+  }
+}
+.fc-direction-ltr {
+  .dashcode-app & .fc-list-day-text {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .dashcode-app & .fc-list-day-side-text {
+    font-size: 16px;
+    font-weight: 500;
+  }
+}
+.fc-list-day-text {
+  .dashcode-app .fc-direction-ltr & {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .dashcode-app .fc-direction-rtl & {
+    font-size: 16px;
+    font-weight: 500;
+  }
+}
+.fc-direction-rtl {
+  .dashcode-app & .fc-list-day-side-text {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .dashcode-app & .fc-list-day-text {
+    font-size: 16px;
+    font-weight: 500;
+  }
+}
+.fc-list-day-side-text {
+  .dashcode-app .fc-direction-rtl & {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .dashcode-app .fc-direction-ltr & {
+    font-size: 16px;
+    font-weight: 500;
+  }
+}
+.fc-day-other {
+  .dark .fc & .fc-daygrid-day-top {
+    @apply opacity-70;
+  }
+}
+.dashcode-calender {
+  & .primary {
+    @apply bg-[#4669FA] border-none text-white text-center px-2 font-medium text-sm;
+  }
+  & .secondary {
+    @apply bg-[#A0AEC0] border-none text-white text-center px-2 font-medium text-sm;
+  }
+  & .danger {
+    @apply bg-[#F1595C] border-none text-white text-center px-2 font-medium text-sm;
+  }
+  & .info {
+    @apply bg-[#0CE7FA] border-none text-white text-center px-2 font-medium text-sm;
+  }
+  & .warning {
+    @apply bg-[#FA916B] border-none text-white text-center px-2 font-medium text-sm;
+  }
+  & .success {
+    @apply bg-[#50C793] border-none text-white text-center px-2 font-medium text-sm;
+  }
+  & .dark {
+    @apply bg-[#222] border-none text-white text-center px-2 font-medium text-sm;
+  }
+}
+.primary {
+  .dashcode-calender & {
+    @apply bg-[#4669FA] border-none text-white text-center px-2 font-medium text-sm;
+  }
+}
+.secondary {
+  .dashcode-calender & {
+    @apply bg-[#A0AEC0] border-none text-white text-center px-2 font-medium text-sm;
+  }
+}
+.danger {
+  .dashcode-calender & {
+    @apply bg-[#F1595C] border-none text-white text-center px-2 font-medium text-sm;
+  }
+}
+.info {
+  .dashcode-calender & {
+    @apply bg-[#0CE7FA] border-none text-white text-center px-2 font-medium text-sm;
+  }
+}
+.warning {
+  .dashcode-calender & {
+    @apply bg-[#FA916B] border-none text-white text-center px-2 font-medium text-sm;
+  }
+}
+.success {
+  .dashcode-calender & {
+    @apply bg-[#50C793] border-none text-white text-center px-2 font-medium text-sm;
+  }
+}
+.dashcode-app-header {
+  @media print {
+    @apply hidden;
+  }
+}
+.site-footer {
+  @media print {
+    @apply hidden;
+  }
+}
+.shadow-deep {
+  @media print {
+    @apply hidden;
+  }
+}
+.content-wrapper {
+  @media print {
+    @apply w-full ml-0;
+  }
+}
+
+body {
+  @apply h-full overflow-x-hidden dark:text-slate-300 text-slate-600 font-normal;
+}
+body.light,
+body.skin--default {
+  @apply bg-slate-100;
+}
+body.lght,
+body.skin--bordered {
+  @apply bg-transparent;
+}
+body.dark {
+  @apply bg-[#0f172a] text-slate-300;
+}
+html,
+body {
+  @apply h-full;
+}
+.dashcode-app-wrapper {
+  @apply relative;
+}
+.single-sidebar-menu .ReactCollapse--collapse {
+  transition: height 400ms;
+}
+.space-xy-5 > div,
+.space-xy-5 > button,
+.space-xy-5 > a,
+.space-xy-5 label,
+.space-xy-5 > * {
+  @apply mr-2 mb-2;
+}
+.space-xy-6 > div,
+.space-xy-6 > button,
+.space-xy-6 > a,
+.space-xy-6 label,
+.space-xy-6 > * {
+  @apply mr-4 mb-2;
+}
+html[dir="rtl"] .recharts-wrapper {
+  direction: rtl;
+}
+html[dir="rtl"] .recharts-yAxis .recharts-text {
+  text-anchor: start;
+}
+.dashcode-app .leaflet-control {
+  z-index: 0 !important;
+}
+.dashcode-app .leaflet-control-container {
+  z-index: 555 !important;
+  position: relative;
+}
+.dashcode-app .recharts-curve.recharts-tooltip-cursor {
+  display: none;
+}
+.dashcode-app .recharts-wrapper.bar-chart .recharts-tooltip-cursor {
+  fill: transparent;
+}
+.dashcode-app .recharts-tooltip-wrapper {
+  border: none !important;
+}
+
+@layer components {
+  @keyframes progress-bar-stripes {
+    0% {
+      background-position: 1rem 0;
+    }
+    to {
+      background-position: 0 0;
+    }
+  }
+  h1 {
+    @apply text-6xl font-semibold text-slate-900 dark:text-slate-300;
+  }
+  h2 {
+    @apply text-5xl font-semibold text-slate-900 dark:text-slate-300;
+  }
+  h3 {
+    @apply text-4xl font-medium text-slate-900 dark:text-slate-300;
+  }
+  h4 {
+    @apply text-3xl font-medium text-slate-900 dark:text-slate-300;
+  }
+  h5 {
+    @apply text-2xl font-medium text-slate-900 dark:text-slate-300;
+  }
+  h6 {
+    @apply text-xl leading-[20px] font-medium text-slate-900 dark:text-slate-300;
+  }
+  blockquote {
+    @apply border-l-2 border-gray-500 pl-5 text-xl  italic;
+  }
+}

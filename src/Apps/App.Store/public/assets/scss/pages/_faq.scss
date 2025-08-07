@@ -1,0 +1,120 @@
+.faq-accordion-area {
+    padding: 100px 0;
+
+    @include lg {
+        padding: 50px 0;
+    }
+
+    >.container>.row {
+        @include md {
+            --bs-gutter-y: 30px;
+        }
+
+        @include sm {
+            --bs-gutter-y: 20px;
+        }
+    }
+}
+
+.fz-single-accordion-item {
+    border: 1px solid #eaeaea;
+
+    &:not(:last-child) {
+        margin-bottom: 30px;
+
+        @include sm {
+            margin-bottom: 20px;
+        }
+    }
+
+    &.open {
+
+        .fz-single-accordion-item {
+            &__header {
+                i {
+                    transform: rotate(45deg);
+                }
+            }
+
+            &__body {
+                line-height: 1.5;
+                padding: 30px;
+                opacity: 1;
+
+                @include xl {
+                    padding: 20px;
+                }
+
+                @include lg {
+                    padding: 15px;
+                }
+            }
+        }
+    }
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #eaeaea;
+        padding: 20px 30px;
+        cursor: pointer;
+
+        @include xl {
+            padding: 15px 20px;
+        }
+
+        @include lg {
+            padding: 12px 15px;
+        }
+
+        @include md {
+            padding: 10px;
+        }
+
+        i {
+            transition: transform 0.4s ease;
+        }
+    }
+
+    &__title {
+        font-family: $poppins;
+        font-size: 18px;
+        font-weight: 600;
+
+        @include xl {
+            font-size: 16px;
+        }
+
+        @include lg {
+            font-size: 14px;
+        }
+
+        @include md {
+            font-weight: 400;
+        }
+    }
+
+    &__body {
+        line-height: 0;
+        transition: all 0.4s ease;
+        overflow: hidden;
+        padding: 0 30px;
+        color: #777;
+        text-transform: capitalize;
+        opacity: 0;
+
+        @include xl {
+            padding: 0 20px;
+        }
+
+        @include lg {
+            padding: 0 15px;
+            font-size: 14px;
+        }
+
+        @include md {
+            font-size: 12px;
+        }
+    }
+}

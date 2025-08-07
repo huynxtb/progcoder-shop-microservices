@@ -1,0 +1,556 @@
+.fz-product-details {
+    padding: 100px 0 60px;
+
+    @include lg {
+        padding: 50px 0;
+    }
+
+    &__img {
+        margin-bottom: 20px;
+
+        img {
+            aspect-ratio: 1;
+            width: 585px;
+            object-fit: cover;
+            filter: contrast(0.9);
+        }
+    }
+
+    &__img-nav {
+        .slick-list {
+            padding: 0;
+            margin: 0 -10px;
+
+            @include md {
+                margin: 0 -5px;
+            }
+        }
+
+        img {
+            filter: contrast(0.9);
+            margin: 0 10px;
+            border: 1px solid transparent;
+            transition: all 0.4s ease;
+
+            @include md {
+                margin: 0 5px;
+            }
+        }
+
+        .slick-current {
+            border: 1px solid $color-3;
+        }
+    }
+
+    &__txt {
+        padding-left: 15px;
+
+        @include md {
+            padding-left: 0;
+        }
+
+        @include sm {
+            padding-top: 20px;
+        }
+    }
+
+    &__title {
+        font-family: $poppins;
+        font-size: 34px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        line-height: 44px;
+
+        @include xl {
+            font-size: 30px;
+            line-height: 40px;
+        }
+
+        @include lg {
+            font-size: 25px;
+            line-height: 35px;
+        }
+
+        @include md {
+            font-size: 20px;
+            line-height: 30px;
+            margin-bottom: 8px;
+        }
+
+        @include xxs {
+            font-size: 18px;
+            line-height: 28px;
+        }
+    }
+
+    &__price-rating {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        font-size: 26px;
+        font-family: $poppins;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #777;
+
+        @include xl {
+            font-size: 23px;
+        }
+
+        @include lg {
+            font-size: 20px;
+        }
+
+        @include md {
+            font-size: 18px;
+            margin-bottom: 11px;
+        }
+
+        @include xxs {
+            font-size: 16px;
+        }
+
+        .rating {
+            color: #FE9602;
+            font-size: 15px;
+        }
+    }
+
+    &__infos {
+        font-family: $roboto;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 20px;
+
+        @include lg {
+            font-size: 16px;
+        }
+
+        @include md {
+            margin-bottom: 10px;
+        }
+
+        @include xxs {
+            font-size: 14px;
+        }
+
+        li:not(:last-child) {
+            margin-bottom: 10px;
+
+            @include lg {
+                margin-bottom: 5px;
+            }
+        }
+
+        .info-value {
+            font-weight: 400;
+            color: #777;
+        }
+    }
+
+    &__short-descr {
+        font-size: 16px;
+        font-family: $roboto;
+        color: #777;
+        margin-bottom: 25px;
+
+        @include md {
+            margin-bottom: 15px;
+        }
+
+        @include xxs {
+            font-size: 14px;
+        }
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        height: 45px;
+        gap: 10px;
+        margin-bottom: 35px;
+
+        @include md {
+            height: 40px;
+            margin-bottom: 25px;
+        }
+
+        @include xxs {
+            height: 35px;
+        }
+
+        >* {
+            border-radius: 3px;
+        }
+
+        >button {
+            background-color: $color-3;
+            height: 100%;
+            padding: 0 50px;
+            color: $white;
+            font-family: $roboto;
+            font-weight: 700;
+            border: 1px solid transparent;
+
+            @include md {
+                padding: 0 30px;
+            }
+
+            @include xxs {
+                padding: 0 20px;
+                font-size: 14px;
+            }
+
+            &:hover {
+                background: transparent;
+                border-color: $black;
+                color: $black;
+            }
+
+            &.fz-product-details__add-to-wishlist {
+                padding: 0 15px;
+                background-color: $white;
+                color: $black;
+                border: 1px solid #eaeaea;
+                line-height: 45px;
+
+                @include md {
+                    line-height: 40px;
+                    padding: 0 13px;
+                }
+
+                @include xxs {
+                    line-height: 35px;
+                }
+
+                &:hover {
+                    background-color: $black;
+                    color: $white;
+                    border-color: $black;
+                }
+            }
+        }
+    }
+
+
+
+    &__quantity {
+        display: flex;
+        height: 100%;
+        border: 1px solid #ddd;
+        padding: 0 15px;
+
+        &.cart-product__quantity {
+            width: max-content;
+            background-color: $white;
+
+            @include md {
+                height: 40px;
+                line-height: 40px;
+            }
+
+            @include xxs {
+                height: 35px;
+                line-height: 35px;
+                padding: 0 10px;
+            }
+        }
+
+        input[type="number"].cart-product-quantity-input {
+            width: max-content;
+            text-align: center;
+            max-width: 50px;
+            padding: 0;
+
+            @include xxs {
+                max-width: 40px;
+            }
+        }
+    }
+
+    .dialog {
+        margin-top: 10px;
+        font-family: $roboto;
+        font-size: 14px;
+        font-weight: 400;
+        display: block;
+        color: #777;
+        text-transform: capitalize;
+    }
+
+    .fz-product-details__additional-info {
+        margin-top: 100px;
+
+        @include lg {
+            margin-top: 50px;
+        }
+    }
+
+    .nav.nav-tabs {
+        margin-bottom: 25px;
+
+        .nav-link {
+            border-radius: 3px 3px 0 0;
+            border: 1px solid transparent;
+            color: #999;
+            padding: 10px 35px;
+
+            @include md {
+                padding: 9px 25px;
+            }
+
+            @include xxs {
+                padding: 6px 15px;
+                font-size: 14px;
+            }
+
+            &:hover {
+                border-color: #ddd;
+            }
+
+            &.active {
+                background-color: $black;
+                color: $white;
+
+                &:hover {
+                    border-color: $black;
+                }
+            }
+
+        }
+    }
+
+    .fz-product-details__descr {
+        color: #777;
+        font-family: $roboto;
+        font-size: 16px;
+
+        @include xxs {
+            font-size: 14px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            width: 70%;
+
+            @include xl {
+                width: 80%;
+            }
+
+            @include lg {
+                width: 100%;
+            }
+
+            @include xxs {
+                font-size: 14px;
+            }
+        }
+
+        ul {
+            list-style: inside disc;
+
+            li:not(:last-child) {
+                margin-bottom: 10px;
+            }
+        }
+    }
+
+    .review-overview {
+        display: flex;
+        align-items: center;
+        gap: 50px;
+        padding: 0 20px;
+
+        @include sm {
+            flex-direction: column;
+            gap: 15px;
+            padding: 0;
+        }
+    }
+
+    .average-rating-area {
+        text-align: center;
+
+        h3 {
+            font-family: $poppins;
+            font-size: 35px;
+
+            @include sm {
+                font-size: 30px;
+            }
+        }
+
+        .rating-amount {
+            text-transform: capitalize;
+
+            @include sm {
+                font-size: 14px;
+            }
+        }
+    }
+
+    .review-breakdown {
+        @include md {
+            font-size: 14px;
+        }
+
+        @include sm {
+            font-size: 12px;
+        }
+
+        .individual-star-breakdown {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            @include xxs {
+                gap: 10px;
+                justify-content: space-between;
+            }
+
+            &:not(:last-child) {
+                margin-bottom: 5px;
+            }
+
+            .star {
+                color: #FE9602;
+
+
+            }
+
+            .bar {
+                width: 240px;
+                height: 10px;
+                background-color: #e7e7e7;
+                border-radius: 5px;
+
+                @include xxs {
+                    width: 150px;
+                }
+            }
+
+            .filled {
+                border-radius: 5px;
+                height: 100%;
+                background-color: $color-3;
+                width: 45%;
+            }
+
+            &-2 {
+                .filled {
+                    width: 30%;
+                }
+            }
+
+            &-3 {
+                .filled {
+                    width: 15%;
+                }
+            }
+
+            &-4 {
+                .filled {
+                    width: 5%;
+                }
+            }
+
+            &-5 {
+                .filled {
+                    width: 5%;
+                }
+            }
+        }
+    }
+
+    .reviews-title {
+        font-family: $roboto;
+        padding-top: 50px;
+        padding-bottom: 20px;
+
+        @include xs {
+            font-size: 18px;
+            padding-top: 30px;
+        }
+    }
+
+    .single-review {
+        border: 1px solid #eaeaea;
+        padding: 15px 20px;
+
+        @include xxs {
+            padding: 10px 12px;
+        }
+
+        .user {
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            @include sm {
+                padding-bottom: 15px;
+                margin-bottom: 15px;
+            }
+
+            &-img {
+                border-radius: 50%;
+                width: 65px;
+                height: 65px;
+                overflow: hidden;
+            }
+
+            &-name {
+                font-family: $poppins;
+                text-transform: capitalize;
+            }
+
+            &-rating {
+                color: #FE9602;
+                font-size: 12px;
+                font-family: $roboto;
+            }
+        }
+
+        .review {
+            padding: 0;
+            color: #777;
+            font-weight: 300;
+        }
+    }
+}
+
+// RELATED SECTION STYLE STARTS
+.related-product-section {
+    padding-bottom: 100px;
+
+    @include lg {
+        padding-bottom: 50px;
+    }
+}
+
+.related-product__title {
+    font-family: $poppins;
+    margin-bottom: 25px;
+
+    @include xl {
+        font-size: 28px;
+    }
+
+    @include lg {
+        font-size: 25px;
+        margin-bottom: 20px;
+    }
+
+    @include md {
+        font-size: 23px;
+        margin-bottom: 15px;
+    }
+
+    @include xxs {
+        width: 95%;
+        margin: auto;
+        margin-bottom: 15px;
+    }
+}

@@ -1,0 +1,5 @@
+- targets:
+    - 'eonw9qk9xvnl.share.zrok.io'
+  labels:
+    service_name: notification-service
+    service_path: /notification-service

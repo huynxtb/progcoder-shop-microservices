@@ -1,0 +1,143 @@
+.ar-tab-pane {
+    opacity: 0;
+    visibility: hidden;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity .5s ease, visibility .5s ease, max-height .5s ease;
+
+    &.small-tab {
+        &.active {
+            max-height: 500px;
+
+            @include md {
+                max-height: 700px;
+            }
+
+            @include xxs {
+                max-height: 1200px;
+            }
+        }
+    }
+
+    &.active {
+        opacity: 1;
+        visibility: visible;
+        max-height: 1500px;
+    }
+}
+
+// Custom Range Slider
+.wrapper {
+    position: relative;
+    width: 100%;
+    border-radius: 10px;
+
+    .rv-container {
+        position: relative;
+        width: 100%;
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 100%;
+            outline: none;
+            position: absolute;
+            margin: auto;
+            top: 0;
+            bottom: 0;
+            background-color: transparent;
+            pointer-events: none;
+        }
+
+        .slider-track {
+            width: 100%;
+            height: 5px;
+            position: relative;
+            margin: auto;
+            top: 0;
+            bottom: 0;
+            border-radius: 5px;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            -webkit-appearance: none;
+            height: 5px;
+        }
+
+        input[type="range"]::-moz-range-track {
+            -moz-appearance: none;
+            height: 5px;
+        }
+
+        input[type="range"]::-ms-track {
+            appearance: none;
+            height: 5px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 0.8em;
+            width: 0.8em;
+            background-color: #fff;
+            cursor: pointer;
+            margin-top: -4px;
+            pointer-events: auto;
+            border-radius: 50%;
+            border: 2px solid #000;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            -webkit-appearance: none;
+            height: 0.8em;
+            width: 0.8em;
+            cursor: pointer;
+            border-radius: 50%;
+            background-color: #fff;
+            pointer-events: auto;
+            border: none;
+        }
+
+        input[type="range"]::-ms-thumb {
+            appearance: none;
+            height: 0.8em;
+            width: 0.8em;
+            cursor: pointer;
+            border-radius: 50%;
+            background-color: #fff;
+            pointer-events: auto;
+        }
+
+        input[type="range"]:active::-webkit-slider-thumb {
+            background-color: #ffffff;
+            border: 2px solid #000;
+        }
+    }
+
+    .values {
+        background-color: #fff;
+        width: 32%;
+        position: relative;
+        margin: auto;
+        padding: 10px 0;
+        border-radius: 5px;
+        text-align: center;
+        font-weight: 500;
+        font-size: 25px;
+        color: #ffffff;
+
+        &:before {
+            content: "";
+            position: absolute;
+            height: 0;
+            width: 0;
+            border-top: 15px solid #000;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            margin: auto;
+            bottom: -14px;
+            left: 0;
+            right: 0;
+        }
+    }
+}

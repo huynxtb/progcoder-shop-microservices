@@ -1,0 +1,1051 @@
+.fz-6-flash {
+    background: url(/assets/images/fz-6-flash-bg.jpg) no-repeat center center;
+    background-size: cover;
+    text-align: center;
+    padding: 80px 0;
+
+    @include md {
+        padding: 60px 0;
+    }
+
+    &-sale-sub-title {
+        font-size: 20px;
+        font-weight: 400;
+        color: #2B2C34;
+    }
+
+    &-sale-title {
+        .colored {
+            color: #fb2f29;
+        }
+    }
+
+    .fz-6-flash-countdown {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 60px;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        @include lg {
+            margin-bottom: 40px;
+        }
+
+        .fz-6-flash-countdown-single-box {
+            background-color: #fb2f29;
+            border-radius: 5px;
+            flex: 80px 0 0;
+            color: #ffffff;
+            padding: 8px 0;
+
+            h4 {
+                font-size: 30px;
+                font-weight: 600;
+                line-height: 1;
+                margin-bottom: 2px;
+            }
+
+            h6 {
+                font-size: 14px;
+                font-weight: 400;
+            }
+        }
+    }
+
+    .fz-6-sub-banner-btn {
+        border-color: #fb2f29;
+        color: #fb2f29;
+        transition: 0.4s ease;
+
+        &:hover {
+            background-color: #fb2f29;
+            color: $white;
+        }
+    }
+}
+
+
+// INDEX-7 FLASH SALE 
+.fz-7-flash {
+    &.pb-120 {
+        @include xl {
+            padding-bottom: 80px;
+        }
+
+        @include md {
+            padding-bottom: 60px;
+        }
+    }
+
+    &-bg {
+        background: url(/assets/images/fz-7-flash-bg.png) no-repeat bottom right;
+        background-size: contain;
+        background-color: #F7F8F9;
+        padding: 80px 125px;
+
+        @include xl {
+            padding: 80px 85px;
+        }
+
+        @include lg {
+            padding: 60px;
+        }
+
+        @include md {
+            padding: 45px;
+        }
+
+        @include sm {
+            padding: 35px;
+        }
+
+        @include xxs {
+            padding: 25px 20px;
+        }
+    }
+
+    &-title {
+        font-size: 50px;
+        color: #2B2C34;
+
+        @include lg {
+            font-size: 45px;
+        }
+
+        @include md {
+            font-size: 40px;
+        }
+
+        @include sm {
+            font-size: 35px;
+        }
+
+        @include xxs {
+            font-size: 30px;
+        }
+    }
+
+    &-descr {
+        margin-bottom: 39px;
+        width: 75%;
+
+        @include lg {
+            margin-bottom: 25px;
+            width: 90%;
+        }
+
+        @include sm {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+    }
+
+    &-countdown {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 30px;
+
+        @include xxs {
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        &_box {
+            padding: 0;
+            background: none;
+            color: #2B2C34;
+            border-radius: 5px;
+            flex: 80px 0 0;
+
+            &__value {
+                font-size: 40px;
+                margin-bottom: 2px;
+
+                @include lg {
+                    font-size: 35px;
+                    margin-bottom: 0;
+                }
+
+                @include sm {
+                    font-size: 32px;
+                }
+            }
+
+            &__unit {
+                font-size: 20px;
+                text-transform: capitalize;
+            }
+        }
+
+    }
+
+    &-img {
+        position: relative;
+        text-align: end;
+
+        img {
+            width: 500px;
+            height: auto;
+            object-fit: contain;
+        }
+    }
+
+    &-tag {
+        width: 140px;
+        height: 140px;
+        background-color: #FC2E6B;
+        border-radius: 50%;
+        text-align: center;
+        font-size: 42px;
+        color: #fff;
+        line-height: 150px;
+        position: absolute;
+        right: 90px;
+        top: -5px;
+
+        @include xs {
+            width: 130px;
+            height: 130px;
+            line-height: 140px;
+            font-size: 37px;
+        }
+
+        @include xxs {
+            width: 90px;
+            height: 90px;
+            line-height: 100px;
+            font-size: 26px;
+        }
+    }
+}
+
+// INDEX-8 FLASH SALE
+.fz-8-flash {
+    &-img {
+        display: flex;
+        justify-content: flex-end;
+
+        img {
+            max-width: none;
+
+            @include xl {
+                max-width: 655px;
+            }
+
+            @include lg {
+                max-width: 585px;
+            }
+
+            @include md {
+                max-width: 100%;
+            }
+        }
+    }
+
+    &-txt {
+        padding: 100px;
+
+        @include xxl {
+            padding: 80px;
+        }
+
+        @include xl {
+            padding: 50px 60px;
+        }
+
+        @include lg {
+            padding: 30px 40px;
+        }
+
+        @include md {
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        @include xs {
+            padding: 60px 0;
+        }
+    }
+
+    &-title {
+        font-weight: 600;
+    }
+
+    &-descr {
+        font-family: $kanit;
+        color: #4D4D4D;
+        font-weight: 400;
+        margin-bottom: 53px;
+
+        @include xxl {
+            margin-bottom: 33px;
+        }
+
+        @include lg {
+            margin-bottom: 23px;
+        }
+    }
+
+    &-countdown {
+        text-align: center;
+        gap: 40px;
+
+        @include xl {
+            gap: 20px;
+        }
+
+        @include lg {
+            margin-bottom: 25px;
+        }
+
+        @include md {
+            justify-content: center;
+        }
+
+        @include xs {
+            gap: 15px;
+        }
+
+        &_box {
+            border-radius: 5px;
+            flex: 80px 0 0;
+            padding: 0;
+            background: none;
+            color: #2B2C34;
+
+            h3 {
+                border: 0.5px dashed #dfdfdf;
+                font-weight: 300;
+                font-size: 50px;
+                padding-top: 7px;
+
+                @include lg {
+                    font-size: 45px;
+                    padding-top: 6px;
+                }
+            }
+
+            h5 {
+                font-family: $kanit;
+                color: #191919;
+            }
+        }
+
+    }
+
+    &-btn {
+        background-color: #DBC996;
+        color: $white;
+        opacity: 1;
+        position: static;
+        scale: 1;
+        pointer-events: auto;
+        text-transform: uppercase;
+    }
+}
+
+// INDEX-9 FLASH SALE 
+.fz-9-flash-sale-sction {
+    background-position: center;
+    background-repeat: no-repeat;
+    height: auto;
+    background-size: cover;
+    width: auto;
+    padding: 120px 0;
+    background-color: #fff;
+
+    @include xl {
+        padding: 80px 0;
+    }
+
+    @include md {
+        padding: 60px 0;
+    }
+
+    .fz-9-falsh-banner-area {
+        background-position: center;
+        background-repeat: no-repeat;
+        height: auto;
+        background-size: cover;
+        width: auto;
+        padding: 110px 100px 110px 130px;
+
+        @include xl {
+            padding: 110px 100px 110px 110px;
+        }
+
+        @include lg {
+            padding: 90px 80px 90px 90px;
+        }
+
+        @include md {
+            padding: 45px;
+        }
+
+        @include xxs {
+            padding: 25px;
+        }
+
+        .fz-9-flash-content-area {
+            .fz-9-flash-sale-content {
+                .subtitle {
+                    color: #FF7C7C;
+                    font-size: 20px;
+                    font-weight: 600;
+                }
+
+                .title {
+                    font-size: 60px;
+                    font-weight: 700;
+                    color: #253B70;
+
+                    @include xxl {
+                        font-size: 55px;
+                    }
+
+                    @include xl {
+                        font-size: 50px;
+                    }
+
+                    @include lg {
+                        font-size: 45px;
+                    }
+
+                    @include md {
+                        font-size: 35px;
+                    }
+
+                    span {
+                        color: #FF7C7C;
+                    }
+                }
+
+                .description {
+                    font-size: 16px;
+                    color: #253B70;
+                }
+            }
+
+            .fz-9-flash-sale-timer {
+                margin-top: 40px;
+                margin-left: -6px;
+
+                @include md {
+                    margin-top: 25px;
+                }
+
+                .fz-hot-deal-countdown {
+                    display: inline-flex;
+                    flex-wrap: wrap;
+                    row-gap: 16px;
+
+                    .fz-9-flash-countdown_box {
+                        padding: 6px 20px;
+                        text-align: center;
+                        border: 1px dashed;
+                        margin: 0 8px;
+                        border-radius: 4px;
+
+                        h3.fz-9-flash-countdown_value {
+                            font-size: 30px;
+                            font-weight: 600;
+                            color: #253B70;
+                        }
+
+                        h5.fz-9-flash-countdown_unit {
+                            font-size: 16px;
+                            color: #253B70;
+                            text-transform: capitalize;
+                        }
+                    }
+
+
+                }
+            }
+
+            .fz-9-flash-sale-btn {
+                margin-top: 10px;
+
+                .fz-9-btn {
+                    margin-top: 20px;
+                    position: relative;
+                    background: #FF7C7C;
+                    color: #ffffff;
+                    padding: 15px 45px;
+                    text-transform: capitalize;
+                    font-weight: 500;
+                    font-size: 16px;
+                    border-radius: 3px;
+                    transition: .4s;
+
+                    &:hover {
+                        background-color: #253B70;
+                    }
+
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        top: 6px;
+                        left: 6px;
+                        bottom: 6px;
+                        right: 6px;
+                        border: 1px dashed #ffffff;
+                    }
+                }
+            }
+        }
+
+        .fz-9-falsh-img-area {
+            position: relative;
+
+            @include md {
+                margin-top: 60px;
+            }
+
+            >* {
+                @include md {
+                    text-align: center;
+                }
+            }
+
+            .fz-9-flash-img1 {
+
+                img {
+                    height: 100%;
+                    width: auto;
+                    border: 6px solid #fff;
+                    transform: rotate(8deg);
+                }
+            }
+
+            .fz-9-flash-img2 {
+                position: absolute;
+                top: 186px;
+                left: 80px;
+
+                @include md {
+                    position: static;
+                }
+
+                img {
+                    height: 100%;
+                    width: auto;
+                    border: 6px solid #fff;
+                    transform: rotate(347deg);
+                }
+            }
+
+        }
+    }
+}
+
+// fz-10 flash section
+.fz-10-flash {
+    background: #F7F8F9;
+
+    >.container {
+        @media screen and (min-width: 1400px) {
+            max-width: 1920px;
+        }
+    }
+
+    .fz-10-flash-txt {
+        text-align: center;
+        padding: 65px 0;
+
+        .fz-hot-deal-countdown {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 25px;
+            text-transform: uppercase;
+            flex-wrap: wrap;
+
+            .fz-10-flash-countdown_value {
+                font-size: 50px;
+                font-weight: 400;
+                padding: 0 14px;
+                border: 1px dashed #979797;
+                font-family: "Playfair Display", serif;
+                padding-bottom: 18px;
+                line-height: 1;
+            }
+
+            .fz-10-flash-countdown_unit {
+                font-size: 16px;
+                font-family: "Nunito", sans-serif;
+                margin-top: 10px;
+            }
+        }
+
+        @include md {
+            .fz-10-flash-title {
+                font-size: 35px;
+            }
+        }
+
+        @include md {
+            padding: 40px 0;
+        }
+
+        .fz-10-flash-descr {
+            margin: auto;
+            padding-bottom: 40px;
+        }
+
+        .fz-10-sub-banner-btn {
+            background: #DBC996;
+            color: #fff;
+            border: none;
+            text-transform: uppercase;
+            font-size: 17px;
+            font-weight: 400;
+            padding: 13px 28px;
+            text-align: center;
+            font-family: $nunito;
+            border-radius: 30px;
+            margin-top: 30px;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+
+            &::after {
+                content: "";
+                position: absolute;
+                background-color: #222222;
+                border-radius: 30px;
+                right: 0;
+                width: 0%;
+                top: 0;
+                height: 100%;
+                transition: all 0.4s ease 0.1s;
+                z-index: -1;
+            }
+
+            &:hover::after {
+                width: 100%;
+                right: auto;
+                left: 0;
+            }
+
+        }
+
+        .syotimer__body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 25px;
+            text-transform: uppercase;
+            flex-wrap: wrap;
+
+            .syotimer-cell__value {
+                font-size: 50px;
+                font-weight: 400;
+                padding: 0 14px;
+                border: 1px dashed #979797;
+                font-family: $playfair;
+                padding-bottom: 18px;
+                line-height: 1;
+            }
+
+            .syotimer-cell__unit {
+                font-size: 16px;
+                font-family: $nunito;
+                margin-top: 10px;
+            }
+        }
+    }
+
+    &-title {
+        font-size: 60px;
+    }
+
+    &-iamge {
+        display: flex;
+        justify-content: end;
+
+        img {
+            max-width: none;
+        }
+
+        &-2 {
+            @include sm {
+                justify-content: center;
+            }
+
+            img {
+                max-width: 100%;
+            }
+        }
+    }
+}
+
+
+// INDEX-11 FLASH SALE
+.fz-11-flash-sale {
+    font-family: $oswald;
+    margin-top: 130px;
+
+    @include md {
+        margin-top: 60px;
+    }
+
+    .fz-11-flash-container {
+        width: 100%;
+        display: flex;
+        gap: 150px;
+        background-color: #f7f8f9;
+
+        @include xxl {
+            gap: 70px;
+        }
+
+        @include xl {
+            gap: 150px;
+        }
+
+        @include lg {
+            gap: 100px;
+        }
+
+        @include md {
+            gap: 70px;
+        }
+
+        @include sm {
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 40px;
+        }
+    }
+
+    .fz-11-flash-img-container {
+        position: relative;
+
+        @include xl {
+            width: 50%;
+        }
+
+        @include sm {
+            width: 100%;
+        }
+
+        img {
+            height: 100%;
+        }
+    }
+
+    .fz-11-flash-overlay {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 116px;
+        font-weight: 700;
+
+        @include xl {
+            font-size: 80px;
+        }
+
+        @include xxs {
+            font-size: 60px;
+        }
+    }
+
+    .fz-11-flash-text-container {
+        padding: 40px 0;
+        align-self: center;
+
+        @include sm {
+            padding: 0;
+            text-align: center;
+        }
+
+        h3 {
+            font-size: 50px;
+            color: #1b1b21;
+
+            @include xl {
+                font-size: 40px;
+            }
+
+            @include lg {
+                font-size: 35px;
+            }
+
+            @include sm {
+                // font-size: 25px;
+            }
+
+        }
+    }
+
+    .fz-11-flash-description {
+        font-size: 20px;
+        font-family: $nunito;
+        color: #2b2c34;
+        font-weight: 400;
+
+        @include lg {
+            font-size: 15px;
+        }
+
+        @include sm {
+            padding-top: 30px;
+        }
+    }
+
+    .fz-11-flash-timer {
+        font-size: 30px;
+        display: flex;
+        gap: 50px;
+    }
+
+    .fz-11-flash-text-container button {
+        width: 132px;
+        height: 45px;
+        border: 1px solid #1b1b21;
+        font-weight: 400;
+        margin-top: 35px;
+        font-family: $jakarta;
+
+        @include xl {
+            margin-top: 30px;
+        }
+
+        @include lg {
+            width: 100px;
+            height: 40px;
+            font-size: 15px;
+            margin-top: 20px;
+        }
+    }
+
+    .fz-11-flash-text-container button:hover {
+        background-color: #1b1b21;
+        color: white;
+    }
+
+    .fz-11-flash-timer-container {
+        color: #1b1b21;
+        margin-top: 25px;
+
+        @include xl {
+            margin-top: 20px;
+        }
+
+        @include lg {
+            margin-top: 15px;
+        }
+
+        @include md {
+            margin-top: 10px;
+        }
+
+        .fz-11-flash-countdown {
+            display: flex;
+            margin-bottom: 0;
+            justify-content: flex-start;
+            gap: 30px;
+            flex-wrap: wrap;
+
+            .fz-11-flash-countdown_box {
+                background: none;
+                color: #222;
+                padding: 0;
+                flex: unset;
+                position: relative;
+                min-width: 48px;
+
+                &:not(:last-child)::before {
+                    content: ":";
+                    font-family: "Font Awesome 6 Sharp";
+                    font-weight: 600;
+                    position: absolute;
+                    left: 100%;
+                    top: 50%;
+                    translate: 0 -50%;
+                }
+
+                h3 {
+                    font-weight: 400;
+                    margin-bottom: 7px;
+                    font-size: 30px;
+                    line-height: 1;
+                }
+
+                h5 {
+                    font-size: 14px;
+                    font-weight: 400;
+                }
+            }
+        }
+
+        .fz-11-flash-list-container {
+            display: flex;
+            gap: 25px;
+
+            @include xl {
+                gap: 10px;
+            }
+
+            @include xl {
+                font-size: 10px;
+            }
+        }
+
+        .fz-11-flash-list {
+            margin-top: 10px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        h1 {
+            font-weight: normal;
+            letter-spacing: 0.125rem;
+            text-transform: uppercase;
+        }
+
+        li {
+            display: inline-block;
+            list-style-type: none;
+            text-transform: uppercase;
+        }
+
+        li span {
+            display: block;
+            font-size: 30px;
+        }
+    }
+}
+
+.fz-11-flash-countdown {
+    .syotimer {
+        &__body {
+            margin-bottom: 0;
+            justify-content: flex-start;
+            gap: 30px;
+
+            @include md {
+                gap: 20px;
+            }
+        }
+
+        &-cell {
+            background: none;
+            color: #222;
+            padding: 0;
+            flex: unset;
+            position: relative;
+            min-width: 48px;
+
+            @include md {
+                min-width: 44px;
+            }
+
+            &:not(:last-child)::before {
+                content: "\3a";
+                font-family: "Font Awesome 6 Sharp";
+                font-weight: 600;
+                position: absolute;
+                left: calc(100%);
+                top: 50%;
+                translate: 0 -50%;
+
+                @include sm {
+                    left: calc(100% + 7px);
+                }
+            }
+
+            &__value {
+                font-weight: 400;
+                margin-bottom: 7px;
+            }
+        }
+    }
+}
+
+// INDEX-12 FLASH SALE
+.fz-12-flash {
+    .fz-8-flash {
+        &-img {
+            height: 100%;
+
+            img {
+                object-fit: cover;
+            }
+        }
+
+        &-txt {
+            @include md {
+                padding: 40px;
+            }
+
+            @include xxs {
+                padding: 25px 10px;
+            }
+        }
+    }
+
+    &-sub-title {
+        font-family: $nunito;
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .fz-12-section-title {
+        margin-bottom: 11px;
+    }
+
+    .fz-12-section-descr {
+        margin-bottom: 38px;
+
+        @include xl {
+            margin-bottom: 28px;
+        }
+    }
+
+    &-countdown {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-start;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+
+        @include lg {
+            justify-content: center;
+        }
+
+        .fz-12-flash-countdown_box {
+            text-align: center;
+            background-color: #F5F5F5;
+            color: #010108;
+            font-family: "Nunito", sans-serif;
+            border-radius: 5px;
+            flex: 80px 0 0;
+            padding: 8px 0;
+
+            h3 {
+                font-size: 30px;
+                font-weight: 600;
+                line-height: 1;
+                margin-bottom: 2px;
+
+            }
+
+            h5 {
+                font-size: 12px;
+                text-transform: capitalize;
+                font-weight: 400;
+            }
+        }
+    }
+}

@@ -1,0 +1,334 @@
+.fz-blog-details {
+    &__img {
+        position: relative;
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(to top, #000, rgba(255, 255, 255, 0) 60%);
+            z-index: 1;
+
+            @include xxs {
+                background-image: linear-gradient(to top, #000, rgb(0 0 0 / 20%));
+            }
+        }
+    }
+
+    &__heading {
+        position: absolute;
+        left: 50%;
+        translate: -50% 0;
+        width: 80%;
+        bottom: 30px;
+        z-index: 2;
+
+        @include xs {
+            width: 95%;
+        }
+
+        @include xxs {
+            bottom: 10px;
+        }
+    }
+
+    &__title {
+        text-align: center;
+        color: $white;
+    }
+
+    &__infos {
+        justify-content: center;
+    }
+
+    &__descr {
+        color: #777;
+        font-family: $poppins;
+
+        @include sm {
+            font-size: 14px;
+        }
+    }
+
+    &__blqt {
+        background-color: #f5f5f5;
+        padding: 30px 50px;
+        font-weight: 500;
+        text-align: center;
+        border-radius: 5px;
+
+        @include xl {
+            padding: 30px;
+        }
+
+        @include sm {
+            padding: 20px;
+        }
+
+        @include xxs {
+            padding: 15px;
+        }
+
+        i {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 20px;
+
+            @include xs {
+                font-size: 14px;
+            }
+        }
+
+        .quoter {
+            position: relative;
+            font-weight: 700px;
+            font-size: 18px;
+            font-family: $roboto;
+            text-transform: capitalize;
+            width: max-content;
+            margin: auto;
+            padding-left: 80px;
+
+            &::before {
+                content: "";
+                position: absolute;
+                width: 60px;
+                height: 1px;
+                background-color: $black;
+                inset: 0;
+                margin: auto;
+                right: calc(100% + 10px);
+            }
+        }
+    }
+
+    &__txt {
+        img {
+            margin-bottom: 20px;
+        }
+
+        .fz-blog-details__descr:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    &__tags-n-shares {
+        @include sm {
+            flex-direction: column;
+            gap: 10px;
+        }
+    }
+}
+
+.fz-single-blog.fz-inner-page-blog.fz-blog-details .fz-blog-details {
+    &__category {
+        color: $white;
+        font-weight: 400;
+        border-color: $white;
+    }
+
+    &__date {
+        color: $white;
+    }
+
+    &__txt {
+        @include sm {
+            padding: 20px;
+        }
+
+        @include xxs {
+            padding: 10px;
+        }
+    }
+}
+
+
+.fz-blog-details {
+    &__tags {
+        display: flex;
+        align-items: center;
+
+        @include xxs {
+            flex-wrap: wrap;
+            justify-content: center;
+            row-gap: 6px;
+        }
+
+        >span {
+            margin-right: 20px;
+            font-family: $poppins;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        >a {
+            border: 1px solid #eaeaea;
+            padding: 0 10px;
+            height: 30px;
+            line-height: 28px;
+            font-size: 13px;
+            color: #777;
+            border-radius: 4px;
+
+            &:hover {
+                background-color: $black;
+                color: $white;
+                border-color: $black;
+            }
+
+            &:not(:last-child) {
+                margin-right: 10px;
+            }
+        }
+    }
+
+    &__shares {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+
+        >span {
+            font-family: $poppins;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        >button {
+            color: #c4c4c4;
+
+            &:hover {
+                color: $black;
+            }
+        }
+    }
+
+    &__user-comments {
+        padding: 50px 0 30px;
+
+        .fz-blog-details__comments-title {
+            font-family: $poppins;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+
+            @include xs {
+                font-size: 18px;
+            }
+        }
+
+        .single-comment {
+            border-radius: 10px;
+        }
+
+        .comment-date {
+            font-size: 14px;
+            font-weight: 400;
+            color: #777;
+            font-family: $roboto;
+        }
+
+        .reply-btn {
+            margin-top: 15px;
+            background: #ebebeb;
+            padding: 0 20px;
+            height: 35px;
+            border-radius: 30px;
+            line-height: 35px;
+            font-size: 15px;
+
+            &:hover {
+                color: $white;
+                background-color: $black;
+
+                i {
+                    color: $white;
+                }
+            }
+
+            i {
+                margin-left: 5px;
+                color: $color-3;
+            }
+        }
+    }
+}
+
+// COMMENTS
+.fz-blog-details__comment-form {
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #f8f8f8;
+
+    @include xxs {
+        padding: 15px 10px;
+    }
+
+    .fz-comment-form__title {
+        font-family: $poppins;
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 20px;
+
+        @include xs {
+            font-size: 18px;
+        }
+    }
+
+    form {
+        label {
+            color: #777;
+            margin-bottom: 5px;
+            display: block;
+
+            @include xs {
+                font-size: 14px;
+            }
+        }
+
+        input,
+        textarea {
+            border: 1px solid #eaeaea;
+            padding: 10px 15px;
+            width: 100%;
+            background-color: $white;
+            font-weight: 300;
+
+            @include lg {
+                padding: 10px;
+            }
+
+            @include sm {
+                padding: 8px 10px;
+            }
+        }
+
+        textarea {
+            height: 200px;
+        }
+    }
+
+    .fz-comment-form__btn {
+        border-radius: 5px;
+        height: 45px;
+        line-height: 43px;
+        font-size: 16px;
+        padding: 0 30px;
+        margin-top: 20px;
+        background-color: $black;
+        color: $white;
+        border: 1px solid $black;
+
+        &:hover {
+            color: $black;
+        }
+
+        &::before {
+            border-radius: 5px;
+            background-color: $white;
+        }
+    }
+}

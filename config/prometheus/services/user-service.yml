@@ -1,0 +1,5 @@
+- targets:
+    - 'eonw9qk9xvnl.share.zrok.io'
+  labels:
+    service_name: user-service
+    service_path: /user-service

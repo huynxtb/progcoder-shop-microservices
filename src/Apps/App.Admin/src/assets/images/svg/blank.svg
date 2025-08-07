@@ -1,0 +1,9 @@
+ <svg id="chats-circle" xmlns="http://www.w3.org/2000/svg" width="76" height="76" viewBox="0 0 76 76">
+                    <line id="Line_51" data-name="Line 51" x2="15" transform="translate(40.5 50.5)" fill="none" stroke="#bcbfc9" stroke-linecap="round" stroke-width="3" stroke-dasharray="0 7"></line>
+                    <rect id="Rectangle_2812" data-name="Rectangle 2812" width="76" height="76" fill="none"></rect>
+                    <path id="Path_3222" data-name="Path 3222" d="M26.994,64.4A21.417,21.417,0,1,1,34.487,71.9h0l-7.4,2.114A1.785,1.785,0,0,1,24.88,71.8l2.114-7.4Z" transform="translate(-16.855 -22.52)" fill="none" stroke="#bcbfc9" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+                    <path id="Path_3223" data-name="Path 3223" d="M92.059,108.61a21.439,21.439,0,0,0,31.154,11.319h0l7.4,2.114a1.785,1.785,0,0,0,2.207-2.207l-2.114-7.4h0a21.432,21.432,0,0,0-17.257-32.33" transform="translate(-64.664 -56.268)" fill="none" stroke="#bcbfc9" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+                    <line id="Line_49" data-name="Line 49" x2="14.977" transform="translate(21.07 25.959)" fill="none" stroke="#bcbfc9" stroke-linecap="round" stroke-width="3" stroke-dasharray="0 7"></line>
+                    <line id="Line_50" data-name="Line 50" x2="15.112" transform="translate(21.07 35.959)" fill="none" stroke="#bcbfc9" stroke-linecap="round" stroke-width="3" stroke-dasharray="0 7"></line>
+                    <circle id="Ellipse_1258" data-name="Ellipse 1258" cx="1.5" cy="1.5" r="1.5" transform="translate(53 39)" fill="#bcbfc9"></circle>
+                  </svg>

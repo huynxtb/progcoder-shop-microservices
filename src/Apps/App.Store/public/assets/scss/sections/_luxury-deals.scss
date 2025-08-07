@@ -1,0 +1,214 @@
+.fz-luxury-section {
+    padding: 0 0 110px;
+
+    .fz-2-section-heading {
+        @include xxs {
+            margin-bottom: 15px;
+        }
+    }
+
+    .fz-section-heading {
+        &-nav {
+            .fz-nav-item {
+                .nav-link {
+                    margin-right: 20px;
+
+                    @include xxs {
+                        margin-right: 15px;
+                    }
+
+                    &.active {
+                        &::before {
+                            width: 100%;
+                        }
+                    }
+                }
+
+                &:last-child {
+                    .nav-link {
+                        margin-right: 0;
+                    }
+                }
+            }
+
+            button {
+                color: #212529;
+                font-size: 20px;
+                font-weight: 300;
+                transition: .4s ease;
+                position: relative;
+                padding: 0;
+
+                @include xxs {
+                    font-size: 14px;
+                }
+
+                &::before {
+                    position: absolute;
+                    content: "";
+                    left: 0;
+                    bottom: 6px;
+                    background-color: $black;
+                    height: 1px;
+                    width: 0%;
+                    transition: 0.4s ease;
+                }
+
+                &:hover,
+                &:focus {
+                    color: #212529;
+
+                    &::before {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
+
+
+    @include md {
+        padding: 0 0 40px;
+    }
+
+    #tab-01-pane,
+    #tab-02-pane {
+        >.row.gy-4 {
+            --bs-gutter-y: 10px
+        }
+    }
+}
+
+.fz-2-single-product {
+    text-align: center;
+
+    &:hover {
+
+        button.fz-add-to-cart-btn,
+        button.fz-add-to-wishlist {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+    }
+
+    &-img {
+        position: relative;
+        overflow: hidden;
+    }
+
+    &-tag {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 5px 10px;
+        color: $white;
+        font-size: 15px;
+        background-color: $color-3;
+
+        @include md {
+            top: 10px;
+            right: 10px;
+            padding: 3px 6px;
+            font-size: 13px;
+        }
+    }
+
+    &-actions {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        translate: -50% 0;
+        width: 100%;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+
+        @include sm {
+            bottom: 15px;
+        }
+
+        button.fz-add-to-cart-btn,
+        button.fz-add-to-wishlist {
+            background: $white;
+            padding: 10px 50px;
+            font-weight: 500;
+            font-family: $futuraPT;
+            transform: translateY(30px);
+            opacity: 0;
+            pointer-events: none;
+            box-shadow: 2px 2px #c1c1c1;
+
+            @include lg {
+                padding: 10px 25px;
+            }
+
+            @include md {
+                font-size: 14px;
+            }
+
+            @include sm {
+                padding: 0 20px;
+            }
+
+            &:hover {
+                color: $white;
+                background: $black;
+            }
+        }
+
+        button.fz-add-to-wishlist {
+            padding: 10px 15px;
+            transition-delay: .1s;
+
+            @include sm {
+                padding: 10px 12px;
+            }
+        }
+    }
+
+    &-txt {
+        padding: 14px 0 15px;
+    }
+
+    &-category {
+        font-size: 14px;
+        font-weight: 300;
+        letter-spacing: 0.5px;
+        color: var(--clr-body-text);
+        margin-bottom: 5px;
+
+        a:hover {
+            color: $color-3;
+        }
+
+
+    }
+
+    &-title {
+        color: var(--clr-body-dark);
+        font-size: 18px;
+        font-weight: 400;
+        margin-bottom: 5px;
+        font-family: $futuraPT;
+
+        a:hover {
+            color: $color-3;
+        }
+
+        @include xs {
+            font-size: 16px;
+        }
+    }
+
+    &-price {
+        font-weight: 500;
+        color: var(--clr-body-dark);
+
+        span.prev-price {
+            margin-left: 10px;
+            text-decoration: line-through;
+            color: var(--clr-body-text);
+        }
+    }
+}

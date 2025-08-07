@@ -1,0 +1,1642 @@
+// INDEX-1 CATEGORY SECTION STYLES
+.fz-1-category-section {
+    padding: 112px 0 120px;
+
+    @include md {
+        padding: 52px 0 60px;
+    }
+
+    >.container>.row {
+        @include xs {
+            --bs-gutter-x: 10px;
+            --bs-gutter-y: 7px;
+        }
+    }
+
+    .fz-1-category-col {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        justify-content: space-between;
+
+        @include md {
+            flex-direction: row;
+        }
+
+        @include sm {
+            gap: 17px;
+        }
+
+        @include xs {
+            gap: 10px;
+        }
+    }
+
+    .fz-1-single-category {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        display: block;
+        border-radius: 6px;
+
+
+        &:hover {
+            img {
+                transform: scale(1.15);
+            }
+        }
+
+        img {
+            width: 100%;
+            transition: all 0.6s ease;
+            height: 100%;
+        }
+
+        &__title {
+            font-family: $kanit;
+            font-weight: 400;
+            position: absolute;
+            bottom: 30px;
+            background-color: $white;
+            left: 50%;
+            translate: -50% 0;
+            text-align: center;
+            width: max-content;
+            padding: 10px 20px;
+            box-shadow: 0 0 6px rgb(0 0 0 / 3%);
+            text-decoration: 1px underline transparent;
+            text-decoration-skip-ink: none;
+            transition: all 0.4s ease;
+
+            @include md {
+                font-size: 16px;
+                bottom: 15px;
+            }
+
+            @include sm {
+                padding: 5px 10px;
+                font-size: 14px;
+            }
+
+            @include xs {
+                width: 90%;
+                bottom: 10px;
+            }
+
+            &:hover {
+                text-decoration-color: $black;
+            }
+        }
+    }
+}
+
+// INDEX-2 CATEGORY SECTION STYLES
+.fz-2-category-section {
+    background: $white;
+    padding: 110px 0;
+
+    @include md {
+        padding: 60px 0;
+    }
+
+    .fz-section-heading {
+        @include sm {
+            text-align: center;
+        }
+
+        &-description {
+            margin-bottom: 0;
+            font-weight: 300;
+        }
+    }
+
+    .fz-section-title {
+        font-family: $soligant;
+
+        span {
+            margin-left: 50px;
+
+            @include sm {
+                margin-left: 0;
+            }
+        }
+    }
+
+    .fz-single-category {
+        &__img {
+            position: relative;
+            margin-bottom: 23px;
+
+            @include xxs {
+                margin-bottom: 10px;
+            }
+
+            &:hover {
+                .fz-overlay {
+                    opacity: 1;
+                }
+
+                .fz-def-btn {
+                    opacity: 1;
+                    margin-top: 0;
+                }
+            }
+
+            .fz-def-btn {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                translate: -50% -50%;
+                border-color: $white;
+                background: no-repeat;
+                color: $white;
+                opacity: 0;
+                margin-top: 10px;
+
+                @include xxs {
+                    font-size: 12px;
+                    width: 80px;
+                    height: 80px;
+                    line-height: 80px;
+                }
+
+                &:hover {
+                    border-color: $black;
+                }
+
+                span {
+                    background-color: $black;
+                }
+            }
+
+            .fz-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgb(0, 0, 0, .3);
+                opacity: 0;
+                transition: .4s ease;
+            }
+        }
+
+        &__txt {
+            h5 {
+                font-family: $soligant;
+                font-size: 34px;
+                text-transform: capitalize;
+                margin-bottom: 0;
+
+                @include md {
+                    font-size: 25px;
+                }
+
+                @include xxs {
+                    font-size: 14px;
+                }
+
+                span {
+                    font-family: $futuraPT;
+                    font-weight: 300;
+                    font-size: 25px;
+
+                    @include sm {
+                        font-size: 20px;
+                    }
+
+                    @include xs {
+                        font-size: 15px;
+                    }
+
+                    @include xxs {
+                        font-size: 13px;
+                    }
+                }
+
+                a {
+                    &:hover {
+                        color: $color-3;
+                    }
+                }
+            }
+        }
+
+        &.second-category {
+            height: 100%;
+
+            .fz-single-category__img {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+// INDEX-3 CATEGORY SECTION STYLES
+.fz-3-category-section {
+    background: #f8f8f8;
+    padding: 110px 0;
+    isolation: isolate;
+
+    @include xl {
+        padding: 60px 0;
+    }
+
+    .fz-3-section-heading {
+        text-align: center;
+
+
+        &-description {
+            margin-bottom: 0;
+            font-weight: 300;
+        }
+    }
+
+    .fz-3-section-title {
+
+        @include xxl {
+            font-size: 70px;
+        }
+
+        @include xl {
+            font-size: 60px;
+        }
+
+        @include lg {
+            font-size: 50px;
+        }
+
+        @include md {
+            font-size: 45px;
+        }
+
+        @include sm {
+            font-size: 40px;
+
+            br {
+                display: none;
+            }
+        }
+
+        @include xs {
+            font-size: 38px;
+        }
+
+        @include xxs {
+            font-size: 35px;
+        }
+
+        span {
+            margin-left: 50px;
+
+            @include sm {
+                margin-left: 0;
+            }
+        }
+    }
+
+    .fz-3-single-category {
+        display: block;
+        text-align: center;
+
+        &__img {
+            border-radius: 50%;
+            width: 216px;
+            max-width: 100%;
+            aspect-ratio: 1;
+            position: relative;
+            margin: auto;
+            margin-bottom: 23px;
+            background: url(/assets/images/fz-cat-bg-1.png) no-repeat center center;
+            z-index: 1;
+            display: grid;
+            place-items: center;
+
+            @include xl {
+                width: 135px;
+                margin-bottom: 13px;
+            }
+
+            @include lg {
+                width: 125px;
+            }
+
+            @include xs {
+                margin-bottom: 8px;
+            }
+
+            @include xxs {
+                width: 120px;
+                margin-bottom: 5px;
+            }
+
+            img {
+                width: 50%;
+            }
+
+            &::before {
+                transition: all 0.4s ease;
+                content: "";
+                border: 1px solid #eee;
+                position: absolute;
+                inset: 0;
+                background-color: #f8f8f8;
+                border-radius: 50%;
+                z-index: -1;
+            }
+
+            &:hover {
+                &::before {
+                    background-color: rgb(0 0 0 / 65%);
+                }
+            }
+
+            .fz-3-def-btn {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                translate: -50% -50%;
+                border-color: $white;
+                background: no-repeat;
+                color: $white;
+                opacity: 0;
+                margin-top: 10px;
+
+                &:hover {
+                    border-color: $black;
+                }
+            }
+
+            .fz-3-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgb(0, 0, 0, .3);
+                opacity: 0;
+                transition: .4s ease;
+            }
+        }
+
+        &__txt {
+            a {
+                font-family: $playfair;
+                font-size: 18px;
+                text-transform: capitalize;
+                margin-bottom: 0;
+
+                @include xxs {
+                    font-size: 16px;
+                }
+
+                &:hover {
+                    color: $color-3;
+                }
+
+                span {
+                    font-family: $futuraPT;
+                    font-weight: 300;
+                    font-size: 25px;
+                }
+            }
+        }
+
+        &.second-category {
+            height: 100%;
+
+            .single-category__img {
+                margin-bottom: 0;
+                margin-top: 10px;
+
+                @include xs {
+                    margin-top: 0;
+                    margin-bottom: 23px;
+                }
+            }
+        }
+    }
+}
+
+
+// INDEX-4 CATEGORY SECTION STYLES
+.fz-4-category-section {
+    &.pb-120 {
+        @include md {
+            padding-bottom: 60px;
+        }
+    }
+}
+
+.fz-4-single-category {
+    &__img {
+        aspect-ratio: 1 / 1;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        padding: 20px;
+        background: var(--clr-gray-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: .3s;
+
+        @include lg {
+            padding: 15px;
+
+            img {
+                max-height: 100px;
+            }
+        }
+
+        @include md {
+            padding: 15px;
+
+            img {
+                max-height: 95px;
+            }
+        }
+    }
+
+    &__txt {
+        text-align: center;
+        padding-top: 27px;
+        margin-bottom: -7px;
+
+        @include lg {
+            padding-top: 20px;
+        }
+
+        @include md {
+            padding-top: 8px;
+        }
+
+        a {
+            font-size: 18px;
+            line-height: 1.3;
+            font-weight: 600;
+            color: var(--clr-body-dark);
+
+            @include lg {
+                font-size: 16px;
+            }
+
+            @include md {
+                font-size: 14px;
+            }
+        }
+    }
+
+    &:hover {
+        .fz-4-single-category__img {
+            border-color: $fz-4-color-2;
+        }
+    }
+}
+
+// INDEX-5 CATEGORY SECTION STYLES
+.fz-5-category-section {
+    @include md {
+        &.pt-120 {
+            padding-top: 60px;
+        }
+
+        &.pb-120 {
+            padding-bottom: 60px;
+        }
+    }
+}
+
+.fz-5-category-slider {
+    margin-bottom: -4px;
+
+    .owl-stage {
+        padding-bottom: 5px;
+    }
+
+    .owl-nav {
+        position: absolute;
+        top: 50%;
+        left: -50px;
+        right: -50px;
+        transform: translateY(-100%);
+        display: flex;
+        justify-content: space-between;
+        font-size: 30px;
+        color: var(--clr-body-soft);
+        visibility: hidden;
+        z-index: 2;
+
+        button {
+            visibility: visible;
+
+            &:hover {
+                color: $black-5;
+            }
+        }
+
+        @include xl {
+            left: -30px;
+            right: -30px;
+        }
+
+        @include lg {
+            display: none;
+        }
+    }
+
+    &-img {
+        background: $white-5;
+        aspect-ratio: 1 / 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        border-radius: 50%;
+        margin-bottom: 30px;
+
+        @include md {
+            margin-bottom: 20px;
+        }
+    }
+
+    &-txt {
+        text-align: center;
+        font-size: 24px;
+        line-height: 1;
+        font-weight: 500;
+
+        @include md {
+            font-size: 18px;
+        }
+    }
+}
+
+// INDEX-6 CATEGORY SECTION STYLES
+.fz-6-categories {
+    background-color: #F7F8F9;
+    padding: 85px 0 100px;
+
+    @include lg {
+        padding: 55px 0 70px;
+    }
+
+    &-bg {
+        background-color: $white;
+        padding: 65px 70px;
+        border-radius: 5px;
+
+        @include xl {
+            padding: 45px 50px;
+        }
+
+        @include sm {
+            padding: 30px;
+        }
+
+        @include xxs {
+            padding: 20px;
+        }
+    }
+
+    &-row {
+        --bs-gutter-x: 100px;
+        --bs-gutter-y: 30px;
+
+        @include xxl {
+            --bs-gutter-x: 50px;
+        }
+
+        @include sm {
+            --bs-gutter-x: 40px;
+        }
+
+        @include xs {
+            --bs-gutter-x: 30px;
+            --bs-gutter-y: 20px;
+        }
+    }
+}
+
+.fz-6-category {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    @include xxs {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    &:hover {
+        .fz-6-category-title {
+            color: #fb2f29;
+        }
+    }
+
+    &-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #191919;
+        transition: 0.4s ease;
+
+        @include sm {
+            font-size: 18px;
+        }
+    }
+
+    &-amount {
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    &-img {
+        align-self: flex-end;
+
+        img {
+            @include xl {
+                width: 90px;
+                height: 60px;
+                object-fit: contain;
+                object-position: right;
+            }
+
+            @include sm {
+                width: 70px;
+            }
+        }
+    }
+}
+
+
+// INDEX-7 CATEGORIES 
+.fz-7-categories {
+    &.pt-120 {
+        @include xl {
+            padding-top: 80px;
+        }
+    }
+
+    .row {
+        @include md {
+            --bs-gutter-x: 30px;
+        }
+    }
+}
+
+.fz-7-category {
+    gap: 40px;
+    display: flex;
+    flex-direction: column;
+
+    @include xs {
+        gap: 20px;
+    }
+
+    &-txt {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    &-sub-title {
+        color: #2B2C34;
+        font-size: 30px;
+        font-weight: 400;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+
+        @include lg {
+            font-size: 26px;
+            margin-bottom: 0;
+        }
+
+        @include md {
+            font-size: 24px;
+        }
+
+        @include sm {
+            font-size: 20px;
+        }
+    }
+
+    &-title {
+        color: #2B2C34;
+        font-size: 40px;
+        font-weight: 700;
+        margin-bottom: 12px;
+
+        @include lg {
+            font-size: 35px;
+            margin-bottom: 8px;
+        }
+
+        @include md {
+            font-size: 32px;
+        }
+
+        @include sm {
+            font-size: 28px;
+        }
+
+        @include xs {
+            font-size: 25px;
+        }
+    }
+
+    .fz-6-sub-banner-btn {
+        @include md {
+            padding: 0 23px;
+            height: 40px;
+        }
+
+        @include sm {
+            padding: 0 20px;
+            height: 35px;
+            font-size: 14px;
+        }
+    }
+}
+
+
+// INDEX-8 CATEGORIES
+.fz-8-categories {
+    &.py-120 {
+        @include xl {
+            padding: 80px 0;
+        }
+
+        @include md {
+            padding: 60px 0;
+        }
+    }
+
+    &-heading {
+        margin-bottom: 64px;
+
+        @include xl {
+            margin-bottom: 34px;
+        }
+
+        @include lg {
+            margin-bottom: 24px;
+        }
+
+        @include md {
+            margin-bottom: 10px;
+        }
+
+        @include sm {
+            margin-bottom: 20px;
+        }
+
+        @include xs {
+            margin-bottom: 10px;
+        }
+    }
+
+    &-title {
+        font-size: 100px;
+        line-height: 1;
+        text-transform: uppercase;
+        color: #18223A;
+        font-weight: 600;
+
+        @include xl {
+            font-size: 90px;
+        }
+
+        @include lg {
+            font-size: 80px;
+        }
+
+        @include md {
+            font-size: 70px;
+        }
+
+        @include sm {
+            font-size: 60px;
+        }
+
+        @include xs {
+            font-size: 55px;
+        }
+
+        @include xxs {
+            font-size: 50px;
+        }
+
+        span {
+            padding-left: 87px;
+
+            @include md {
+                padding-left: 57px;
+            }
+        }
+    }
+
+    &-descr {
+        font-family: $kanit;
+        font-size: 20px;
+        font-weight: 400;
+        color: #4D4D4D;
+
+        @include md {
+            font-size: 18px;
+        }
+    }
+
+    &-col-left {
+        margin-top: 125px;
+
+        @include md {
+            margin-top: 85px;
+        }
+
+        @include sm {
+            margin-top: 55px;
+        }
+
+        @include xs {
+            margin-top: 20px;
+        }
+    }
+}
+
+.fz-8-category {
+    position: relative;
+    overflow: hidden;
+
+    &:hover {
+        .fz-8-category-img img {
+            scale: 1.1;
+        }
+
+        .fz-8-category-title {
+            border-color: $white;
+        }
+    }
+
+    &:first-child {
+        margin-bottom: 100px;
+
+        @include lg {
+            margin-bottom: 70px;
+        }
+
+        @include md {
+            margin-bottom: 60px;
+        }
+
+        @include sm {
+            margin-bottom: 45px;
+        }
+
+        @include xs {
+            margin-bottom: 16px;
+        }
+    }
+
+    &-rounded {
+        border-top-left-radius: 290px;
+        border-top-right-radius: 290px;
+    }
+
+    &-img {
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, #000000ba 0, transparent 40%);
+            z-index: 1;
+        }
+
+        img {
+            transition: scale 0.4s ease;
+            width: 100%;
+        }
+    }
+
+    &-txt {
+        position: absolute;
+        inset: 0;
+        top: auto;
+        padding: 0 50px;
+        padding-bottom: 27px;
+        z-index: 2;
+
+        @include lg {
+            padding: 0 35px;
+            padding-bottom: 17px;
+        }
+
+        @include md {
+            padding: 0 25px;
+            padding-bottom: 13px;
+        }
+
+        @include sm {
+            padding: 0 15px;
+            padding-bottom: 8px;
+        }
+
+        @include xxs {
+            padding: 0 22px;
+            padding-bottom: 13px;
+        }
+    }
+
+    &-title {
+        font-size: 50px;
+        font-weight: 600;
+        color: $white;
+        text-transform: uppercase;
+        border-bottom: 4px solid transparent;
+        line-height: 1;
+        transition: 0.4s ease;
+        width: fit-content;
+        max-width: 100%;
+
+        @include md {
+            font-size: 40px;
+            border-bottom-width: 2px;
+        }
+
+        @include sm {
+            font-size: 30px;
+        }
+
+        a:hover {
+            color: #DBC996;
+        }
+    }
+}
+
+
+// INDEX-9 CATEGORIES 
+
+.fz-9-section-title-area {
+    margin-bottom: 40px;
+
+    @include xxs {
+        margin-bottom: 20px;
+    }
+
+    .fz-9-section-title {
+        font-size: 60px;
+        font-weight: 700;
+        color: #253B70;
+
+        @include xxl {
+            font-size: 55px;
+        }
+
+        @include xl {
+            font-size: 50px;
+        }
+
+        @include lg {
+            font-size: 45px;
+        }
+
+        @include md {
+            font-size: 35px;
+        }
+    }
+
+    .fz-9-section-content {
+        font-size: 16px;
+        font-weight: 400;
+        color: #253B70;
+
+        br {
+            @include md {
+                display: none;
+            }
+        }
+    }
+}
+
+.fz-9-categories {
+    overflow: hidden;
+    padding: 120px 0;
+
+    @include xl {
+        padding: 80px 0;
+    }
+
+    @include md {
+        padding: 60px 0;
+    }
+
+    .category-items {
+        margin-top: 25px;
+        position: relative;
+
+        .slick-list {
+            margin-right: -30px;
+
+            @include xl {
+                margin-right: -20px;
+            }
+        }
+
+        .category-box {
+
+            .category-thumb {
+                margin-bottom: 20px;
+
+                a {
+                    width: 100%;
+                    vertical-align: top;
+                }
+
+                img {
+                    width: 100%;
+                }
+            }
+        }
+    }
+
+}
+
+
+.fz-9-slider-nav {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    translate: -50% -50%;
+    width: 100%;
+    z-index: 1;
+    visibility: hidden;
+
+    button {
+        background-color: transparent;
+        color: #FF7C7C;
+        border: 1px solid #FF7C7C;
+        height: 58px;
+        width: 58px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 1;
+        transition: 0.4s;
+        translate: -50% 0;
+        visibility: visible;
+
+        @include lg {
+            height: 48px;
+            width: 48px;
+        }
+
+        @include sm {
+            height: 43px;
+            width: 43px;
+        }
+
+        &:last-child {
+            translate: 50% 0;
+        }
+
+        @include xs {
+            display: none !important;
+        }
+
+        &:hover {
+            background-color: #FF7C7C;
+            color: #ffffff;
+        }
+    }
+}
+
+// fz-10-category-scss
+.fz-10-category {
+    &-section {
+        padding: 130px 0;
+        border-bottom: 1px solid rgb(10, 10, 10, 0.10);
+
+        @include lg {
+            padding: 80px 0;
+        }
+
+        @include md {
+            padding: 60px 0 50px;
+        }
+
+        @include xxs {
+            padding: 60px 0 20px;
+        }
+
+        .single-category-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+
+            @include xl {
+                // margin-bottom: 20px;
+            }
+
+            @include xxs {
+                flex-direction: column;
+            }
+
+            @include sm {
+                .single-categories-iamge {
+                    max-width: 250px;
+                }
+            }
+
+            @include xxs {
+                .single-categories-iamge {
+                    max-width: 100%;
+                }
+            }
+
+            .single-categories-content {
+                padding: 70px 30px;
+
+                @include lg {
+                    padding: 30px 20px;
+                }
+
+                @include xs {
+                    padding: 20px;
+                }
+
+                h3 {
+                    margin-top: 30px;
+                    font-weight: 600;
+                    margin-bottom: 12px;
+
+                    @include sm {
+                        font-size: 20px;
+                    }
+
+                    @include xs {
+                        margin-top: 10px;
+                        margin-bottom: 6px;
+                    }
+                }
+
+                p {
+                    font-family: $nunito;
+                    margin-bottom: 30px;
+                    font-size: 20px;
+                    font-weight: 300;
+                    color: #8A8A8A;
+
+                    @include xs {
+                        margin-bottom: 10px;
+                    }
+                }
+
+                span {
+                    height: 1px;
+                    width: 60px;
+                    background: rgb(0, 0, 0, 0.16);
+                    transform: rotate(90deg);
+                    display: inline-block;
+                    margin: 30px 0 30px 0;
+
+                    @include xs {
+                        width: 50px;
+                    }
+
+                    @include xxs {
+                        display: none;
+                    }
+
+                }
+            }
+
+            .single-categories-image img {
+                width: 100%;
+            }
+        }
+
+        .bottom-ct {
+            @include xxs {
+                flex-direction: column-reverse;
+            }
+        }
+    }
+
+    &-row {
+        --bs-gutter-x: 30px;
+        --bs-gutter-y: 30px;
+
+        @include xs {
+            --bs-gutter-x: 15px;
+            --bs-gutter-y: 15px;
+        }
+    }
+}
+
+
+// INDEX-11 CATEGORIES
+.fz-11-category {
+    max-width: 100%;
+    margin-top: 200px;
+    font-family: $oswald;
+
+    @include xxl {
+        margin-top: 130px;
+    }
+
+    @include xxs {
+        margin-top: 60px;
+    }
+
+    .fz-11-category-container {
+        background-color: #f5f5f5;
+        height: 600px;
+        position: relative;
+
+        @include xxl {
+            height: 410px;
+        }
+
+        @include xl {
+            height: 350px;
+        }
+
+        @include md {
+            height: 300px;
+        }
+
+        @include xs {
+            height: 270px;
+        }
+    }
+
+    .fz-11-category-container:before {
+        content: "";
+        position: absolute;
+        top: 100;
+        right: 100;
+        border-top: 300px solid white;
+        border-right: 200px solid #f5f5f5;
+        width: 0;
+
+        @include md {
+            top: 70;
+            right: 70;
+            border-top: 200px solid white;
+            border-right: 140px solid #f5f5f5;
+        }
+
+        @include sm {
+            top: 70;
+            right: 70;
+            border-top: 300px solid white;
+            border-right: 140px solid #f5f5f5;
+        }
+
+        @include xs {
+            top: 70;
+            right: 70;
+            border-top: 0px solid white;
+            border-right: 0px solid #f5f5f5;
+        }
+    }
+
+    .fz-11-category-sub-container {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        padding-top: 100px;
+
+        @include xl {
+            padding-top: 60px;
+        }
+
+        @include md {
+            display: flex;
+            flex-wrap: wrap;
+            padding-top: 30px;
+            margin-bottom: 20px;
+        }
+    }
+
+    .fz-11-category-heading {
+        font-size: 50px;
+        font-weight: 600;
+
+        @include xxl {
+            margin-left: 100px;
+        }
+
+        @include xl {
+            margin-left: 160px;
+        }
+
+        @include lg {
+            margin-left: 200px;
+        }
+
+        @include md {
+            font-size: 45px;
+            margin-left: 20px;
+        }
+
+        @include sm {
+            margin-left: 70px;
+            font-size: 35px;
+        }
+
+        @include xs {
+            font-size: 30px;
+            margin-left: 0px;
+
+        }
+    }
+
+    .fz-11-category-description {
+        font-size: 18px;
+        color: #010108;
+        font-family: $nunito;
+        width: 470px;
+
+        @include lg {
+            margin: 0 20px;
+        }
+
+        @include md {
+            padding-top: 20px;
+            padding-bottom: 20px;
+            padding-left: 72px;
+        }
+
+        @include sm {
+            padding-left: 110px;
+            font-size: 16px;
+        }
+
+        @include xs {
+            padding-top: 10px;
+            padding-left: 5px;
+            padding-bottom: 10px;
+        }
+    }
+
+    .fz-11-category-icon-container {
+        display: flex;
+        gap: 20px;
+
+        .fz-11-category-arrow {
+            height: 50px;
+            width: 50px;
+            border: 2px solid black;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .fz-11-category-arrow:hover {
+            background-color: #010108;
+            color: white;
+        }
+    }
+
+    .fz-11-category-cctv-container {
+        position: absolute;
+        top: 300px;
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        gap: 30px;
+
+        @include xl {
+            top: 260px;
+        }
+
+        @include md {
+            top: 300px;
+        }
+
+        @include sm {
+            top: 330px;
+        }
+
+        @include xs {
+            top: 260px;
+        }
+
+        @include xxs {
+            top: 280px;
+        }
+    }
+
+    .fz-11-category-cctv1 {
+        height: 100%;
+        width: 100%;
+    }
+
+    .fz-11-category-button {
+        width: 100%;
+        height: 100%;
+        font-size: 20px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: end;
+    }
+
+    .fz-11-category-button button {
+        background-color: white;
+        margin-bottom: 30px;
+        padding: 8px 18px;
+    }
+
+    .fz-11-category-button button:hover {
+        background-color: #150c21;
+        color: white;
+    }
+
+    .swiper {
+        width: 100%;
+        height: 100%;
+    }
+
+    .swiper-slide {
+        text-align: center;
+        font-size: 18px;
+        background: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .swiper-slide img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+
+// INDEX-12 CATEGORY 
+.fz-12-categories {
+    &.py-120 {
+        @include xl {
+            padding: 80px 0;
+        }
+
+        @include md {
+            padding: 60px 0;
+        }
+    }
+
+    .fz-12-section-title {
+        font-size: 60px;
+        font-weight: 600;
+
+        @include xl {
+            font-size: 55px;
+        }
+
+        @include sm {
+            font-size: 45px;
+        }
+
+        @include xs {
+            font-size: 40px;
+        }
+
+        @include xxs {
+            font-size: 35px;
+        }
+
+        span {
+            padding-left: 75px;
+        }
+    }
+
+    &-descr {
+        font-size: 20px;
+        font-family: $nunito;
+
+        @include lg {
+            font-size: 18px;
+        }
+    }
+
+    .reveal {
+        visibility: hidden;
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+
+        img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            transform-origin: left;
+        }
+    }
+
+    &-col-right {
+        .fz-12-category-right {
+            margin-right: 135px;
+            margin-left: 85px;
+
+            @include xxl {
+                margin-right: 85px;
+            }
+
+            @include lg {
+                margin-right: 15px;
+            }
+
+            @include sm {
+                margin-left: 40px;
+            }
+        }
+    }
+}
+
+.fz-12-category {
+    margin-right: 170px;
+
+    @include xxl {
+        margin-right: 120px;
+    }
+
+    @include lg {
+        margin-right: 20px;
+    }
+
+    @include sm {
+        margin-right: 0;
+    }
+
+    &-right {
+        margin-left: 100px;
+        margin-right: 120px;
+        position: relative;
+
+        @include xxl {
+            margin-right: 70px;
+        }
+
+        @include lg {
+            margin-right: 0;
+        }
+
+        @include sm {
+            margin-left: 50px;
+        }
+
+        .fz-12-category-title {
+            position: absolute;
+            bottom: 170px;
+            left: -95px;
+
+            @include sm {
+                left: -65px;
+            }
+
+            @include xs {
+                left: -45px;
+            }
+
+            @include xxs {
+                left: -35px;
+            }
+        }
+    }
+
+    &:first-child {
+        margin-bottom: 111px;
+
+        @include lg {
+            margin-bottom: 70px;
+        }
+
+        @include xs {
+            margin-bottom: 30px;
+        }
+    }
+
+    &-title {
+        font-size: 30px;
+        font-weight: 400;
+        margin-top: 18px;
+
+        @include sm {
+            margin-top: 8px;
+            font-size: 27px;
+        }
+
+        a:hover {
+            color: #DBC996;
+        }
+    }
+}

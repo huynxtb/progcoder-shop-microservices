@@ -1,0 +1,27 @@
+@mixin hover-animated-icon {
+    overflow: hidden;
+    position: relative;
+
+    & i {
+        transition: all .3s;
+
+        &:last-child {
+            position: absolute;
+            left: 50%;
+            top: 150%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    &:hover {
+        & i {
+            &:first-child {
+                transform: translateY(-45px);
+            }
+
+            &:last-child {
+                top: 50%;
+            }
+        }
+    }
+}

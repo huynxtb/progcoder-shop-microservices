@@ -1,0 +1,9 @@
+#To enable basic auth, uncomment the following lines. Just use authen on your production.
+
+# basic_auth_users:
+#     admin: $2a$12$d89wOoes5N3cCNF7r6W8uOoPdGZ9AO7OFunBWDRZbxb.euELApEgO
+
+#Username: admin
+#Password: 123456789Aa
+#Note: Password also need to be updated in prometheus/prometheus.yml
+#Go to this link to gen pass: https://bcrypt-generator.com/

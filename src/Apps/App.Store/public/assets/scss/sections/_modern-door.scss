@@ -1,0 +1,39 @@
+.fz-1-modern-door-section {
+    padding: 120px 0;
+
+    @include md {
+        padding: 60px 0;
+    }
+
+    .fz-1-modern-door-slider-container {
+        position: relative;
+
+        .fz-1-modern-door-slider-nav {
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            width: calc(100% + 40px);
+            top: 50%;
+            translate: -50% -50%;
+            left: 50%;
+            z-index: 12;
+
+            @include md {
+                display: none;
+            }
+
+            button {
+                background-color: $white;
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+                box-shadow: 0 0 6px rgb(0 0 0 / 10%);
+
+                &:hover {
+                    background-color: $black;
+                    color: $white;
+                }
+            }
+        }
+    }
+}

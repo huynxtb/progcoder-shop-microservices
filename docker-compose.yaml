@@ -1,0 +1,106 @@
+version: '3.8'
+
+services:
+
+  identity_service:
+    build:
+      context: .
+      dockerfile: src/Services/Identity/IdentityServer/Dockerfile
+    container_name: identity_service
+    restart: always
+    ports:
+      - "17001:80"
+      - "15001:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+;http://+
+      - ASPNETCORE_HTTPS_PORTS=15001
+      - ASPNETCORE_HTTP_PORTS=17001
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=ProGCoder
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnet.pfx
+      - ConnectionStrings__DefaultConnection=Server=mssql_identitydb;Database=IdentityService;User Id=sa;Password=123456789Aa;Trusted_Connection=True;TrustServerCertificate=True;Integrated Security=False
+      - MessageBroker__Host=amqp://rabbitmq:5672
+      - MessageBroker__UserName=admin
+      - MessageBroker__Password=123456789Aa
+      - SerilogServer__ServerLog=http://seq_logger:5341
+      - SerilogServer__Password=UBAn2vc9E4XPIuajmBDKOrYpjL8hNWmZhtW/AJEjjS4=
+      - DistributedTracingAndLogging__Zipkin__Endpoint=http://zipkin:9411/api/v2/spans
+    volumes:
+      - ~/.aspnet/https:/https
+      - ./idsrv-keys:/app/keys
+    networks:
+      - progcoder_network
+
+  # catalog_service:
+  #   build:
+  #     context: .
+  #     dockerfile: src/Services/Catalog/API/Dockerfile
+  #   container_name: catalog_service
+  #   restart: always
+  #   ports:
+  #     - "17002:80"
+  #     - "15000:443"
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ASPNETCORE_URLS=https://+;http://+
+  #     - ASPNETCORE_HTTPS_PORTS=15000
+  #     - ASPNETCORE_HTTP_PORTS=17002
+  #     - ASPNETCORE_Kestrel__Certificates__Default__Password=ProGCoder
+  #     - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnet.pfx
+  #     - DatabaseConfig__DatabaseType=POSTGRESQL
+  #     - DatabaseConfig__ConnectionString=Server=postgresql_catalogdb;Port=5432;Database=Catalog_DB;User Id=postgres;Password=123456789Aa;Include Error Detail=true;
+  #     - MessageBroker__Host=amqp://rabbitmq:6379
+  #     - MessageBroker__UserName=admin
+  #     - MessageBroker__Password=123456789Aa
+  #     - SerilogServer__ServerLog=http://seq_logger:5341
+  #     - SerilogServer__Password=UBAn2vc9E4XPIuajmBDKOrYpjL8hNWmZhtW/AJEjjS4=
+  #     - DistributedTracingAndLogging__Zipkin__Endpoint=http://zipkin:9411/api/v2/spans
+  #     - AppConfig__ServiceName=catalog-service
+  #     - AppConfig__ApiKey=123456
+  #     - IdentityServer__Authority=https://distinct-elk-wanted.ngrok-free.app
+  #     - IdentityServer__ApiName=catalog.api
+  #     - IdentityServer__RequireHttpsMetadata=false
+  #     - MinIO__Endpoint=minio:9000
+  #     - MinIO__AccessKey=minioadmin
+  #     - MinIO__SecretKey=minioadmin
+  #     - MinIO__Secure=false
+  #   volumes:
+  #     - ~/.aspnet/https:/https
+  #   depends_on:
+  #     - identity_service
+  #   networks:
+  #     - progcoder_network
+
+  # yarp_api_gateway:
+  #   build:
+  #     context: .
+  #     dockerfile: src/ApiGateway/YarpApiGateway/Dockerfile
+  #   container_name: yarp_api_gateway
+  #   restart: always
+  #   ports:
+  #     - "8004:80"
+  #     - "8005:443"
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ASPNETCORE_URLS=https://+;http://+
+  #     - ASPNETCORE_HTTPS_PORTS=8005
+  #     - ASPNETCORE_Kestrel__Certificates__Default__Password=123@123Aa
+  #     - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+  #     - CorsConfig__PolicyName=AllowSpecificOrigins
+  #     - CorsConfig__Domains__0=http://localhost:3000
+  #     - CorsConfig__Domains__1=http://localhost:3001
+  #     - ReverseProxy__Clusters__catalog-cluster__Destinations__destination1__Address=http://catalog_service
+  #   volumes:
+  #     - ./certs/https:/https
+  #   depends_on:
+  #     - identity_service
+  #     - catalog_service
+  #   networks:
+  #     - progcoder_network
+
+volumes:
+  idsrv-keys:
+
+networks:
+  progcoder_network:
+    driver: bridge

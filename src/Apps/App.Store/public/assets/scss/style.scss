@@ -1,0 +1,93 @@
+/*============================================================
+[Master Stylesheet]
+Theme Name            :Farzaa - Multipurpose E-commerce React Template
+Version               :1.0.0
+Author                :Codebasket
+URL                   :https://themeforest.net/user/codebasket
+Front-End Developer   : Azizur Rahman
+=========================================================*/
+
+
+/*=======================================================
+TABLE OF CONTENTS:
+01  Global Styles
+02  Components
+
+======SECTION STYLSHEET======
+03  Header section
+04  Banner section
+05  Category section
+06  Layer cake section
+07  Featured Product Section
+08  Modern Door Section
+09  Client section
+10  Special Offer section
+11  Video section
+12  Latest Product section
+13  Call-to-Action section
+15  Luxury Deals section
+16  Hot Deals section
+17  Testimonial section
+18  Blog Section
+19  Gallery Section
+20  Features Section
+21  Footer Section
+
+======INNER PAGES stylsheet======
+22  Shop Page
+22  Shop Details Page
+22  Blog Page
+22  Blog Details
+22  Cart Page
+22  Contact Page
+22  FAQ Page
+22  About Page
+22  Account Page
+22  Checkout Page
+=========================================================*/
+
+
+// ========================= Main ============================
+@import "main/breakpoints";
+@import "main/variable";
+@import "main/mixins";
+@import "main/global";
+@import "main/components";
+@import "main/utils";
+
+// ========================= sections =========================
+@import "sections/header";
+@import "sections/banner";
+@import "sections/category";
+@import "sections/layer";
+@import "sections/featured-products";
+@import "sections/modern-door";
+@import "sections/client";
+@import "sections/special-offer";
+@import "sections/video";
+@import "sections/latest";
+@import "sections/cta";
+@import "sections/luxury-deals";
+@import "sections/hot-deals";
+@import "sections/testimonial";
+@import "sections/blog";
+@import "sections/gallery";
+@import "sections/feature";
+@import "sections/footer";
+@import "sections/brands";
+@import "sections/flash-sale";
+@import "sections/sub-banner";
+@import "sections/modal";
+
+// =============================== PAGES ========================== 
+@import "pages/shop";
+@import "pages/shop-details";
+@import "pages/blog";
+@import "pages/blog-details";
+@import "pages/cart";
+@import "pages/contact";
+@import "pages/faq";
+@import "pages/about";
+@import "pages/account";
+@import "pages/checkout";
+@import "pages/404";

@@ -1,0 +1,2018 @@
+{
+	"info": {
+		"_postman_id": "a7fc5d87-6f2f-45d8-8c6e-b96def38b67f",
+		"name": "PG Shop Micrservices",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17282638"
+	},
+	"item": [
+		{
+			"name": "Catalog",
+			"item": [
+				{
+					"name": "GET Products",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{catalog_host}}/products?PageNumber=1&PageSize=20",
+							"host": [
+								"{{catalog_host}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "PageNumber",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{catalog_host}}/categories?PageNumber=1&PageSize=20",
+							"host": [
+								"{{catalog_host}}"
+							],
+							"path": [
+								"categories"
+							],
+							"query": [
+								{
+									"key": "PageNumber",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Brands",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkU4MjE2QjBCRkYwRTJERUZCMjZEQ0I3REVGQzFEN0VCIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxIiwibmJmIjoxNzI1Njc5OTIzLCJpYXQiOjE3MjU2Nzk5MjMsImV4cCI6MTcyNTY4MzUyMywiYXVkIjpbImlkZW50aXR5LmFwaSIsImNhdGFsb2cuYXBpIiwic2VhcmNoLmFwaSIsImh0dHBzOi8vbG9jYWxob3N0OjUwMDEvcmVzb3VyY2VzIl0sInNjb3BlIjpbIm9wZW5pZCIsImVtYWlsIiwicHJvZmlsZSIsImZ1bGxfYWNjZXNzIl0sImFtciI6WyJwd2QiXSwiY2xpZW50X2lkIjoiY2xpZW50LnByb2djb2Rlci53ZWIudXNlciIsInN1YiI6IjMwYWFiYzgzLTc2MTAtNGE2Ny05OTQ1LTVjNDQ5MmFmYjI5ZCIsImF1dGhfdGltZSI6MTcyNTY3OTkwNSwiaWRwIjoibG9jYWwiLCJyb2xlIjoic3lzdGVtOmN1c3RvbWVyIiwic2lkIjoiQjQ0MzI5N0VBMTBDNTlGMzM3QjBERDQ2ODQ2MzZEOTkiLCJqdGkiOiIwMjZDM0NCMzYwMDVGMTU4NDAxNDVEQ0M5OEM5QTMwQSJ9.Tj_b3Ixv-fnsrszMZ6wa7M0CRJD91HdJ5rg006c55TUDipAf0kIOBF70DySc61A0sVOl_vJA4mzANuf5wp-i0FaXEkPKrT4Q1nPwqlzOW3LpIgx7mnIi8Jc9C7X4g9kC-kyK-5Pt5nNJLtJ84V69tPsgjCngIFv7Z0OJT73WFZp_3o1JJucXhLh7y_idpsFjWeo6bbjVT8c0FYr4E_Q0-mB7Q6OouXeHjJKsWD4zHxTJp727wRT-oA9xH2PIMmdm9X2AcOXoLCXDmksCvtIspJnje04mO3uC8o5tFHTm17I8f02fv3ML7vGItU-Tq2lrYym41EdY7-5jZsDEv06lag",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{catalog_host}}/brands?PageNumber=1&PageSize=20",
+							"host": [
+								"{{catalog_host}}"
+							],
+							"path": [
+								"brands"
+							],
+							"query": [
+								{
+									"key": "PageNumber",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Attributes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{catalog_host}}/attributes?PageNumber=1&PageSize=20",
+							"host": [
+								"{{catalog_host}}"
+							],
+							"path": [
+								"attributes"
+							],
+							"query": [
+								{
+									"key": "PageNumber",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET X-XSRF-TOKEN",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{catalog_host}}/products?PageNumber=1&PageSize=20",
+							"host": [
+								"{{catalog_host}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "PageNumber",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ProductById",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{catalog_host}}/product/id/2232dc6c-7b98-483d-95aa-9ce4bf0ca163",
+							"host": [
+								"{{catalog_host}}"
+							],
+							"path": [
+								"product",
+								"id",
+								"2232dc6c-7b98-483d-95aa-9ce4bf0ca163"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ProductByCategory",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{catalog_url}}/products/category/c2",
+							"host": [
+								"{{catalog_url}}"
+							],
+							"path": [
+								"products",
+								"category",
+								"c2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "BrandId",
+									"value": "001b4565-7794-4a9d-b781-265874d298d7",
+									"type": "text"
+								},
+								{
+									"key": "Name",
+									"value": "Sinh ton noi hoang da",
+									"type": "text"
+								},
+								{
+									"key": "Price",
+									"value": "540000",
+									"type": "text"
+								},
+								{
+									"key": "Description",
+									"value": "dasdasd",
+									"type": "text"
+								},
+								{
+									"key": "Stock",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "ImageFiles[0]",
+									"type": "file",
+									"src": "/C:/HuyNX11/Data/Photos/Actions Pts/Blind_Scape_Set.jpg"
+								},
+								{
+									"key": "AttributeSetList[0].Value",
+									"value": "4234234",
+									"type": "text"
+								},
+								{
+									"key": "AttributeSetList[0].Id",
+									"value": "001b4565-7794-4a9d-b781-265874d298d7",
+									"type": "text"
+								},
+								{
+									"key": "ConfigOptionList[0].Price",
+									"value": "11000",
+									"type": "text"
+								},
+								{
+									"key": "ConfigOptionList[0].Id",
+									"value": "002b4565-7794-4a9d-b781-265874d298d7",
+									"type": "text"
+								},
+								{
+									"key": "CategoryIds[0]",
+									"value": "015b4565-7794-4a9d-b781-265874d298d7",
+									"type": "text"
+								},
+								{
+									"key": "CategoryIds[1]",
+									"value": "003b4565-7794-4a9d-b781-265874d298d7",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "Tags[0]",
+									"value": "trang",
+									"type": "text"
+								},
+								{
+									"key": "Tags[1]",
+									"value": "yyy",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "Tags[2]",
+									"value": "xxxx",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "ThumbnailFile",
+									"type": "file",
+									"src": [
+										"/C:/HuyNX11/Data/Photos/Actions Pts/8.png",
+										"/C:/HuyNX11/Data/Photos/Actions Pts/Brownie Vintagee.png"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{catalog_host}}/product",
+							"host": [
+								"{{catalog_host}}"
+							],
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Product",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{catalog_host}}/products",
+							"host": [
+								"{{catalog_host}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Product Update Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Id\": \"2232dc6c-7b98-483d-95aa-9ce4bf0ca163\",\r\n    \"Status\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalog_host}}/product/status",
+							"host": [
+								"{{catalog_host}}"
+							],
+							"path": [
+								"product",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{catalog_host}}/products/73ebe0a3-c6a3-4f22-9263-dc63e1ce80a9",
+							"host": [
+								"{{catalog_host}}"
+							],
+							"path": [
+								"products",
+								"73ebe0a3-c6a3-4f22-9263-dc63e1ce80a9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{catalog_host}}/health",
+							"host": [
+								"{{catalog_host}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Discount",
+			"item": [
+				{
+					"name": "POST Promotion",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"IsPercent\": true,\r\n    \"Code\": \"PROGCODER-1\",\r\n    \"Name\": \"Khuyến mãi từ VIP 1\",\r\n    \"Description\": \"Khuyến mãi từ VIP 1\",\r\n    \"DiscountValue\": 10,\r\n    \"Quantity\": 100\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{discount_host}}/promotions",
+							"host": [
+								"{{discount_host}}"
+							],
+							"path": [
+								"promotions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Promotions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{discount_host}}/promotions",
+							"host": [
+								"{{discount_host}}"
+							],
+							"path": [
+								"promotions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Promotion By Code",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{discount_host}}/promotions/apply/PROGCODER-1i",
+							"host": [
+								"{{discount_host}}"
+							],
+							"path": [
+								"promotions",
+								"apply",
+								"PROGCODER-1i"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ordering",
+			"item": [
+				{
+					"name": "POST Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"Order\": \r\n        {\r\n        \t\"CustomerId\": \"58c49479-ec65-4de2-86e7-033c546291aa\",\r\n            \"OrderName\": \"ORD_4\",\r\n            \"ShippingAddress\": \r\n            \t{\r\n            \t\t\"FirstName\": \"Valentina\",\r\n\t                \"LastName\": \"Legros\",\r\n\t                \"EmailAddress\": \"valeg@xmail.com\",\r\n\t                \"AddressLine\": \"Wiegand Pass Suite 825\",\r\n\t                \"Country\": \"USA\",\r\n\t                \"State\": \"Oklahoma\",\r\n\t                \"ZipCode\": \"41248\"\r\n            \t},\r\n            \"BillingAddress\": \r\n            \t{\r\n            \t\t\"FirstName\": \"Valentina\",\r\n\t                \"LastName\": \"Legros\",\r\n\t                \"EmailAddress\": \"valeg@xmail.com\",\r\n\t                \"AddressLine\": \"Wiegand Pass Suite 825\",\r\n\t                \"Country\": \"USA\",\r\n\t                \"State\": \"Oklahoma\",\r\n\t                \"ZipCode\": \"41248\"\r\n            \t},\r\n            \"Payment\": \r\n            \t{\r\n            \t\t\"CardName\": \"CARD_1\",\r\n\t                \"CardNumber\": \"875-444-3739\",\r\n\t                \"Expiration\": \"12/29\",\r\n\t                \"Cvv\": \"455\",\r\n\t                \"PaymentMethod\": 1\r\n            \t},\r\n            \"Status\": 2,\r\n            \"OrderItems\": [\r\n                {\r\n\t                \"ProductId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n\t                //\"ProductName\": \"IPhone X\",\r\n\t                \"Quantity\": 2,\r\n\t                \"Price\": 500\r\n                },\r\n                {\r\n\t                \"ProductId\": \"c67d6323-e8b1-4bdf-9a75-b0d0d2e7e914\",\r\n\t                //\"ProductName\": \"Samsung 10\",\r\n\t                \"Quantity\": 1,\r\n\t                \"Price\": 500\r\n                }\r\n            ]  \r\n        }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ordering_url}}/orders",
+							"host": [
+								"{{ordering_url}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Order",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"Order\": \r\n        {\r\n            \"Id\": \"354c00f6-b04c-46ed-8d6d-f9f42d7bdf98\",\r\n        \t\"CustomerId\": \"58c49479-ec65-4de2-86e7-033c546291aa\",\r\n            \"OrderName\": \"ORD_5\",\r\n            \"ShippingAddress\": \r\n            \t{\r\n            \t\t\"FirstName\": \"Mehmet\",\r\n\t                \"LastName\": \"Legros\",\r\n\t                \"EmailAddress\": \"valeg@xmail.com\",\r\n\t                \"AddressLine\": \"Wiegand Pass Suite 825\",\r\n\t                \"Country\": \"USA\",\r\n\t                \"State\": \"New York\",\r\n\t                \"ZipCode\": \"41248\"\r\n            \t},\r\n            \"BillingAddress\": \r\n            \t{\r\n            \t\t\"FirstName\": \"Mehmet\",\r\n\t                \"LastName\": \"Legros\",\r\n\t                \"EmailAddress\": \"valeg@xmail.com\",\r\n\t                \"AddressLine\": \"Wiegand Pass Suite 825\",\r\n\t                \"Country\": \"USA\",\r\n\t                \"State\": \"Oklahoma\",\r\n\t                \"ZipCode\": \"41248\"\r\n            \t},\r\n            \"Payment\": \r\n            \t{\r\n            \t\t\"CardName\": \"CARD_2\",\r\n\t                \"CardNumber\": \"875-444-3739\",\r\n\t                \"Expiration\": \"12/29\",\r\n\t                \"CVV\": \"455\",\r\n\t                \"PaymentMethod\": 1\r\n            \t},\r\n            \"Status\": 2,\r\n            \"OrderItems\": [\r\n                {\r\n\t                \"ProductId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n\t                //\"ProductName\": \"IPhone X\",\r\n\t                \"Quantity\": 2,\r\n\t                \"Price\": 500\r\n                },\r\n                {\r\n\t                \"ProductId\": \"c67d6323-e8b1-4bdf-9a75-b0d0d2e7e914\",\r\n\t                //\"ProductName\": \"Samsung 10\",\r\n\t                \"Quantity\": 1,\r\n\t                \"Price\": 500\r\n                }\r\n            ]  \r\n        }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ordering_url}}/orders",
+							"host": [
+								"{{ordering_url}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Orders w/ Pagination",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ordering_url}}/orders?PageIndex=0&PageSize=2",
+							"host": [
+								"{{ordering_url}}"
+							],
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "PageIndex",
+									"value": "0"
+								},
+								{
+									"key": "PageSize",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Orders by Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ordering_url}}/orders/ORD_2",
+							"host": [
+								"{{ordering_url}}"
+							],
+							"path": [
+								"orders",
+								"ORD_2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Orders by Customer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ordering_url}}/orders/customer/58c49479-ec65-4de2-86e7-033c546291aa",
+							"host": [
+								"{{ordering_url}}"
+							],
+							"path": [
+								"orders",
+								"customer",
+								"58c49479-ec65-4de2-86e7-033c546291aa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Order",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{ordering_url}}/orders/354c00f6-b04c-46ed-8d6d-f9f42d7bdf98",
+							"host": [
+								"{{ordering_url}}"
+							],
+							"path": [
+								"orders",
+								"354c00f6-b04c-46ed-8d6d-f9f42d7bdf98"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ordering_url}}/health",
+							"host": [
+								"{{ordering_url}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "API Gateway",
+			"item": [
+				{
+					"name": "Catalog",
+					"item": [
+						{
+							"name": "GET Product",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_gateway}}/catalog-service/products?pageNumber=1&pageSize=5",
+									"host": [
+										"{{api_gateway}}"
+									],
+									"path": [
+										"catalog-service",
+										"products"
+									],
+									"query": [
+										{
+											"key": "pageNumber",
+											"value": "1"
+										},
+										{
+											"key": "pageSize",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Brands",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkU4MjE2QjBCRkYwRTJERUZCMjZEQ0I3REVGQzFEN0VCIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxIiwibmJmIjoxNzI1Njc5OTIzLCJpYXQiOjE3MjU2Nzk5MjMsImV4cCI6MTcyNTY4MzUyMywiYXVkIjpbImlkZW50aXR5LmFwaSIsImNhdGFsb2cuYXBpIiwic2VhcmNoLmFwaSIsImh0dHBzOi8vbG9jYWxob3N0OjUwMDEvcmVzb3VyY2VzIl0sInNjb3BlIjpbIm9wZW5pZCIsImVtYWlsIiwicHJvZmlsZSIsImZ1bGxfYWNjZXNzIl0sImFtciI6WyJwd2QiXSwiY2xpZW50X2lkIjoiY2xpZW50LnByb2djb2Rlci53ZWIudXNlciIsInN1YiI6IjMwYWFiYzgzLTc2MTAtNGE2Ny05OTQ1LTVjNDQ5MmFmYjI5ZCIsImF1dGhfdGltZSI6MTcyNTY3OTkwNSwiaWRwIjoibG9jYWwiLCJyb2xlIjoic3lzdGVtOmN1c3RvbWVyIiwic2lkIjoiQjQ0MzI5N0VBMTBDNTlGMzM3QjBERDQ2ODQ2MzZEOTkiLCJqdGkiOiIwMjZDM0NCMzYwMDVGMTU4NDAxNDVEQ0M5OEM5QTMwQSJ9.Tj_b3Ixv-fnsrszMZ6wa7M0CRJD91HdJ5rg006c55TUDipAf0kIOBF70DySc61A0sVOl_vJA4mzANuf5wp-i0FaXEkPKrT4Q1nPwqlzOW3LpIgx7mnIi8Jc9C7X4g9kC-kyK-5Pt5nNJLtJ84V69tPsgjCngIFv7Z0OJT73WFZp_3o1JJucXhLh7y_idpsFjWeo6bbjVT8c0FYr4E_Q0-mB7Q6OouXeHjJKsWD4zHxTJp727wRT-oA9xH2PIMmdm9X2AcOXoLCXDmksCvtIspJnje04mO3uC8o5tFHTm17I8f02fv3ML7vGItU-Tq2lrYym41EdY7-5jZsDEv06lag",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_gateway}}/catalog-service/brands?PageNumber=1&PageSize=20",
+									"host": [
+										"{{api_gateway}}"
+									],
+									"path": [
+										"catalog-service",
+										"brands"
+									],
+									"query": [
+										{
+											"key": "PageNumber",
+											"value": "1"
+										},
+										{
+											"key": "PageSize",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET ProductById",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_url}}/catalog-service/products/5334c996-8457-4cf0-815c-ed2b77c4ff61",
+									"host": [
+										"{{yarp_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"products",
+										"5334c996-8457-4cf0-815c-ed2b77c4ff61"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET ProductByCategory",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_url}}/catalog-service/products/category/c2",
+									"host": [
+										"{{yarp_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"products",
+										"category",
+										"c2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Product",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"Name\": \"New Product A\",\r\n    \"Category\": [\"c1\", \"c2\"],\r\n    \"Description\": \"Description Product A\",\r\n    \"ImageFile\": \"ImageFile Product A\",\r\n    \"Price\": 199\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_url}}/catalog-service/products",
+									"host": [
+										"{{yarp_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE Product",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_url}}/catalog-service/products/018d2605-1fef-4cbf-b9b4-cbf999a85cc1",
+									"host": [
+										"{{yarp_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"products",
+										"018d2605-1fef-4cbf-b9b4-cbf999a85cc1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Basket",
+					"item": [
+						{
+							"name": "GET BasketByUsername",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_url}}/basket-service/basket/swn",
+									"host": [
+										"{{yarp_url}}"
+									],
+									"path": [
+										"basket-service",
+										"basket",
+										"swn"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Store Basket",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"Cart\": \r\n        {\r\n            \"UserName\": \"swn\",\r\n            \"Items\": [\r\n                {\r\n                \"Quantity\": 2,\r\n                \"Color\": \"Red\",\r\n                \"Price\": 500,\r\n                \"ProductId\": \"5334c996-8457-4cf0-815c-ed2b77c4ff61\",\r\n                \"ProductName\": \"IPhone X\"\r\n                },\r\n                {\r\n                \"Quantity\": 1,\r\n                \"Color\": \"Blue\",\r\n                \"Price\": 500,\r\n                \"ProductId\": \"c67d6323-e8b1-4bdf-9a75-b0d0d2e7e914\",\r\n                \"ProductName\": \"Samsung 10\"\r\n                }\r\n            ]  \r\n        }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_url}}/basket-service/basket",
+									"host": [
+										"{{yarp_url}}"
+									],
+									"path": [
+										"basket-service",
+										"basket"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE BasketByUsername",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_url}}/basket-service/basket/swn",
+									"host": [
+										"{{yarp_url}}"
+									],
+									"path": [
+										"basket-service",
+										"basket",
+										"swn"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Checkout Basket",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"BasketCheckoutDto\": \r\n        {\r\n\t\t  \"userName\": \"swn\",\r\n\t\t  \"CustomerId\": \"189dc8dc-990f-48e0-a37b-e6f2b60b9d7d\",\r\n\t\t  \"totalPrice\": 0,\r\n\t\t  \"firstName\": \"swn\",\r\n\t\t  \"lastName\": \"swn\",\r\n\t\t  \"emailAddress\": \"test@test.com\",\r\n\t\t  \"addressLine\": \"34 Charles Street\",\r\n\t\t  \"country\": \"USA\",\r\n\t\t  \"state\": \"Michigan\",\r\n\t\t  \"zipCode\": \"48198\",\r\n\t\t  \"cardName\": \"swn\",\r\n\t\t  \"cardNumber\": \"485-3184\",\r\n\t\t  \"expiration\": \"11/30\",\r\n\t\t  \"cvv\": \"333\",\r\n\t\t  \"paymentMethod\": 1\r\n\t\t}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{yarp_url}}/basket-service/basket/checkout",
+									"host": [
+										"{{yarp_url}}"
+									],
+									"path": [
+										"basket-service",
+										"basket",
+										"checkout"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Ordering",
+					"item": [
+						{
+							"name": "GET Orders w/ Pagination",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_url}}/ordering-service/orders?PageIndex=0&PageSize=2",
+									"host": [
+										"{{yarp_url}}"
+									],
+									"path": [
+										"ordering-service",
+										"orders"
+									],
+									"query": [
+										{
+											"key": "PageIndex",
+											"value": "0"
+										},
+										{
+											"key": "PageSize",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Orders by Name",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_url}}/ordering-service/orders/ORD_2",
+									"host": [
+										"{{yarp_url}}"
+									],
+									"path": [
+										"ordering-service",
+										"orders",
+										"ORD_2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Orders by Customer",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{yarp_url}}/ordering-service/orders/customer/58c49479-ec65-4de2-86e7-033c546291aa",
+									"host": [
+										"{{yarp_url}}"
+									],
+									"path": [
+										"ordering-service",
+										"orders",
+										"customer",
+										"58c49479-ec65-4de2-86e7-033c546291aa"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Search",
+					"item": [
+						{
+							"name": "GET Products",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_gateway}}/products?PageNumber=1&PageSize=20",
+									"host": [
+										"{{api_gateway}}"
+									],
+									"path": [
+										"products"
+									],
+									"query": [
+										{
+											"key": "PageNumber",
+											"value": "1"
+										},
+										{
+											"key": "PageSize",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Identity",
+					"item": [
+						{
+							"name": "GET Token",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "client_id",
+											"value": "client.progcoder.web.user",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "client_secret",
+											"type": "text"
+										},
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"type": "text"
+										},
+										{
+											"key": "scope",
+											"value": "openid email profile full_access",
+											"type": "text"
+										},
+										{
+											"key": "code",
+											"value": "A14F471B603E813BCC093A78A3F3302F8B0E4812253D137A1AC2395C8B5DEEA5-1",
+											"type": "text"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "https://localhost:3000",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{api_gateway}}/identity-service/connect/token",
+									"host": [
+										"{{api_gateway}}"
+									],
+									"path": [
+										"identity-service",
+										"connect",
+										"token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Logout",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "client_id",
+											"value": "client.progcoder.web.user",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "client_secret$$",
+											"type": "text"
+										},
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"type": "text"
+										},
+										{
+											"key": "scope",
+											"value": "openid email profile full_access",
+											"type": "text"
+										},
+										{
+											"key": "code",
+											"value": "51E51704D83013610995C3F556F2D7C89F0813E94DFE2F6AC24DA79BAB58F4CE-1",
+											"type": "text"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "https://localhost:3000",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://localhost:5001/connect/endsession?id_token_hint=eyJhbGciOiJSUzI1NiIsImtpZCI6IjVBMEY3RjM4M0VBNUUxQjhDNzc3REM5RDA0MEQ3QkFFIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxIiwibmJmIjoxNzI2NjQ0MTM2LCJpYXQiOjE3MjY2NDQxMzYsImV4cCI6MTcyNjY0NDQzNiwiYXVkIjoiY2xpZW50LnByb2djb2Rlci53ZWIudXNlciIsImFtciI6WyJwd2QiXSwiYXRfaGFzaCI6IjVtaWR3SXVzQUJHa1dxbEIzTTdoa3ciLCJzaWQiOiJBMEVFNEY1MTgwOERERjU2MEVCMTY4REQ2MjczNTE2QyIsInN1YiI6IjBlZmY5YjEwLWU2YTgtNGVjOS1hNmM5LTU2YjY3YTI0YWIzMCIsImF1dGhfdGltZSI6MTcyNjY0NDEzNiwiaWRwIjoibG9jYWwifQ.TlAQZ80IubI2RZ1GpxgM1eC8XH7Bfdq1U9nEJ1MFPi-uc7xRllsoCTIt414O4aZOpW7EEJ9G_NfeRv9WmLj8uMQQjkKYKciHfk9Y1L4dxYOzyLCaRa3IWBG4Vc12On9ZX2h0nLqlBYO9cYFYutQ25UlywA-6bzBI5qdF3XV4aoZBzrLv0FxhxgjLXyxezMJDj8bIvrcVT3DhZWjP-RYvncXsYHlAENIEsrgu1BvOd9JMLNmM44VUybTMmk-AQC9W-ou-il_9yEkrDjL5dDJaf213sB4Qx49hNetQhV4NFro9bRfblsblu3JzHFax_iT23z9Jr4UtDkbqoGKdZI8BlQ&post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A3000",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"connect",
+										"endsession"
+									],
+									"query": [
+										{
+											"key": "id_token_hint",
+											"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjVBMEY3RjM4M0VBNUUxQjhDNzc3REM5RDA0MEQ3QkFFIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxIiwibmJmIjoxNzI2NjQ0MTM2LCJpYXQiOjE3MjY2NDQxMzYsImV4cCI6MTcyNjY0NDQzNiwiYXVkIjoiY2xpZW50LnByb2djb2Rlci53ZWIudXNlciIsImFtciI6WyJwd2QiXSwiYXRfaGFzaCI6IjVtaWR3SXVzQUJHa1dxbEIzTTdoa3ciLCJzaWQiOiJBMEVFNEY1MTgwOERERjU2MEVCMTY4REQ2MjczNTE2QyIsInN1YiI6IjBlZmY5YjEwLWU2YTgtNGVjOS1hNmM5LTU2YjY3YTI0YWIzMCIsImF1dGhfdGltZSI6MTcyNjY0NDEzNiwiaWRwIjoibG9jYWwifQ.TlAQZ80IubI2RZ1GpxgM1eC8XH7Bfdq1U9nEJ1MFPi-uc7xRllsoCTIt414O4aZOpW7EEJ9G_NfeRv9WmLj8uMQQjkKYKciHfk9Y1L4dxYOzyLCaRa3IWBG4Vc12On9ZX2h0nLqlBYO9cYFYutQ25UlywA-6bzBI5qdF3XV4aoZBzrLv0FxhxgjLXyxezMJDj8bIvrcVT3DhZWjP-RYvncXsYHlAENIEsrgu1BvOd9JMLNmM44VUybTMmk-AQC9W-ou-il_9yEkrDjL5dDJaf213sB4Qx49hNetQhV4NFro9bRfblsblu3JzHFax_iT23z9Jr4UtDkbqoGKdZI8BlQ"
+										},
+										{
+											"key": "post_logout_redirect_uri",
+											"value": "http%3A%2F%2Flocalhost%3A3000"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Revoke",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Basic Y2xpZW50LnByb2djb2Rlci53ZWIudXNlcjpjbGllbnRfc2VjcmV0",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "client_id",
+											"value": "client.progcoder.web.user",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "client_secret",
+											"value": "client_secret",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjVBMEY3RjM4M0VBNUUxQjhDNzc3REM5RDA0MEQ3QkFFIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxIiwibmJmIjoxNzI2NjQ0MTM2LCJpYXQiOjE3MjY2NDQxMzYsImV4cCI6MTcyNjY0NDQzNiwiYXVkIjoiY2xpZW50LnByb2djb2Rlci53ZWIudXNlciIsImFtciI6WyJwd2QiXSwiYXRfaGFzaCI6IjVtaWR3SXVzQUJHa1dxbEIzTTdoa3ciLCJzaWQiOiJBMEVFNEY1MTgwOERERjU2MEVCMTY4REQ2MjczNTE2QyIsInN1YiI6IjBlZmY5YjEwLWU2YTgtNGVjOS1hNmM5LTU2YjY3YTI0YWIzMCIsImF1dGhfdGltZSI6MTcyNjY0NDEzNiwiaWRwIjoibG9jYWwifQ.TlAQZ80IubI2RZ1GpxgM1eC8XH7Bfdq1U9nEJ1MFPi-uc7xRllsoCTIt414O4aZOpW7EEJ9G_NfeRv9WmLj8uMQQjkKYKciHfk9Y1L4dxYOzyLCaRa3IWBG4Vc12On9ZX2h0nLqlBYO9cYFYutQ25UlywA-6bzBI5qdF3XV4aoZBzrLv0FxhxgjLXyxezMJDj8bIvrcVT3DhZWjP-RYvncXsYHlAENIEsrgu1BvOd9JMLNmM44VUybTMmk-AQC9W-ou-il_9yEkrDjL5dDJaf213sB4Qx49hNetQhV4NFro9bRfblsblu3JzHFax_iT23z9Jr4UtDkbqoGKdZI8BlQ",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://localhost:5001/connect/revocation",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"connect",
+										"revocation"
+									],
+									"query": [
+										{
+											"key": "id_token_hint",
+											"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjVBMEY3RjM4M0VBNUUxQjhDNzc3REM5RDA0MEQ3QkFFIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxIiwibmJmIjoxNzI2NjQ0MTM2LCJpYXQiOjE3MjY2NDQxMzYsImV4cCI6MTcyNjY0NDQzNiwiYXVkIjoiY2xpZW50LnByb2djb2Rlci53ZWIudXNlciIsImFtciI6WyJwd2QiXSwiYXRfaGFzaCI6IjVtaWR3SXVzQUJHa1dxbEIzTTdoa3ciLCJzaWQiOiJBMEVFNEY1MTgwOERERjU2MEVCMTY4REQ2MjczNTE2QyIsInN1YiI6IjBlZmY5YjEwLWU2YTgtNGVjOS1hNmM5LTU2YjY3YTI0YWIzMCIsImF1dGhfdGltZSI6MTcyNjY0NDEzNiwiaWRwIjoibG9jYWwifQ.TlAQZ80IubI2RZ1GpxgM1eC8XH7Bfdq1U9nEJ1MFPi-uc7xRllsoCTIt414O4aZOpW7EEJ9G_NfeRv9WmLj8uMQQjkKYKciHfk9Y1L4dxYOzyLCaRa3IWBG4Vc12On9ZX2h0nLqlBYO9cYFYutQ25UlywA-6bzBI5qdF3XV4aoZBzrLv0FxhxgjLXyxezMJDj8bIvrcVT3DhZWjP-RYvncXsYHlAENIEsrgu1BvOd9JMLNmM44VUybTMmk-AQC9W-ou-il_9yEkrDjL5dDJaf213sB4Qx49hNetQhV4NFro9bRfblsblu3JzHFax_iT23z9Jr4UtDkbqoGKdZI8BlQ",
+											"disabled": true
+										},
+										{
+											"key": "post_logout_redirect_uri",
+											"value": "http%3A%2F%2Flocalhost%3A3000",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Authorize Code",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "client_id",
+											"value": "potoro.client.user",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "client_secret$$",
+											"type": "text"
+										},
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"type": "text"
+										},
+										{
+											"key": "scope",
+											"value": "openid email profile full_access",
+											"type": "text"
+										},
+										{
+											"key": "code",
+											"value": "F04FE70320736E03C9A2C7D86DA81F764DE614F86AA7648E3567A85F2D95AE6B-1",
+											"type": "text"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "https://www.potoro.vn/signin-oidc",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{identity_host}}/Account/Login?ReturnUrl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Dclient.progcoder.web.user%26grant_type%3Dauthorization_code%26response_type%3Dcode%26redirect_uri%3Dhttps%3A%2F%2Flocalhost%3A3000%26scope%3Dopenid%20email%20profile%20full_access",
+									"host": [
+										"{{identity_host}}"
+									],
+									"path": [
+										"Account",
+										"Login"
+									],
+									"query": [
+										{
+											"key": "ReturnUrl",
+											"value": "%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Dclient.progcoder.web.user%26grant_type%3Dauthorization_code%26response_type%3Dcode%26redirect_uri%3Dhttps%3A%2F%2Flocalhost%3A3000%26scope%3Dopenid%20email%20profile%20full_access"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET User Info",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkU4MjE2QjBCRkYwRTJERUZCMjZEQ0I3REVGQzFEN0VCIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxIiwibmJmIjoxNzI1NjkxODY0LCJpYXQiOjE3MjU2OTE4NjQsImV4cCI6MTcyNjI5NjY2NCwiYXVkIjpbImlkZW50aXR5LmFwaSIsImNhdGFsb2cuYXBpIiwic2VhcmNoLmFwaSIsImh0dHBzOi8vbG9jYWxob3N0OjUwMDEvcmVzb3VyY2VzIl0sInNjb3BlIjpbIm9wZW5pZCIsImVtYWlsIiwicHJvZmlsZSIsImZ1bGxfYWNjZXNzIl0sImFtciI6WyJwd2QiXSwiY2xpZW50X2lkIjoiY2xpZW50LnByb2djb2Rlci53ZWIudXNlciIsInN1YiI6Ijk4OTU3ZTgxLWVjZjQtNDdjYS1hNDlkLTBlZTE4NjcxMTFjZCIsImF1dGhfdGltZSI6MTcyNTY5MTg0NSwiaWRwIjoibG9jYWwiLCJzaWQiOiI1MTVBQzZGQ0M5RUNFRjUwN0JFMjdGRDk4REUxRTcwNSIsImp0aSI6IkNBN0EyNDA1MTAzNzE5Mzc4NjhDQTM1QkMzQzhBNDdFIn0.8UmDh_-HBXHhtIgBEbRmQ69HvyY8jyUPn3k8_RcedoDdp8DVLOK5FkR1O8UYaTVF66ufdnyoubJKsCQnBOnbSUseyjn3q65ge06oh3z3SFCFe1LSfS8XR5XjR0AiIe_kIoBbHLfh6z-knuPYJ_wBllPSkHzKtvo_h3hGv5nmiTt37HugsKqUv77XjOXKLIu7j4VISTn9q2F6P9nWIqaY_cKriArJKKsiuFJvDwJxOZUwREI9_xpzGjeCPEwV5l4cdvhSR7CWBBwTjOfMcFp_JJCmVDjUTQm6ixZbsX_HZ2YSp_zCb0z-tz8azSpYgMIMUiqmJBT_dGWjc8ep-F39Cg",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_gateway}}/identity-service/connect/userinfo",
+									"host": [
+										"{{api_gateway}}"
+									],
+									"path": [
+										"identity-service",
+										"connect",
+										"userinfo"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Search",
+			"item": [
+				{
+					"name": "GET Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{search_host}}/products?PageNumber=1&PageSize=20",
+							"host": [
+								"{{search_host}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "PageNumber",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "20"
+								},
+								{
+									"key": "SearchText",
+									"value": "123 ech sss",
+									"disabled": true
+								},
+								{
+									"key": "BrandName",
+									"value": "HM",
+									"disabled": true
+								},
+								{
+									"key": "Price",
+									"value": "321",
+									"disabled": true
+								},
+								{
+									"key": "Tags",
+									"value": "1,23",
+									"disabled": true
+								},
+								{
+									"key": "Categories",
+									"value": "Thời trang nam,Áo thun nam",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Elastic API",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "123456789Aa",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "elastic",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"query\": {\r\n    \"match\": {\r\n      \"categoryTextList\": \"Đồ đôi - Đồ gia đình\"\r\n    }\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9200/products/_search",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"products",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check Mapping",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "123456789Aa",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "elastic",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9200/products/_mapping",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"products",
+								"_mapping"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Notification",
+			"item": [
+				{
+					"name": "GET Notifications",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{notification_host}}/notifications?PageNumber=1&PageSize=20",
+							"host": [
+								"{{notification_host}}"
+							],
+							"path": [
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "PageNumber",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Total Unread Notifications",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{notification_host}}/notifications/count/unread",
+							"host": [
+								"{{notification_host}}"
+							],
+							"path": [
+								"notifications",
+								"count",
+								"unread"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Identity",
+			"item": [
+				{
+					"name": "GET Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "client.progcoder.web.user",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "client_secret$$",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "openid email profile full_access",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "871854751E44FEF7CB58EB80F0941963019ADD77C9D1F4F4FD90679C4A1641E3-1",
+									"type": "text"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "https://localhost:3000",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{identity_host}}/connect/token",
+							"host": [
+								"{{identity_host}}"
+							],
+							"path": [
+								"connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Authorize Code",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "potoro.client.user",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "client_secret$$",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "openid email profile full_access",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "F04FE70320736E03C9A2C7D86DA81F764DE614F86AA7648E3567A85F2D95AE6B-1",
+									"type": "text"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "https://www.potoro.vn/signin-oidc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{identity_host}}/Account/Login?ReturnUrl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Dclient.progcoder.web.user%26grant_type%3Dauthorization_code%26response_type%3Dcode%26redirect_uri%3Dhttps%3A%2F%2Flocalhost%3A3000%26scope%3Dopenid%20email%20profile%20full_access",
+							"host": [
+								"{{identity_host}}"
+							],
+							"path": [
+								"Account",
+								"Login"
+							],
+							"query": [
+								{
+									"key": "ReturnUrl",
+									"value": "%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Dclient.progcoder.web.user%26grant_type%3Dauthorization_code%26response_type%3Dcode%26redirect_uri%3Dhttps%3A%2F%2Flocalhost%3A3000%26scope%3Dopenid%20email%20profile%20full_access"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET User Info",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkU4MjE2QjBCRkYwRTJERUZCMjZEQ0I3REVGQzFEN0VCIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxIiwibmJmIjoxNzI2NzI2ODE3LCJpYXQiOjE3MjY3MjY4MTcsImV4cCI6MTcyNzMzMTYxNywiYXVkIjpbImJhc2tldC5hcGkiLCJjYXRhbG9nLmFwaSIsImRpc2NvdW50LmFwaSIsImZlZWRiYWNrLmFwaSIsImlkZW50aXR5LmFwaSIsIm5vdGlmaWNhdGlvbi5hcGkiLCJvcmRlci5hcGkiLCJzZWFyY2guYXBpIiwidXNlci5hcGkiLCJodHRwczovL2xvY2FsaG9zdDo1MDAxL3Jlc291cmNlcyJdLCJzY29wZSI6WyJvcGVuaWQiLCJlbWFpbCIsInByb2ZpbGUiLCJmdWxsX2FjY2VzcyJdLCJhbXIiOlsicHdkIl0sImNsaWVudF9pZCI6ImNsaWVudC5wcm9nY29kZXIud2ViLnVzZXIiLCJzdWIiOiIwZWZmOWIxMC1lNmE4LTRlYzktYTZjOS01NmI2N2EyNGFiMzAiLCJhdXRoX3RpbWUiOjE3MjY3MjY4MTYsImlkcCI6ImxvY2FsIiwicm9sZSI6WyJzeXN0ZW06ZWRpdG9yIiwic3lzdGVtOnN0YWZmIiwic3lzdGVtOmN1c3RvbWVyIiwic3lzdGVtOnVzZXIiLCJzeXN0ZW06aWRlbnRpdHkuYWRtaW4iLCJzeXN0ZW06YWRtaW4iXSwicG9saWN5IjpbImRhc2hib2FyZC5yZWFkIiwiZGFzaGJvYXJkLndyaXRlIiwidXNlci53cml0ZS5yb2xlIiwidXNlci53cml0ZS5wb2xpY3kiLCJwb3N0LnJlYWQiLCJwb3N0LndyaXRlIiwiY2F0YWxvZy5yZWFkIiwiY2F0YWxvZy53cml0ZSIsImRpc2NvdW50LnJlYWQiLCJkaXNjb3VudC53cml0ZSIsImZlZWRiYWNrLnJlYWQiLCJmZWVkYmFjay53cml0ZSIsIm9yZGVyLnJlYWQiLCJvcmRlci53cml0ZSIsIm9yZGVyLnJlcG9ydCIsInVzZXIucmVhZCIsInBvbGljeS5yZWFkIiwicm9sZS5yZWFkIiwiaWRlbnRpdHkucmVhZCIsImlkZW50aXR5LndyaXRlIiwidXNlci53cml0ZSIsInBvbGljeS53cml0ZSIsInJvbGUud3JpdGUiXSwic2lkIjoiMTdCNkJCQjdBODFDOEY4MkZDREUzQ0REQkIzRTg0MTciLCJqdGkiOiJGMDFEMzlFQUQwNkZBNTMxRTk5RTlBNzUwRjY5MTdCQSJ9.8dcJ3k_OLeWC9tHe2XNuRX4R2gkK4XcgWIc90MX47lvA-zwEgyNId_0l_h-rg70OJtYFd4310m0xyRCXgHfvjafdXR6Dg7Z0xBgZcdESWdXH059rbfR24GUSlLdP-hU4gBzfaLX9zUi_QcSO3vqYnDDjEdC8hn974bPKj0GISpXkycJCzO8ri6MPdzKBDR9N7j8mNDg-Iy_jSEcKL1WxAW951GNosF9YRoVNg9Uwbt43NrXcduy-lK4x8kfSfra3gPT5DxzyXuJ9_OtNbUY9hhhs9XkGvpwGxCm8cXwXPNfidIFxou-hGkdHbc90XePNfEkxr6e1ltOSjXtLECPLyQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{identity_host}}/connect/userinfo",
+							"host": [
+								"{{identity_host}}"
+							],
+							"path": [
+								"connect",
+								"userinfo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET User API",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkMxODU2MDA0Rjk0NDQ2MDQxMDlEOTg3OEE3OTM3QkY5IiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxIiwibmJmIjoxNzI2MDMwMDUxLCJpYXQiOjE3MjYwMzAwNTEsImV4cCI6MTcyNjYzNDg1MSwiYXVkIjpbImlkZW50aXR5LmFwaSIsImNhdGFsb2cuYXBpIiwic2VhcmNoLmFwaSIsIm5vdGlmaWNhdGlvbi5hcGkiLCJodHRwczovL2xvY2FsaG9zdDo1MDAxL3Jlc291cmNlcyJdLCJzY29wZSI6WyJvcGVuaWQiLCJlbWFpbCIsInByb2ZpbGUiLCJmdWxsX2FjY2VzcyJdLCJhbXIiOlsicHdkIl0sImNsaWVudF9pZCI6ImNsaWVudC5wcm9nY29kZXIud2ViLnVzZXIiLCJzdWIiOiIwZWZmOWIxMC1lNmE4LTRlYzktYTZjOS01NmI2N2EyNGFiMzAiLCJhdXRoX3RpbWUiOjE3MjYwMjk5ODksImlkcCI6ImxvY2FsIiwicm9sZSI6WyJzeXN0ZW06aWRlbnRpdHkuYWRtaW4iLCJzeXN0ZW06dXNlciIsInN5c3RlbTplZGl0b3IiLCJzeXN0ZW06Y3VzdG9tZXIiLCJzeXN0ZW06YWRtaW4iLCJzeXN0ZW06c3RhZmYiXSwicG9saWN5IjpbImRhc2hib2FyZC5yZWFkIiwiZGFzaGJvYXJkLndyaXRlIiwiY2F0YWxvZy5yZWFkIiwiY2F0YWxvZy53cml0ZSIsImRpc2NvdW50LnJlYWQiLCJkaXNjb3VudC53cml0ZSIsImZlZWRiYWNrLnJlYWQiLCJmZWVkYmFjay53cml0ZSIsImlkZW50aXR5LnJlYWQiLCJpZGVudGl0eS53cml0ZSIsIm9yZGVyLnJlYWQiLCJvcmRlci53cml0ZSIsIm9yZGVyLnJlcG9ydCIsInVzZXIucmVhZCIsInVzZXIud3JpdGUiLCJwb2xpY3kucmVhZCIsInBvbGljeS53cml0ZSIsInJvbGUucmVhZCIsInJvbGUud3JpdGUiLCJwb3N0LnJlYWQiLCJwb3N0LndyaXRlIl0sImVtYWlsIjoiaHV5bngxMS5kZXZAZ21haWwuY29tIiwic2lkIjoiMjc4MTVCNTVGNEExM0UxMTNCMUQ2ODYyMkNDMjQzMDIiLCJqdGkiOiJERDE5NDQyNDJEOTZFNTZGRTc2NDYwRENBQjBFRjVEQyJ9.bwIB_aH9AHRrHBY6MMgsqexsA_E5pnlB2cNIH1k2lURAvyqyrqX1Pr6lK9unBoFZ1civ1UiX-CumlOEgY5g3GKGc-leQsBfhuYEJQw2u43OEB6Biak9bu2GL8vX298MQ4D6SGK_b02AYKdQ_KkHtXfDaaPNICDJQEsorlypDWITY0q9XmuRpoopemU0ZEC4BtXJm_7J26DRefL1JncfgNWUz2W5ffo0TLh37hL0LKE9s3Tr10W_cZN6HjAOvQEVz4UE9lm6Gt-sU-5tEoirkMW5eKzf5pWJW-SjdSxlZTYjy_vr4twKJwG5tIWMpBL8szCv60GdL4ul6d2vIPot8LA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{identity_host}}/api/user/1",
+							"host": [
+								"{{identity_host}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "GET Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{user_host}}/users",
+							"host": [
+								"{{user_host}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET User Timezone",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{user_host}}/timezone/me",
+							"host": [
+								"{{user_host}}"
+							],
+							"path": [
+								"timezone",
+								"me"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Update Role",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"UserId\": \"66e10d9ef0783bcf3b7eb1a3\",\r\n    \"Roles\": [\"system\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{user_host}}/user/role",
+							"host": [
+								"{{user_host}}"
+							],
+							"path": [
+								"user",
+								"role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Update User Timezone",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"TimezoneId\": \"66e10d9ef0783bcf3b7eb1a3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{user_host}}/timezone/me",
+							"host": [
+								"{{user_host}}"
+							],
+							"path": [
+								"timezone",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Basket",
+			"item": [
+				{
+					"name": "GET Basket",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{basket_host}}/basket",
+							"host": [
+								"{{basket_host}}"
+							],
+							"path": [
+								"basket"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Save Basket",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Items\": [\r\n        {\r\n            \"ProductId\": \"2232dc6c-7b98-483d-95aa-9ce4bf0ca163\",\r\n            \"ProductName\": \"Sinh ton hoang da\",\r\n            \"Quantity\": 100\r\n        },\r\n        {\r\n            \"ProductId\": \"2\",\r\n            \"ProductName\": \"Product test\",\r\n            \"Quantity\": 5\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basket_host}}/basket",
+							"host": [
+								"{{basket_host}}"
+							],
+							"path": [
+								"basket"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Basket Checkout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Items\": [\r\n        {\r\n            \"ProductId\": \"2232dc6c-7b98-483d-95aa-9ce4bf0ca163\",\r\n            \"ProductName\": \"Sinh ton hoang da\",\r\n            \"Quantity\": 109\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basket_host}}/basket/checkout",
+							"host": [
+								"{{basket_host}}"
+							],
+							"path": [
+								"basket",
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Information",
+			"item": [
+				{
+					"name": "GET Timezones",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{information_host}}/timezones",
+							"host": [
+								"{{information_host}}"
+							],
+							"path": [
+								"timezones"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "catalog_host",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "identity_host",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "search_host",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "notification_host",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_host",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "discount_host",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "feedback_host",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "basket_host",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "order_host",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "api_gateway",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "information_host",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

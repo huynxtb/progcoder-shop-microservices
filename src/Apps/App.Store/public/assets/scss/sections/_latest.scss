@@ -1,0 +1,123 @@
+.fz-1-latest-collection {
+    padding-bottom: 120px;
+    overflow: hidden;
+
+    @include md {
+        padding-bottom: 60px;
+    }
+
+    @include xxs {
+        padding: 0 5px;
+        padding-bottom: 60px;
+    }
+}
+
+.filter-navs {
+    display: flex;
+    column-gap: 50px;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
+
+    @include lg {
+        margin-bottom: 30px;
+        gap: 10px 3px;
+    }
+
+    @include sm {
+        column-gap: 10px;
+    }
+
+    @include xs {
+        row-gap: 10px;
+    }
+
+    @include xxs {
+        column-gap: 10px;
+        margin-bottom: 30px;
+    }
+
+    button {
+        display: flex;
+        align-items: flex-end;
+        flex-direction: column;
+        gap: 5px;
+        color: #616161;
+
+        @include xs {
+            font-size: 14px;
+        }
+
+        @include xxs {
+            font-size: 12px;
+        }
+
+        &.active {
+            color: $black;
+
+            .filter-nav-name {
+                text-decoration: solid underline;
+            }
+        }
+
+        span {
+            line-height: 1;
+        }
+    }
+}
+
+.fz-1-products-container {
+    .slick-list {
+        overflow: visible;
+        margin: 0 -15px;
+
+        @include md {
+            overflow: hidden;
+        }
+
+        @include sm {
+            margin: 0 -10px;
+        }
+    }
+
+    .fz-1-single-product {
+        margin: 0 15px;
+
+        @include xl {
+            margin: 0 10px;
+        }
+
+        @include sm {
+            margin: 0 10px;
+        }
+    }
+}
+
+.fz-1-latest-products-slider-nav {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: max-content;
+    display: flex;
+    gap: 5px;
+
+    @include md {
+        display: none;
+    }
+
+    button {
+        background-color: #f8f8f8;
+        width: 40px;
+        height: 40px;
+        line-height: 42px;
+        border-radius: 4px;
+        justify-content: center;
+        align-items: center;
+
+        &:hover {
+            background-color: $black;
+            color: $white;
+        }
+    }
+}

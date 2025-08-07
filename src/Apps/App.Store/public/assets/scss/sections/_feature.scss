@@ -1,0 +1,161 @@
+// INDEX-1 FEATURES SECTION
+.fz-1-features-section {
+    background-color: $white;
+    padding: 120px 0;
+
+    @include md {
+        padding: 60px 0;
+    }
+}
+
+.features-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    @include lg {
+        row-gap: 35px;
+        column-gap: 40px;
+    }
+
+    @include md {
+        justify-content: center;
+    }
+
+    @include xs {
+        column-gap: 30px;
+    }
+
+    >* {
+        flex: auto;
+    }
+}
+
+.fz-single-feature {
+    color: $black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+
+    @include xl {
+        gap: 15px;
+    }
+
+    @include md {
+        justify-content: center;
+    }
+
+    @include xxs {
+        gap: 15px;
+        justify-content: center;
+    }
+
+    &__img img {
+        @include xxs {
+            width: 35px;
+        }
+    }
+
+    &__title {
+        @include xl {
+            font-size: 20px;
+        }
+
+        @include xs {
+            font-size: 18px;
+        }
+    }
+
+    &__sub-title {
+        font-family: $kanit;
+        font-weight: 400;
+
+        @include xs {
+            font-size: 14px;
+        }
+    }
+}
+
+// INDEX-3 FEATURES SECTION
+.fz-3-features-section {
+    background-color: #111;
+    padding: 100px 0 0;
+
+    @include md {
+        padding: 60px 0 0;
+    }
+
+    .features-container {
+        padding: 25px 18px;
+        border-radius: 4px;
+        border: 1px solid #2d2d2d;
+    }
+
+    .fz-3-single-feature {
+        &__img img {
+            @include xs {
+                width: 40px;
+            }
+
+            @include xxs {
+                width: 35px;
+            }
+        }
+
+        &__txt {
+            color: #b5b5b5;
+        }
+
+        &__title {
+            margin-bottom: 5px;
+
+            @include sm {
+                font-size: 20px;
+            }
+
+            @include xs {
+                font-size: 18px;
+            }
+        }
+
+        &__sub-title {
+            font-family: $roboto;
+
+            @include xs {
+                font-size: 14px;
+            }
+        }
+    }
+}
+
+// INDEX-4 FEATURES SECTION
+.fz-4-features-section {
+    .features-container {
+        padding: 30px 18px;
+        border-radius: 4px;
+        border: 1px solid var(--clr-gray-3);
+    }
+
+    .fz-single-feature__title {
+        font-size: 16px;
+        line-height: 26px;
+        font-weight: 400;
+        color: var(--clr-body-color);
+    }
+
+    .fz-single-feature__sub-title {
+        font-size: 16px;
+        line-height: 26px;
+        font-weight: 700;
+        color: var(--clr-common-black);
+    }
+}
+
+.fz-5-body {
+    .fz-single-feature__img {
+        img {
+            filter: grayscale(100%) brightness(100%) invert(0);
+        }
+    }
+}

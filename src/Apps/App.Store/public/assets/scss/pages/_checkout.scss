@@ -1,0 +1,177 @@
+.fz-checkout {
+    padding: 100px 0;
+
+    @include lg {
+        padding: 50px 0;
+    }
+}
+
+.fz-checkout-title {
+    font-family: $poppins;
+    font-weight: 600;
+    font-size: 22px;
+    margin-bottom: 20px;
+
+    @include lg {
+        font-size: 20px;
+    }
+
+    @include xxs {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+}
+
+.checkout-form {
+    display: flex;
+    gap: 25px;
+
+
+    @include md {
+        flex-direction: column;
+        align-items: center;
+    }
+
+}
+
+.fz-billing-details {
+    width: 70%;
+
+    @include md {
+        width: 100%;
+    }
+
+    input:not([type="checkbox"]),
+    textarea,
+    .nice-select {
+        width: 100%;
+        border: 1px solid #eaeaea;
+        height: 50px;
+        line-height: 50px;
+        padding: 0 20px;
+        margin-bottom: 20px;
+
+        @include md {
+            height: 45px;
+            line-height: 45px;
+            padding: 0 15px;
+        }
+
+        @include sm {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 10px;
+            margin-bottom: 10px;
+        }
+
+        &::after {
+            content: "\f107";
+            border: none;
+            font-family: 'Font Awesome 6 Pro';
+            transform: rotate(0);
+            margin: 0;
+            top: 0;
+            height: fit-content;
+            width: fit-content;
+            right: 20px;
+            transform-origin: center;
+
+            @include md {
+                right: 15px;
+            }
+
+            @include sm {
+                right: 10px;
+            }
+        }
+
+        &.open::after {
+            transform: rotate(180deg);
+        }
+    }
+
+    textarea {
+        margin-bottom: 0;
+        height: 150px;
+        line-height: 1.4;
+        padding: 20px;
+
+        @include md {
+            padding: 15px;
+        }
+
+        @include xxs {
+            padding: 10px;
+        }
+    }
+
+    .nice-select .list {
+        width: 100%;
+    }
+}
+
+.additional-info {
+    margin-top: 50px;
+
+    @include xxs {
+        margin-top: 30px;
+    }
+}
+
+.fz-checkout-sidebar {
+    width: 30%;
+
+    @include md {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 35px;
+    }
+
+    @include sm {
+        grid-template-columns: 1fr;
+    }
+
+    .cart-checkout-area {
+        width: 100%;
+        padding: 20px;
+        border-radius: 0;
+        margin-bottom: 53px;
+
+        @include sm {
+            margin-bottom: 0;
+        }
+
+        @include xxs {
+            padding: 15px;
+        }
+    }
+
+    .payment-area {
+        border: 1px solid #eaeaea;
+        padding: 0 15px;
+        height: 50px;
+        line-height: 50px;
+
+        @include xxs {
+            padding: 0 10px;
+            height: 40px;
+            line-height: 40px;
+        }
+    }
+}
+
+.checkout-payment-descr {
+    padding: 20px 0;
+    font-size: 14px;
+    color: #777;
+    text-transform: capitalize;
+
+    a {
+        color: $color-3;
+    }
+}
+
+.checkout-form-btn {
+    width: 100%;
+}

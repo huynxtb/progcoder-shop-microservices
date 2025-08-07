@@ -1,0 +1,159 @@
+.fz-inner-contact-details {
+    padding: 100px 0;
+    display: flex;
+    gap: 60px;
+    align-items: flex-start;
+
+    @include xl {
+        gap: 40px;
+    }
+
+    @include lg {
+        padding: 50px 0;
+    }
+
+    @include md {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .fz-inner-contact-details__title {
+        font-size: 24px;
+        font-family: $poppins;
+        font-weight: 600;
+        margin-bottom: 20px;
+
+        @include lg {
+            font-size: 22px;
+        }
+
+        @include sm {
+            font-size: 20px;
+        }
+    }
+
+    &__left {
+        width: 70%;
+
+        @include lg {
+            width: 65%;
+        }
+
+        @include md {
+            width: 100%;
+        }
+
+        .fz-blog-details__comment-form {
+            padding: 0;
+            background: none;
+            border: none;
+
+            form input,
+            form textarea {
+                border-radius: 5px;
+            }
+        }
+    }
+
+    &__info-card {
+        width: 30%;
+        padding: 30px;
+        background-color: #f8f8f8;
+
+        @include lg {
+            width: 35%;
+        }
+
+        @include md {
+            width: 50%;
+        }
+
+        @include sm {
+            width: 70%;
+        }
+
+        @include xxs {
+            width: 100%;
+            padding: 20px;
+        }
+
+        ul li {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+
+            .contact-numbers {
+                display: flex;
+                flex-direction: column;
+
+                a:hover {
+                    color: $color-3;
+                }
+            }
+        }
+
+        .fz-single-contact-info {
+            font-size: 17px;
+            color: #777;
+
+            @include sm {
+                font-size: 15px;
+            }
+
+            i {
+                font-size: 22px;
+                color: $black;
+                padding-top: 4px;
+            }
+        }
+
+        .contact-socials {
+            margin-bottom: 0;
+            margin-top: 30px;
+
+            &__title {
+                font-size: 18px;
+                font-family: $poppins;
+            }
+
+            ul {
+                display: flex;
+                gap: 15px;
+
+                li {
+                    margin-bottom: 0;
+
+                    a {
+                        color: #777;
+
+                        &:hover {
+                            color: $color-3;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+
+.fz-contact-location-map {
+    iframe {
+        min-height: 600px;
+        min-width: 100%;
+        vertical-align: top;
+
+        @include xl {
+            min-height: 450px;
+        }
+
+        @include md {
+            min-height: 330px;
+        }
+
+        @include xs {
+            min-height: 280px;
+        }
+    }
+}
