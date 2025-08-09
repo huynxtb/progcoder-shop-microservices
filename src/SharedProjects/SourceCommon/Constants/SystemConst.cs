@@ -1,4 +1,4 @@
-﻿namespace SourceCommon.FixedValues;
+﻿namespace SourceCommon.Constants;
 
 public static class SystemConst
 {

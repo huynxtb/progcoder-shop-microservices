@@ -11,21 +11,11 @@ public interface IReadDbContext
 {
     #region Fields, Properties and Indexers
 
-    DbSet<Agent> Agents { get; }
+    DbSet<User> Users { get; }
 
-    DbSet<KeycloakUser> KeycloakUsers { get; }
+    DbSet<Role> Roles { get; }
 
-    DbSet<AccountProfile> AccountProfiles { get; }
-
-    DbSet<Subscription> Subscriptions { get; }
-
-    DbSet<AccountSubscription> AccountSubscriptions { get; }
-
-    DbSet<ChatThread> ChatThreads { get; }
-
-    DbSet<ChatHistory> ChatHistories { get; }
-
-    DbSet<Coupon> Coupons { get; }
+    DbSet<UserRole> UserRoles { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 

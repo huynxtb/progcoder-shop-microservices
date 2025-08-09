@@ -16,25 +16,12 @@ public static class SwaggerGenExtension
 
     public static IServiceCollection AddSwaggerServices(
         this IServiceCollection services, 
-        IConfiguration configuration)
+        IConfiguration cfg)
     {
-        services.Configure<SwaggerGenOptions>(
-            configuration.GetSection(SwaggerGenOptions.Section));
-
-        var authOptions = configuration
-            .GetSection(AuthorizationOptions.Section)
-            .Get<AuthorizationOptions>()
-            ?? throw new InvalidOperationException("AuthorizationOptions section is missing or invalid.");
-
-        var appCfgOpt = configuration
-            .GetSection(AppConfigOptions.Section)
-            .Get<AppConfigOptions>()
-            ?? throw new InvalidOperationException("AppConfigOptions section is missing or invalid.");
-
-        var authority = authOptions.Authority;
-        var clientId = authOptions.ClientId;
-        var clientSecret = authOptions.ClientSecret;
-        var scopesArray = authOptions.Scopes;
+        var authority = cfg[$"{AuthorizationCfg.Section}:{AuthorizationCfg.Authority}"];
+        var clientId = cfg[$"{AuthorizationCfg.Section}:{AuthorizationCfg.ClientId}"];
+        var clientSecret = cfg[$"{AuthorizationCfg.Section}:{AuthorizationCfg.ClientSecret}"];
+        var scopesArray = cfg.GetValue<string[]>($"{AuthorizationCfg.Section}:{AuthorizationCfg.Scopes}");
         var oauthScopes = scopesArray?.ToDictionary(s => s, s => $"OpenID scope {s}");
         var authUrl = new Uri($"{authority}/protocol/openid-connect/auth");
         var tokenUrl = new Uri($"{authority}/protocol/openid-connect/token");
@@ -44,9 +31,15 @@ public static class SwaggerGenExtension
         {
             opts.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = appCfgOpt.ServiceName,
+                Title = cfg[$"{AppConfigCfg.Section}:{AppConfigCfg.ServiceName}"],
                 Version = "v1",
-                Description = $"This is an API for {appCfgOpt.ServiceName}"
+                Description = $"This is an API for {cfg[$"{AppConfigCfg.Section}:{AppConfigCfg.ServiceName}"]}",
+                Contact = new OpenApiContact
+                {
+                    Name = cfg[$"{SwaggerGenCfg.Section}:{SwaggerGenCfg.ContactName}"],
+                    Email = cfg[$"{SwaggerGenCfg.Section}:{SwaggerGenCfg.ContactEmail}"],
+                    Url = new Uri(cfg[$"{SwaggerGenCfg.Section}:{SwaggerGenCfg.ContactUrl}"]!)
+                }
             });
 
             opts.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -92,21 +85,14 @@ public static class SwaggerGenExtension
 
     public static WebApplication UseSwaggerApi(this WebApplication app)
     {
-        var swaggerGenOpt = app.Configuration
-            .GetSection(SwaggerGenOptions.Section)
-            .Get<SwaggerGenOptions>()
-            ?? throw new InvalidOperationException("AuthorizationOptions section is missing or invalid.");
+        var cfg = app.Configuration;
 
-        if (!swaggerGenOpt.Enable) return app;
+        if (!cfg.GetValue<bool>($"{SwaggerGenCfg.Section}:{SwaggerGenCfg.Enable}")) 
+            return app;
 
-        var authOptions = app.Configuration
-            .GetSection(AuthorizationOptions.Section)
-            .Get<AuthorizationOptions>()
-            ?? throw new InvalidOperationException("AuthorizationOptions section is missing or invalid.");
-
-        var clientId = authOptions.ClientId;
-        var clientSecret = authOptions.ClientSecret;
-        var scopes = authOptions.Scopes;
+        var clientId = cfg[$"{AuthorizationCfg.Section}:{AuthorizationCfg.ClientId}"];
+        var clientSecret = cfg[$"{AuthorizationCfg.Section}:{AuthorizationCfg.ClientSecret}"];
+        var scopes = cfg.GetValue<string[]>($"{AuthorizationCfg.Section}:{AuthorizationCfg.Scopes}");
 
         app.UseSwagger();
         app.UseSwaggerUI(c =>
@@ -116,7 +102,7 @@ public static class SwaggerGenExtension
             c.OAuthClientSecret(clientSecret);
             //c.OAuthUsePkce();
             c.OAuthScopes(scopes);
-            c.OAuth2RedirectUrl(authOptions.OAuth2RedirectUrl);
+            c.OAuth2RedirectUrl(cfg[$"{AuthorizationCfg.Section}:{AuthorizationCfg.OAuth2RedirectUrl}"]);
         });
 
         return app;

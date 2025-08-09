@@ -1,4 +1,8 @@
-﻿using Application.Models;
+﻿#region using
+
+using Application.Dtos.Keycloaks;
+
+#endregion
 
 namespace Application.Services;
 

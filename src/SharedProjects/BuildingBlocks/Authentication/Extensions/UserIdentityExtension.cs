@@ -13,11 +13,11 @@ public static class UserIdentityExtension
 {
     #region Methods
 
-    public static UserIdentity GetUser(this IHttpContextAccessor context)
+    public static UserIdentity GetCurrentUser(this IHttpContextAccessor context)
     {
         var identity = context.HttpContext?.User;
 
-        var userId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+        var userId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? SystemConst.DefaultModifiedBy;
         var userName = identity?.FindFirst(CustomClaimTypes.UserName)?.Value ?? string.Empty;
         var firstName = identity?.FindFirst(ClaimTypes.GivenName)?.Value ?? string.Empty;
         var lastName = identity?.FindFirst(ClaimTypes.Surname)?.Value ?? string.Empty;

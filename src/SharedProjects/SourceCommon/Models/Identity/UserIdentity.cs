@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace SourceCommon.Models.Identity;
+﻿namespace SourceCommon.Models.Identity;
 
 public sealed class UserIdentity
 {

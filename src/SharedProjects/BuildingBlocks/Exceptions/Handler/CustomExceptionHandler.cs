@@ -2,18 +2,12 @@
 
 using SourceCommon.Constants;
 using SourceCommon.Models;
-using SourceCommon.Models.Reponse;
-using Elastic.Apm.Api;
-using Elastic.CommonSchema;
+using SourceCommon.Models.Reponses;
 using FluentValidation;
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Text.RegularExpressions;
-using Microsoft.Extensions.Options;
 using SourceCommon.Configurations;
 
 #endregion
@@ -22,7 +16,7 @@ namespace BuildingBlocks.Exceptions.Handler;
 
 public class CustomExceptionHandler(
     ILogger<CustomExceptionHandler> logger, 
-    IOptions<SwaggerGenOptions> swaggerGengOptions) : IExceptionHandler
+    IConfiguration cfg) : IExceptionHandler
 {
     #region Implementations
 
@@ -31,37 +25,38 @@ public class CustomExceptionHandler(
         Exception exception, 
         CancellationToken cancellationToken)
     {
-        var swaggerGengOpt = swaggerGengOptions.Value;
+        var includeInnerEx = cfg.GetValue<bool>($"{AppConfigCfg.Section}:{AppConfigCfg.IncludeInnerException}");
+        var includeStackTrace = cfg.GetValue<bool>($"{AppConfigCfg.Section}:{AppConfigCfg.IncludeExceptionStackTrace}");
 
-        (string Message, string Title, int StatusCode, string? InnerException) details = exception switch
+        (string ErrorMessage, int StatusCode, string? Message, string InnerException) details = exception switch
         {
             ValidationException =>
             (
                 exception.Message,
-                exception.GetType().Name,
                 context.Response.StatusCode = StatusCodes.Status400BadRequest,
-                swaggerGengOpt.IncludeInnerException ? exception.InnerException?.Message : null
+                "BadRequest",
+                includeInnerEx ? exception.GetType().Name : string.Empty
             ),
             BadRequestException =>
             (
                 exception.Message,
-                exception.GetType().Name,
                 context.Response.StatusCode = StatusCodes.Status400BadRequest,
-                swaggerGengOpt.IncludeInnerException ? exception.InnerException?.Message : null
+                "BadRequest",
+                includeInnerEx ? exception.GetType().Name : string.Empty
             ),
             NotFoundException =>
             (
                 exception.Message,
-                exception.GetType().Name,
                 context.Response.StatusCode = StatusCodes.Status404NotFound,
-                swaggerGengOpt.IncludeInnerException ? exception.InnerException?.Message : null
+                "NotFound",
+                includeInnerEx ? exception.GetType().Name : string.Empty
             ),
             _ =>
             (
-                swaggerGengOpt.IncludeInnerException ? exception.Message : MessageCode.UnknownError,
-                swaggerGengOpt.IncludeInnerException ? exception.GetType().Name : MessageCode.UnknownError,
+                includeInnerEx ? exception.Message : MessageCode.UnknownError,
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError,
-                swaggerGengOpt.IncludeInnerException ? exception.InnerException?.Message : null
+                includeStackTrace ? exception.StackTrace : null,
+                includeInnerEx ? exception.InnerException?.Message ?? string.Empty : string.Empty
             )
         };
 
@@ -76,14 +71,14 @@ public class CustomExceptionHandler(
         }
         else
         {
-            errors.Add(new ErrorDetail(details.Message, details.Title));
+            errors.Add(new ErrorDetail(details.ErrorMessage, details.InnerException));
         }
 
         var response = ResultSharedResponse<object>.Failure(
             statusCode: details.StatusCode,
             instance: context.Request.Path,
             errors: errors,
-            message: details.InnerException);
+            message: details.Message);
 
         if (details.StatusCode == StatusCodes.Status500InternalServerError)
         {

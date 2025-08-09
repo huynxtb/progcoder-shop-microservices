@@ -20,21 +20,11 @@ public class WriteDbContext : DbContext, IWriteDbContext
 
     #region Implementations
 
-    public DbSet<Agent> Agents => Set<Agent>();
+    public DbSet<User> Users => Set<User>();
 
-    public DbSet<KeycloakUser> KeycloakUsers => Set<KeycloakUser>();
+    public DbSet<Role> Roles => Set<Role>();
 
-    public DbSet<AccountProfile> AccountProfiles => Set<AccountProfile>();
-
-    public DbSet<Subscription> Subscriptions => Set<Subscription>();
-
-    public DbSet<AccountSubscription> AccountSubscriptions => Set<AccountSubscription>();
-
-    public DbSet<ChatThread> ChatThreads => Set<ChatThread>();
-
-    public DbSet<ChatHistory> ChatHistories => Set<ChatHistory>();
-
-    public DbSet<Coupon> Coupons => Set<Coupon>();
+    public DbSet<UserRole> UserRoles => Set<UserRole>();
 
     #endregion
 

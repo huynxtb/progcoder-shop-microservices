@@ -1,6 +1,5 @@
 ﻿#region using
 
-using SourceCommon.Constants;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,16 +15,8 @@ public static class LogServerExtensions
 {
     #region Methods
 
-    public static IServiceCollection AddLogServer(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddLogServer(this IServiceCollection services, IConfiguration cfg)
     {
-        services.Configure<LogServerOptions>(
-            configuration.GetSection(LogServerOptions.Section));
-
-        var logSrvOpt = configuration
-            .GetSection(LogServerOptions.Section)
-            .Get<LogServerOptions>()
-            ?? throw new InvalidOperationException("LogServerOptions section is missing or invalid.");
-
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             //.Enrich.FromLogContext()
@@ -41,8 +32,8 @@ public static class LogServerExtensions
             //.WriteTo.Seq(configuration["SerilogServer:ServerLog"]!,
             //     apiKey: configuration["SerilogServer:Password"]!,
             //     controlLevelSwitch: new LoggingLevelSwitch())
-            .WriteTo.GrafanaLoki(logSrvOpt.Host!,
-                labels: [new LokiLabel() { Key = "app", Value = logSrvOpt.ApplicationName! }],
+            .WriteTo.GrafanaLoki(cfg[$"{LogServerCfg.Section}:{LogServerCfg.Host}"]!,
+                labels: [new LokiLabel() { Key = "app", Value = cfg[$"{LogServerCfg.Section}:{LogServerCfg.ApplicationName}"]! }],
                 propertiesAsLabels: ["app"])
             .CreateLogger();
 

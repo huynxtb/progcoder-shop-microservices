@@ -4,6 +4,8 @@ public static class MessageCode
 {
     #region Constants
 
+    public const string BadRequest = "BAD_REQUEST";
+
     public const string DecisionFlowIllegal = "DECISION_FLOW_ILLEGAL";
 
     public const string InvalidEmailAddress = "INVALID_EMAIL_ADDRESS";
@@ -39,6 +41,14 @@ public static class MessageCode
     public const string LastNameIsRequired = "LAST_NAME_IS_REQUIRED";
 
     public const string IdIsRequired = "ID_IS_REQUIRED";
+
+    public const string PasswordIsRequired = "PASSWORD_IS_REQUIRED";
+
+    public const string ConfirmPasswordIsRequired = "CONFIRM_PASSWORD_IS_REQUIRED";
+
+    public const string ConfirmPasswordIsNotMatch = "CONFIRM_PASSWORD_IS_NOT_MATCH";
+
+    public const string UserNotFound = "USER_NOT_FOUND";
 
     #endregion
 }

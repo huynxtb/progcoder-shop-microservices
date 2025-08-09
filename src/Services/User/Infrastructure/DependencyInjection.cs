@@ -10,18 +10,13 @@ using Infrastructure.Data.Extensions;
 using Infrastructure.Data.Interceptors;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
-using Polly;
-using Polly.Extensions.Http;
 using Refit;
 using SourceCommon.Configurations;
-using SourceCommon.Constants;
-using SourceSourceCommon.Constants;
 
 #endregion
 
@@ -33,41 +28,29 @@ public static class DependencyInjection
 
     public static IServiceCollection AddInfrastructureServices(
         this IServiceCollection services, 
-        IConfiguration configuration)
+        IConfiguration cfg)
     {
-        services.AddDistributedTracingAndLogging(configuration);
-        services.AddLogServer(configuration);
-
-        services.Configure<MinIoOptions>(
-            configuration.GetSection(MinIoOptions.Section));
-
-        var minIoOpt = configuration
-            .GetSection(MinIoOptions.Section)
-            .Get<MinIoOptions>()
-            ?? throw new InvalidOperationException("MinIoOptions section is missing or invalid.");
+        services.AddDistributedTracingAndLogging(cfg);
+        services.AddLogServer(cfg);
 
         services.AddMinio(configureClient => configureClient
-                    .WithEndpoint(minIoOpt.Endpoint)
-                    .WithCredentials(minIoOpt.AccessKey, minIoOpt.SecretKey)
-                    .WithSSL(minIoOpt.Secure)
+                    .WithEndpoint(cfg[$"{MinIoCfg.Section}:{MinIoCfg.Endpoint}"])
+                    .WithCredentials(cfg[$"{MinIoCfg.Section}:{MinIoCfg.AccessKey}"], cfg[$"{MinIoCfg.Section}:{MinIoCfg.SecretKey}"])
+                    .WithSSL(cfg.GetValue<bool>(cfg[$"{MinIoCfg.Section}:{MinIoCfg.Secure}"]!))
                     .Build());
 
         services.AddScoped<IMinIOCloudService, MinIOCloudService>();
 
         // DbContext
         {
-            var connStrOpt = configuration
-                .GetSection(ConnectionStringsOptions.Section)
-                .Get<ConnectionStringsOptions>()
-                ?? throw new InvalidOperationException("ConnectionStringsOptions section is missing or invalid.");
+            var databaseType = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.DatabaseType}"];
 
             services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
             services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
 
             services.AddDbContext<WriteDbContext>((sp, options) =>
             {
-                var databaseType = connStrOpt.DatabaseType;
-                var writeConn = connStrOpt.WriteDb;
+                var writeConn = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.WriteDb}"];
 
                 options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
 
@@ -90,8 +73,7 @@ public static class DependencyInjection
 
             services.AddDbContext<ReadDbContext>((sp, options) =>
             {
-                var databaseType = connStrOpt.DatabaseType;
-                var readConn = connStrOpt.ReadDb;
+                var readConn = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.ReadDb}"];
 
                 switch (databaseType)
                 {
@@ -121,23 +103,18 @@ public static class DependencyInjection
             //    .HandleTransientHttpError()
             //    .CircuitBreakerAsync(5, TimeSpan.FromSeconds(30));
 
-            services.Configure<KeycloakApiOptions>(
-                configuration.GetSection(KeycloakApiOptions.Section));
-
-            var keycloakOpt = configuration
-                .GetSection(KeycloakApiOptions.Section)
-                .Get<KeycloakApiOptions>()
-                ?? throw new InvalidOperationException("KeycloakApiOptions section is missing or invalid.");
-
             services.AddRefitClient<IKeycloakApi>()
             .ConfigureHttpClient(c =>
             {
-                c.BaseAddress = new Uri(keycloakOpt.BaseUrl!);
+                c.BaseAddress = new Uri(cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.BaseUrl}"]!);
                 c.Timeout = TimeSpan.FromSeconds(10);
             });
             //.AddPolicyHandler(retryPolicy)
             //.AddPolicyHandler(circuitBreakerPolicy);
         }
+
+        services.AddScoped<IKeycloakService, KeycloakService>();
+
         return services;
     }
 

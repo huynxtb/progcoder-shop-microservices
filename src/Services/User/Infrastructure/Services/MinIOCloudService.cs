@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Minio.DataModel.Args;
 using Minio.Exceptions;
 using Minio;
-using SourceCommon.Models.Reponse;
+using SourceCommon.Models.Reponses;
 
 #endregion
 

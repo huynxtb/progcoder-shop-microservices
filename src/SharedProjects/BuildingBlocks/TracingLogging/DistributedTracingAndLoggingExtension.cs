@@ -9,8 +9,6 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using SourceCommon.Configurations;
-using SourceCommon.Constants;
-using System.Configuration;
 using System.Diagnostics;
 
 #endregion
@@ -21,39 +19,35 @@ public static class DistributedTracingAndLoggingExtension
 {
     #region Methods
 
-    public static IServiceCollection AddDistributedTracingAndLogging(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddDistributedTracingAndLogging(
+        this IServiceCollection services, 
+        IConfiguration cfg)
     {
-        services.Configure<DistributedTracingLoggingOptions>(
-            configuration.GetSection(DistributedTracingLoggingOptions.Section));
-
-        var traceOpt = configuration
-            .GetSection(DistributedTracingLoggingOptions.Section)
-            .Get<DistributedTracingLoggingOptions>()
-            ?? throw new InvalidOperationException("DistributedTracingLoggingOptions section is missing or invalid.");
-
-        var otlpEndpoint = traceOpt.Otlp!.Endpoint;
-        var zipkinEndpoint = traceOpt.Zipkin!.Endpoint;
-
         services.Configure<AspNetCoreTraceInstrumentationOptions>(
-            configuration.GetSection($"{DistributedTracingLoggingOptions.Section}:AspNetCoreInstrumentation"));
+            cfg.GetSection($"{DistributedTracingLoggingCfg.Section}:{DistributedTracingLoggingCfg.AspNetCoreInstrumentation}"));
+
         services.Configure<ZipkinExporterOptions>(
-            configuration.GetSection($"{DistributedTracingLoggingOptions.Section}:Zipkin"));
+            cfg.GetSection($"{DistributedTracingLoggingCfg.Section}:{DistributedTracingLoggingCfg.Zipkin}"));
+
+        var zipkinEndpoint = cfg[$"{DistributedTracingLoggingCfg.Section}:{DistributedTracingLoggingCfg.Zipkin}:{DistributedTracingLoggingCfg.Endpoint}"];
+        var otlpEndpoint = cfg[$"{DistributedTracingLoggingCfg.Section}:{DistributedTracingLoggingCfg.Otlp}:{DistributedTracingLoggingCfg.Endpoint}"];
 
         services.AddOpenTelemetry()
             .ConfigureResource(r => r
                 .AddService(
-                    serviceName: traceOpt.ApplicationName!,
-                    serviceNamespace: $"namespace-{traceOpt.ApplicationName}",
-                    serviceInstanceId: $"{traceOpt.ApplicationName}-{Environment.MachineName}-{Process.GetCurrentProcess().Id}")
+                    serviceName: cfg[$"{AppConfigCfg.Section}:{AppConfigCfg.ServiceName}"]!,
+                    serviceNamespace: $"namespace-{cfg[$"{AppConfigCfg.Section}:{AppConfigCfg.ServiceName}"]}",
+                    serviceInstanceId: $"{cfg[$"{AppConfigCfg.Section}:{AppConfigCfg.ServiceName}"]}-{Environment.MachineName}-{Process.GetCurrentProcess().Id}")
                 .AddAttributes(new Dictionary<string, object>
                 {
-                    ["deployment.environment"] = configuration["ASPNETCORE_ENVIRONMENT"] ?? "Production",
+                    ["deployment.environment"] = cfg["ASPNETCORE_ENVIRONMENT"] ?? "Production",
                     ["host.name"] = Environment.MachineName
                 }))
             .WithTracing(tracingBuilder =>
             {
                 tracingBuilder
-                    .SetSampler(new TraceIdRatioBasedSampler(traceOpt.SamplingRate))
+                    .SetSampler(new TraceIdRatioBasedSampler(
+                        cfg.GetValue<double>(cfg[$"{DistributedTracingLoggingCfg.Section}:{DistributedTracingLoggingCfg.SamplingRate}"]!)))
                     .AddHttpClientInstrumentation(opts =>
                     {
                         opts.RecordException = true;
@@ -72,19 +66,22 @@ public static class DistributedTracingAndLoggingExtension
                             activity.SetTag("exception.message", exception.Message);
                         };
                     })
-                    .AddSource(traceOpt.Source!);
+                    .AddSource(cfg[$"{DistributedTracingLoggingCfg.Section}:{DistributedTracingLoggingCfg.Source}"]!);
 
                 // Configure exporters
                 if (!string.IsNullOrEmpty(zipkinEndpoint))
                 {
-                    tracingBuilder.AddZipkinExporter();
+                    tracingBuilder.AddZipkinExporter(opt =>
+                    {
+                        opt.Endpoint = new Uri(zipkinEndpoint);
+                    });
                 }
 
                 if (!string.IsNullOrEmpty(otlpEndpoint))
                 {
-                    tracingBuilder.AddOtlpExporter(otlpOptions =>
+                    tracingBuilder.AddOtlpExporter(opt =>
                     {
-                        otlpOptions.Endpoint = new Uri(otlpEndpoint);
+                        opt.Endpoint = new Uri(otlpEndpoint);
                     });
                 }
             })
@@ -96,7 +93,7 @@ public static class DistributedTracingAndLoggingExtension
                     .AddHttpClientInstrumentation()
                     .AddAspNetCoreInstrumentation();
 
-                if (traceOpt.Prometheus!.Enabled)
+                if (cfg.GetValue<bool>(cfg[$"{DistributedTracingLoggingCfg.Section}:{DistributedTracingLoggingCfg.Prometheus}:{DistributedTracingLoggingCfg.Enabled}"]!))
                 {
                     metricsBuilder.AddPrometheusExporter();
                 }
@@ -115,12 +112,9 @@ public static class DistributedTracingAndLoggingExtension
 
     public static WebApplication UsePrometheusEndpoint(this WebApplication app)
     {
-        var traceOpt = app.Configuration
-            .GetSection(DistributedTracingLoggingOptions.Section)
-            .Get<DistributedTracingLoggingOptions>()
-            ?? throw new InvalidOperationException("DistributedTracingLoggingOptions section is missing or invalid.");
+        var cfg = app.Configuration;
 
-        if (traceOpt.Prometheus!.Enabled)
+        if (cfg.GetValue<bool>(cfg[$"{DistributedTracingLoggingCfg.Section}:{DistributedTracingLoggingCfg.Prometheus}:{DistributedTracingLoggingCfg.Enabled}"]!))
         {
             app.MapPrometheusScrapingEndpoint();
         }

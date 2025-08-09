@@ -1,61 +1,45 @@
 services:
 
-  user-write-db:
-    image: ${POSTGRES_IMAGE_NAME}
-    container_name: user-write-db
+  sql-server:
+    image: ${MSSQL_IMAGE_NAME}
+    container_name: sql-server
     restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_WRITE_DB}
-    ports:
-      - ${POSTGRES_WRITE_DB_PORT}:5432
+    user: root
     volumes:
-      - ./data/user-service/writedb:/var/lib/postgresql/data
+      - ./data/sql-server/data:/var/opt/mssql/data
+      - ./data/sql-server/log:/var/opt/mssql/log
+    ports:
+      - ${MSSQL_PORT}:1433
+    environment:
+      SA_PASSWORD: ${MSSQL_PASSWORD}
+      ACCEPT_EULA: "Y"
     networks:
       - prog_coder_network
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "user_admin"]
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "${MSSQL_PASSWORD}" -Q "SELECT 1" || exit 1
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 30s
 
-  user-read-db:
+  postgres-sql:
     image: ${POSTGRES_IMAGE_NAME}
-    container_name: user-read-db
+    container_name: postgres-sql
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_READ_DB}
+      POSTGRES_MULTIPLE_DATABASES: ${POSTGRES_MULTIPLE_DATABASES}
     ports:
-      - ${POSTGRES_READ_DB_PORT}:5432
+      - ${POSTGRES_PORT}:5432
     volumes:
-      - ./data/user-service/readdb:/var/lib/postgresql/data
+      - ./data/postgres-sql:/var/lib/postgresql/data
+      - ./config/postgres-sql:/docker-entrypoint-initdb.d
+    entrypoint: ["/bin/bash", "-c", "chmod +x /docker-entrypoint-initdb.d/*.sh && docker-entrypoint.sh postgres"]
     networks:
       - prog_coder_network
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "user_admin"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  keycloak-db:
-    image: ${POSTGRES_IMAGE_NAME}
-    container_name: keycloak-db
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_KEYCLOAK_DB}
-    ports:
-      - ${POSTGRES_KEYCLOAK_DB_PORT}:5432
-    volumes:
-      - ./data/keycloakdb:/var/lib/postgresql/data
-    networks:
-      - prog_coder_network
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "user_admin"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d postgres -h localhost"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -78,14 +62,14 @@ services:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://keycloak-db/${POSTGRES_KEYCLOAK_DB}
+      KC_DB_URL: jdbc:postgresql://postgres-sql/keycloak_db # Use the database name from POSTGRES_MULTIPLE_DATABASES
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
       WEBHOOK_URL: ${WEBHOOK_URL}
     ports:
       - ${KEYCLOAK_PORT}:8080
     depends_on:
-      - keycloak-db
+      - postgres-sql
     networks:
       - prog_coder_network
 

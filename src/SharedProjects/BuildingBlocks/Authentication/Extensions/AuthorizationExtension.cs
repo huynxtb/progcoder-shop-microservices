@@ -1,14 +1,14 @@
 ﻿#region using
 
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text.Json;
-using SourceCommon.Constants;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using SourceCommon.Configurations;
+using SourceCommon.Constants;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text.Json;
 
 #endregion
 
@@ -18,20 +18,12 @@ public static class AuthenticationExtensions
 
     public static IServiceCollection AddAuthorizationServerAuthentication(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration cfg)
     {
-        services.Configure<AuthorizationOptions>(
-            configuration.GetSection(AuthorizationOptions.Section));
-
-        var authOptions = configuration
-            .GetSection(AuthorizationOptions.Section)
-            .Get<AuthorizationOptions>()
-            ?? throw new InvalidOperationException("AuthorizationOptions section is missing or invalid.");
-
-        var authority = authOptions.Authority;
-        var clientId = authOptions.ClientId;
-        var audience = authOptions.Audience;
-        var requireHttps = authOptions.RequireHttpsMetadata;
+        var authority = cfg[$"{AuthorizationCfg.Section}:{AuthorizationCfg.Authority}"];
+        var clientId = cfg[$"{AuthorizationCfg.Section}:{AuthorizationCfg.ClientId}"];
+        var audience = cfg[$"{AuthorizationCfg.Section}:{AuthorizationCfg.Audience}"];
+        var requireHttps = cfg.GetValue<bool>($"{AuthorizationCfg.Section}:{AuthorizationCfg.RequireHttpsMetadata}");
 
         services.AddAuthentication(options =>
         {

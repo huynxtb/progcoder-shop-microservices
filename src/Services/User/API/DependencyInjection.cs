@@ -13,21 +13,13 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApiServices(
         this IServiceCollection services, 
-        IConfiguration configuration)
+        IConfiguration cfg)
     {
         services.AddCarter();
 
-        services.Configure<ConnectionStringsOptions>(
-            configuration.GetSection(ConnectionStringsOptions.Section));
-
-        var connectionStrOpt = configuration
-            .GetSection(ConnectionStringsOptions.Section)
-            .Get<ConnectionStringsOptions>()
-            ?? throw new InvalidOperationException("ConnectionStringsOptions section is missing or invalid.");
-
-        var databaseType = connectionStrOpt.DatabaseType;
-        var writeConn = connectionStrOpt.WriteDb;
-        var readConn = connectionStrOpt.ReadDb;
+        var databaseType = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.DatabaseType}"];
+        var writeConn = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.WriteDb}"];
+        var readConn = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.ReadDb}"];
 
         switch (databaseType)
         {
@@ -57,9 +49,9 @@ public static class DependencyInjection
 
         services.AddHttpContextAccessor();
 
-        services.AddAuthorizationServerAuthentication(configuration);
+        services.AddAuthorizationServerAuthentication(cfg);
 
-        services.AddSwaggerServices(configuration);
+        services.AddSwaggerServices(cfg);
 
         return services;
     }

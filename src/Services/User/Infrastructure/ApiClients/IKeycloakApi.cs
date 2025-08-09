@@ -1,7 +1,8 @@
 ﻿#region using
 
+using Application.Dtos.Keycloaks;
 using Application.Models;
-using Application.Models.Response;
+using Application.Models.Responses;
 using Refit;
 
 #endregion
@@ -14,7 +15,7 @@ public interface IKeycloakApi
 
     [Post("/realms/{realm}/protocol/openid-connect/token")]
     [Headers("Content-Type: application/x-www-form-urlencoded")]
-    Task<AccessTokenResponse> GetAccessTokenAsync(
+    Task<KeycloakAccessTokenResponse> GetAccessTokenAsync(
         [AliasAs("realm")] string realm,
         [Body(BodySerializationMethod.UrlEncoded)] Dictionary<string, string> form);
 

@@ -2,31 +2,45 @@
 #region using
 
 using API.Constants;
-using SourceCommon.Constants;
-using SourceCommon.Models.Reponse;
+using Application.CQRS.AccountProfile.Queries;
+using Application.Models.Responses;
+using BuildingBlocks.Pagination;
+using SourceCommon.Models.Reponses;
 
 #endregion
 
 namespace API.Endpoints;
 
-public class GetUsers : ICarterModule
+public sealed class GetUsers : ICarterModule
 {
     #region Implementations
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet(ApiRoutes.Users.Base, async (ISender sender,
-            IHttpContextAccessor httpContext) =>
-        {
-            return Results.Ok(1);
-        })
-        //.DisableAntiforgery()
-        .WithName(nameof(GetUsers))
-        .Produces<ResultSharedResponse<string>>(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status400BadRequest)
-        .Produces(StatusCodes.Status404NotFound)
-        .RequireAuthorization(policy =>
-            policy.RequireRole(AuthorizeRole.SupperAdmin));
+        app.MapGet(ApiRoutes.User.Base, GetUsersAsync)
+            .WithTags(ApiRoutes.User.Tags)
+            .WithName(nameof(GetUsers))
+            .Produces<ResultSharedResponse<GetUsersReponse>>(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound);
+    }
+
+    #endregion
+
+    #region Methods
+
+    private async Task<ResultSharedResponse<GetUsersReponse>> GetUsersAsync(
+        ISender sender,
+        [AsParameters] GetUsersFilter filter,
+        [AsParameters] PaginationRequest pagination)
+    {
+        var query = new GetUsersQuery(
+            filter,
+            pagination);
+
+        var result = await sender.Send(query);
+
+        return result;
     }
 
     #endregion

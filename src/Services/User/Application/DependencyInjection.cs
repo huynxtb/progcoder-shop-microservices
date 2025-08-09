@@ -21,8 +21,8 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.Configure<AppConfigOptions>(
-            configuration.GetSection(AppConfigOptions.Section));
+        services.Configure<AppConfigCfg>(
+            configuration.GetSection(AppConfigCfg.Section));
 
         services.AddExceptionHandler<CustomExceptionHandler>();
 

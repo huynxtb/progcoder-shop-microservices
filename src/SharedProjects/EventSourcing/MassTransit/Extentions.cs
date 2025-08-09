@@ -16,17 +16,9 @@ public static class Extentions
 
     public static IServiceCollection AddMessageBroker(
         this IServiceCollection services, 
-        IConfiguration configuration, 
+        IConfiguration cfg, 
         Assembly? assembly = null)
     {
-        services.Configure<MessageBrokerOptions>(
-            configuration.GetSection(MessageBrokerOptions.Section));
-
-        var msgBrokerOpt = configuration
-            .GetSection(MessageBrokerOptions.Section)
-            .Get<MessageBrokerOptions>()
-            ?? throw new InvalidOperationException("DistributedTracingLoggingOptions section is missing or invalid.");
-
         services.AddMassTransit(config =>
         {
             config.SetKebabCaseEndpointNameFormatter();
@@ -36,10 +28,10 @@ public static class Extentions
 
             config.UsingRabbitMq((context, configurator) =>
             {
-                configurator.Host(new Uri(msgBrokerOpt.Host!), host =>
+                configurator.Host(new Uri(cfg[$"{MessageBrokerCfg.Section}:{MessageBrokerCfg.Host}"]!), host =>
                 {
-                    host.Username(msgBrokerOpt.UserName!);
-                    host.Password(msgBrokerOpt.Password!);
+                    host.Username(cfg[$"{MessageBrokerCfg.Section}:{MessageBrokerCfg.UserName}"]!);
+                    host.Password(cfg[$"{MessageBrokerCfg.Section}:{MessageBrokerCfg.Password}"]!);
                 });
                 configurator.ConfigureEndpoints(context);
             });

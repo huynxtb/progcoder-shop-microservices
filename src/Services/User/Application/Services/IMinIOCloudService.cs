@@ -1,4 +1,4 @@
-﻿using SourceCommon.Models.Reponse;
+﻿using SourceCommon.Models.Reponses;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Services;
