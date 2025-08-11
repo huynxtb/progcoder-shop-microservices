@@ -2,11 +2,8 @@
 #region using
 
 using API.Constants;
-using Application.CQRS.AccountProfile.Queries;
 using Application.CQRS.User.Commands;
 using Application.Dtos.Users;
-using Application.Models.Responses;
-using BuildingBlocks.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using SourceCommon.Models.Reponses;
 
@@ -20,28 +17,24 @@ public sealed class CreateUser : ICarterModule
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost(ApiRoutes.User.Base, CreateUserAsync)
+        app.MapPost(ApiRoutes.User.Create, HandleCreateUserAsync)
             .WithTags(ApiRoutes.User.Tags)
             .WithName(nameof(CreateUser))
             .Produces<ResultSharedResponse<string>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status404NotFound);
+            .Produces(StatusCodes.Status404NotFound)
+            .RequireAuthorization();
     }
 
     #endregion
 
     #region Methods
 
-    private async Task<ResultSharedResponse<string>> CreateUserAsync(
+    private async Task<ResultSharedResponse<string>> HandleCreateUserAsync(
         ISender sender,
-        IHttpContextAccessor httpContext,
         [FromBody] CreateUserDto req)
     {
-        var reqUserId = httpContext.GetCurrentUser().Id!;
-
-        var command = new CreateUserCommand(
-            req,
-            reqUserId);
+        var command = new CreateUserCommand(req);
 
         var result = await sender.Send(command);
 

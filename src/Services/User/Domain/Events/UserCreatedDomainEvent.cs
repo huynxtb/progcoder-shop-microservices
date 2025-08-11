@@ -7,4 +7,4 @@ using Domain.Entities;
 
 namespace Domain.Events;
 
-public record UserCreatedDomainEvent(User User, string Password) : IDomainEvent;
+public sealed record class UserCreatedDomainEvent(User User) : IDomainEvent;

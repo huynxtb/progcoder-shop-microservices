@@ -49,10 +49,10 @@ public sealed class ResultSharedResponse<T> where T : class
     #region Static Methods
 
     public static ResultSharedResponse<T> Failure(
-        int statusCode,
-        string instance,
-        List<ErrorDetail>? errors,
-        string? message)
+        int statusCode = 400,
+        string instance = "",
+        List<ErrorDetail>? errors = null,
+        string? message = "")
     {
         return new ResultSharedResponse<T>(statusCode, instance, errors, message);
     }

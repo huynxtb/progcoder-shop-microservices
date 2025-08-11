@@ -18,9 +18,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D095784E-9749-42E9-9400-49093A205DE5}"
 	ProjectSection(SolutionItems) = preProject
 		.env = .env
-		docker-compose-db-infra.yaml = docker-compose-db-infra.yaml
-		docker-compose.yaml = docker-compose.yaml
+		docker-compose-db-infra.yml = docker-compose-db-infra.yml
 		LICENSE = LICENSE
+		docker-compose.yml = docker-compose.yml
 		README.md = README.md
 		setup-db.sh = setup-db.sh
 	EndProjectSection
@@ -50,6 +50,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Services\User\Application\Application.csproj", "{91879E73-A7DF-6594-819D-D9A59D2B81AB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "src\Services\User\API\API.csproj", "{A9B730CE-8423-7CC4-822F-00151A88193B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notification", "Notification", "{260B3617-531F-4277-8FA3-79F2E0701613}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -110,6 +112,7 @@ Global
 		{2B79481C-33DA-0F16-584D-E78E6A77AD63} = {48E5517A-EF57-42F8-8655-0C53164A8A0C}
 		{91879E73-A7DF-6594-819D-D9A59D2B81AB} = {48E5517A-EF57-42F8-8655-0C53164A8A0C}
 		{A9B730CE-8423-7CC4-822F-00151A88193B} = {48E5517A-EF57-42F8-8655-0C53164A8A0C}
+		{260B3617-531F-4277-8FA3-79F2E0701613} = {310F2C5A-6698-4ABF-898E-5166CB08C4ED}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F6F14A8F-92CF-46E4-99A4-78E0093FC991}

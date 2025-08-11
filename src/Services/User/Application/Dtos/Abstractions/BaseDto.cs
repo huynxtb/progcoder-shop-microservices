@@ -6,9 +6,9 @@ public abstract class BaseDto<T>
 
     public T Id { get; set; } = default!;
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset CreatedAt { get; set; }
 
-    public DateTime LastModifiedAt { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset LastModifiedAt { get; set; }
 
     public string CreatedBy { get; set; } = string.Empty;
 

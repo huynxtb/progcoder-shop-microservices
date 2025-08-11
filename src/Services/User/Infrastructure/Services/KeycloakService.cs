@@ -5,6 +5,7 @@ using Application.Models.Responses;
 using Application.Services;
 using Infrastructure.ApiClients;
 using JasperFx.Core;
+using Mapster;
 using Microsoft.Extensions.Configuration;
 using SourceCommon.Configurations;
 
@@ -17,10 +18,6 @@ public class KeycloakService : IKeycloakService
     #region Fields, Properties and Indexers
 
     private readonly IKeycloakApi _keycloakApi;
-
-    private readonly IConfiguration _cfg;
-
-    private readonly string _baseUrl;
 
     private readonly string _realm;
 
@@ -41,9 +38,6 @@ public class KeycloakService : IKeycloakService
         IConfiguration cfg)
     {
         _keycloakApi = keycloakApi ?? throw new ArgumentNullException(nameof(keycloakApi));
-        _cfg = cfg ?? throw new ArgumentNullException(nameof(cfg));
-
-        _baseUrl = cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.BaseUrl}"]!;
         _realm = cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.Realm}"]!;
         _clientId = cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.ClientId}"]!;
         _clientSecret = cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.ClientSecret}"]!;
@@ -56,7 +50,7 @@ public class KeycloakService : IKeycloakService
 
     #region Implementations
 
-    public async Task<string> CreateUserAsync(KeycloakUserDto user)
+    public async Task<string> CreateUserAsync(KcUserDto user)
     {
         var accessToken = await GetAccessTokenAsync();
 
@@ -67,6 +61,35 @@ public class KeycloakService : IKeycloakService
 
         return result.Content!;
     }
+
+    public async Task<string> DeleteUserAsync(string userId)
+    {
+        var accessToken = await GetAccessTokenAsync();
+
+        var result = await _keycloakApi.DeleteUserAsync(
+            _realm,
+            userId,
+            $"Bearer {accessToken.AccessToken}");
+
+        return result.Content!;
+    }
+
+    public async Task<string> UpdateUserAsync(string userId, KcUserDto user)
+    {
+        var accessToken = await GetAccessTokenAsync();
+
+        var result = await _keycloakApi.UpdateUserAsync(
+            _realm,
+            userId,
+            user,
+            $"Bearer {accessToken.AccessToken}");
+
+        return result.Content!;
+    }
+
+    #endregion
+
+    #region Methods
 
     private async Task<KeycloakAccessTokenResponse> GetAccessTokenAsync()
     {

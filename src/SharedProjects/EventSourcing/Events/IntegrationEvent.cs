@@ -10,7 +10,7 @@ public record IntegrationEvent
 
     public string EventType => GetType()?.AssemblyQualifiedName ?? string.Empty;
 
-    public DateTime? CreatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
 
     public string? CreatedBy { get; set; }
 

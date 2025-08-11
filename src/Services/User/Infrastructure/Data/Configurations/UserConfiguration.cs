@@ -10,7 +10,7 @@ namespace Infrastructure.Data.Configurations;
 
 public sealed class UserConfiguration : IEntityTypeConfiguration<User>
 {
-    #region Methods
+    #region Implementations
 
     public void Configure(EntityTypeBuilder<User> builder)
     {
@@ -19,18 +19,25 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id).HasColumnName("id");
-        builder.Property(u => u.UserName).HasColumnName("user_name").HasMaxLength(255);
-        builder.Property(u => u.Email).HasColumnName("email").HasMaxLength(255);
-        builder.Property(u => u.FirstName).HasColumnName("first_name").HasMaxLength(100);
-        builder.Property(u => u.LastName).HasColumnName("last_name").HasMaxLength(100);
-        builder.Property(u => u.KeycloakUserId).HasColumnName("keycloak_user_id").HasMaxLength(50);
-        builder.Property(u => u.CreatedAt).HasColumnName("created_at");
-        builder.Property(u => u.CreatedBy).HasColumnName("created_by").HasMaxLength(50);
-        builder.Property(u => u.LastModifiedAt).HasColumnName("last_modified_at");
-        builder.Property(u => u.LastModifiedBy).HasColumnName("last_modified_by").HasMaxLength(50);
+        builder.Property(x => x.UserName).HasColumnName("user_name").HasMaxLength(255);
+        builder.Property(x => x.Email).HasColumnName("email").HasMaxLength(255);
+        builder.Property(x => x.FirstName).HasColumnName("first_name").HasMaxLength(100);
+        builder.Property(x => x.LastName).HasColumnName("last_name").HasMaxLength(100);
+        builder.Property(x => x.EmailVerified).HasColumnName("email_verified").HasDefaultValue(false);
+        builder.Property(x => x.IsActive).HasColumnName("is_active").HasDefaultValue(true);;
+        builder.Property(x => x.CreatedAt).HasColumnName("created_at");
+        builder.Property(x => x.CreatedBy).HasColumnName("created_by").HasMaxLength(50);
+        builder.Property(x => x.LastModifiedAt).HasColumnName("last_modified_at");
+        builder.Property(x => x.LastModifiedBy).HasColumnName("last_modified_by").HasMaxLength(50);
 
-        builder.HasIndex(u => u.UserName).IsUnique(true);
-        builder.HasIndex(u => u.Email).IsUnique(true);
+        builder.HasIndex(x => x.UserName).IsUnique(true);
+        builder.HasIndex(x => x.Email).IsUnique(true);
+
+        builder.HasMany(x => x.LoginHistories)
+         .WithOne(x => x.User)
+         .HasForeignKey(x => x.UserId)
+         .IsRequired()
+         .OnDelete(DeleteBehavior.Cascade);
     }
 
     #endregion

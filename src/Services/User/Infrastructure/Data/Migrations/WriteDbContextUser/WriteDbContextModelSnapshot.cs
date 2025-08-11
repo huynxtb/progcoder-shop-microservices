@@ -22,27 +22,31 @@ namespace Infrastructure.Data.Migrations.WriteDbContextUser
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Entities.Role", b =>
+            modelBuilder.Entity("Domain.Entities.LoginHistory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2")
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset")
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("created_by");
 
-                    b.Property<string>("KeycloakRoleId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)")
+                        .HasColumnName("ip_address");
 
-                    b.Property<DateTime?>("LastModifiedAt")
-                        .HasColumnType("datetime2")
+                    b.Property<DateTimeOffset?>("LastModifiedAt")
+                        .HasColumnType("datetimeoffset")
                         .HasColumnName("last_modified_at");
 
                     b.Property<string>("LastModifiedBy")
@@ -50,19 +54,18 @@ namespace Infrastructure.Data.Migrations.WriteDbContextUser
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("last_modified_by");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("name");
+                    b.Property<DateTimeOffset>("LoggedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasDatabaseName("ix_roles_name")
-                        .HasFilter("[name] IS NOT NULL");
+                    b.HasIndex("UserId", "LoggedAt");
 
-                    b.ToTable("roles", (string)null);
+                    b.ToTable("login_histories", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
@@ -72,8 +75,8 @@ namespace Infrastructure.Data.Migrations.WriteDbContextUser
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2")
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset")
                         .HasColumnName("created_at");
 
                     b.Property<string>("CreatedBy")
@@ -86,18 +89,25 @@ namespace Infrastructure.Data.Migrations.WriteDbContextUser
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("email");
 
+                    b.Property<bool>("EmailVerified")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("email_verified");
+
                     b.Property<string>("FirstName")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("first_name");
 
-                    b.Property<string>("KeycloakUserId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("keycloak_user_id");
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
 
-                    b.Property<DateTime?>("LastModifiedAt")
-                        .HasColumnType("datetime2")
+                    b.Property<DateTimeOffset?>("LastModifiedAt")
+                        .HasColumnType("datetimeoffset")
                         .HasColumnName("last_modified_at");
 
                     b.Property<string>("LastModifiedBy")
@@ -119,62 +129,29 @@ namespace Infrastructure.Data.Migrations.WriteDbContextUser
 
                     b.HasIndex("Email")
                         .IsUnique()
-                        .HasDatabaseName("ix_users_email")
                         .HasFilter("[email] IS NOT NULL");
 
                     b.HasIndex("UserName")
                         .IsUnique()
-                        .HasDatabaseName("ix_users_username")
                         .HasFilter("[user_name] IS NOT NULL");
 
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.UserRole", b =>
+            modelBuilder.Entity("Domain.Entities.LoginHistory", b =>
                 {
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("user_id");
-
-                    b.Property<Guid?>("RoleId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("role_id");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId", "UserId")
-                        .HasDatabaseName("ix_user_roles_role_user");
-
-                    b.ToTable("user_roles", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Entities.UserRole", b =>
-                {
-                    b.HasOne("Domain.Entities.Role", "Role")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entities.User", "User")
-                        .WithMany("UserRoles")
+                        .WithMany("LoginHistories")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Role");
-
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Role", b =>
-                {
-                    b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
-                    b.Navigation("UserRoles");
+                    b.Navigation("LoginHistories");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,12 +1,18 @@
-﻿using Domain.Abstractions;
+﻿#region using
+
+using Domain.Abstractions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+
+#endregion
 
 namespace Infrastructure.Data.Interceptors;
 public class DispatchDomainEventsInterceptor(IMediator mediator)
     : SaveChangesInterceptor
 {
+    #region Override Methods
+
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {
         DispatchDomainEvents(eventData.Context).GetAwaiter().GetResult();
@@ -18,6 +24,10 @@ public class DispatchDomainEventsInterceptor(IMediator mediator)
         await DispatchDomainEvents(eventData.Context);
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }
+
+    #endregion
+
+    #region Methods
 
     public async Task DispatchDomainEvents(DbContext? context)
     {
@@ -37,4 +47,6 @@ public class DispatchDomainEventsInterceptor(IMediator mediator)
         foreach (var domainEvent in domainEvents)
             await mediator.Publish(domainEvent);
     }
+
+    #endregion
 }

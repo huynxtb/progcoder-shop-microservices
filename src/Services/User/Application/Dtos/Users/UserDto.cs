@@ -18,7 +18,9 @@ public class UserDto : BaseDto<Guid>
 
     public string? LastName { get; set; }
 
-    public string? KeycloakUserId { get; set; }
+    public bool EmailVerified { get; set; }
+
+    public bool IsActive { get; set; }
 
     #endregion
 }

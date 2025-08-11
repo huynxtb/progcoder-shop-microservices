@@ -1,8 +1,12 @@
 ﻿#region using
 
+using Application.CQRS.User.Commands;
+using Application.Services;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using SourceCommon.Constants;
 
 #endregion
 
@@ -18,22 +22,14 @@ public static class DatabaseExtentions
 
         var writeDbContext = scope.ServiceProvider.GetRequiredService<WriteDbContext>();
         var readDbContext = scope.ServiceProvider.GetRequiredService<ReadDbContext>();
-
-        //await writeDbContext.Database.EnsureDeletedAsync();
+        
         await writeDbContext.Database.MigrateAsync();
-
-        //await readDbContext.Database.EnsureDeletedAsync();
         await readDbContext.Database.MigrateAsync();
 
-        await SeedAsync(writeDbContext);
+        await SeedDataAsync(writeDbContext, readDbContext);
     }
 
-    private static async Task SeedAsync(WriteDbContext context)
-    {
-        await SeedDataAsync(context);
-    }
-
-    private static async Task SeedDataAsync(WriteDbContext context)
+    private static async Task SeedDataAsync(WriteDbContext writeDbContext, ReadDbContext readDbContext)
     {
         // TODO
         await Task.CompletedTask;

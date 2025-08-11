@@ -37,14 +37,14 @@ public interface IKeycloakApi
     [Post("/admin/realms/{realm}/users")]
     Task<ApiResponse<string>> CreateUserAsync(
         [AliasAs("realm")] string realm,
-        [Body] KeycloakUserDto user,
+        [Body] KcUserDto user,
         [Header("Authorization")] string bearerToken);
 
     [Put("/admin/realms/{realm}/users/{id}")]
     Task<ApiResponse<string>> UpdateUserAsync(
         [AliasAs("realm")] string realm,
         [AliasAs("id")] string userId,
-        [Body] KeycloakUserDto user,
+        [Body] KcUserDto user,
         [Header("Authorization")] string bearerToken);
 
     [Delete("/admin/realms/{realm}/users/{id}")]
@@ -53,19 +53,19 @@ public interface IKeycloakApi
         [AliasAs("id")] string userId,
         [Header("Authorization")] string bearerToken);
 
-    [Post("/admin/realms/{realm}/users/{userId}/role-mappings/realm")]
-    Task<ApiResponse<string>> AssignRolesToUserAsync(
-        [AliasAs("realm")] string realm,
-        [AliasAs("userId")] string userId,
-        [Body] List<KeycloakRoleDto> roles,
-        [Header("Authorization")] string bearerToken);
+    //[Post("/admin/realms/{realm}/users/{userId}/role-mappings/realm")]
+    //Task<ApiResponse<string>> AssignRolesToUserAsync(
+    //    [AliasAs("realm")] string realm,
+    //    [AliasAs("userId")] string userId,
+    //    [Body] List<KcRoleDto> roles,
+    //    [Header("Authorization")] string bearerToken);
 
-    [Post("/admin/realms/{realm}/users/{userId}/groups")]
-    Task<ApiResponse<string>> AssignGroupsToUserAsync(
-        [AliasAs("realm")] string realm,
-        [AliasAs("userId")] string userId,
-        [Body] List<KeycloakGroupDto> groups,
-        [Header("Authorization")] string bearerToken);
+    //[Post("/admin/realms/{realm}/users/{userId}/groups")]
+    //Task<ApiResponse<string>> AssignGroupsToUserAsync(
+    //    [AliasAs("realm")] string realm,
+    //    [AliasAs("userId")] string userId,
+    //    [Body] List<KeycloakGroupDto> groups,
+    //    [Header("Authorization")] string bearerToken);
 
     #endregion
 }

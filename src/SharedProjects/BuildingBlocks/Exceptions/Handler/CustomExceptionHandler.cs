@@ -34,21 +34,35 @@ public class CustomExceptionHandler(
             (
                 exception.Message,
                 context.Response.StatusCode = StatusCodes.Status400BadRequest,
-                "BadRequest",
+                MessageCode.BadRequest,
                 includeInnerEx ? exception.GetType().Name : string.Empty
             ),
             BadRequestException =>
             (
                 exception.Message,
                 context.Response.StatusCode = StatusCodes.Status400BadRequest,
-                "BadRequest",
+                MessageCode.BadRequest,
                 includeInnerEx ? exception.GetType().Name : string.Empty
             ),
             NotFoundException =>
             (
                 exception.Message,
                 context.Response.StatusCode = StatusCodes.Status404NotFound,
-                "NotFound",
+                MessageCode.NotFound,
+                includeInnerEx ? exception.GetType().Name : string.Empty
+            ),
+            UnauthorizedException =>
+            (
+                exception.Message,
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized,
+                MessageCode.Unauthorized,
+                includeInnerEx ? exception.GetType().Name : string.Empty
+            ),
+            NoPermissionException =>
+            (
+                exception.Message,
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized,
+                MessageCode.AccessDenied,
                 includeInnerEx ? exception.GetType().Name : string.Empty
             ),
             _ =>

@@ -29,13 +29,15 @@ public static class UserIdentityExtension
             .Select(c => c.Value)
             .ToList() ?? [];
 
+        var uuid = Guid.TryParse(userId, out var parsedUserId) ? parsedUserId : Guid.Empty;
+
         return new UserIdentity()
         {
             EmailVerified = emailVerified,
             FirstName = firstName,
             LastName = lastName,
             Email = email,
-            Id = userId,
+            Id = uuid,
             UserName = userName,
             Tenant = tenant,
             Roles = roles

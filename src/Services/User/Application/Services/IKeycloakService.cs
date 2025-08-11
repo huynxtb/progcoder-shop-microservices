@@ -10,7 +10,11 @@ public interface IKeycloakService
 {
     #region Methods
 
-    Task<string> CreateUserAsync(KeycloakUserDto user);
+    Task<string> CreateUserAsync(KcUserDto user);
+
+    Task<string> UpdateUserAsync(string userId, KcUserDto user);
+
+    Task<string> DeleteUserAsync(string userId);
 
     #endregion
 }

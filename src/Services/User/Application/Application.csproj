@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="CQRS\LoginHistory\EventHandlers\" />
     <Folder Include="CQRS\User\EventHandlers\Integration\" />
     <Folder Include="CQRS\Keycloak\EventHandlers\Integration\" />
     <Folder Include="CQRS\Keycloak\Queries\" />

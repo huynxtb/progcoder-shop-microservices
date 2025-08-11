@@ -1,6 +1,6 @@
 ﻿namespace Application.Dtos.Users;
 
-public sealed class CreateUserDto
+public class CreateUserDto
 {
     #region Fields, Properties and Indexers
 
@@ -13,10 +13,6 @@ public sealed class CreateUserDto
     public string? LastName { get; set; }
 
     public string? Password { get; set; }
-
-    public string? ConfirmPassword { get; set; }
-
-    public string? KeycloakUserId { get; set; }
 
     #endregion
 }

@@ -11,16 +11,7 @@ using SourceCommon.Models.Reponses;
 
 namespace Application.CQRS.AccountProfile.Queries;
 
-public sealed class GetUsersFilter
-{
-    #region Fields, Properties and Indexers
-
-    public string? SearchText { get; set; }
-
-    public string? RequestUserId { get; set; }
-
-    #endregion
-}
+public record class GetUsersFilter(string? SearchText);
 
 public sealed record GetUsersQuery(
     GetUsersFilter Filter,

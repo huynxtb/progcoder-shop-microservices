@@ -50,5 +50,25 @@ public static class MessageCode
 
     public const string UserNotFound = "USER_NOT_FOUND";
 
+    public const string UserAlreadyExists = "USER_ALREADY_EXISTS";
+
+    public const string ActionIsRequired = "ACTION_IS_REQUIRED";
+
+    public const string Unauthorized = "UNAUTHORIZED";
+
+    public const string NotFound = "NOT_FOUND";
+
+    public const string EmailAlreadyExists = "EMAIL_ALREADY_EXISTS";
+
+    public const string UserNameAlreadyExists = "USERNAME_ALREADY_EXISTS";
+
+    public const string RequestUserIdIsRequired = "REQUEST_USER_ID_IS_REQUIRED";
+
+    public const string SynchronizedSuccessfully = "SYNCHRONIZED_SUCCESSFULLY";
+
+    public const string SynchronizedFail = "SYNCHRONIZED_FAIL";
+
+    public const string UserIdIsRequired = "USER_ID_IS_REQUIRED";
+
     #endregion
 }

@@ -17,19 +17,20 @@ public sealed class GetUsers : ICarterModule
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet(ApiRoutes.User.Base, GetUsersAsync)
+        app.MapGet(ApiRoutes.User.GetUsers, HandleGetUsersAsync)
             .WithTags(ApiRoutes.User.Tags)
             .WithName(nameof(GetUsers))
             .Produces<ResultSharedResponse<GetUsersReponse>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status404NotFound);
+            .Produces(StatusCodes.Status404NotFound)
+            .RequireAuthorization();
     }
 
     #endregion
 
     #region Methods
 
-    private async Task<ResultSharedResponse<GetUsersReponse>> GetUsersAsync(
+    private async Task<ResultSharedResponse<GetUsersReponse>> HandleGetUsersAsync(
         ISender sender,
         [AsParameters] GetUsersFilter filter,
         [AsParameters] PaginationRequest pagination)

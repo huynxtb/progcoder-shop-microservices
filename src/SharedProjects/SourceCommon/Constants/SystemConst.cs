@@ -6,6 +6,10 @@ public static class SystemConst
 
     public const string DefaultModifiedBy = "system";
 
+    public const string Keycloak = "keycloak";
+
+    public const string IntegrationJob = "integration_job";
+
     public const string NA = "N/A";
 
     #endregion

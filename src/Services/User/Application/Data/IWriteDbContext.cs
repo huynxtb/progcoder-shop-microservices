@@ -13,9 +13,7 @@ public interface IWriteDbContext
 
     DbSet<User> Users { get; }
 
-    DbSet<Role> Roles { get; }
-
-    DbSet<UserRole> UserRoles { get; }
+    DbSet<LoginHistory> LoginHistories { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 

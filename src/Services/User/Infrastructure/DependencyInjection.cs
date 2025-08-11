@@ -107,7 +107,7 @@ public static class DependencyInjection
             .ConfigureHttpClient(c =>
             {
                 c.BaseAddress = new Uri(cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.BaseUrl}"]!);
-                c.Timeout = TimeSpan.FromSeconds(10);
+                c.Timeout = TimeSpan.FromSeconds(30);
             });
             //.AddPolicyHandler(retryPolicy)
             //.AddPolicyHandler(circuitBreakerPolicy);

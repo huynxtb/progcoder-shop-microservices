@@ -1,14 +1,17 @@
 ﻿#region using
 
 using Application.Data;
+using Application.Dtos.Keycloaks;
 using Application.Dtos.Users;
+using Application.Services;
+using Microsoft.EntityFrameworkCore;
 using SourceCommon.Models.Reponses;
 
 #endregion
 
 namespace Application.CQRS.User.Commands;
 
-public record CreateUserCommand(CreateUserDto User, string UserIdentityId) : ICommand<ResultSharedResponse<string>>;
+public record CreateUserCommand(CreateUserDto Dto) : ICommand<ResultSharedResponse<string>>;
 
 public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 {
@@ -16,41 +19,34 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 
     public CreateUserCommandValidator()
     {
-        RuleFor(x => x.User)
+        RuleFor(x => x.Dto)
             .NotNull()
             .WithMessage(MessageCode.BadRequest)
             .DependentRules(() =>
             {
-                RuleFor(x => x.User.UserName)
+                RuleFor(x => x.Dto.UserName)
                     .NotEmpty()
                     .WithMessage(MessageCode.UserNameIsRequired);
 
-                RuleFor(x => x.User.Email)
+                RuleFor(x => x.Dto.Email)
                     .NotEmpty()
                     .WithMessage(MessageCode.EmailIsRequired)
                     .EmailAddress()
                     .WithMessage(MessageCode.InvalidEmailAddress);
 
-                RuleFor(x => x.User.FirstName)
+                RuleFor(x => x.Dto.FirstName)
                     .NotEmpty()
                     .WithMessage(MessageCode.FirstNameIsRequired);
 
-                RuleFor(x => x.User.LastName)
+                RuleFor(x => x.Dto.LastName)
                     .NotEmpty()
                     .WithMessage(MessageCode.LastNameIsRequired);
 
-                RuleFor(x => x.User.Password)
+                RuleFor(x => x.Dto.Password)
                     .NotEmpty()
                     .WithMessage(MessageCode.PasswordIsRequired)
                     .MinimumLength(5)
                     .WithMessage(MessageCode.Min5Characters);
-
-                RuleFor(x => x.User.ConfirmPassword)
-                    .NotEmpty()
-                    .WithMessage(MessageCode.ConfirmPasswordIsRequired)
-                    .Equal(x => x.User.Password)
-                    .WithMessage(MessageCode.ConfirmPasswordIsNotMatch);
-
             });
 
     }
@@ -58,28 +54,49 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
     #endregion
 }
 
-public class CreateUserCommandHandler(IWriteDbContext dbContext) : ICommandHandler<CreateUserCommand, ResultSharedResponse<string>>
+public class CreateUserCommandHandler(
+    IWriteDbContext dbContext,
+    IKeycloakService keycloakService) : ICommandHandler<CreateUserCommand, ResultSharedResponse<string>>
 {
     #region Implementations
 
     public async Task<ResultSharedResponse<string>> Handle(CreateUserCommand command, CancellationToken cancellationToken)
     {
-        var uuid = Guid.NewGuid();
+        var existingEmail = await dbContext.Users
+            .AsNoTracking()
+            .AnyAsync(x => x.Email == command.Dto.Email, cancellationToken);
 
-        var entity = Domain.Entities.User.Create(id: uuid,
-            userName: command.User.UserName!,
-            email: command.User.Email!,
-            password: command.User.Password!,
-            firstName: command.User.FirstName!,
-            lastName: command.User.LastName!,
-            modifiedBy: command.UserIdentityId);
+        if (existingEmail) 
+            throw new BadRequestException(MessageCode.EmailAlreadyExists);
 
-        await dbContext.Users.AddAsync(entity);
+        var existingUsername = await dbContext.Users
+            .AsNoTracking()
+            .AnyAsync(x => x.UserName == command.Dto.UserName, cancellationToken);
 
-        await dbContext.SaveChangesAsync(cancellationToken);
+        if (existingUsername)
+            throw new BadRequestException(MessageCode.UserNameAlreadyExists);
+
+        var keycloakUser = new KcUserDto
+        {
+            UserName = command.Dto.UserName,
+            Email = command.Dto.Email,
+            FirstName = command.Dto.FirstName,
+            LastName = command.Dto.LastName,
+            Credentials =
+            [
+                new()
+                {
+                    Type = "password",
+                    Value = command.Dto.Password,
+                    Temporary = false
+                }
+            ],
+        };
+
+        await keycloakService.CreateUserAsync(keycloakUser);
 
         return ResultSharedResponse<string>.Success(
-            data: entity.Id.ToString(),
+            data: keycloakUser.Email!,
             message: MessageCode.CreatedSuccessfully);
     }
 

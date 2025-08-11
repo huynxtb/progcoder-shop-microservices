@@ -4,7 +4,7 @@ public sealed class UserIdentity
 {
     #region Fields, Properties and Indexers
 
-    public string? Id { get; init; }
+    public Guid Id { get; init; }
 
     public string? UserName { get; init; }
 
