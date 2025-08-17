@@ -1,13 +1,13 @@
 ﻿#region using
 
-using Application.Data;
-using Application.Services;
+using User.Application.Data;
+using User.Application.Services;
 using Microsoft.EntityFrameworkCore;
 using SourceCommon.Models.Reponses;
 
 #endregion
 
-namespace Application.CQRS.User.Commands;
+namespace User.Application.CQRS.User.Commands;
 
 public record DeleteUserCommand(Guid UserId) : ICommand<ResultSharedResponse<string>>;
 
@@ -26,7 +26,7 @@ public class DeleteUserCommandValidator : AbstractValidator<DeleteUserCommand>
 }
 
 public class DeleteUserCommandHandler(
-    IWriteDbContext dbContext,
+    IApplicationDbContext dbContext,
     IKeycloakService keycloakService) : ICommandHandler<DeleteUserCommand, ResultSharedResponse<string>>
 {
     #region Implementations

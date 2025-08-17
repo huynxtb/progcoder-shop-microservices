@@ -1,10 +1,10 @@
 ﻿#region using
 
-using Application.Dtos.Keycloaks;
+using User.Application.Dtos.Keycloaks;
 
 #endregion
 
-namespace Application.Services;
+namespace User.Application.Services;
 
 public interface IKeycloakService
 {

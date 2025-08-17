@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 #endregion
 
-namespace Application.Models.Responses;
+namespace User.Application.Models.Responses;
 
 public sealed class KeycloakGroupResponse
 {

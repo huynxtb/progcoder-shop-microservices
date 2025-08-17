@@ -4,10 +4,11 @@ using BuildingBlocks.Swagger.Extensions;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using SourceCommon.Configurations;
+using SourceCommon.Constants;
 
 #endregion
 
-namespace API;
+namespace User.Api;
 
 public static class DependencyInjection
 {
@@ -17,26 +18,22 @@ public static class DependencyInjection
     {
         services.AddCarter();
 
-        var databaseType = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.DatabaseType}"];
-        var writeConn = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.WriteDb}"];
-        var readConn = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.ReadDb}"];
+        var dbype = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.DbType}"];
+        var conn = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.Database}"];
 
-        switch (databaseType)
+        switch (dbype)
         {
-            case "SQLSERVER":
+            case DatabaseType.SqlServer:
                 services.AddHealthChecks()
-                    .AddSqlServer(connectionString: writeConn!, name: "wirte_db")
-                    .AddSqlServer(connectionString: readConn!, name: "read_db");
+                    .AddSqlServer(connectionString: conn!);
                 break;
-            case "MYSQL":
+            case DatabaseType.MySql:
                 services.AddHealthChecks()
-                    .AddMySql(connectionString: writeConn!, name: "wirte_db")
-                    .AddMySql(connectionString: readConn!, name: "read_db");
+                    .AddMySql(connectionString: conn!);
                 break;
-            case "POSTGRESQL":
+            case DatabaseType.PostgreSql:
                 services.AddHealthChecks()
-                    .AddNpgSql(connectionString: writeConn!, name: "wirte_db")
-                    .AddNpgSql(connectionString: readConn!, name: "read_db");
+                    .AddNpgSql(connectionString: conn!);
                 break;
             //case "MONGO":
             //    services.AddHealthChecks()
@@ -48,9 +45,7 @@ public static class DependencyInjection
         }
 
         services.AddHttpContextAccessor();
-
         services.AddAuthorizationServerAuthentication(cfg);
-
         services.AddSwaggerServices(cfg);
 
         return services;

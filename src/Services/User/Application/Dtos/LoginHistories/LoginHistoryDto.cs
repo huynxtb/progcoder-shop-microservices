@@ -1,4 +1,4 @@
-﻿namespace Application.Dtos.LoginHistories;
+﻿namespace User.Application.Dtos.LoginHistories;
 
 public class LoginHistoryDto
 {

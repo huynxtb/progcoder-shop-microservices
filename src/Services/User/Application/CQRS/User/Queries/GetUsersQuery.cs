@@ -1,15 +1,15 @@
 ﻿#region using
 
-using Application.Data;
-using Application.Dtos.Users;
-using Application.Models.Responses;
+using User.Application.Data;
+using User.Application.Dtos.Users;
+using User.Application.Models.Responses;
 using BuildingBlocks.Pagination.Extensions;
 using Microsoft.EntityFrameworkCore;
 using SourceCommon.Models.Reponses;
 
 #endregion
 
-namespace Application.CQRS.AccountProfile.Queries;
+namespace User.Application.CQRS.AccountProfile.Queries;
 
 public record class GetUsersFilter(string? SearchText);
 
@@ -17,14 +17,16 @@ public sealed record GetUsersQuery(
     GetUsersFilter Filter,
     PaginationRequest Paging) : IQuery<ResultSharedResponse<GetUsersReponse>>;
 
-public sealed class GetUsersQueryHandler(IReadDbContext dbContext)
+public sealed class GetUsersQueryHandler(IApplicationDbContext dbContext)
     : IQueryHandler<GetUsersQuery, ResultSharedResponse<GetUsersReponse>>
 {
     #region Implementations
 
     public async Task<ResultSharedResponse<GetUsersReponse>> Handle(GetUsersQuery query, CancellationToken cancellationToken)
     {
-        var total = await dbContext.Users.CountAsync(cancellationToken);
+        var total = await dbContext.Users
+            .AsNoTracking()
+            .CountAsync(cancellationToken);
         var totalPages = (int)Math.Ceiling(total / (double)query.Paging.PageSize);
 
         var result = await dbContext.Users
@@ -33,9 +35,10 @@ public sealed class GetUsersQueryHandler(IReadDbContext dbContext)
                 x.UserName!.Contains(query.Filter.SearchText) ||
                 x.FirstName!.Contains(query.Filter.SearchText) ||
                 x.LastName!.Contains(query.Filter.SearchText))
-            .OrderByDescending(x => x.CreatedAt)
+            .OrderByDescending(x => x.CreatedOnUtc)
             .Skip(query.Paging.ToSkip())
             .Take(query.Paging.ToTake())
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
 
         var reponse = new GetUsersReponse()

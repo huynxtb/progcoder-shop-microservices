@@ -1,14 +1,14 @@
 ﻿#region using
 
-using Application.Data;
-using Application.Dtos.LoginHistories;
-using Domain.Entities;
+using User.Application.Data;
+using User.Application.Dtos.LoginHistories;
+using User.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using SourceCommon.Models.Reponses;
 
 #endregion
 
-namespace Application.CQRS.User.Commands;
+namespace User.Application.CQRS.User.Commands;
 
 public record CreateLoginHistoryCommand(CreateLoginHistoryDto Dto) : ICommand<ResultSharedResponse<string>>;
 
@@ -37,7 +37,7 @@ public class CreateLoginHistoryCommandValidator : AbstractValidator<CreateLoginH
     #endregion
 }
 
-public class CreateLoginHistoryCommandHandler(IWriteDbContext dbContext) : ICommandHandler<CreateLoginHistoryCommand, ResultSharedResponse<string>>
+public class CreateLoginHistoryCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<CreateLoginHistoryCommand, ResultSharedResponse<string>>
 {
     #region Implementations
 

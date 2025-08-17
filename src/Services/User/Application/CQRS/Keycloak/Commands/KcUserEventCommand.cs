@@ -1,20 +1,19 @@
 ﻿#region using
 
-using Application.CQRS.User.Commands;
-using Application.Data;
-using Application.Dtos.Keycloaks;
-using Application.Dtos.LoginHistories;
+using User.Application.CQRS.User.Commands;
+using User.Application.Data;
+using User.Application.Dtos.Keycloaks;
+using User.Application.Dtos.LoginHistories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SourceCommon.Configurations;
 using SourceCommon.Models.Reponses;
 using SourceSourceCommon.Constants;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 #endregion
 
-namespace Application.CQRS.Keycloak.Commands;
+namespace User.Application.CQRS.Keycloak.Commands;
 
 public record KcUserEventCommand(KcUserEventDto Dto, string ApiKey) : ICommand<ResultSharedResponse<string>>;
 
@@ -39,7 +38,7 @@ public class KeycloakUserEventCommandValidator : AbstractValidator<KcUserEventCo
 }
 
 public class KeycloakUserEventCommandHandler(
-    IWriteDbContext dbContext,
+    IApplicationDbContext dbContext,
     ISender sender,
     IConfiguration cfg) : ICommandHandler<KcUserEventCommand, ResultSharedResponse<string>>
 {

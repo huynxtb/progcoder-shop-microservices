@@ -5,11 +5,11 @@ VisualStudioVersion = 17.10.35004.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{310F2C5A-6698-4ABF-898E-5166CB08C4ED}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedProjects", "SharedProjects", "{0DA0DDCA-CF1F-4F3A-87FC-B527A04026E0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{0DA0DDCA-CF1F-4F3A-87FC-B527A04026E0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildingBlocks", "src\SharedProjects\BuildingBlocks\BuildingBlocks.csproj", "{B9BBDD13-A141-4A23-8E04-F00F48800EDD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildingBlocks", "src\Shared\BuildingBlocks\BuildingBlocks.csproj", "{B9BBDD13-A141-4A23-8E04-F00F48800EDD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcing", "src\SharedProjects\EventSourcing\EventSourcing.csproj", "{E4FBCFAA-8B20-42DA-9160-4CB62769682A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventSourcing", "src\Shared\EventSourcing\EventSourcing.csproj", "{E4FBCFAA-8B20-42DA-9160-4CB62769682A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateway", "ApiGateway", "{596BF733-3CBE-4975-ABA3-45A6E2D357A5}"
 EndProject
@@ -18,16 +18,17 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D095784E-9749-42E9-9400-49093A205DE5}"
 	ProjectSection(SolutionItems) = preProject
 		.env = .env
+		add-migration.bat = add-migration.bat
 		docker-compose-db-infra.yml = docker-compose-db-infra.yml
-		LICENSE = LICENSE
 		docker-compose.yml = docker-compose.yml
+		LICENSE = LICENSE
 		README.md = README.md
 		setup-db.sh = setup-db.sh
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Payment", "Payment", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceCommon", "src\SharedProjects\SourceCommon\SourceCommon.csproj", "{2E0CCED0-4A3F-5AC8-58AD-72E9367F5E69}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceCommon", "src\Shared\SourceCommon\SourceCommon.csproj", "{2E0CCED0-4A3F-5AC8-58AD-72E9367F5E69}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Search", "Search", "{D54B29E6-15C1-4D82-B836-097C82983DEE}"
 EndProject
@@ -43,15 +44,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Inventory", "Inventory", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "User", "User", "{48E5517A-EF57-42F8-8655-0C53164A8A0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Services\User\Domain\Domain.csproj", "{89002BD1-12CE-B1FF-838C-416A9811C116}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User.Domain", "src\Services\User\Domain\User.Domain.csproj", "{89002BD1-12CE-B1FF-838C-416A9811C116}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Services\User\Infrastructure\Infrastructure.csproj", "{2B79481C-33DA-0F16-584D-E78E6A77AD63}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User.Infrastructure", "src\Services\User\Infrastructure\User.Infrastructure.csproj", "{2B79481C-33DA-0F16-584D-E78E6A77AD63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Services\User\Application\Application.csproj", "{91879E73-A7DF-6594-819D-D9A59D2B81AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User.Application", "src\Services\User\Application\User.Application.csproj", "{91879E73-A7DF-6594-819D-D9A59D2B81AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "src\Services\User\API\API.csproj", "{A9B730CE-8423-7CC4-822F-00151A88193B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User.Api", "src\Services\User\API\User.Api.csproj", "{A9B730CE-8423-7CC4-822F-00151A88193B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notification", "Notification", "{260B3617-531F-4277-8FA3-79F2E0701613}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notification.Api", "src\Services\Notification\API\Notification.Api.csproj", "{A8ACD060-8575-F2D4-0ADA-B4F8C1718B7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notification.Application", "src\Services\Notification\Application\Notification.Application.csproj", "{3FA3FC88-9C39-DDE3-7C67-B295FF103967}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notification.Domain", "src\Services\Notification\Domain\Notification.Domain.csproj", "{679C6DD0-7215-5C10-8838-646A709C285C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notification.Infrastructure", "src\Services\Notification\Infrastructure\Notification.Infrastructure.csproj", "{DE1B97F4-3D0E-B784-624F-487A2B614FAF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Worker", "Worker", "{C2D53219-27D3-4A5B-88F2-CAE80644235B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notification.Worker", "src\Services\Notification\Worker\Worker\Notification.Worker.csproj", "{65989642-7D20-4746-A89F-EE4FCE9DB12B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,6 +104,26 @@ Global
 		{A9B730CE-8423-7CC4-822F-00151A88193B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9B730CE-8423-7CC4-822F-00151A88193B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9B730CE-8423-7CC4-822F-00151A88193B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8ACD060-8575-F2D4-0ADA-B4F8C1718B7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8ACD060-8575-F2D4-0ADA-B4F8C1718B7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8ACD060-8575-F2D4-0ADA-B4F8C1718B7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8ACD060-8575-F2D4-0ADA-B4F8C1718B7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FA3FC88-9C39-DDE3-7C67-B295FF103967}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FA3FC88-9C39-DDE3-7C67-B295FF103967}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FA3FC88-9C39-DDE3-7C67-B295FF103967}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FA3FC88-9C39-DDE3-7C67-B295FF103967}.Release|Any CPU.Build.0 = Release|Any CPU
+		{679C6DD0-7215-5C10-8838-646A709C285C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{679C6DD0-7215-5C10-8838-646A709C285C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{679C6DD0-7215-5C10-8838-646A709C285C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{679C6DD0-7215-5C10-8838-646A709C285C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE1B97F4-3D0E-B784-624F-487A2B614FAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE1B97F4-3D0E-B784-624F-487A2B614FAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE1B97F4-3D0E-B784-624F-487A2B614FAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE1B97F4-3D0E-B784-624F-487A2B614FAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65989642-7D20-4746-A89F-EE4FCE9DB12B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65989642-7D20-4746-A89F-EE4FCE9DB12B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65989642-7D20-4746-A89F-EE4FCE9DB12B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65989642-7D20-4746-A89F-EE4FCE9DB12B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -113,6 +146,12 @@ Global
 		{91879E73-A7DF-6594-819D-D9A59D2B81AB} = {48E5517A-EF57-42F8-8655-0C53164A8A0C}
 		{A9B730CE-8423-7CC4-822F-00151A88193B} = {48E5517A-EF57-42F8-8655-0C53164A8A0C}
 		{260B3617-531F-4277-8FA3-79F2E0701613} = {310F2C5A-6698-4ABF-898E-5166CB08C4ED}
+		{A8ACD060-8575-F2D4-0ADA-B4F8C1718B7B} = {260B3617-531F-4277-8FA3-79F2E0701613}
+		{3FA3FC88-9C39-DDE3-7C67-B295FF103967} = {260B3617-531F-4277-8FA3-79F2E0701613}
+		{679C6DD0-7215-5C10-8838-646A709C285C} = {260B3617-531F-4277-8FA3-79F2E0701613}
+		{DE1B97F4-3D0E-B784-624F-487A2B614FAF} = {260B3617-531F-4277-8FA3-79F2E0701613}
+		{C2D53219-27D3-4A5B-88F2-CAE80644235B} = {260B3617-531F-4277-8FA3-79F2E0701613}
+		{65989642-7D20-4746-A89F-EE4FCE9DB12B} = {C2D53219-27D3-4A5B-88F2-CAE80644235B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F6F14A8F-92CF-46E4-99A4-78E0093FC991}

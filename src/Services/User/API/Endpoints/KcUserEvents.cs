@@ -1,17 +1,17 @@
 ﻿#region using
 
-using API.Constants;
-using Application.CQRS.Keycloak.Commands;
-using Application.CQRS.User.Commands;
-using Application.Dtos.Keycloaks;
-using Application.Dtos.Users;
+using User.Api.Constants;
+using User.Application.CQRS.Keycloak.Commands;
+using User.Application.CQRS.User.Commands;
+using User.Application.Dtos.Keycloaks;
+using User.Application.Dtos.Users;
 using Microsoft.AspNetCore.Mvc;
 using SourceCommon.Configurations;
 using SourceCommon.Models.Reponses;
 
 #endregion
 
-namespace API.Endpoints;
+namespace User.Api.Endpoints;
 
 public class KcUserEvents : ICarterModule
 {

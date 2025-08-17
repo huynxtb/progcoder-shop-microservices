@@ -1,17 +1,15 @@
 ﻿#region using
 
-using Application.Dtos.Keycloaks;
-using Application.Models.Responses;
-using Application.Services;
-using Infrastructure.ApiClients;
-using JasperFx.Core;
-using Mapster;
+using User.Application.Dtos.Keycloaks;
+using User.Application.Models.Responses;
+using User.Application.Services;
+using User.Infrastructure.ApiClients;
 using Microsoft.Extensions.Configuration;
 using SourceCommon.Configurations;
 
 #endregion
 
-namespace Infrastructure.Services;
+namespace User.Infrastructure.Services;
 
 public class KeycloakService : IKeycloakService
 {
@@ -98,7 +96,7 @@ public class KeycloakService : IKeycloakService
             { "client_id", _clientId },
             { "client_secret", _clientSecret },
             { "grant_type", _grantType },
-            { "scope", _scopes!.Join(" ") }
+            { "scope", string.Join(" ", _scopes!) }
         };
 
         return await _keycloakApi.GetAccessTokenAsync(_realm, form);

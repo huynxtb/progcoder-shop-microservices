@@ -1,4 +1,4 @@
-﻿namespace Application.Dtos.Users;
+﻿namespace User.Application.Dtos.Users;
 
 public sealed class UserRegisterDto : CreateUserDto
 {

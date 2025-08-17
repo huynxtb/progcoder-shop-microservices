@@ -1,4 +1,4 @@
-﻿namespace Application.Dtos.Abstractions;
+﻿namespace User.Application.Dtos.Abstractions;
 
 public abstract class BaseDto<T>
 {
@@ -6,7 +6,7 @@ public abstract class BaseDto<T>
 
     public T Id { get; set; } = default!;
 
-    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset CreatedOnUtc { get; set; }
 
     public DateTimeOffset LastModifiedAt { get; set; }
 

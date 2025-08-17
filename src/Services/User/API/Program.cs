@@ -1,8 +1,8 @@
 #region using
 
-using API;
-using Application;
-using Infrastructure;
+using User.Api;
+using User.Application;
+using User.Infrastructure;
 
 #endregion
 

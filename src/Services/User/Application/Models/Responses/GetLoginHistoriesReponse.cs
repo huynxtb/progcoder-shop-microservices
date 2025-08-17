@@ -1,11 +1,11 @@
 ﻿#region using
 
-using Application.Dtos.LoginHistories;
+using User.Application.Dtos.LoginHistories;
 using SourceCommon.Models.Reponses;
 
 #endregion
 
-namespace Application.Models.Responses;
+namespace User.Application.Models.Responses;
 
 public sealed class GetLoginHistoriesReponse
 {

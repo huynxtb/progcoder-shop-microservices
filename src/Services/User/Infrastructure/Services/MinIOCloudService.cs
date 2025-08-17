@@ -1,6 +1,6 @@
 ﻿#region using
 
-using Application.Services;
+using User.Application.Services;
 using Microsoft.AspNetCore.Http;
 using Minio.DataModel.Args;
 using Minio.Exceptions;
@@ -9,7 +9,7 @@ using SourceCommon.Models.Reponses;
 
 #endregion
 
-namespace Infrastructure.Services;
+namespace User.Infrastructure.Services;
 
 public class MinIOCloudService : IMinIOCloudService
 {

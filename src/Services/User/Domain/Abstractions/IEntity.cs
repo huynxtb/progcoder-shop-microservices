@@ -1,4 +1,4 @@
-﻿namespace Domain.Abstractions;
+﻿namespace User.Domain.Abstractions;
 
 public interface IEntity<T> : IEntity
 {
@@ -14,11 +14,11 @@ public interface IEntity
 {
     #region Fields, Properties and Indexers
 
-    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset CreatedOnUtc { get; set; }
 
     public string? CreatedBy { get; set; }
 
-    public DateTimeOffset? LastModifiedAt { get; set; }
+    public DateTimeOffset? LastModifiedOnUtc { get; set; }
 
     public string? LastModifiedBy { get; set; }
 

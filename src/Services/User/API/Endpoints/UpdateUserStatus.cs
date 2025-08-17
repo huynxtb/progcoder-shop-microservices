@@ -1,15 +1,15 @@
 ﻿
 #region using
 
-using API.Constants;
-using Application.CQRS.User.Commands;
-using Application.Dtos.Users;
+using User.Api.Constants;
+using User.Application.CQRS.User.Commands;
+using User.Application.Dtos.Users;
 using Microsoft.AspNetCore.Mvc;
 using SourceCommon.Models.Reponses;
 
 #endregion
 
-namespace API.Endpoints;
+namespace User.Api.Endpoints;
 
 public sealed class UpdateUserStatus : ICarterModule
 {

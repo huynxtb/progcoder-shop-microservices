@@ -1,4 +1,4 @@
-﻿namespace Domain.Abstractions;
+﻿namespace User.Domain.Abstractions;
 
 public abstract class Entity<T> : IEntity<T>
 {
@@ -6,11 +6,11 @@ public abstract class Entity<T> : IEntity<T>
 
     public T Id { get; set; } = default!;
 
-    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset CreatedOnUtc { get; set; }
 
     public string? CreatedBy { get; set; }
 
-    public DateTimeOffset? LastModifiedAt { get; set; }
+    public DateTimeOffset? LastModifiedOnUtc { get; set; }
 
     public string? LastModifiedBy { get; set; }
 

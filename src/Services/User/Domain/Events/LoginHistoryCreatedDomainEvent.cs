@@ -1,10 +1,10 @@
 ﻿#region using
 
-using Domain.Abstractions;
-using Domain.Entities;
+using User.Domain.Abstractions;
+using User.Domain.Entities;
 
 #endregion
 
-namespace Domain.Events;
+namespace User.Domain.Events;
 
 public sealed record LoginHistoryCreatedDomainEvent(LoginHistory LoginHistory) : IDomainEvent;

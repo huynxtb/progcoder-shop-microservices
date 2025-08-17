@@ -1,14 +1,14 @@
 ﻿#region using
 
-using Application.Data;
-using Application.Services;
+using User.Application.Data;
+using User.Application.Services;
 using BuildingBlocks.LogServer;
 using BuildingBlocks.TracingLogging;
-using Infrastructure.ApiClients;
-using Infrastructure.Data;
-using Infrastructure.Data.Extensions;
-using Infrastructure.Data.Interceptors;
-using Infrastructure.Services;
+using User.Infrastructure.ApiClients;
+using User.Infrastructure.Data;
+using User.Infrastructure.Data.Extensions;
+using User.Infrastructure.Data.Interceptors;
+using User.Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -17,10 +17,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Minio;
 using Refit;
 using SourceCommon.Configurations;
+using SourceCommon.Constants;
 
 #endregion
 
-namespace Infrastructure;
+namespace User.Infrastructure;
 
 public static class DependencyInjection
 {
@@ -43,74 +44,40 @@ public static class DependencyInjection
 
         // DbContext
         {
-            var databaseType = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.DatabaseType}"];
-
+            var dbType = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.DbType}"];
             services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
             services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
-
-            services.AddDbContext<WriteDbContext>((sp, options) =>
+            services.AddDbContext<ApplicationDbContext>((sp, options) =>
             {
-                var writeConn = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.WriteDb}"];
-
+                var conn = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.Database}"];
                 options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
 
-                switch (databaseType)
+                switch (dbType)
                 {
-                    case "SQLSERVER":
-                        options.UseSqlServer(writeConn);
+                    case DatabaseType.SqlServer:
+                        options.UseSqlServer(conn);
                         break;
-                    case "MYSQL":
-                        options.UseMySQL(writeConn!);
+                    case DatabaseType.MySql:
+                        options.UseMySQL(conn!);
                         break;
-                    case "POSTGRESQL":
-                        options.UseNpgsql(writeConn);
+                    case DatabaseType.PostgreSql:
+                        options.UseNpgsql(conn);
                         break;
                     default:
                         throw new Exception("Unsupported database type");
                 }
             });
-            services.AddScoped<IWriteDbContext, WriteDbContext>();
-
-            services.AddDbContext<ReadDbContext>((sp, options) =>
-            {
-                var readConn = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.ReadDb}"];
-
-                switch (databaseType)
-                {
-                    case "SQLSERVER":
-                        options.UseSqlServer(readConn);
-                        break;
-                    case "MYSQL":
-                        options.UseMySQL(readConn!);
-                        break;
-                    case "POSTGRESQL":
-                        options.UseNpgsql(readConn);
-                        break;
-                    default:
-                        throw new Exception("Unsupported database type");
-                }
-            });
-            services.AddScoped<IReadDbContext, ReadDbContext>();
+            services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
         }
 
         // HttpClient
         {
-            //var retryPolicy = HttpPolicyExtensions
-            //    .HandleTransientHttpError()
-            //    .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
-
-            //var circuitBreakerPolicy = HttpPolicyExtensions
-            //    .HandleTransientHttpError()
-            //    .CircuitBreakerAsync(5, TimeSpan.FromSeconds(30));
-
             services.AddRefitClient<IKeycloakApi>()
             .ConfigureHttpClient(c =>
             {
                 c.BaseAddress = new Uri(cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.BaseUrl}"]!);
                 c.Timeout = TimeSpan.FromSeconds(30);
             });
-            //.AddPolicyHandler(retryPolicy)
-            //.AddPolicyHandler(circuitBreakerPolicy);
         }
 
         services.AddScoped<IKeycloakService, KeycloakService>();

@@ -1,7 +1,7 @@
 ﻿#region using
 
-using Application.CQRS.User.Commands;
-using Application.Services;
+using User.Application.CQRS.User.Commands;
+using User.Application.Services;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +10,7 @@ using SourceCommon.Constants;
 
 #endregion
 
-namespace Infrastructure.Data.Extensions;
+namespace User.Infrastructure.Data.Extensions;
 
 public static class DatabaseExtentions
 {
@@ -20,16 +20,14 @@ public static class DatabaseExtentions
     {
         using var scope = app.Services.CreateScope();
 
-        var writeDbContext = scope.ServiceProvider.GetRequiredService<WriteDbContext>();
-        var readDbContext = scope.ServiceProvider.GetRequiredService<ReadDbContext>();
-        
-        await writeDbContext.Database.MigrateAsync();
-        await readDbContext.Database.MigrateAsync();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        await SeedDataAsync(writeDbContext, readDbContext);
+        await dbContext.Database.MigrateAsync();;
+
+        await SeedDataAsync(dbContext);
     }
 
-    private static async Task SeedDataAsync(WriteDbContext writeDbContext, ReadDbContext readDbContext)
+    private static async Task SeedDataAsync(ApplicationDbContext writeDbContext)
     {
         // TODO
         await Task.CompletedTask;

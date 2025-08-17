@@ -1,13 +1,13 @@
 ﻿#region using
 
-using Application.Dtos.Keycloaks;
-using Application.Models;
-using Application.Models.Responses;
+using User.Application.Dtos.Keycloaks;
+using User.Application.Models;
+using User.Application.Models.Responses;
 using Refit;
 
 #endregion
 
-namespace Infrastructure.ApiClients;
+namespace User.Infrastructure.ApiClients;
 
 public interface IKeycloakApi
 {

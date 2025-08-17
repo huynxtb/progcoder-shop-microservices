@@ -1,18 +1,17 @@
 ﻿#region using
 
-using Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 
 #endregion
 
-namespace Infrastructure.Data.Configurations;
+namespace User.Infrastructure.Data.Configurations;
 
-public sealed class UserConfiguration : IEntityTypeConfiguration<User>
+public sealed class UserConfiguration : IEntityTypeConfiguration<Domain.Entities.User>
 {
     #region Implementations
 
-    public void Configure(EntityTypeBuilder<User> builder)
+    public void Configure(EntityTypeBuilder<Domain.Entities.User> builder)
     {
         builder.ToTable("users");
 
@@ -25,9 +24,9 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.LastName).HasColumnName("last_name").HasMaxLength(100);
         builder.Property(x => x.EmailVerified).HasColumnName("email_verified").HasDefaultValue(false);
         builder.Property(x => x.IsActive).HasColumnName("is_active").HasDefaultValue(true);;
-        builder.Property(x => x.CreatedAt).HasColumnName("created_at");
+        builder.Property(x => x.CreatedOnUtc).HasColumnName("created_on_utc");
         builder.Property(x => x.CreatedBy).HasColumnName("created_by").HasMaxLength(50);
-        builder.Property(x => x.LastModifiedAt).HasColumnName("last_modified_at");
+        builder.Property(x => x.LastModifiedOnUtc).HasColumnName("last_modified_on_utc");
         builder.Property(x => x.LastModifiedBy).HasColumnName("last_modified_by").HasMaxLength(50);
 
         builder.HasIndex(x => x.UserName).IsUnique(true);

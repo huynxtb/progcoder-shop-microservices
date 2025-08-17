@@ -1,15 +1,15 @@
 ﻿#region using
 
-using Application.Data;
-using Application.Dtos.Keycloaks;
-using Application.Dtos.Users;
-using Application.Services;
+using User.Application.Data;
+using User.Application.Dtos.Keycloaks;
+using User.Application.Dtos.Users;
+using User.Application.Services;
 using Microsoft.EntityFrameworkCore;
 using SourceCommon.Models.Reponses;
 
 #endregion
 
-namespace Application.CQRS.User.Commands;
+namespace User.Application.CQRS.User.Commands;
 
 public record UserRegisterCommand(UserRegisterDto Dto) : ICommand<ResultSharedResponse<string>>;
 
@@ -62,7 +62,7 @@ public class UserRegisterCommandValidator : AbstractValidator<UserRegisterComman
 }
 
 public class UserRegisterCommandHandler(
-    IWriteDbContext dbContext,
+    IApplicationDbContext dbContext,
     IKeycloakService keycloakService) : ICommandHandler<UserRegisterCommand, ResultSharedResponse<string>>
 {
     #region Implementations

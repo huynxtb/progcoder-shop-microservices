@@ -1,5 +1,5 @@
 ﻿
-namespace Domain.Abstractions;
+namespace User.Domain.Abstractions;
 
 public abstract class Aggregate<TId> : Entity<TId>, IAggregate<TId>
 {

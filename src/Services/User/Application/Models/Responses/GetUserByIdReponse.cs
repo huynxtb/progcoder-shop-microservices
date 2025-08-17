@@ -1,10 +1,10 @@
 ﻿#region using
 
-using Application.Dtos.Users;
+using User.Application.Dtos.Users;
 
 #endregion
 
-namespace Application.Models.Responses;
+namespace User.Application.Models.Responses;
 
 public sealed class GetUserByIdReponse : UserDto
 {

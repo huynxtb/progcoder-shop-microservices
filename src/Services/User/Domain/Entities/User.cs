@@ -1,11 +1,11 @@
 ﻿#region using
 
-using Domain.Abstractions;
-using Domain.Events;
+using User.Domain.Abstractions;
+using User.Domain.Events;
 
 #endregion
 
-namespace Domain.Entities;
+namespace User.Domain.Entities;
 
 public sealed class User : Aggregate<Guid>
 {

@@ -1,11 +1,11 @@
 ﻿#region using
 
-using Application.Dtos.Users;
+using User.Application.Dtos.Users;
 using SourceCommon.Models.Reponses;
 
 #endregion
 
-namespace Application.Models.Responses;
+namespace User.Application.Models.Responses;
 
 public sealed class GetUsersReponse
 {

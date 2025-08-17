@@ -1,25 +1,24 @@
 ﻿#region using
 
-using Application.Data;
-using Application.Dtos.LoginHistories;
-using Application.Models.Responses;
+using User.Application.Data;
+using User.Application.Dtos.LoginHistories;
+using User.Application.Models.Responses;
 using BuildingBlocks.Pagination.Extensions;
 using Microsoft.EntityFrameworkCore;
 using SourceCommon.Models.Reponses;
 
 #endregion
 
-namespace Application.CQRS.AccountProfile.Queries;
+namespace User.Application.CQRS.AccountProfile.Queries;
 
-public sealed record GetLoginHistoriesFilter(
-    string? SearchText, 
-    Guid CurrentUserId);
+public sealed record GetLoginHistoriesFilter(string? SearchText);
 
 public sealed record GetLoginHistoriesQuery(
     GetLoginHistoriesFilter Filter,
-    PaginationRequest Paging) : IQuery<ResultSharedResponse<GetLoginHistoriesReponse>>;
+    PaginationRequest Paging,
+    Guid CurrentUserId) : IQuery<ResultSharedResponse<GetLoginHistoriesReponse>>;
 
-public sealed class GetLoginHistoriesQueryHandler(IReadDbContext dbContext)
+public sealed class GetLoginHistoriesQueryHandler(IApplicationDbContext dbContext)
     : IQueryHandler<GetLoginHistoriesQuery, ResultSharedResponse<GetLoginHistoriesReponse>>
 {
     #region Implementations
@@ -31,10 +30,10 @@ public sealed class GetLoginHistoriesQueryHandler(IReadDbContext dbContext)
 
         var result = await dbContext.LoginHistories
             .Where(x => 
-                x.UserId == query.Filter.CurrentUserId &&
+                x.UserId == query.CurrentUserId &&
                 (string.IsNullOrEmpty(query.Filter.SearchText) ||
                 x.IpAddress!.Contains(query.Filter.SearchText)))
-            .OrderByDescending(x => x.CreatedAt)
+            .OrderByDescending(x => x.CreatedOnUtc)
             .Skip(query.Paging.ToSkip())
             .Take(query.Paging.ToTake())
             .ToListAsync(cancellationToken);

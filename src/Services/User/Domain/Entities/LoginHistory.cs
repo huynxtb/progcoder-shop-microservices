@@ -1,11 +1,11 @@
 ﻿#region using
 
-using Domain.Abstractions;
-using Domain.Events;
+using User.Domain.Abstractions;
+using User.Domain.Events;
 
 #endregion
 
-namespace Domain.Entities;
+namespace User.Domain.Entities;
 
 public sealed class LoginHistory : Aggregate<Guid>
 {
@@ -15,7 +15,7 @@ public sealed class LoginHistory : Aggregate<Guid>
 
     public string? IpAddress { get; private set; }
 
-    public DateTimeOffset LoggedAt { get; private set; }
+    public DateTimeOffset LoggedOnUtc { get; private set; }
 
     public User User { get; private set; } = default!;
 
@@ -43,9 +43,9 @@ public sealed class LoginHistory : Aggregate<Guid>
             Id = id,
             UserId = userId,
             IpAddress = ipAddress,
-            LoggedAt = loggedAt,
+            LoggedOnUtc = loggedAt,
             CreatedBy = modifiedBy,
-            LastModifiedBy = modifiedBy
+            LastModifiedBy = modifiedBy,
         };
 
         loginHistory.AddDomainEvent(new LoginHistoryCreatedDomainEvent(loginHistory));

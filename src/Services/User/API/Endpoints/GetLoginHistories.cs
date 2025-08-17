@@ -1,15 +1,15 @@
 ﻿
 #region using
 
-using API.Constants;
-using Application.CQRS.AccountProfile.Queries;
-using Application.Models.Responses;
+using User.Api.Constants;
+using User.Application.CQRS.AccountProfile.Queries;
+using User.Application.Models.Responses;
 using BuildingBlocks.Pagination;
 using SourceCommon.Models.Reponses;
 
 #endregion
 
-namespace API.Endpoints;
+namespace User.Api.Endpoints;
 
 public sealed class GetLoginHistories : ICarterModule
 {
@@ -38,11 +38,10 @@ public sealed class GetLoginHistories : ICarterModule
     {
         var userId = httpContext.GetCurrentUser().Id;
 
-        filter ??= new GetLoginHistoriesFilter(string.Empty, userId);
-
         var query = new GetLoginHistoriesQuery(
             filter,
-            pagination);
+            pagination,
+            userId);
 
         var result = await sender.Send(query);
 

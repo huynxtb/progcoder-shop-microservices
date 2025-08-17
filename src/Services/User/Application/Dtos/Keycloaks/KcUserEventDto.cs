@@ -1,4 +1,4 @@
-﻿namespace Application.Dtos.Keycloaks;
+﻿namespace User.Application.Dtos.Keycloaks;
 
 public sealed class KcUserEventDto
 {

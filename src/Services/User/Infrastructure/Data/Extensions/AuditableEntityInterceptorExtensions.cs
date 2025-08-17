@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 #endregion
 
-namespace Infrastructure.Data.Extensions;
+namespace User.Infrastructure.Data.Extensions;
 
 public static class AuditableEntityInterceptorExtensions
 {

@@ -1,2 +1,2 @@
 ﻿global using SourceCommon.Models;
-global using Infrastructure.Exceptions;
+global using User.Infrastructure.Exceptions;

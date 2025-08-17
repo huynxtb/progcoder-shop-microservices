@@ -34,18 +34,13 @@ echo -- Ensure dotnet-ef is installed --
 dotnet tool install --global dotnet-ef
 
 echo.
-echo -- Creating migration "%migrationName%" for WriteDbContext and ReadDbContext (separate folders) --
-for %%C in (WriteDbContext ReadDbContext) do (
-    echo.
-    echo --- Context: %%C ---
-    set targetFolder=%%C%serviceName%
-    mkdir "Data\Migrations\!targetFolder!" 2>nul
-    dotnet ef migrations add "%migrationName%" ^
-        --context %%C ^
-        --project Infrastructure ^
-        --startup-project API ^
-        --output-dir "Data\Migrations\!targetFolder!"
-)
+echo -- Creating migration "%migrationName%" --
+
+dotnet ef migrations add "%migrationName%" --project Infrastructure --startup-project API --output-dir Data\Migrations
+
+echo -- Updating database --
+
+dotnet ef database update --project Infrastructure --startup-project API
 
 echo.
 	

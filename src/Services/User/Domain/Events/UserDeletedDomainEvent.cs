@@ -1,10 +1,9 @@
 ﻿#region using
 
-using Domain.Abstractions;
-using Domain.Entities;
+using User.Domain.Abstractions;
 
 #endregion
 
-namespace Domain.Events;
+namespace User.Domain.Events;
 
-public sealed record class UserDeletedDomainEvent(User User) : IDomainEvent;
+public sealed record class UserDeletedDomainEvent(Entities.User User) : IDomainEvent;

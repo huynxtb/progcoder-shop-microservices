@@ -1,9 +1,3 @@
-﻿#region using
+﻿namespace User.Domain.Events;
 
-using Domain.Entities;
-
-#endregion
-
-namespace Domain.Events;
-
-public sealed record class UserEmailVerifiedDomainEvent(User User);
+public sealed record class UserEmailVerifiedDomainEvent(Entities.User User);

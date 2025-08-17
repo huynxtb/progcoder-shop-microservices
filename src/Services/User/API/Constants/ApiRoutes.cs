@@ -1,4 +1,4 @@
-﻿namespace API.Constants;
+﻿namespace User.Api.Constants;
 
 public sealed class ApiRoutes
 {

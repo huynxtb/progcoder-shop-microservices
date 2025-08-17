@@ -1,14 +1,14 @@
 ﻿#region using
 
-using Domain.Abstractions;
-using Infrastructure.Data.Extensions;
+using User.Domain.Abstractions;
+using User.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 #endregion
 
-namespace Infrastructure.Data.Interceptors;
+namespace User.Infrastructure.Data.Interceptors;
 
 public class AuditableEntityInterceptor : SaveChangesInterceptor
 {
@@ -42,8 +42,8 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
                 || entry.State == EntityState.Modified
                 || entry.HasChangedOwnedEntities())
             {
-                entry.Entity.CreatedAt = DateTime.UtcNow;
-                entry.Entity.LastModifiedAt = DateTime.UtcNow;
+                entry.Entity.CreatedOnUtc = DateTimeOffset.UtcNow;
+                entry.Entity.LastModifiedOnUtc = DateTimeOffset.UtcNow;
             }
         }
     }

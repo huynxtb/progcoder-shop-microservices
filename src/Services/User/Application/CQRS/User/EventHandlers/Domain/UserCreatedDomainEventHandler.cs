@@ -1,16 +1,16 @@
 ﻿#region using
 
-using Application.Data;
-using Domain.Events;
+using User.Application.Data;
+using User.Domain.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 #endregion
 
-namespace Application.CQRS.User.EventHandlers.Domain;
+namespace User.Application.CQRS.User.EventHandlers.Domain;
 
 public class UserCreatedDomainEventHandler(
-    IReadDbContext dbContext,
+    IApplicationDbContext dbContext,
     ILogger<UserCreatedDomainEventHandler> logger) : INotificationHandler<UserCreatedDomainEvent>
 {
     #region Implementations
@@ -21,9 +21,9 @@ public class UserCreatedDomainEventHandler(
 
         var user = @event.User;
 
-        await dbContext.Users.AddAsync(user);
+        //await dbContext.Users.AddAsync(user);
 
-        await dbContext.SaveChangesAsync(cancellationToken);
+        //await dbContext.SaveChangesAsync(cancellationToken);
     }
 
     #endregion

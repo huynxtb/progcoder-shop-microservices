@@ -1,7 +1,7 @@
 ﻿using SourceCommon.Models.Reponses;
 using Microsoft.AspNetCore.Http;
 
-namespace Application.Services;
+namespace User.Application.Services;
 
 public interface IMinIOCloudService
 {

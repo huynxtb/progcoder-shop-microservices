@@ -1,13 +1,13 @@
 ﻿#region using
 
-using Domain.Abstractions;
+using User.Domain.Abstractions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 #endregion
 
-namespace Infrastructure.Data.Interceptors;
+namespace User.Infrastructure.Data.Interceptors;
 public class DispatchDomainEventsInterceptor(IMediator mediator)
     : SaveChangesInterceptor
 {

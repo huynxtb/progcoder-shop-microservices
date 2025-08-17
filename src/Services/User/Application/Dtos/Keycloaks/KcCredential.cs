@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 #endregion
 
-namespace Application.Dtos.Keycloaks;
+namespace User.Application.Dtos.Keycloaks;
 
 public sealed class KcCredential
 {

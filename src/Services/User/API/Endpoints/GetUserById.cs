@@ -1,16 +1,15 @@
 ﻿
 #region using
 
-using API.Constants;
-using Application.CQRS.AccountProfile.Queries;
-using Application.Models.Responses;
-using BuildingBlocks.Pagination;
+using User.Api.Constants;
+using User.Application.CQRS.AccountProfile.Queries;
+using User.Application.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
 using SourceCommon.Models.Reponses;
 
 #endregion
 
-namespace API.Endpoints;
+namespace User.Api.Endpoints;
 
 public sealed class GetUserById : ICarterModule
 {

@@ -1,10 +1,10 @@
 ﻿#region using
 
-using Application.Dtos.Abstractions;
+using User.Application.Dtos.Abstractions;
 
 #endregion
 
-namespace Application.Dtos.Users;
+namespace User.Application.Dtos.Users;
 
 public class UserDto : BaseDto<Guid>
 {

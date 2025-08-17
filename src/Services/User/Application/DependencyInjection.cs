@@ -11,7 +11,7 @@ using System.Reflection;
 
 #endregion
 
-namespace Application;
+namespace User.Application;
 
 public static class DependencyInjection
 {
