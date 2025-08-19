@@ -99,9 +99,10 @@ public class KeycloakUserEventCommandHandler(
             email: user.Email!,
             emailVerified: user.EmailVerified,
             isActive: user.Enabled,
+            phoneNumber: "",
             firstName: user.Attributes!.FirstOrDefault(x => x.Key == "firstName")?.Value ?? string.Empty,
             lastName: user.Attributes!.FirstOrDefault(x => x.Key == "lastName")?.Value ?? string.Empty,
-            modifiedBy: user.RealmName!);
+            createdBy: user.RealmName!);
 
         await dbContext.Users.AddAsync(entity);
 
@@ -113,6 +114,7 @@ public class KeycloakUserEventCommandHandler(
         existingUser.Update(
             userName: user.Username!,
             email: user.Email!,
+            phoneNumber: "",
             emailVerified: user.EmailVerified,
             isActive: user.Enabled,
             firstName: user.Attributes!.FirstOrDefault(x => x.Key == "firstName")?.Value ?? existingUser.FirstName!,

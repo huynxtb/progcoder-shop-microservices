@@ -1,9 +1,9 @@
 ﻿#region using
 
 using User.Application.Data;
-using User.Application.Services;
 using Microsoft.EntityFrameworkCore;
 using SourceCommon.Models.Reponses;
+using User.Application.Services;
 
 #endregion
 

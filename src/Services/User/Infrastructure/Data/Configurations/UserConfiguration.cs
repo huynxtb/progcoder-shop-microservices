@@ -22,6 +22,7 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<Domain.Entities
         builder.Property(x => x.Email).HasColumnName("email").HasMaxLength(255);
         builder.Property(x => x.FirstName).HasColumnName("first_name").HasMaxLength(100);
         builder.Property(x => x.LastName).HasColumnName("last_name").HasMaxLength(100);
+        builder.Property(x => x.PhoneNumber).HasColumnName("phone_number").HasMaxLength(100);
         builder.Property(x => x.EmailVerified).HasColumnName("email_verified").HasDefaultValue(false);
         builder.Property(x => x.IsActive).HasColumnName("is_active").HasDefaultValue(true);;
         builder.Property(x => x.CreatedOnUtc).HasColumnName("created_on_utc");

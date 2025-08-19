@@ -17,7 +17,7 @@ public static class UserIdentityExtension
     {
         var identity = context.HttpContext?.User;
 
-        var userId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? SystemConst.DefaultModifiedBy;
+        var userId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? SystemConst.CreatedBySystem;
         var userName = identity?.FindFirst(CustomClaimTypes.UserName)?.Value ?? string.Empty;
         var firstName = identity?.FindFirst(ClaimTypes.GivenName)?.Value ?? string.Empty;
         var lastName = identity?.FindFirst(ClaimTypes.Surname)?.Value ?? string.Empty;

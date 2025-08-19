@@ -27,21 +27,21 @@ public static class DatabaseExtentions
                 channel: Domain.Enums.ChannelType.Email,
                 subject: "Welcome to ProG Coder",
                 body: "<p>Hello <strong>{{DisplayName}}</strong>,</p> <p>thank you for signing up. We’re glad to have you!</p> <p>Best regards,</p> <p>ProG Coder</p>",
-                modifiedBy: SystemConst.DefaultModifiedBy),
+                createdBy: SystemConst.CreatedBySystem),
             NotificationTemplate.Create(
                 id: Guid.Parse("c63f5f8d-daba-409f-88f9-fc3a9eb3e7e2"),
                 key: TemplateKey.UserRegistered,
                 channel: Domain.Enums.ChannelType.WhatsApp,
                 subject: "Welcome to ProG Coder",
                 body: "Hello {{DisplayName}}, thank you for signing up. We’re glad to have you!",
-                modifiedBy: SystemConst.DefaultModifiedBy),
+                createdBy: SystemConst.CreatedBySystem),
             NotificationTemplate.Create(
                 id: Guid.Parse("c63f5f8d-daba-409f-88f9-fc3a9eb3e7e3"),
                 key: TemplateKey.UserRegistered,
                 channel: Domain.Enums.ChannelType.InApp,
                 subject: "Welcome to ProG Coder",
                 body: "Hello {{DisplayName}}, thank you for signing up",
-                modifiedBy: SystemConst.DefaultModifiedBy)
+                createdBy: SystemConst.CreatedBySystem)
         };
 
         foreach (var template in docs)
@@ -65,15 +65,17 @@ public static class DatabaseExtentions
         var tmpl = app.Services.GetRequiredService<IMongoCollection<NotificationTemplate>>();
 
         await notif.Indexes.CreateOneAsync(new CreateIndexModel<AppNotification>(
-            Builders<AppNotification>.IndexKeys
-                .Ascending(x => x.UserId)
-                .Descending(x => x.CreatedOnUtc)));
+        Builders<AppNotification>.IndexKeys
+            .Ascending(x => x.UserId)
+            .Ascending(x => x.IsRead)
+            .Descending(x => x.CreatedOnUtc)));
 
         await deliv.Indexes.CreateOneAsync(new CreateIndexModel<NotificationDelivery>(
             Builders<NotificationDelivery>.IndexKeys
-                .Descending(x => x.CreatedOnUtc)
                 .Ascending(x => x.Status)
-                .Ascending(x => x.Priority)));
+                .Ascending(x => x.NextAttemptUtc)
+                .Descending(x => x.Priority)
+                .Ascending(x => x.CreatedOnUtc)));
 
         await tmpl.Indexes.CreateOneAsync(new CreateIndexModel<NotificationTemplate>(
             Builders<NotificationTemplate>.IndexKeys

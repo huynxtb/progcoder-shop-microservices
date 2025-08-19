@@ -12,11 +12,17 @@ public sealed class MessagePayload
 
     public ChannelType Channel { get; private set; }
 
-    public string? Address { get; set; }
+    public IReadOnlySet<string> To { get; private set; }
 
-    public string? Subject { get; set; }
+    public IReadOnlySet<string>? Cc { get; private set; }
 
-    public string? Body { get; set; }
+    public IReadOnlySet<string>? Bcc { get; private set; }
+
+    public string? Subject { get; private set; }
+
+    public string? Body { get; private set; }
+
+    public bool IsHtml { get; private set; }
 
     #endregion
 
@@ -30,16 +36,22 @@ public sealed class MessagePayload
 
     public static MessagePayload Create(
         ChannelType channel,
-        string address,
+        HashSet<string> to,
         string subject,
-        string body)
+        string body,
+        bool isHtml = false,
+        HashSet<string> cc = null,
+        HashSet<string> bcc = null)
     {
         return new MessagePayload()
         {
             Channel = channel,
-            Address = address,
+            To = to,
+            Cc = cc,
+            Bcc = bcc,
             Subject = subject,
-            Body = body
+            Body = body,
+            IsHtml = isHtml,
         };
     }
 

@@ -16,7 +16,7 @@ public interface INotificationDeliveryRepository
 
     Task UpsertAsync(NotificationDelivery doc, CancellationToken cancellationToken = default);
 
-    Task<NotificationDelivery> 
+    Task<NotificationDelivery> GetByEventIdAsync(string eventId, CancellationToken cancellationToken = default);
 
     #endregion
 }

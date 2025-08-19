@@ -3,9 +3,9 @@
 using User.Application.Data;
 using User.Application.Dtos.Keycloaks;
 using User.Application.Dtos.Users;
-using User.Application.Services;
 using Microsoft.EntityFrameworkCore;
 using SourceCommon.Models.Reponses;
+using User.Application.Services;
 
 #endregion
 

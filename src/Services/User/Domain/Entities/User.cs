@@ -19,6 +19,8 @@ public sealed class User : Aggregate<Guid>
     
     public string? LastName { get; private set; }
 
+    public string? PhoneNumber { get; private set; }
+
     public bool EmailVerified { get; private set; }
 
     public bool IsActive { get; private set; }
@@ -34,9 +36,10 @@ public sealed class User : Aggregate<Guid>
         string email,
         string firstName,
         string lastName,
+        string phoneNumber,
         bool emailVerified,
         bool isActive,
-        string modifiedBy)
+        string createdBy)
     {
         var user =  new User
         {
@@ -45,13 +48,14 @@ public sealed class User : Aggregate<Guid>
             Email = email,
             FirstName = firstName,
             LastName = lastName,
+            PhoneNumber = phoneNumber,
             EmailVerified = emailVerified,
             IsActive = isActive,
-            CreatedBy = modifiedBy,
-            LastModifiedBy = modifiedBy,
+            CreatedBy = createdBy,
+            LastModifiedBy = createdBy,
         };
 
-        user.AddDomainEvent(new UserCreatedDomainEvent(user));
+        user.AddDomainEvent(new UserCreatedDomainEvent(id, firstName, lastName, email));
 
         return user;
     }
@@ -60,6 +64,7 @@ public sealed class User : Aggregate<Guid>
         string email, 
         string firstName, 
         string lastName,
+        string phoneNumber,
         bool emailVerified,
         bool isActive,
         string modifiedBy)
@@ -68,6 +73,7 @@ public sealed class User : Aggregate<Guid>
         Email = email;
         FirstName = firstName;
         LastName = lastName;
+        PhoneNumber = phoneNumber;
         EmailVerified = emailVerified;
         IsActive = isActive;
         LastModifiedBy = modifiedBy;

@@ -2,10 +2,10 @@
 
 using User.Application.Dtos.Keycloaks;
 using User.Application.Models.Responses;
-using User.Application.Services;
 using User.Infrastructure.ApiClients;
 using Microsoft.Extensions.Configuration;
 using SourceCommon.Configurations;
+using User.Application.Services;
 
 #endregion
 

@@ -1,10 +1,11 @@
 ﻿#region using
 
+using Notification.Application.Services;
 using System.Text.RegularExpressions;
 
 #endregion
 
-namespace Notification.Application.Services.Implementations;
+namespace Notification.Infrastructure.Services;
 
 public class TemplateRenderer : ITemplateRenderer
 {
@@ -16,7 +17,7 @@ public class TemplateRenderer : ITemplateRenderer
 
     #region Implementations
 
-    public string Render(string template, IDictionary<string, object> data = null)
+    public string Render(string template, IDictionary<string, object> data = default!)
     {
         if(data == null) return template;
 

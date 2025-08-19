@@ -2,6 +2,7 @@
 
 using Notification.Domain.Abstractions;
 using Notification.Domain.Enums;
+using SourceCommon.Constants;
 
 #endregion
 
@@ -11,21 +12,23 @@ public sealed class NotificationDelivery : Aggregate<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public string EventId { get; set }
+    public string? EventId { get; private set; }
 
     public MessagePayload? Payload { get; private set; }
 
-    public DeliveryStatus Status { get; set; }
+    public DeliveryStatus Status { get; private set; }
 
-    public DeliveryPriority Priority { get; set; }
+    public DeliveryPriority Priority { get; private set; }
 
-    public int AttemptCount { get; set; }
+    public int AttemptCount { get; private set; }
 
-    public string? LastErrorCode { get; set; }
+    public int MaxAttempts { get; private set; }
 
-    public string? LastErrorMessage { get; set; }
+    public string? LastErrorMessage { get; private set; }
 
-    public DateTimeOffset? SentOnUtc { get; set; }
+    public DateTimeOffset? SentOnUtc { get; private set; }
+
+    public DateTimeOffset? NextAttemptUtc { get; private set; }
 
     #endregion
 
@@ -39,16 +42,21 @@ public sealed class NotificationDelivery : Aggregate<Guid>
 
     public static NotificationDelivery Create(
         ChannelType channel,
-        string address,
+        HashSet<string> to,
         string subject,
         string body,
         DeliveryPriority priority,
-        string modifiedBy)
+        string eventId,
+        HashSet<string> cc = null,
+        HashSet<string> bcc = null,
+        string createdBy = SystemConst.CreatedBySystem)
     {
         var payload = MessagePayload.Create(
             channel: channel,
             subject: subject,
-            address: address,
+            to: to,
+            cc: cc,
+            bcc: bcc,
             body: body);
 
         return new NotificationDelivery()
@@ -56,8 +64,10 @@ public sealed class NotificationDelivery : Aggregate<Guid>
             Payload = payload,
             Status = DeliveryStatus.Queued,
             Priority = priority,
-            CreatedBy = modifiedBy,
-            LastModifiedBy = modifiedBy,
+            EventId = eventId,
+            MaxAttempts = SystemConst.MaxAttempts,
+            CreatedBy = createdBy,
+            LastModifiedBy = createdBy,
             CreatedOnUtc = DateTimeOffset.UtcNow,
             LastModifiedOnUtc = DateTimeOffset.UtcNow
         };
@@ -71,15 +81,29 @@ public sealed class NotificationDelivery : Aggregate<Guid>
         SentOnUtc = status == DeliveryStatus.Sent ? DateTimeOffset.UtcNow : SentOnUtc;
     }
 
-    public void AddError(string errorCode, string errorMessage)
+    public void RaiseError(
+        string errorMessage,
+        DateTimeOffset nextAttemptUtc)
     {
-        LastErrorCode = errorCode;
-        LastErrorMessage = errorMessage;
+        if (AttemptCount >= MaxAttempts)
+        {
+            Status = DeliveryStatus.GiveUp;
+            LastErrorMessage = errorMessage;
+            NextAttemptUtc = null;
+        }
+        else
+        {
+            Status = DeliveryStatus.Failed;
+            LastErrorMessage = errorMessage;
+            var backoff = TimeSpan.FromSeconds(Math.Min(60, Math.Pow(2, AttemptCount)))
+                        + TimeSpan.FromMilliseconds(Random.Shared.Next(0, 250));
+            NextAttemptUtc = nextAttemptUtc + backoff;
+        }
     }
 
     public void IncreaseAttemptCount()
     {
-        AttemptCount += 1;
+        AttemptCount += 1;   
     }
 
     #endregion

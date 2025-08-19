@@ -12,10 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="MongoDB.Bson" Version="3.4.2" />
     <PackageReference Include="MongoDB.Driver" Version="3.4.2" />
   </ItemGroup>

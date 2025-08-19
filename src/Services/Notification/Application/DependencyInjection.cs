@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FeatureManagement;
 using Notification.Application.Services;
-using Notification.Application.Services.Implementations;
 using SourceCommon.Configurations;
 using System.Reflection;
 
@@ -37,8 +36,6 @@ public static class DependencyInjection
 
         services.AddFeatureManagement();
         services.AddMessageBroker(configuration, Assembly.GetExecutingAssembly());
-
-        services.AddSingleton<ITemplateRenderer, TemplateRenderer>();
 
         return services;
     }

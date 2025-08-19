@@ -4,13 +4,19 @@ public static class SystemConst
 {
     #region Constants
 
-    public const string DefaultModifiedBy = "system";
+    public const string CreatedBySystem = "system";
 
-    public const string Keycloak = "keycloak";
+    public const string CreatedByKeycloak = "keycloak";
 
-    public const string IntegrationJob = "integration_job";
+    public const string CreatedByIntegrationJob = "integration_job";
+
+    public const string CreatedByWorker = "worker";
 
     public const string NA = "N/A";
+
+    public const int MaxAttempts = 5;
+
+    public const int MinRetries = 5;
 
     #endregion
 }

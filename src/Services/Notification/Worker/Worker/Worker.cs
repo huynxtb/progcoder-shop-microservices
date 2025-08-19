@@ -1,16 +1,90 @@
+﻿#region using
+
+using Notification.Application.Data.Repositories;
+using Notification.Application.Models;
+using Notification.Application.Services;
+using Notification.Domain.Enums;
+using SourceCommon.Configurations;
+using SourceCommon.Constants;
+using static MassTransit.ValidationResultExtensions;
+
+#endregion
+
 namespace Notification.Worker;
 
-public sealed class Worker(ILogger<Worker> logger) : BackgroundService
+internal sealed class Worker(
+    INotificationDeliveryRepository deliveryRepo,
+    INotificationChannelResolver resolver,
+    IConfiguration cfg,
+    ILogger<Worker> logger) : BackgroundService
 {
+    #region Overide Methods
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            if (logger.IsEnabled(LogLevel.Information))
+            var now = DateTimeOffset.UtcNow;
+            logger.LogInformation("Worker loop started at {Now}", now);
+
+            var batchSize = cfg.GetValue<int>($"{WorkerCfg.Section}:{WorkerCfg.BatchSize}", 100);
+            var dueDiliveries = await deliveryRepo.GetDueAsync(now, batchSize, stoppingToken);
+
+            foreach (var doc in dueDiliveries)
             {
-                logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                logger.LogInformation("Processing DeliveryId={DeliveryId}, Status={Status}, Attempts={Attempts}",
+                        doc.Id, doc.Status, doc.AttemptCount);
+                try
+                {
+                    if (doc.Payload == null)
+                    {
+                        logger.LogWarning("DeliveryId={DeliveryId} has null payload, marking as Illegal", doc.Id);
+                        doc.UpdateStatus(DeliveryStatus.Illegal, SystemConst.CreatedByWorker);
+                        await deliveryRepo.UpsertAsync(doc, stoppingToken);
+                        continue;
+                    }
+
+                    doc.UpdateStatus(DeliveryStatus.Sending, SystemConst.CreatedByWorker);
+                    await deliveryRepo.UpsertAsync(doc, stoppingToken);
+                    logger.LogInformation("DeliveryId={DeliveryId} marked as Sending", doc.Id);
+
+                    var ctx = new NotificationContext
+                    {
+                        To = doc.Payload.To,
+                        Cc = doc.Payload.Cc ?? new HashSet<string>(),
+                        Bcc = doc.Payload.Bcc ?? new HashSet<string>(),
+                        Subject = doc.Payload.Subject,
+                        Body = doc.Payload.Body,
+                        IsHtml = doc.Payload.IsHtml
+                    };
+
+                    var result = await resolver.Resolve(doc.Payload!.Channel).SendAsync(ctx, stoppingToken);
+
+                    doc.IncreaseAttemptCount();
+
+                    if (result.IsSuccess)
+                    {
+                        doc.UpdateStatus(DeliveryStatus.Sent, SystemConst.CreatedByWorker);
+                        logger.LogInformation("DeliveryId={DeliveryId} sent successfully", doc.Id);
+                    }
+                    else
+                    {
+                        doc.RaiseError(result.ErrorMessage!, now);
+                        logger.LogWarning("DeliveryId={DeliveryId} failed: {Error}", doc.Id, result.ErrorMessage);
+                    }
+
+                    await deliveryRepo.UpsertAsync(doc, stoppingToken);
+                }
+                catch (Exception ex)
+                {
+                    doc.RaiseError(ex.Message!, now);
+                    logger.LogError(ex, "Unhandled error occurred in Worker loop");
+                }
             }
-            await Task.Delay(1000, stoppingToken);
+
+            await Task.Delay(3000, stoppingToken);
         }
     }
+
+    #endregion
 }

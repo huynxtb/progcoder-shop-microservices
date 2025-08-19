@@ -16,7 +16,7 @@ internal static class DependencyInjection
 {
     #region Methods
 
-    public static IServiceCollection AddWorkerServices(
+    internal static IServiceCollection AddWorkerServices(
         this IServiceCollection services,
         IConfiguration configuration)
     {

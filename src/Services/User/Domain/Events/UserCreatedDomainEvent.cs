@@ -6,4 +6,8 @@ using User.Domain.Abstractions;
 
 namespace User.Domain.Events;
 
-public sealed record class UserCreatedDomainEvent(Entities.User User) : IDomainEvent;
+public sealed record class UserCreatedDomainEvent(
+    Guid Id,
+    string FirstName, 
+    string LastName, 
+    string Email) : IDomainEvent;

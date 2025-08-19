@@ -19,24 +19,28 @@ public sealed class NotificationDeliveryRepository(IMongoCollection<Notification
         int batchSize, 
         CancellationToken ctcancellationToken = default)
     {
-        var filter = Builders<NotificationDelivery>.Filter.Or(
-            Builders<NotificationDelivery>.Filter.And(
-                Builders<NotificationDelivery>.Filter.Eq(x => (int)x.Status, (int)DeliveryStatus.Queued)
-                //Builders<NotificationDelivery>.Filter.Or(
-                //    Builders<NotificationDelivery>.Filter.Eq(x => x.NextAttemptUtc, null),
-                //    Builders<NotificationDelivery>.Filter.Lte(x => x.NextAttemptUtc, nowUtc)
-                //)
-            ),
-            Builders<NotificationDelivery>.Filter.And(
-                Builders<NotificationDelivery>.Filter.Eq(x => (int)x.Status, (int)DeliveryStatus.Queued)
-                //Builders<NotificationDelivery>.Filter.Ne(x => x.NextAttemptUtc, null),
-                //Builders<NotificationDelivery>.Filter.Lte(x => x.NextAttemptUtc, nowUtc)
+        var filterBuilder = Builders<NotificationDelivery>.Filter;
+
+        var queuedDue = filterBuilder.And(
+            filterBuilder.Eq(x => x.Status, DeliveryStatus.Queued),
+            filterBuilder.Or(
+                filterBuilder.Eq(x => x.NextAttemptUtc, null),
+                filterBuilder.Lte(x => x.NextAttemptUtc, now)
             )
         );
 
+        var failedDue = filterBuilder.And(
+            filterBuilder.Eq(x => x.Status, DeliveryStatus.Failed),
+            filterBuilder.Ne(x => x.NextAttemptUtc, null),
+            filterBuilder.Lte(x => x.NextAttemptUtc, now)
+        );
+
+        var filter = filterBuilder.Or(queuedDue, failedDue);
+
         var sort = Builders<NotificationDelivery>.Sort
-            .Ascending(x => x.CreatedOnUtc)
-            .Ascending(x => x.Priority);
+            .Ascending(x => x.NextAttemptUtc)
+            .Descending(x => x.Priority)
+            .Ascending(x => x.CreatedOnUtc);
 
         return await collection.Find(filter)
             .Sort(sort)
@@ -59,6 +63,14 @@ public sealed class NotificationDeliveryRepository(IMongoCollection<Notification
             options: new ReplaceOptions { IsUpsert = true },
             cancellationToken: cancellationToken
         );
+    }
+
+    public async Task<NotificationDelivery> GetByEventIdAsync(string eventId, CancellationToken cancellationToken = default)
+    {
+        var filter = Builders<NotificationDelivery>.Filter.Eq(x => x.EventId, eventId);
+        return await collection
+            .Find(filter)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     #endregion

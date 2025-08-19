@@ -4,13 +4,15 @@ using User.Application.Data;
 using User.Domain.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using MassTransit;
+using EventSourcing.Events.UserEvents;
 
 #endregion
 
 namespace User.Application.CQRS.User.EventHandlers.Domain;
 
 public class UserCreatedDomainEventHandler(
-    IApplicationDbContext dbContext,
+    IPublishEndpoint publish,
     ILogger<UserCreatedDomainEventHandler> logger) : INotificationHandler<UserCreatedDomainEvent>
 {
     #region Implementations
@@ -19,11 +21,15 @@ public class UserCreatedDomainEventHandler(
     {
         logger.LogInformation("Domain Event handled: {DomainEvent}", @event.GetType().Name);
 
-        var user = @event.User;
+        var userCreatedEvent = new UserCreatedEvent()
+        {
+            Email = @event.Email,
+            FirstName = @event.FirstName,
+            LastName = @event.LastName,
+            UserId = @event.Id
+        };
 
-        //await dbContext.Users.AddAsync(user);
-
-        //await dbContext.SaveChangesAsync(cancellationToken);
+        await publish.Publish(userCreatedEvent);
     }
 
     #endregion

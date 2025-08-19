@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <Folder Include="CQRS\" />
+    <Folder Include="Interfaces\" />
     <Folder Include="Models\Responses\" />
   </ItemGroup>
 

@@ -12,7 +12,7 @@ using SourceCommon.Constants;
 
 namespace Notification.Worker.EventHandlers.Integrations;
 
-public sealed class UserCreatedEventHandler(
+internal sealed class UserCreatedEventHandler(
     ITemplateRenderer renderer,
     INotificationTemplateRepository tmplRepo,
     INotificationDeliveryRepository deliveryRepo,
@@ -24,6 +24,10 @@ public sealed class UserCreatedEventHandler(
         logger.LogInformation("Integration Event handled: {IntegrationEvent}", context.Message.GetType().Name);
 
         var message = context.Message;
+
+        var existing = await deliveryRepo.GetByEventIdAsync(message.EventId);
+
+        if (existing != null) return;
 
         var tmplDoc = await tmplRepo.GetAsync(
             key: TemplateKey.UserRegistered,
@@ -37,12 +41,13 @@ public sealed class UserCreatedEventHandler(
         var body = renderer.Render(tmplDoc.Body!, data);
 
         var ndDocs = NotificationDelivery.Create(
+            eventId: message.EventId,
             channel: Domain.Enums.ChannelType.Email,
-            address: message.Email!,
+            to: [message.Email!],
             subject: tmplDoc.Subject!,
             body: body,
             priority: Domain.Enums.DeliveryPriority.Medium,
-            modifiedBy: SystemConst.DefaultModifiedBy);
+            createdBy: SystemConst.CreatedBySystem);
 
         await deliveryRepo.UpsertAsync(ndDocs);
     }

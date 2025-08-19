@@ -35,7 +35,7 @@ public sealed class NotificationTemplate : Entity<Guid>
         ChannelType channel,
         string subject,
         string body,
-        string modifiedBy)
+        string createdBy)
     {
         return new NotificationTemplate()
         {
@@ -44,8 +44,8 @@ public sealed class NotificationTemplate : Entity<Guid>
             Channel = channel,
             Subject = subject,
             Body = body,
-            CreatedBy = modifiedBy,
-            LastModifiedBy = modifiedBy,
+            CreatedBy = createdBy,
+            LastModifiedBy = createdBy,
             CreatedOnUtc = DateTimeOffset.UtcNow,
             LastModifiedOnUtc = DateTimeOffset.UtcNow
         };

@@ -36,7 +36,7 @@ public sealed class LoginHistory : Aggregate<Guid>
         Guid userId, 
         string? ipAddress, 
         DateTimeOffset loggedAt,
-        string modifiedBy)
+        string createdBy)
     {
         var loginHistory = new LoginHistory
         {
@@ -44,8 +44,8 @@ public sealed class LoginHistory : Aggregate<Guid>
             UserId = userId,
             IpAddress = ipAddress,
             LoggedOnUtc = loggedAt,
-            CreatedBy = modifiedBy,
-            LastModifiedBy = modifiedBy,
+            CreatedBy = createdBy,
+            LastModifiedBy = createdBy,
         };
 
         loginHistory.AddDomainEvent(new LoginHistoryCreatedDomainEvent(loginHistory));

@@ -53,7 +53,7 @@ public class CreateLoginHistoryCommandHandler(IApplicationDbContext dbContext) :
             userId: user.Id,
             ipAddress: command.Dto.IpAddress,
             loggedAt: DateTimeOffset.UtcNow,
-            modifiedBy: SystemConst.DefaultModifiedBy);
+            createdBy: SystemConst.CreatedBySystem);
 
         await dbContext.LoginHistories.AddAsync(entity, cancellationToken);
 

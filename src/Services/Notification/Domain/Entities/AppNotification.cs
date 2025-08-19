@@ -37,7 +37,7 @@ public sealed class AppNotification : Entity<Guid>
         Guid userId,
         string title,
         string message,
-        string modifiedBy)
+        string createdBy)
     {
         return new AppNotification()
         {
@@ -45,8 +45,8 @@ public sealed class AppNotification : Entity<Guid>
             UserId = userId,
             Title = title,
             Message = message,
-            CreatedBy = modifiedBy,
-            LastModifiedBy = modifiedBy,
+            CreatedBy = createdBy,
+            LastModifiedBy = createdBy,
             CreatedOnUtc = DateTimeOffset.UtcNow,
             LastModifiedOnUtc = DateTimeOffset.UtcNow
         };
