@@ -12,11 +12,11 @@ public sealed class MessagePayload
 
     public ChannelType Channel { get; private set; }
 
-    public IReadOnlySet<string> To { get; private set; }
+    public IReadOnlyCollection<string> To { get; private set; }
 
-    public IReadOnlySet<string>? Cc { get; private set; }
+    public IReadOnlyCollection<string>? Cc { get; private set; }
 
-    public IReadOnlySet<string>? Bcc { get; private set; }
+    public IReadOnlyCollection<string>? Bcc { get; private set; }
 
     public string? Subject { get; private set; }
 
@@ -36,12 +36,12 @@ public sealed class MessagePayload
 
     public static MessagePayload Create(
         ChannelType channel,
-        HashSet<string> to,
+        List<string> to,
         string subject,
         string body,
         bool isHtml = false,
-        HashSet<string> cc = null,
-        HashSet<string> bcc = null)
+        List<string>? cc = null,
+        List<string>? bcc = null)
     {
         return new MessagePayload()
         {

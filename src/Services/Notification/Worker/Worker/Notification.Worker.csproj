@@ -15,7 +15,6 @@
     <ProjectReference Include="..\..\..\..\Shared\BuildingBlocks\BuildingBlocks.csproj" />
     <ProjectReference Include="..\..\..\..\Shared\EventSourcing\EventSourcing.csproj" />
     <ProjectReference Include="..\..\..\..\Shared\SourceCommon\SourceCommon.csproj" />
-    <ProjectReference Include="..\..\Application\Notification.Application.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Notification.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

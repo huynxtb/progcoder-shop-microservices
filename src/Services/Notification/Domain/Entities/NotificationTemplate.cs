@@ -11,13 +11,15 @@ public sealed class NotificationTemplate : Entity<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public string? Key { get; set; }
+    public string? Key { get; private set; }
 
-    public ChannelType Channel { get; set; }
+    public ChannelType Channel { get; private set; }
 
-    public string? Subject { get; set; }
+    public string? Subject { get; private set; }
 
-    public string? Body { get; set; }
+    public string? Body { get; private set; }
+
+    public bool IsHtml { get; private set; }
 
     #endregion
 
@@ -34,6 +36,7 @@ public sealed class NotificationTemplate : Entity<Guid>
         string key,
         ChannelType channel,
         string subject,
+        bool isHtml,
         string body,
         string createdBy)
     {
@@ -44,6 +47,7 @@ public sealed class NotificationTemplate : Entity<Guid>
             Channel = channel,
             Subject = subject,
             Body = body,
+            IsHtml = isHtml,
             CreatedBy = createdBy,
             LastModifiedBy = createdBy,
             CreatedOnUtc = DateTimeOffset.UtcNow,

@@ -26,6 +26,7 @@ public static class DatabaseExtentions
                 key: TemplateKey.UserRegistered,
                 channel: Domain.Enums.ChannelType.Email,
                 subject: "Welcome to ProG Coder",
+                isHtml: true,
                 body: "<p>Hello <strong>{{DisplayName}}</strong>,</p> <p>thank you for signing up. We’re glad to have you!</p> <p>Best regards,</p> <p>ProG Coder</p>",
                 createdBy: SystemConst.CreatedBySystem),
             NotificationTemplate.Create(
@@ -33,6 +34,7 @@ public static class DatabaseExtentions
                 key: TemplateKey.UserRegistered,
                 channel: Domain.Enums.ChannelType.WhatsApp,
                 subject: "Welcome to ProG Coder",
+                isHtml: false,
                 body: "Hello {{DisplayName}}, thank you for signing up. We’re glad to have you!",
                 createdBy: SystemConst.CreatedBySystem),
             NotificationTemplate.Create(
@@ -40,6 +42,7 @@ public static class DatabaseExtentions
                 key: TemplateKey.UserRegistered,
                 channel: Domain.Enums.ChannelType.InApp,
                 subject: "Welcome to ProG Coder",
+                isHtml: false,
                 body: "Hello {{DisplayName}}, thank you for signing up",
                 createdBy: SystemConst.CreatedBySystem)
         };

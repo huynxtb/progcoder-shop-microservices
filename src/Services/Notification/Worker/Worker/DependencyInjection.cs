@@ -12,29 +12,14 @@ using System.Reflection;
 
 namespace Notification.Worker;
 
-internal static class DependencyInjection
+public static class DependencyInjection
 {
     #region Methods
 
-    internal static IServiceCollection AddWorkerServices(
+    public static IServiceCollection AddWorkerServices(
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.Configure<AppConfigCfg>(
-            configuration.GetSection(AppConfigCfg.Section));
-
-        services.AddExceptionHandler<CustomExceptionHandler>();
-
-        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-
-        services.AddMediatR(config =>
-        {
-            config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-            config.AddOpenBehavior(typeof(ValidationBehavior<,>));
-            config.AddOpenBehavior(typeof(LoggingBehavior<,>));
-        });
-
-        services.AddFeatureManagement();
         services.AddMessageBroker(configuration, Assembly.GetExecutingAssembly());
 
         return services;

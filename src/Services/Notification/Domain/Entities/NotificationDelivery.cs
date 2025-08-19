@@ -41,19 +41,22 @@ public sealed class NotificationDelivery : Aggregate<Guid>
     #region Methods
 
     public static NotificationDelivery Create(
+        Guid id,
         ChannelType channel,
-        HashSet<string> to,
+        List<string> to,
         string subject,
-        string body,
+        bool isHtml,
+		string body,
         DeliveryPriority priority,
         string eventId,
-        HashSet<string> cc = null,
-        HashSet<string> bcc = null,
+        List<string>? cc = null,
+        List<string>? bcc = null,
         string createdBy = SystemConst.CreatedBySystem)
     {
         var payload = MessagePayload.Create(
             channel: channel,
             subject: subject,
+            isHtml: isHtml,
             to: to,
             cc: cc,
             bcc: bcc,
@@ -61,6 +64,7 @@ public sealed class NotificationDelivery : Aggregate<Guid>
 
         return new NotificationDelivery()
         {
+            Id = id,
             Payload = payload,
             Status = DeliveryStatus.Queued,
             Priority = priority,

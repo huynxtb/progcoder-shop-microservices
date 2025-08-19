@@ -61,7 +61,6 @@ public static class DependencyInjection
 
         services.AddSingleton<ITemplateRenderer, TemplateRenderer>();
         services.AddSingleton<INotificationChannelResolver, NotificationChannelResolver>();
-
         services.AddSingleton<INotificationDeliveryRepository, NotificationDeliveryRepository>();
         services.AddSingleton<INotificationTemplateRepository, NotificationTemplateRepository>();
 

@@ -12,7 +12,7 @@ using SourceCommon.Constants;
 
 namespace Notification.Worker.EventHandlers.Integrations;
 
-internal sealed class UserCreatedEventHandler(
+public sealed class UserCreatedEventHandler(
     ITemplateRenderer renderer,
     INotificationTemplateRepository tmplRepo,
     INotificationDeliveryRepository deliveryRepo,
@@ -41,11 +41,13 @@ internal sealed class UserCreatedEventHandler(
         var body = renderer.Render(tmplDoc.Body!, data);
 
         var ndDocs = NotificationDelivery.Create(
+            id: Guid.NewGuid(),
             eventId: message.EventId,
             channel: Domain.Enums.ChannelType.Email,
             to: [message.Email!],
             subject: tmplDoc.Subject!,
             body: body,
+            isHtml: tmplDoc.IsHtml,
             priority: Domain.Enums.DeliveryPriority.Medium,
             createdBy: SystemConst.CreatedBySystem);
 

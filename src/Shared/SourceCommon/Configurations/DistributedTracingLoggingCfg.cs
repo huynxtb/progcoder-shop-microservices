@@ -24,6 +24,8 @@ public sealed class DistributedTracingLoggingCfg
 
     public const string RecordException = "RecordException";
 
+    public const string Enable = "Enable";
+
     #endregion
 
 }

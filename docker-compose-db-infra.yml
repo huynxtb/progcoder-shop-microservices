@@ -153,6 +153,18 @@ services:
       - ${MAILHOG_WEB_UI}:8025
     networks:
       - prog_coder_network
-      
+
+  loki:
+    image: ${LOKI_IMAGE_NAME}
+    container_name: loki
+    restart: unless-stopped
+    ports:
+      - ${LOKI_PORT}:3100
+    volumes:
+      - ./data/loki:/loki
+      - ./config/loki/loki-config.yml:/etc/loki/loki-config.yaml
+    networks:
+      - prog_coder_network
+
 networks:
   prog_coder_network:

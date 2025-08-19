@@ -12,12 +12,14 @@ using static MassTransit.ValidationResultExtensions;
 
 namespace Notification.Worker;
 
-internal sealed class Worker(
+public sealed class WorkerBackgroundService(
     INotificationDeliveryRepository deliveryRepo,
     INotificationChannelResolver resolver,
     IConfiguration cfg,
-    ILogger<Worker> logger) : BackgroundService
+    ILogger<WorkerBackgroundService> logger) : BackgroundService
 {
+    private const int OutboxProcessorFrequency = 1;
+
     #region Overide Methods
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -25,8 +27,6 @@ internal sealed class Worker(
         while (!stoppingToken.IsCancellationRequested)
         {
             var now = DateTimeOffset.UtcNow;
-            logger.LogInformation("Worker loop started at {Now}", now);
-
             var batchSize = cfg.GetValue<int>($"{WorkerCfg.Section}:{WorkerCfg.BatchSize}", 100);
             var dueDiliveries = await deliveryRepo.GetDueAsync(now, batchSize, stoppingToken);
 
@@ -51,8 +51,8 @@ internal sealed class Worker(
                     var ctx = new NotificationContext
                     {
                         To = doc.Payload.To,
-                        Cc = doc.Payload.Cc ?? new HashSet<string>(),
-                        Bcc = doc.Payload.Bcc ?? new HashSet<string>(),
+                        Cc = doc.Payload.Cc ?? [],
+                        Bcc = doc.Payload.Bcc ?? [],
                         Subject = doc.Payload.Subject,
                         Body = doc.Payload.Body,
                         IsHtml = doc.Payload.IsHtml
@@ -78,11 +78,12 @@ internal sealed class Worker(
                 catch (Exception ex)
                 {
                     doc.RaiseError(ex.Message!, now);
+                    await deliveryRepo.UpsertAsync(doc, stoppingToken);
                     logger.LogError(ex, "Unhandled error occurred in Worker loop");
                 }
             }
 
-            await Task.Delay(3000, stoppingToken);
+            await Task.Delay(TimeSpan.FromSeconds(OutboxProcessorFrequency), stoppingToken);
         }
     }
 

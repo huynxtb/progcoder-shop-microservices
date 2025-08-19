@@ -6,11 +6,11 @@ public sealed class NotificationContext
 
     public Guid? UserId { get; init; }
 
-    public IReadOnlySet<string> To { get; init; } = new HashSet<string>();
+    public IReadOnlyCollection<string> To { get; init; } = [];
 
-    public IReadOnlySet<string> Cc { get; init; } = new HashSet<string>();
+    public IReadOnlyCollection<string> Cc { get; init; } = [];
 
-    public IReadOnlySet<string> Bcc { get; init; } = new HashSet<string>();
+    public IReadOnlyCollection<string> Bcc { get; init; } = [];
 
     public string? Subject { get; init; }
 

@@ -17,6 +17,10 @@ public static class LogServerExtensions
 
     public static IServiceCollection AddLogServer(this IServiceCollection services, IConfiguration cfg)
     {
+        var enable = cfg.GetValue<bool>($"{DistributedTracingLoggingCfg.Section}:{DistributedTracingLoggingCfg.Enable}", false);
+
+        if (!enable) return services;
+
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             //.Enrich.FromLogContext()

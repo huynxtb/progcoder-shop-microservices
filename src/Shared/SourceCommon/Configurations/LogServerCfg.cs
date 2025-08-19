@@ -16,6 +16,8 @@ public sealed class LogServerCfg
 
     public const string ApplicationName = "ApplicationName";
 
+    public const string Enable = "Enable";
+
     #endregion
 
 }

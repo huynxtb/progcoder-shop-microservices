@@ -23,6 +23,10 @@ public static class DistributedTracingAndLoggingExtension
         this IServiceCollection services, 
         IConfiguration cfg)
     {
+        var enable = cfg.GetValue<bool>($"{DistributedTracingLoggingCfg.Section}:{DistributedTracingLoggingCfg.Enable}", false);
+
+        if (!enable) return services;
+
         services.Configure<AspNetCoreTraceInstrumentationOptions>(
             cfg.GetSection($"{DistributedTracingLoggingCfg.Section}:{DistributedTracingLoggingCfg.AspNetCoreInstrumentation}"));
 
@@ -113,8 +117,13 @@ public static class DistributedTracingAndLoggingExtension
     public static WebApplication UsePrometheusEndpoint(this WebApplication app)
     {
         var cfg = app.Configuration;
+        var enable = cfg.GetValue<bool>($"{DistributedTracingLoggingCfg.Section}:{DistributedTracingLoggingCfg.Enable}", false);
 
-        if (cfg.GetValue<bool>(cfg[$"{DistributedTracingLoggingCfg.Section}:{DistributedTracingLoggingCfg.Prometheus}:{DistributedTracingLoggingCfg.Enabled}"]!))
+        if (!enable) return app;
+
+        var enablePrometheus = cfg.GetValue<bool>(cfg[$"{DistributedTracingLoggingCfg.Section}:{DistributedTracingLoggingCfg.Prometheus}:{DistributedTracingLoggingCfg.Enabled}"]!, false);
+
+        if (enablePrometheus)
         {
             app.MapPrometheusScrapingEndpoint();
         }
