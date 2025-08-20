@@ -1,18 +1,9 @@
-﻿#region using
+﻿namespace Notification.Domain.Abstractions;
 
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
-#endregion
-
-namespace Notification.Domain.Abstractions;
-
-public abstract class Entity<T> : IEntity<T>
+public abstract class Entity<T> : IEntityId<T>, IAuditable
 {
     #region Fields, Properties and Indexers
 
-    [BsonId]
-    [BsonRepresentation(BsonType.String)]
     public T Id { get; set; } = default!;
 
     public DateTimeOffset CreatedOnUtc { get; set; }

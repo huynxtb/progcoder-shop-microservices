@@ -61,8 +61,13 @@ public static class DependencyInjection
 
         services.AddSingleton<ITemplateRenderer, TemplateRenderer>();
         services.AddSingleton<INotificationChannelResolver, NotificationChannelResolver>();
-        services.AddSingleton<INotificationDeliveryRepository, NotificationDeliveryRepository>();
-        services.AddSingleton<INotificationTemplateRepository, NotificationTemplateRepository>();
+        services.AddSingleton<IQueryNotificationTemplateRepository, NotificationTemplateRepository>();
+
+        services.AddSingleton<NotificationDeliveryRepository>();
+        services.AddSingleton<ICommandNotificationDeliveryRepository>(sp =>
+            sp.GetRequiredService<NotificationDeliveryRepository>());
+        services.AddSingleton<IQueryNotificationDeliveryRepository>(sp =>
+            sp.GetRequiredService<NotificationDeliveryRepository>());
 
         return services;
     }

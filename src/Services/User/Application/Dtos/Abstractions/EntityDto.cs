@@ -1,10 +1,10 @@
-﻿namespace User.Domain.Abstractions;
+﻿namespace User.Application.Dtos.Abstractions;
 
-public abstract class Entity<T> : IEntityId<T>, IAuditable
+public abstract class EntityDto<T> : IDtoId<T>, IAuditableDto
 {
     #region Fields, Properties and Indexers
 
-    public T Id { get; set; } = default!;
+    public T Id { get; init; } = default!;
 
     public DateTimeOffset CreatedOnUtc { get; set; }
 
@@ -15,5 +15,4 @@ public abstract class Entity<T> : IEntityId<T>, IAuditable
     public string? LastModifiedBy { get; set; }
 
     #endregion
-
 }

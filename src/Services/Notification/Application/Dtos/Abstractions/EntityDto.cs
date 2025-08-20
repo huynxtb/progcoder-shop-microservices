@@ -1,18 +1,10 @@
-﻿namespace User.Domain.Abstractions;
+﻿namespace Notification.Application.Dtos.Abstractions;
 
-public interface IEntity<T> : IEntity
+public abstract class EntityDto<T> : IDtoId<T>, IAuditableDto
 {
     #region Fields, Properties and Indexers
 
-    public T Id { get; set; }
-
-    #endregion
-
-}
-
-public interface IEntity
-{
-    #region Fields, Properties and Indexers
+    public T Id { get; init; } = default!;
 
     public DateTimeOffset CreatedOnUtc { get; set; }
 

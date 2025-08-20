@@ -13,7 +13,7 @@ using static MassTransit.ValidationResultExtensions;
 namespace Notification.Worker;
 
 public sealed class WorkerBackgroundService(
-    INotificationDeliveryRepository deliveryRepo,
+    ICommandNotificationDeliveryRepository deliveryRepo,
     INotificationChannelResolver resolver,
     IConfiguration cfg,
     ILogger<WorkerBackgroundService> logger) : BackgroundService

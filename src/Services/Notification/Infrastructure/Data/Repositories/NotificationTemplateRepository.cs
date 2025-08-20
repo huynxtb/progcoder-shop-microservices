@@ -10,7 +10,7 @@ using Notification.Domain.Enums;
 namespace Notification.Infrastructure.Data.Repositories;
 
 public sealed class NotificationTemplateRepository(IMongoCollection<NotificationTemplate> collection) 
-    : INotificationTemplateRepository
+    : IQueryNotificationTemplateRepository
 {
     #region Implementations
 
@@ -21,11 +21,6 @@ public sealed class NotificationTemplateRepository(IMongoCollection<Notification
     {
         return await collection.Find(x => x.Key == key && x.Channel == channel)
             .FirstOrDefaultAsync(cancellationToken);
-    }
-
-    public async Task InsertManyAsync(IEnumerable<NotificationTemplate> docs, CancellationToken cancellationToken = default)
-    {
-        await collection.InsertManyAsync(docs, cancellationToken: cancellationToken);
     }
 
     #endregion

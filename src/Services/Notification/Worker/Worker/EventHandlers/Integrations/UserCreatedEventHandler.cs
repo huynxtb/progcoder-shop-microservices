@@ -14,8 +14,8 @@ namespace Notification.Worker.EventHandlers.Integrations;
 
 public sealed class UserCreatedEventHandler(
     ITemplateRenderer renderer,
-    INotificationTemplateRepository tmplRepo,
-    INotificationDeliveryRepository deliveryRepo,
+    IQueryNotificationTemplateRepository tmplRepo,
+    ICommandNotificationDeliveryRepository deliveryRepo,
     ILogger<UserCreatedEventHandler> logger)
     : IConsumer<UserCreatedEvent>
 {

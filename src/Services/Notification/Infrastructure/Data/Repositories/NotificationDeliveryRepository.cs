@@ -10,7 +10,7 @@ using Notification.Domain.Enums;
 namespace Notification.Infrastructure.Data.Repositories;
 
 public sealed class NotificationDeliveryRepository(IMongoCollection<NotificationDelivery> collection) 
-    : INotificationDeliveryRepository
+    : ICommandNotificationDeliveryRepository, IQueryNotificationDeliveryRepository
 {
     #region Implementations
 

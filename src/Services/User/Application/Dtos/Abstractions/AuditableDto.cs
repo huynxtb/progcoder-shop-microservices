@@ -1,10 +1,14 @@
-﻿namespace User.Domain.Abstractions;
+﻿#region using
 
-public abstract class Entity<T> : IEntityId<T>, IAuditable
+using Notification.Application.Dtos.Abstractions;
+
+#endregion
+
+namespace User.Application.Dtos.Abstractions;
+
+public abstract class AuditableDto : IAuditableDto
 {
     #region Fields, Properties and Indexers
-
-    public T Id { get; set; } = default!;
 
     public DateTimeOffset CreatedOnUtc { get; set; }
 
@@ -15,5 +19,6 @@ public abstract class Entity<T> : IEntityId<T>, IAuditable
     public string? LastModifiedBy { get; set; }
 
     #endregion
-
 }
+
+public interface IAuditableDto : ICreationAuditDto, IModificationAuditDto { }
