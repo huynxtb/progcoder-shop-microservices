@@ -8,13 +8,13 @@ using SourceCommon.Constants;
 
 namespace Notification.Domain.Entities;
 
-public sealed class Delivery : Aggregate<Guid>
+public sealed class DeliveryEntity : Aggregate<Guid>
 {
     #region Fields, Properties and Indexers
 
     public string? EventId { get; private set; }
 
-    public MessagePayload? Payload { get; private set; }
+    public MessagePayloadEntity? Payload { get; private set; }
 
     public DeliveryStatus Status { get; private set; }
 
@@ -34,13 +34,13 @@ public sealed class Delivery : Aggregate<Guid>
 
     #region Ctors
 
-    private Delivery() { }
+    private DeliveryEntity() { }
 
     #endregion
 
     #region Methods
 
-    public static Delivery Create(
+    public static DeliveryEntity Create(
         Guid id,
         ChannelType channel,
         List<string> to,
@@ -53,7 +53,7 @@ public sealed class Delivery : Aggregate<Guid>
         List<string>? bcc = null,
         string createdBy = SystemConst.CreatedBySystem)
     {
-        var payload = MessagePayload.Create(
+        var payload = MessagePayloadEntity.Create(
             channel: channel,
             subject: subject,
             isHtml: isHtml,
@@ -62,7 +62,7 @@ public sealed class Delivery : Aggregate<Guid>
             bcc: bcc,
             body: body);
 
-        return new Delivery()
+        return new DeliveryEntity()
         {
             Id = id,
             Payload = payload,

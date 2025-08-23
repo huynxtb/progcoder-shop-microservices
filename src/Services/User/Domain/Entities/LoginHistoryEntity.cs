@@ -7,7 +7,7 @@ using User.Domain.Events;
 
 namespace User.Domain.Entities;
 
-public sealed class LoginHistory : Aggregate<Guid>
+public sealed class LoginHistoryEntity : Aggregate<Guid>
 {
     #region Fields, Properties and Indexers
 
@@ -17,28 +17,26 @@ public sealed class LoginHistory : Aggregate<Guid>
 
     public DateTimeOffset LoggedOnUtc { get; private set; }
 
-    public User User { get; private set; } = default!;
+    public UserEntity User { get; private set; } = default!;
 
     #endregion
 
     #region Ctors
 
-    private LoginHistory()
-    {
-    }
+    private LoginHistoryEntity() { }
 
     #endregion
 
     #region Methods
 
-    public static LoginHistory Create(
+    public static LoginHistoryEntity Create(
         Guid id, 
         Guid userId, 
         string? ipAddress, 
         DateTimeOffset loggedAt,
         string createdBy)
     {
-        var loginHistory = new LoginHistory
+        var loginHistory = new LoginHistoryEntity
         {
             Id = id,
             UserId = userId,

@@ -7,7 +7,7 @@ using User.Domain.Events;
 
 namespace User.Domain.Entities;
 
-public sealed class User : Aggregate<Guid>
+public sealed class UserEntity : Aggregate<Guid>
 {
     #region Fields, Properties and Indexers
 
@@ -25,13 +25,19 @@ public sealed class User : Aggregate<Guid>
 
     public bool IsActive { get; private set; }
 
-    public ICollection<LoginHistory> LoginHistories { get; } = [];
+    public ICollection<LoginHistoryEntity> LoginHistories { get; } = [];
+
+    #endregion
+
+    #region Ctors
+
+    private UserEntity() { }
 
     #endregion
 
     #region Methods
 
-    public static User Create(Guid id, 
+    public static UserEntity Create(Guid id, 
         string userName, 
         string email,
         string firstName,
@@ -41,7 +47,7 @@ public sealed class User : Aggregate<Guid>
         bool isActive,
         string createdBy)
     {
-        var user =  new User
+        var user =  new UserEntity
         {
             Id = id,
             UserName = userName,

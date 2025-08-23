@@ -2,10 +2,10 @@
 #region using
 
 using User.Api.Constants;
-using User.Application.CQRS.AccountProfile.Queries;
 using User.Application.Models.Responses;
 using BuildingBlocks.Pagination;
 using SourceCommon.Models.Reponses;
+using User.Application.CQRS.LoginHistory.Queries;
 
 #endregion
 

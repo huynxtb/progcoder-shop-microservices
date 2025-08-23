@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace User.Infrastructure.Data.Configurations;
 
-public sealed class UserConfiguration : IEntityTypeConfiguration<Domain.Entities.User>
+public sealed class UserConfiguration : IEntityTypeConfiguration<Domain.Entities.UserEntity>
 {
     #region Implementations
 
-    public void Configure(EntityTypeBuilder<Domain.Entities.User> builder)
+    public void Configure(EntityTypeBuilder<Domain.Entities.UserEntity> builder)
     {
         builder.ToTable("users");
 

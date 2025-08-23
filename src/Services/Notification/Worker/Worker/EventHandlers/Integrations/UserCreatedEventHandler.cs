@@ -41,7 +41,7 @@ public sealed class UserCreatedEventHandler(
 
         var body = renderer.Render(tmplDoc.Body!, data);
 
-        var ndDocs = Delivery.Create(
+        var ndDocs = DeliveryEntity.Create(
             id: Guid.NewGuid(),
             eventId: message.EventId,
             channel: Domain.Enums.ChannelType.Email,

@@ -7,4 +7,4 @@ using User.Domain.Entities;
 
 namespace User.Domain.Events;
 
-public sealed record LoginHistoryCreatedDomainEvent(LoginHistory LoginHistory) : IDomainEvent;
+public sealed record LoginHistoryCreatedDomainEvent(LoginHistoryEntity LoginHistory) : IDomainEvent;

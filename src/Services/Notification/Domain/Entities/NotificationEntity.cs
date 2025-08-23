@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Notification.Domain.Entities;
 
-public sealed class Notification : Entity<Guid>
+public sealed class NotificationEntity : Entity<Guid>
 {
     #region Fields, Properties and Indexers
 
@@ -26,20 +26,20 @@ public sealed class Notification : Entity<Guid>
 
     #region Ctors
 
-    private Notification() { }
+    private NotificationEntity() { }
 
     #endregion
 
     #region Methods
 
-    public static Notification Create(
+    public static NotificationEntity Create(
         Guid id,
         Guid userId,
         string title,
         string message,
         string createdBy)
     {
-        return new Notification()
+        return new NotificationEntity()
         {
             Id = id,
             UserId = userId,

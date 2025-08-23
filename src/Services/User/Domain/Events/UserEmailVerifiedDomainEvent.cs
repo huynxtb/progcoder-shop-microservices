@@ -1,3 +1,3 @@
 ﻿namespace User.Domain.Events;
 
-public sealed record class UserEmailVerifiedDomainEvent(Entities.User User);
+public sealed record class UserEmailVerifiedDomainEvent(Entities.UserEntity User);

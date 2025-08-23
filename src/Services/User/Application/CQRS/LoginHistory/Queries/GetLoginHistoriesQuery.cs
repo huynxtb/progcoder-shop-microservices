@@ -9,7 +9,7 @@ using SourceCommon.Models.Reponses;
 
 #endregion
 
-namespace User.Application.CQRS.AccountProfile.Queries;
+namespace User.Application.CQRS.LoginHistory.Queries;
 
 public sealed record GetLoginHistoriesFilter(string? SearchText);
 

@@ -2,13 +2,13 @@
 
 using User.Application.Data;
 using User.Application.Dtos.LoginHistories;
-using User.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using SourceCommon.Models.Reponses;
+using User.Domain.Entities;
 
 #endregion
 
-namespace User.Application.CQRS.User.Commands;
+namespace User.Application.CQRS.LoginHistory.Commands;
 
 public record CreateLoginHistoryCommand(CreateLoginHistoryDto Dto) : ICommand<ResultSharedResponse<string>>;
 
@@ -48,7 +48,7 @@ public class CreateLoginHistoryCommandHandler(IApplicationDbContext dbContext) :
             .SingleOrDefaultAsync(x => x.Id == command.Dto.UserId, cancellationToken)
             ?? throw new NotFoundException(MessageCode.UserNotFound);
 
-        var entity = LoginHistory.Create(
+        var entity = LoginHistoryEntity.Create(
             id: Guid.NewGuid(),
             userId: user.Id,
             ipAddress: command.Dto.IpAddress,

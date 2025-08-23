@@ -58,5 +58,5 @@ yarn-error.log*
 .env
 
 # local data
-/data
-data/
+/local-data
+local-data/

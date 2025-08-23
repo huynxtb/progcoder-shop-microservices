@@ -8,8 +8,8 @@ services:
     restart: unless-stopped
     user: root
     volumes:
-      - ./data/sql-server/data:/var/opt/mssql/data
-      - ./data/sql-server/log:/var/opt/mssql/log
+      - ./local-data/sql-server/data:/var/opt/mssql/data
+      - ./local-data/sql-server/log:/var/opt/mssql/log
     ports:
       - ${MSSQL_PORT}:1433
     environment:
@@ -35,7 +35,7 @@ services:
     ports:
       - ${POSTGRES_PORT}:5432
     volumes:
-      - ./data/postgres-sql:/var/lib/postgresql/data
+      - ./local-data/postgres-sql:/var/lib/postgresql/data
       - ./config/postgres-sql:/docker-entrypoint-initdb.d
     entrypoint: ["/bin/bash", "-c", "chmod +x /docker-entrypoint-initdb.d/*.sh && docker-entrypoint.sh postgres"]
     networks:
@@ -56,7 +56,7 @@ services:
     ports:
       - ${MONGO_PORT}:27017
     volumes:
-      - ./data/mongodb:/data/db
+      - ./local-data/mongodb:/data/db
     networks:
       - prog_coder_network
 
@@ -77,7 +77,7 @@ services:
       - ${MINIO_API_PORT}:9000
       - ${MINIO_UI_PORT}:9001
     volumes:
-      - ./data/minio:/data
+      - ./local-data/minio:/data
     networks:
       - prog_coder_network
     healthcheck:
@@ -129,7 +129,7 @@ services:
       - ${REDIS_PORT}:6379
     command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
     volumes: 
-      - ./data/redis:/data
+      - ./local-data/redis:/data
     networks:
       - prog_coder_network
   
@@ -145,7 +145,7 @@ services:
       - ${RABBITMQ_UI_PORT}:15672
       - ${RABBITMQ_METRICS_PORT}:15692
     volumes:
-      - ./data/rabbitmq:/var/lib/rabbitmq
+      - ./local-data/rabbitmq:/var/lib/rabbitmq
       - ./config/rabbitmq/rabbitmq_enabled_plugins:/etc/rabbitmq/enabled_plugins
     networks:
       - prog_coder_network
@@ -175,7 +175,7 @@ services:
     ports:
       - ${ELASTIC_PORT}:9200
     volumes:
-      - ./data/elasticsearch:/usr/share/elasticsearch/data
+      - ./local-data/elasticsearch:/usr/share/elasticsearch/data
     environment:
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD} #UserName: elastic
       xpack.security.enabled: true
@@ -197,7 +197,7 @@ services:
       - ${PORTAINER_PORT3}:8000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./data/portainer:/data
+      - ./local-data/portainer:/data
     networks:
       - prog_coder_network
 
@@ -215,7 +215,7 @@ services:
       - ${PROMETHEUS_PORT}:9090
     volumes:
       - ./config/prometheus:/etc/prometheus
-      - ./data/prometheus:/prometheus"
+      - ./local-data/prometheus:/prometheus"
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--web.config.file=/etc/prometheus/web.yml"
@@ -230,7 +230,7 @@ services:
     ports:
       - ${GRAFANA_PORT}:3000
     volumes:
-      - ./data/grafana:/var/lib/grafana
+      - ./local-data/grafana:/var/lib/grafana
       - ./config/grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./config/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./config/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
@@ -286,7 +286,7 @@ services:
     ports:
       - ${LOKI_PORT}:3100
     volumes:
-      - ./data/loki:/loki
+      - ./local-data/loki:/loki
       - ./config/loki/loki-config.yml:/etc/loki/loki-config.yaml
     networks:
       - prog_coder_network
@@ -314,7 +314,7 @@ services:
       # - ${TEMPO_OLTP_HTTP_PORT}:4318   # OTLP HTTP (ingest)
     volumes:
       - ./config/tempo/tempo.yaml:/etc/tempo/tempo.yaml
-      - ./data/tempo:/var/tempo
+      - ./local-data/tempo:/var/tempo
     command: [ "-config.file=/etc/tempo/tempo.yaml" ]
     networks:
       - prog_coder_network

@@ -19,11 +19,11 @@ public static class DatabaseExtentions
     public static async Task InitialiseDatabaseAsync(this WebApplication app)
     {
         var db = app.Services.GetRequiredService<IMongoDatabase>();
-        var collection = db.GetCollection<Template>(MongoCollection.Template);
-        var models = new List<WriteModel<Template>>();
-        var docs = new List<Template>()
+        var collection = db.GetCollection<TemplateEntity>(MongoCollection.Template);
+        var models = new List<WriteModel<TemplateEntity>>();
+        var docs = new List<TemplateEntity>()
         {
-            Template.Create(
+            TemplateEntity.Create(
                 id: Guid.Parse("c63f5f8d-daba-409f-88f9-fc3a9eb3e7e1"),
                 key: TemplateKey.UserRegistered,
                 channel: Domain.Enums.ChannelType.Email,
@@ -31,7 +31,7 @@ public static class DatabaseExtentions
                 isHtml: true,
                 body: "<p>Hello <strong>{{DisplayName}}</strong>,</p> <p>thank you for signing up. We’re glad to have you!</p> <p>Best regards,</p> <p>ProG Coder</p>",
                 createdBy: SystemConst.CreatedBySystem),
-            Template.Create(
+            TemplateEntity.Create(
                 id: Guid.Parse("c63f5f8d-daba-409f-88f9-fc3a9eb3e7e2"),
                 key: TemplateKey.UserRegistered,
                 channel: Domain.Enums.ChannelType.WhatsApp,
@@ -39,7 +39,7 @@ public static class DatabaseExtentions
                 isHtml: false,
                 body: "Hello {{DisplayName}}, thank you for signing up. We’re glad to have you!",
                 createdBy: SystemConst.CreatedBySystem),
-            Template.Create(
+            TemplateEntity.Create(
                 id: Guid.Parse("c63f5f8d-daba-409f-88f9-fc3a9eb3e7e3"),
                 key: TemplateKey.UserRegistered,
                 channel: Domain.Enums.ChannelType.InApp,
@@ -51,8 +51,8 @@ public static class DatabaseExtentions
 
         foreach (var template in docs)
         {
-            var filter = Builders<Template>.Filter.Eq(x => x.Id, template.Id);
-            var replace = new ReplaceOneModel<Template>(filter, template)
+            var filter = Builders<TemplateEntity>.Filter.Eq(x => x.Id, template.Id);
+            var replace = new ReplaceOneModel<TemplateEntity>(filter, template)
             {
                 IsUpsert = true
             };
@@ -66,25 +66,25 @@ public static class DatabaseExtentions
     public static async Task EnsureIndexesAsync(this WebApplication app)
     {
         var db = app.Services.GetRequiredService<IMongoDatabase>();
-        var notif = db.GetCollection<Domain.Entities.Notification>(MongoCollection.Notification);
-        var deliv = db.GetCollection<Delivery>(MongoCollection.Delivery);
-        var tmpl = db.GetCollection<Template>(MongoCollection.Template);
+        var notif = db.GetCollection<NotificationEntity>(MongoCollection.Notification);
+        var deliv = db.GetCollection<DeliveryEntity>(MongoCollection.Delivery);
+        var tmpl = db.GetCollection<TemplateEntity>(MongoCollection.Template);
 
-        await notif.Indexes.CreateOneAsync(new CreateIndexModel<Domain.Entities.Notification>(
-        Builders<Domain.Entities.Notification>.IndexKeys
+        await notif.Indexes.CreateOneAsync(new CreateIndexModel<NotificationEntity>(
+        Builders<Domain.Entities.NotificationEntity>.IndexKeys
             .Ascending(x => x.UserId)
             .Ascending(x => x.IsRead)
             .Descending(x => x.CreatedOnUtc)));
 
-        await deliv.Indexes.CreateOneAsync(new CreateIndexModel<Delivery>(
-            Builders<Delivery>.IndexKeys
+        await deliv.Indexes.CreateOneAsync(new CreateIndexModel<DeliveryEntity>(
+            Builders<DeliveryEntity>.IndexKeys
                 .Ascending(x => x.Status)
                 .Ascending(x => x.NextAttemptUtc)
                 .Descending(x => x.Priority)
                 .Ascending(x => x.CreatedOnUtc)));
 
-        await tmpl.Indexes.CreateOneAsync(new CreateIndexModel<Template>(
-            Builders<Template>.IndexKeys
+        await tmpl.Indexes.CreateOneAsync(new CreateIndexModel<TemplateEntity>(
+            Builders<TemplateEntity>.IndexKeys
                 .Ascending(x => x.Key)
                 .Ascending(x => x.Channel),
             new CreateIndexOptions { Unique = true }));

@@ -20,9 +20,9 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
     #region Implementations
 
-    public DbSet<Domain.Entities.User> Users => Set<Domain.Entities.User>();
+    public DbSet<UserEntity> Users => Set<Domain.Entities.UserEntity>();
 
-    public DbSet<LoginHistory> LoginHistories => Set<LoginHistory>();
+    public DbSet<LoginHistoryEntity> LoginHistories => Set<LoginHistoryEntity>();
 
     #endregion
 

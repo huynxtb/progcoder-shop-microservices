@@ -1,6 +1,5 @@
 ﻿#region using
 
-using User.Application.CQRS.User.Commands;
 using User.Application.Data;
 using User.Application.Dtos.Keycloaks;
 using User.Application.Dtos.LoginHistories;
@@ -10,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using SourceCommon.Configurations;
 using SourceCommon.Models.Reponses;
 using SourceSourceCommon.Constants;
+using User.Application.CQRS.LoginHistory.Commands;
 
 #endregion
 
@@ -91,9 +91,9 @@ public class KeycloakUserEventCommandHandler(
 
     #region Methods
 
-    private async Task<Domain.Entities.User> CreateUserAsync(KcUserEventDto user)
+    private async Task<Domain.Entities.UserEntity> CreateUserAsync(KcUserEventDto user)
     {
-        var entity = Domain.Entities.User.Create(
+        var entity = Domain.Entities.UserEntity.Create(
             id: Guid.Parse(user.Id!),
             userName: user.Username!,
             email: user.Email!,
@@ -109,7 +109,7 @@ public class KeycloakUserEventCommandHandler(
         return entity;
     }
 
-    private void UpdateUser(KcUserEventDto user, Domain.Entities.User existingUser)
+    private void UpdateUser(KcUserEventDto user, Domain.Entities.UserEntity existingUser)
     {
         existingUser.Update(
             userName: user.Username!,
@@ -124,19 +124,19 @@ public class KeycloakUserEventCommandHandler(
         dbContext.Users.Update(existingUser);
     }
 
-    private void DeleteUser(Domain.Entities.User user)
+    private void DeleteUser(Domain.Entities.UserEntity user)
     {
         user.Delete();
         dbContext.Users.Remove(user);
     }
 
-    private void VerifyEmail(Domain.Entities.User user, bool emailVerified)
+    private void VerifyEmail(Domain.Entities.UserEntity user, bool emailVerified)
     {
         user.VerifyEmail(emailVerified);
         dbContext.Users.Update(user);
     }
 
-    private async Task CreateLoginHistoryAsync(Domain.Entities.User user, KcUserEventDto kcDto)
+    private async Task CreateLoginHistoryAsync(Domain.Entities.UserEntity user, KcUserEventDto kcDto)
     {
         var dto = new CreateLoginHistoryDto()
         {

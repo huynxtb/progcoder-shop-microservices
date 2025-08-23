@@ -6,4 +6,4 @@ using User.Domain.Abstractions;
 
 namespace User.Domain.Events;
 
-public sealed record class UserUpdatedDomainEvent(Entities.User User) : IDomainEvent;
+public sealed record class UserUpdatedDomainEvent(Entities.UserEntity User) : IDomainEvent;

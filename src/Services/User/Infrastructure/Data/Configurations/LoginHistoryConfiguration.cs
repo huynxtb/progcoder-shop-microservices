@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace User.Infrastructure.Data.Configurations;
 
-public sealed class LoginHistoryConfiguration : IEntityTypeConfiguration<LoginHistory>
+public sealed class LoginHistoryConfiguration : IEntityTypeConfiguration<LoginHistoryEntity>
 {
     #region Implementations
 
-    public void Configure(EntityTypeBuilder<LoginHistory> builder)
+    public void Configure(EntityTypeBuilder<LoginHistoryEntity> builder)
     {
         builder.ToTable("login_histories");
 

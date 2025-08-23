@@ -1,19 +1,22 @@
 ﻿#region using
 
-using Notification.Domain.Abstractions;
 using Notification.Domain.Enums;
 
 #endregion
 
 namespace Notification.Domain.Entities;
 
-public sealed class Template : Entity<Guid>
+public sealed class MessagePayloadEntity
 {
     #region Fields, Properties and Indexers
 
-    public string? Key { get; private set; }
-
     public ChannelType Channel { get; private set; }
+
+    public IReadOnlyCollection<string>? To { get; private set; }
+
+    public IReadOnlyCollection<string>? Cc { get; private set; }
+
+    public IReadOnlyCollection<string>? Bcc { get; private set; }
 
     public string? Subject { get; private set; }
 
@@ -25,33 +28,30 @@ public sealed class Template : Entity<Guid>
 
     #region Ctors
 
-    private Template() { }
+    private MessagePayloadEntity() { }
 
     #endregion
 
     #region Methods
 
-    public static Template Create(
-        Guid id,
-        string key,
+    public static MessagePayloadEntity Create(
         ChannelType channel,
+        List<string> to,
         string subject,
-        bool isHtml,
         string body,
-        string createdBy)
+        bool isHtml = false,
+        List<string>? cc = null,
+        List<string>? bcc = null)
     {
-        return new Template()
+        return new MessagePayloadEntity()
         {
-            Id = id,
-            Key = key,
             Channel = channel,
+            To = to,
+            Cc = cc,
+            Bcc = bcc,
             Subject = subject,
             Body = body,
             IsHtml = isHtml,
-            CreatedBy = createdBy,
-            LastModifiedBy = createdBy,
-            CreatedOnUtc = DateTimeOffset.UtcNow,
-            LastModifiedOnUtc = DateTimeOffset.UtcNow
         };
     }
 

@@ -7,7 +7,7 @@ using SourceCommon.Models.Reponses;
 
 #endregion
 
-namespace User.Application.CQRS.AccountProfile.Queries;
+namespace User.Application.CQRS.User.Queries;
 
 public sealed record GetUserByIdQuery(Guid UserId) : IQuery<ResultSharedResponse<GetUserByIdReponse>>;
 

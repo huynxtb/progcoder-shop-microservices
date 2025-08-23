@@ -11,9 +11,9 @@ public interface IApplicationDbContext
 {
     #region Fields, Properties and Indexers
 
-    DbSet<Domain.Entities.User> Users { get; }
+    DbSet<UserEntity> Users { get; }
 
-    DbSet<LoginHistory> LoginHistories { get; }
+    DbSet<LoginHistoryEntity> LoginHistories { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
