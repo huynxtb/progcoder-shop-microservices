@@ -10,7 +10,7 @@ public interface INotificationChannelResolver
 {
     #region Methods
 
-    INotificationChannel Resolve(ChannelType channel);
+    INotificationStartegyService Resolve(ChannelType channel);
 
     #endregion
 }

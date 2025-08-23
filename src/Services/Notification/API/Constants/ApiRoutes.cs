@@ -1,30 +1,18 @@
-﻿namespace User.Api.Constants;
+﻿namespace Notification.Api.Constants;
 
 public sealed class ApiRoutes
 {
-    public static class User
+    public static class Notification
     {
         #region Constants
 
-        public const string Tags = "Users";
+        public const string Tags = "Notifications";
 
-        private const string Base = "/users";
+        private const string Base = "/notifications";
 
-        public const string Create = Base;
+        public const string MarkAsRead = $"{Base}/{{notificationId}}/read";
 
-        public const string Update = Base;
-
-        public const string UpdateStatus = $"{Base}/{{userId}}/status";
-
-        public const string Delete = $"{Base}/{{userId}}";
-
-        public const string GetById = $"{Base}/{{userId}}";
-
-        public const string GetCurrentUserInfo = $"{Base}/me";
-
-        public const string GetUsers = Base;
-
-        public const string Register = $"{Base}/register";
+        public const string GetNotifications = Base;
 
         #endregion
     }

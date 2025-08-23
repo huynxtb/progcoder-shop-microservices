@@ -27,6 +27,7 @@ public sealed class GetUsersQueryHandler(IApplicationDbContext dbContext)
         var total = await dbContext.Users
             .AsNoTracking()
             .CountAsync(cancellationToken);
+
         var totalPages = (int)Math.Ceiling(total / (double)query.Paging.PageSize);
 
         var result = await dbContext.Users
@@ -36,8 +37,7 @@ public sealed class GetUsersQueryHandler(IApplicationDbContext dbContext)
                 x.FirstName!.Contains(query.Filter.SearchText) ||
                 x.LastName!.Contains(query.Filter.SearchText))
             .OrderByDescending(x => x.CreatedOnUtc)
-            .Skip(query.Paging.ToSkip())
-            .Take(query.Paging.ToTake())
+            .WithPaging(query.Paging)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 

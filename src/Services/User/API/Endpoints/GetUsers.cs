@@ -33,11 +33,11 @@ public sealed class GetUsers : ICarterModule
     private async Task<ResultSharedResponse<GetUsersReponse>> HandleGetUsersAsync(
         ISender sender,
         [AsParameters] GetUsersFilter filter,
-        [AsParameters] PaginationRequest pagination)
+        [AsParameters] PaginationRequest paging)
     {
         var query = new GetUsersQuery(
             filter,
-            pagination);
+            paging);
 
         var result = await sender.Send(query);
 

@@ -18,8 +18,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D095784E-9749-42E9-9400-49093A205DE5}"
 	ProjectSection(SolutionItems) = preProject
 		.env = .env
+		.env.sample = .env.sample
+		.gitignore = .gitignore
 		add-migration.bat = add-migration.bat
-		docker-compose-db-infra.yml = docker-compose-db-infra.yml
+		docker-compose-infra.yml = docker-compose-infra.yml
 		docker-compose.yml = docker-compose.yml
 		LICENSE = LICENSE
 		README.md = README.md

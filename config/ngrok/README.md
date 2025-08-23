@@ -1,0 +1,1 @@
+ngrok.exe start --all --config ngrok.yml

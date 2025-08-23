@@ -25,3 +25,23 @@ datasources:
           matcherRegex: "(?:trace_id|trace)=(\\w+)"
           name: TraceID
           url: "$${__value.raw}"
+
+  - name: Tempo
+    type: tempo
+    access: proxy
+    url: http://tempo:3200
+    isDefault: false
+    jsonData:
+      httpMethod: GET
+      serviceMap:
+        datasourceUid: prometheus
+      tracesToMetrics:
+        datasourceUid: prometheus
+        tags: ["service.name", "http.method", "http.status_code"]
+      tracesToLogs:
+        datasourceUid: loki
+        mappedTags: [{ key: "service.name", value: "service" }]
+        mapTagNamesEnabled: true
+        filterByTraceID: true
+        spanStartTimeShift: "-5m"
+        spanEndTimeShift: "5m"

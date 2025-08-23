@@ -1,11 +1,7 @@
 ﻿#region using
 
-using BuildingBlocks.Behaviors;
-using BuildingBlocks.Exceptions.Handler;
+using BuildingBlocks.Logging;
 using EventSourcing.MassTransit;
-using FluentValidation;
-using Microsoft.FeatureManagement;
-using SourceCommon.Configurations;
 using System.Reflection;
 
 #endregion
@@ -18,9 +14,10 @@ public static class DependencyInjection
 
     public static IServiceCollection AddWorkerServices(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration cfg)
     {
-        services.AddMessageBroker(configuration, Assembly.GetExecutingAssembly());
+        services.AddSerilogLogging(cfg);
+        services.AddMessageBroker(cfg, Assembly.GetExecutingAssembly());
 
         return services;
     }

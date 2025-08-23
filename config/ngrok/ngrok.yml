@@ -1,0 +1,15 @@
+version: "3"
+
+agent:
+    authtoken: 2jdbIAaTIk7E1OIIUyutUR9RiYB_stJUNQPyppV3Kk2pojLK
+    
+tunnels:
+  app1:
+    addr: 8080
+    proto: http
+  app2:
+    addr: 5001
+    proto: http
+  app3:
+    addr: 5003
+    proto: http

@@ -1,3 +1,6 @@
+# =========================
+# GLOBAL SETTINGS
+# =========================
 global:
   scrape_interval: 15s # By default, scrape targets every 15 seconds.
 
@@ -6,9 +9,11 @@ global:
   external_labels:
     monitor: 'progcoder-monitor'
 
-# A scrape configuration containing exactly one endpoint to scrape:
-# Here it's Prometheus itself.
+# =========================
+# SCRAPE CONFIGS
+# =========================
 scrape_configs:
+  # --- CORE / PROMETHEUS SELF-SCRAPE ---
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
   - job_name: 'prometheus'
     basic_auth:
@@ -17,48 +22,64 @@ scrape_configs:
     static_configs:
       - targets: ['prometheus:9090']
 
+  # --- HOST / NODE METRICS ---
   - job_name: 'node_exporter'
     static_configs:
       - targets: ['node_exporter:9100']
 
+  # --- CONTAINER METRICS ---
   - job_name: 'cadvisor'
     static_configs:
       - targets: ['cadvisor:8080']
 
+  # --- MESSAGING / RABBITMQ (server metrics endpoint) ---
   - job_name: 'rabbitmq_server'
     static_configs:
       - targets: ['rabbitmq:15692']
 
+  # --- MESSAGING / RABBITMQ EXPORTER ---
   - job_name: 'rabbitmq_exporter'
     static_configs:
       - targets: ['rabbitmq_exporter:9419']
 
+  # --- STORAGE / MINIO (cluster metrics) ---
   - job_name: minio
     metrics_path: /minio/v2/metrics/cluster
     static_configs:
       - targets: ['minio:9000']
 
+  # --- SEARCH / ELASTICSEARCH EXPORTER ---
   - job_name: elasticsearch_exporter
     static_configs:
       - targets: ['elasticsearch_exporter:9114']
     
+  # --- CACHE / REDIS EXPORTER ---
   - job_name: redis_exporter
     static_configs:
       - targets: ['redis_exporter:9121']
 
+  # --- OBSERVABILITY PIPELINE: OTEL COLLECTOR ---
   - job_name: 'otel_collector'
     static_configs:
       - targets: ['otel_collector:8889']
       - targets: ['otel_collector:8888']
 
+  # --- LOGGING / LOKI ---
   - job_name: 'loki'
     static_configs:
     - targets: ['loki:3100']
     
+  # --- LOGGING AGENT / PROMTAIL ---
   - job_name: 'promtail'
     static_configs:
-    - targets: ['promtail:9080']
-    
+      - targets: ['promtail:9080']
+
+  # --- TRACING / TEMPO ---
+  - job_name: 'tempo'
+    static_configs:
+      - targets: [ 'tempo:3200' ]
+
+  # --- APPLICATIONS / MICROSERVICES (file_sd) ---
   - job_name: 'microservices'
     scheme: 'https'
     metrics_path: '/metrics'
@@ -80,9 +101,15 @@ scrape_configs:
         regex: (.+)
         replacement: $1/metrics
 
+# =========================
+# ALERTING RULES
+# =========================
 rule_files:
   - "alert.rules"
 
+# =========================
+# ALERTMANAGER TARGET
+# =========================
 alerting:
   alertmanagers:
   - scheme: http

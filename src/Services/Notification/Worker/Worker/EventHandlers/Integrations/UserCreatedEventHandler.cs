@@ -14,8 +14,9 @@ namespace Notification.Worker.EventHandlers.Integrations;
 
 public sealed class UserCreatedEventHandler(
     ITemplateRenderer renderer,
-    IQueryNotificationTemplateRepository tmplRepo,
-    ICommandNotificationDeliveryRepository deliveryRepo,
+    IQueryTemplateRepository tmplRepo,
+    ICommandDeliveryRepository deliveryRepo,
+    IQueryDeliveryRepository delivQueryRepo,
     ILogger<UserCreatedEventHandler> logger)
     : IConsumer<UserCreatedEvent>
 {
@@ -25,7 +26,7 @@ public sealed class UserCreatedEventHandler(
 
         var message = context.Message;
 
-        var existing = await deliveryRepo.GetByEventIdAsync(message.EventId);
+        var existing = await delivQueryRepo.GetByEventIdAsync(message.EventId);
 
         if (existing != null) return;
 
@@ -40,7 +41,7 @@ public sealed class UserCreatedEventHandler(
 
         var body = renderer.Render(tmplDoc.Body!, data);
 
-        var ndDocs = NotificationDelivery.Create(
+        var ndDocs = Delivery.Create(
             id: Guid.NewGuid(),
             eventId: message.EventId,
             channel: Domain.Enums.ChannelType.Email,

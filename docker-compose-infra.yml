@@ -1,0 +1,326 @@
+services:
+  # =========================
+  # Databases
+  # =========================
+  sql-server:
+    image: ${MSSQL_IMAGE_NAME}
+    container_name: sql-server
+    restart: unless-stopped
+    user: root
+    volumes:
+      - ./data/sql-server/data:/var/opt/mssql/data
+      - ./data/sql-server/log:/var/opt/mssql/log
+    ports:
+      - ${MSSQL_PORT}:1433
+    environment:
+      SA_PASSWORD: ${MSSQL_PASSWORD}
+      ACCEPT_EULA: "Y"
+    networks:
+      - prog_coder_network
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "${MSSQL_PASSWORD}" -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  postgres-sql:
+    image: ${POSTGRES_IMAGE_NAME}
+    container_name: postgres-sql
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_MULTIPLE_DATABASES: ${POSTGRES_MULTIPLE_DATABASES}
+    ports:
+      - ${POSTGRES_PORT}:5432
+    volumes:
+      - ./data/postgres-sql:/var/lib/postgresql/data
+      - ./config/postgres-sql:/docker-entrypoint-initdb.d
+    entrypoint: ["/bin/bash", "-c", "chmod +x /docker-entrypoint-initdb.d/*.sh && docker-entrypoint.sh postgres"]
+    networks:
+      - prog_coder_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d postgres -h localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongodb:
+    image: ${MONGO_IMAGE_NAME}
+    container_name: mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - ${MONGO_PORT}:27017
+    volumes:
+      - ./data/mongodb:/data/db
+    networks:
+      - prog_coder_network
+
+  # =========================
+  # Storage / Object store
+  # =========================
+  minio:
+    image: ${MINIO_IMAGE_NAME}
+    container_name: minio
+    command: server --console-address ":9001" /data
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_PROMETHEUS_AUTH_TYPE: public
+    hostname: minio
+    ports:
+      - ${MINIO_API_PORT}:9000
+      - ${MINIO_UI_PORT}:9001
+    volumes:
+      - ./data/minio:/data
+    networks:
+      - prog_coder_network
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # =========================
+  # Identity / Security
+  # =========================
+  keycloak:
+    image: ${KEYCLOAK_IMAGE_NAME}
+    container_name: keycloak
+    restart: unless-stopped
+    command:
+      - start
+    volumes:
+      - ./config/keycloak/providers:/opt/keycloak/providers
+    environment:
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: ${KEYCLOAK_PORT}
+      KC_HOSTNAME_STRICT_BACKCHANNEL: false
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HEALTH_ENABLED: true
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres-sql/keycloak_db # Use the database name from POSTGRES_MULTIPLE_DATABASES
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      WEBHOOK_URL: ${WEBHOOK_URL}
+    ports:
+      - ${KEYCLOAK_PORT}:8080
+    depends_on:
+      - postgres-sql
+    networks:
+      - prog_coder_network
+
+  # =========================
+  # Cache / Messaging / Mail
+  # =========================
+  redis:
+    image: ${REDIS_IMAGE_NAME}
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - ${REDIS_PORT}:6379
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    volumes: 
+      - ./data/redis:/data
+    networks:
+      - prog_coder_network
+  
+  rabbitmq:
+    image: ${RABBITMQ_IMAGE_NAME}
+    container_name: rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - ${RABBITMQ_CONNECT_PORT}:5672
+      - ${RABBITMQ_UI_PORT}:15672
+      - ${RABBITMQ_METRICS_PORT}:15692
+    volumes:
+      - ./data/rabbitmq:/var/lib/rabbitmq
+      - ./config/rabbitmq/rabbitmq_enabled_plugins:/etc/rabbitmq/enabled_plugins
+    networks:
+      - prog_coder_network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  mailhog:
+    image: ${MAILHOG_IMAGE_NAME}
+    container_name: mailhog
+    restart: unless-stopped
+    ports:
+      - ${MAILHOG_SMTP_PORT}:1025
+      - ${MAILHOG_WEB_UI}:8025
+    networks:
+      - prog_coder_network
+
+  # =========================
+  # Search Engine
+  # =========================
+  elasticsearch:
+    image: ${ELASTIC_IMAGE_NAME}
+    container_name: elasticsearch
+    restart: unless-stopped
+    ports:
+      - ${ELASTIC_PORT}:9200
+    volumes:
+      - ./data/elasticsearch:/usr/share/elasticsearch/data
+    environment:
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD} #UserName: elastic
+      xpack.security.enabled: true
+      discovery.type: single-node
+      ES_JAVA_OPTS: ${ES_JAVA_OPTS}
+    networks:
+      - prog_coder_network
+
+  # =========================
+  # Admin / Ops
+  # =========================
+  portainer:
+    image: ${PORTAINER_IMAGE_NAME}
+    container_name: portainer
+    restart: unless-stopped
+    ports:
+      - ${PORTAINER_PORT1}:9000
+      - ${PORTAINER_PORT2}:9443
+      - ${PORTAINER_PORT3}:8000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/portainer:/data
+    networks:
+      - prog_coder_network
+
+  # =====================================
+  # Monitoring
+  # =====================================
+  prometheus:
+    image: ${PROMETHEUS_IMAGE_NAME}
+    container_name: prometheus
+    restart: unless-stopped
+    user: root
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - ${PROMETHEUS_PORT}:9090
+    volumes:
+      - ./config/prometheus:/etc/prometheus
+      - ./data/prometheus:/prometheus"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.config.file=/etc/prometheus/web.yml"
+    networks:
+      - prog_coder_network
+
+  grafana:
+    image: ${GRAFANA_IMAGE_NAME}
+    container_name: grafana
+    restart: unless-stopped
+    user: root
+    ports:
+      - ${GRAFANA_PORT}:3000
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+      - ./config/grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./config/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./config/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./config/grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      GF_INSTALL_PLUGINS: "flant-statusmap-panel,grafana-piechart-panel,grafana-exploretraces-app"
+    networks:
+      - prog_coder_network
+
+  cadvisor:
+    image: ${CADVISOR_IMAGE_NAME}
+    container_name: cadvisor
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
+    networks:
+      - prog_coder_network
+
+  # =====================================
+  # Tracing
+  # =====================================
+
+  otel-collector:
+    image: ${OTEL_IMAGE_NAME}
+    container_name: otel-collector
+    restart: unless-stopped
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./config/otel-collector/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - ${OTEL_PPROF_PORT}:1888   # pprof extension
+      - ${OTEL_PROMETHEUS_METRICS_PORT}:8888   # Prometheus metrics exposed by the collector
+      - ${OTEL_PROMETHEUS_EXPORTER_PORT}:8889  # Prometheus exporter metrics
+      - ${OTEL_HEALTH_PORT}:13133 # health_check extension
+      - ${OTEL_OTLP_GRPC_PORT}:4317   # OTLP gRPC receiver
+      - ${OTEL_ZPAGES_PORT}:55679 # zpages extension
+    networks:
+      - prog_coder_network
+
+  # =====================================
+  # Logging
+  # =====================================
+  loki:
+    image: ${LOKI_IMAGE_NAME}
+    container_name: loki
+    restart: unless-stopped
+    ports:
+      - ${LOKI_PORT}:3100
+    volumes:
+      - ./data/loki:/loki
+      - ./config/loki/loki-config.yml:/etc/loki/loki-config.yaml
+    networks:
+      - prog_coder_network
+
+  promtail:
+    container_name: promtail
+    image: ${PROMTAIL_IMAGE_NAME}
+    command: -config.file=/etc/promtail/promtail-config.yml
+    ports:
+      - ${PROMTAIL_SYSLOG_PORT}:1514
+      - ${PROMTAIL_HTTP_PORT}:9080
+    restart: always
+    volumes:
+    - ./config/promtail/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
+    networks:
+      - prog_coder_network
+
+  tempo:
+    image: ${TEMPO_IMAGE_NAME}
+    container_name: tempo
+    restart: unless-stopped
+    ports:
+      - ${TEMPO_HTTP_API_PORT}:3200
+      # - ${TEMPO_OLTP_GRPC_PORT}:4317   # OTLP gRPC (ingest)
+      # - ${TEMPO_OLTP_HTTP_PORT}:4318   # OTLP HTTP (ingest)
+    volumes:
+      - ./config/tempo/tempo.yaml:/etc/tempo/tempo.yaml
+      - ./data/tempo:/var/tempo
+    command: [ "-config.file=/etc/tempo/tempo.yaml" ]
+    networks:
+      - prog_coder_network
+
+  # =====================================
+  # Exporter
+  # =====================================
+networks:
+  prog_coder_network:

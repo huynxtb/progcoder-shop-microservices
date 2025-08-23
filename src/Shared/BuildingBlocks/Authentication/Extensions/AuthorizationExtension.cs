@@ -16,7 +16,7 @@ public static class AuthenticationExtensions
 {
     #region Methods
 
-    public static IServiceCollection AddAuthorizationServerAuthentication(
+    public static IServiceCollection AddAuthenticationAndAuthorization(
         this IServiceCollection services,
         IConfiguration cfg)
     {

@@ -1,10 +1,11 @@
 ﻿#region using
 
-using BuildingBlocks.LogServer;
-using BuildingBlocks.TracingLogging;
+using BuildingBlocks.DistributedTracing;
+using BuildingBlocks.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Notification.Application.Data.Repositories;
 using Notification.Application.Services;
@@ -27,54 +28,44 @@ public static class DependencyInjection
         this IServiceCollection services, 
         IConfiguration cfg)
     {
-        services.AddDistributedTracingAndLogging(cfg);
-        services.AddLogServer(cfg);
+        services.Scan(s => s
+            .FromAssemblyOf<InfrastructureMarker>()
+            .AddClasses(c => c.Where(t => t.Name.EndsWith("StartegyService")))
+            .UsingRegistrationStrategy(Scrutor.RegistrationStrategy.Skip)
+            .AsImplementedInterfaces()
+            .WithSingletonLifetime());
+
+        services.Scan(s => s
+            .FromAssemblyOf<InfrastructureMarker>()
+            .AddClasses(c => c.Where(t => t.Name.EndsWith("Repository")))
+            .UsingRegistrationStrategy(Scrutor.RegistrationStrategy.Skip)
+            .AsImplementedInterfaces()
+            .WithSingletonLifetime());
 
         // DbContext
         {
             var conn = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.Database}"];
             var dbName = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.DatabaseName}"];
 
-            services.AddSingleton<IMongoClient>(_ => new MongoClient(conn));
-            services.AddSingleton(sp => 
-                sp.GetRequiredService<IMongoClient>().GetDatabase(dbName));
-            services.AddSingleton(sp => 
-                sp.GetRequiredService<IMongoDatabase>().GetCollection<AppNotification>("app_notifications"));
-            services.AddSingleton(sp =>
-                sp.GetRequiredService<IMongoDatabase>().GetCollection<NotificationDelivery>("notification_deliveries"));
-            services.AddSingleton(sp =>
-                sp.GetRequiredService<IMongoDatabase>().GetCollection<NotificationTemplate>("notification_templates"));
-        }
-
-        var strategies = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(assembly => assembly.GetTypes())
-            .Where(type => 
-                typeof(INotificationChannel).IsAssignableFrom(type) && 
-                !type.IsInterface && !type.IsAbstract);
-
-        foreach (var strategy in strategies)
-        {
-            services.AddSingleton(
-                typeof(INotificationChannel),
-                strategy);
+            services.AddSingleton<IMongoClient>(sp =>
+            {
+                var settings = MongoClientSettings.FromConnectionString(conn);
+                return new MongoClient(settings);
+            });
+            services.AddSingleton<IMongoDatabase>(sp =>
+            {
+                return sp.GetRequiredService<IMongoClient>().GetDatabase(dbName);
+            });
         }
 
         services.AddSingleton<ITemplateRenderer, TemplateRenderer>();
         services.AddSingleton<INotificationChannelResolver, NotificationChannelResolver>();
-        services.AddSingleton<IQueryNotificationTemplateRepository, NotificationTemplateRepository>();
-
-        services.AddSingleton<NotificationDeliveryRepository>();
-        services.AddSingleton<ICommandNotificationDeliveryRepository>(sp =>
-            sp.GetRequiredService<NotificationDeliveryRepository>());
-        services.AddSingleton<IQueryNotificationDeliveryRepository>(sp =>
-            sp.GetRequiredService<NotificationDeliveryRepository>());
 
         return services;
     }
 
     public static WebApplication UseInfrastructure(this WebApplication app)
     {
-        app.UsePrometheusEndpoint();
         app.EnsureIndexesAsync().GetAwaiter();
         app.InitialiseDatabaseAsync().GetAwaiter();
 

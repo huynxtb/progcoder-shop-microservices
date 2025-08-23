@@ -11,20 +11,20 @@ public class NotificationChannelResolver : INotificationChannelResolver
 {
     #region Fields, Properties and Indexers
 
-    private readonly IReadOnlyDictionary<ChannelType, INotificationChannel> map;
+    private readonly IReadOnlyDictionary<ChannelType, INotificationStartegyService> map;
 
     #endregion
 
     #region Ctors
 
-    public NotificationChannelResolver(IEnumerable<INotificationChannel> channels) 
+    public NotificationChannelResolver(IEnumerable<INotificationStartegyService> channels) 
         => map = channels.ToDictionary(c => c.Channel);
 
     #endregion
 
     #region Implementations
 
-    public INotificationChannel Resolve(ChannelType channel) =>
+    public INotificationStartegyService Resolve(ChannelType channel) =>
         map.TryGetValue(channel, out var impl)
             ? impl
             : throw new InfrastructureException($"No channel registered for {channel}.");

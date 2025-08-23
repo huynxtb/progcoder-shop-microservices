@@ -34,13 +34,13 @@ public sealed class GetLoginHistories : ICarterModule
         ISender sender,
         IHttpContextAccessor httpContext,
         [AsParameters] GetLoginHistoriesFilter filter,
-        [AsParameters] PaginationRequest pagination)
+        [AsParameters] PaginationRequest paging)
     {
         var userId = httpContext.GetCurrentUser().Id;
 
         var query = new GetLoginHistoriesQuery(
             filter,
-            pagination,
+            paging,
             userId);
 
         var result = await sender.Send(query);

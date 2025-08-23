@@ -1,5 +1,7 @@
 ﻿#region using
 
+using BuildingBlocks.DistributedTracing;
+using BuildingBlocks.Logging;
 using BuildingBlocks.Swagger.Extensions;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -16,6 +18,8 @@ public static class DependencyInjection
         this IServiceCollection services, 
         IConfiguration cfg)
     {
+        services.AddDistributedTracing(cfg);
+        services.AddSerilogLogging(cfg);
         services.AddCarter();
 
         var dbype = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.DbType}"];
@@ -47,7 +51,7 @@ public static class DependencyInjection
         }
 
         services.AddHttpContextAccessor();
-        services.AddAuthorizationServerAuthentication(cfg);
+        services.AddAuthenticationAndAuthorization(cfg);
         services.AddSwaggerServices(cfg);
 
         return services;
@@ -55,10 +59,10 @@ public static class DependencyInjection
 
     public static WebApplication UseApi(this WebApplication app)
     {
+        app.UseSerilogReqLogging();
+        app.UsePrometheusEndpoint();
         app.MapCarter();
-
         app.UseExceptionHandler(options => { });
-
         app.UseHealthChecks("/health",
             new HealthCheckOptions
             {
@@ -67,7 +71,6 @@ public static class DependencyInjection
 
         app.UseAuthentication();
         app.UseAuthorization();
-
         app.UseSwaggerApi();
 
         return app;

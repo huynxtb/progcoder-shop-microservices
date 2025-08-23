@@ -13,7 +13,8 @@ using static MassTransit.ValidationResultExtensions;
 namespace Notification.Worker;
 
 public sealed class WorkerBackgroundService(
-    ICommandNotificationDeliveryRepository deliveryRepo,
+    IQueryDeliveryRepository delivQueryRepo,
+    ICommandDeliveryRepository delivCommandRepo,
     INotificationChannelResolver resolver,
     IConfiguration cfg,
     ILogger<WorkerBackgroundService> logger) : BackgroundService
@@ -28,7 +29,7 @@ public sealed class WorkerBackgroundService(
         {
             var now = DateTimeOffset.UtcNow;
             var batchSize = cfg.GetValue<int>($"{WorkerCfg.Section}:{WorkerCfg.BatchSize}", 100);
-            var dueDiliveries = await deliveryRepo.GetDueAsync(now, batchSize, stoppingToken);
+            var dueDiliveries = await delivQueryRepo.GetDueAsync(now, batchSize, stoppingToken);
 
             foreach (var doc in dueDiliveries)
             {
@@ -36,16 +37,16 @@ public sealed class WorkerBackgroundService(
                         doc.Id, doc.Status, doc.AttemptCount);
                 try
                 {
-                    if (doc.Payload == null)
+                    if (doc.Payload == null || doc.Payload.To == null)
                     {
                         logger.LogWarning("DeliveryId={DeliveryId} has null payload, marking as Illegal", doc.Id);
                         doc.UpdateStatus(DeliveryStatus.Illegal, SystemConst.CreatedByWorker);
-                        await deliveryRepo.UpsertAsync(doc, stoppingToken);
+                        await delivCommandRepo.UpsertAsync(doc, stoppingToken);
                         continue;
                     }
 
                     doc.UpdateStatus(DeliveryStatus.Sending, SystemConst.CreatedByWorker);
-                    await deliveryRepo.UpsertAsync(doc, stoppingToken);
+                    await delivCommandRepo.UpsertAsync(doc, stoppingToken);
                     logger.LogInformation("DeliveryId={DeliveryId} marked as Sending", doc.Id);
 
                     var ctx = new NotificationContext
@@ -73,12 +74,12 @@ public sealed class WorkerBackgroundService(
                         logger.LogWarning("DeliveryId={DeliveryId} failed: {Error}", doc.Id, result.ErrorMessage);
                     }
 
-                    await deliveryRepo.UpsertAsync(doc, stoppingToken);
+                    await delivCommandRepo.UpsertAsync(doc, stoppingToken);
                 }
                 catch (Exception ex)
                 {
                     doc.RaiseError(ex.Message!, now);
-                    await deliveryRepo.UpsertAsync(doc, stoppingToken);
+                    await delivCommandRepo.UpsertAsync(doc, stoppingToken);
                     logger.LogError(ex, "Unhandled error occurred in Worker loop");
                 }
             }

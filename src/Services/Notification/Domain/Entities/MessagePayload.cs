@@ -12,7 +12,7 @@ public sealed class MessagePayload
 
     public ChannelType Channel { get; private set; }
 
-    public IReadOnlyCollection<string> To { get; private set; }
+    public IReadOnlyCollection<string>? To { get; private set; }
 
     public IReadOnlyCollection<string>? Cc { get; private set; }
 

@@ -1,6 +1,5 @@
 ﻿#region using
 
-using Notification.Application.Dtos.Abstractions;
 using User.Application.Dtos.Abstractions;
 
 #endregion

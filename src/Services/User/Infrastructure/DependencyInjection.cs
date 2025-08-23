@@ -1,14 +1,10 @@
 ﻿#region using
 
 using User.Application.Data;
-using User.Application.Services;
-using BuildingBlocks.LogServer;
-using BuildingBlocks.TracingLogging;
 using User.Infrastructure.ApiClients;
 using User.Infrastructure.Data;
 using User.Infrastructure.Data.Extensions;
 using User.Infrastructure.Data.Interceptors;
-using User.Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -31,16 +27,18 @@ public static class DependencyInjection
         this IServiceCollection services, 
         IConfiguration cfg)
     {
-        services.AddDistributedTracingAndLogging(cfg);
-        services.AddLogServer(cfg);
+        services.Scan(s => s
+            .FromAssemblyOf<InfrastructureMarker>()
+            .AddClasses(c => c.Where(t => t.Name.EndsWith("Service")))
+            .UsingRegistrationStrategy(Scrutor.RegistrationStrategy.Skip)
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
 
         services.AddMinio(configureClient => configureClient
                     .WithEndpoint(cfg[$"{MinIoCfg.Section}:{MinIoCfg.Endpoint}"])
                     .WithCredentials(cfg[$"{MinIoCfg.Section}:{MinIoCfg.AccessKey}"], cfg[$"{MinIoCfg.Section}:{MinIoCfg.SecretKey}"])
                     .WithSSL(cfg.GetValue<bool>(cfg[$"{MinIoCfg.Section}:{MinIoCfg.Secure}"]!))
                     .Build());
-
-        services.AddScoped<IMinIOCloudService, MinIOCloudService>();
 
         // DbContext
         {
@@ -80,14 +78,11 @@ public static class DependencyInjection
             });
         }
 
-        services.AddScoped<IKeycloakService, KeycloakService>();
-
         return services;
     }
 
     public static WebApplication UseInfrastructure(this WebApplication app)
     {
-        app.UsePrometheusEndpoint();
         app.InitialiseDatabaseAsync().Wait();
 
         return app;

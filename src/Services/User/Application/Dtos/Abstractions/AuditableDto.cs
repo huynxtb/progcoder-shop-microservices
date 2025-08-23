@@ -1,10 +1,4 @@
-﻿#region using
-
-using Notification.Application.Dtos.Abstractions;
-
-#endregion
-
-namespace User.Application.Dtos.Abstractions;
+﻿namespace User.Application.Dtos.Abstractions;
 
 public abstract class AuditableDto : IAuditableDto
 {

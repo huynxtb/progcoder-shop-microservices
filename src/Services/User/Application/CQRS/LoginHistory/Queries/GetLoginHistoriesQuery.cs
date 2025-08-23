@@ -34,8 +34,7 @@ public sealed class GetLoginHistoriesQueryHandler(IApplicationDbContext dbContex
                 (string.IsNullOrEmpty(query.Filter.SearchText) ||
                 x.IpAddress!.Contains(query.Filter.SearchText)))
             .OrderByDescending(x => x.CreatedOnUtc)
-            .Skip(query.Paging.ToSkip())
-            .Take(query.Paging.ToTake())
+            .WithPaging(query.Paging)
             .ToListAsync(cancellationToken);
 
         var reponse = new GetLoginHistoriesReponse()
