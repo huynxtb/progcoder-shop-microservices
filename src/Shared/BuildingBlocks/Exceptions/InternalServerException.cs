@@ -1,6 +1,6 @@
 ﻿namespace BuildingBlocks.Exceptions;
 
-public class InternalServerException : Exception
+public sealed class InternalServerException : Exception
 {
     #region Ctors
 

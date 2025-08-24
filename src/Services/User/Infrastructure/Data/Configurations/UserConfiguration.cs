@@ -18,7 +18,6 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<Domain.Entities
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id).HasColumnName("id");
-        builder.Property(x => x.KeycloakUserNo).HasColumnName("keycloak_user_no").HasMaxLength(50);
         builder.Property(x => x.UserName).HasColumnName("user_name").HasMaxLength(255);
         builder.Property(x => x.Email).HasColumnName("email").HasMaxLength(255);
         builder.Property(x => x.FirstName).HasColumnName("first_name").HasMaxLength(100);
@@ -33,7 +32,6 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<Domain.Entities
 
         builder.HasIndex(x => x.UserName).IsUnique(true);
         builder.HasIndex(x => x.Email).IsUnique(true);
-        builder.HasIndex(x => x.KeycloakUserNo).IsUnique(true);
 
         builder.HasMany(x => x.LoginHistories)
          .WithOne(x => x.User)

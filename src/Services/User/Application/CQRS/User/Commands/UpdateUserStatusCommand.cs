@@ -11,9 +11,9 @@ using User.Application.Services;
 
 namespace User.Application.CQRS.User.Commands;
 
-public record UpdateUserStatusCommand(Guid UserId, UpdateUserStatusDto Dto, Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
+public sealed record UpdateUserStatusCommand(Guid UserId, UpdateUserStatusDto Dto, Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
 
-public class UpdateUserStatusCommandValidator : AbstractValidator<UpdateUserStatusCommand>
+public sealed class UpdateUserStatusCommandValidator : AbstractValidator<UpdateUserStatusCommand>
 {
     #region Ctors
 
@@ -27,7 +27,7 @@ public class UpdateUserStatusCommandValidator : AbstractValidator<UpdateUserStat
     #endregion
 }
 
-public class UpdateUserStatusCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<UpdateUserStatusCommand, ResultSharedResponse<string>>
+public sealed class UpdateUserStatusCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<UpdateUserStatusCommand, ResultSharedResponse<string>>
 {
     #region Implementations
 

@@ -1,6 +1,6 @@
 ﻿namespace Notification.Application.Constants;
 
-public class TemplateKey
+public sealed class TemplateKey
 {
     #region Constants
 

@@ -1,6 +1,6 @@
 ﻿namespace SourceCommon.Constants;
 
-public class FileContentType
+public sealed class FileContentType
 {
     #region Constants
 

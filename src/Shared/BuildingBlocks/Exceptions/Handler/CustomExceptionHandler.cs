@@ -14,7 +14,7 @@ using SourceCommon.Configurations;
 
 namespace BuildingBlocks.Exceptions.Handler;
 
-public class CustomExceptionHandler(
+public sealed class CustomExceptionHandler(
     ILogger<CustomExceptionHandler> logger, 
     IConfiguration cfg) : IExceptionHandler
 {

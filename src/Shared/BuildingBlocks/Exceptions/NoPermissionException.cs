@@ -1,6 +1,6 @@
 ﻿namespace BuildingBlocks.Exceptions;
 
-public class NoPermissionException : Exception
+public sealed class NoPermissionException : Exception
 {
     #region Ctors
 

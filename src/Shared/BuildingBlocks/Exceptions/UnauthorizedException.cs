@@ -1,6 +1,6 @@
 ﻿namespace BuildingBlocks.Exceptions;
 
-public class UnauthorizedException : Exception
+public sealed class UnauthorizedException : Exception
 {
     #region Ctors
 

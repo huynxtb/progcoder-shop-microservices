@@ -13,8 +13,6 @@ public sealed class UserEntity : Aggregate<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public string? KeycloakUserNo { get; private set; }
-
     public string? UserName { get; private set; }
 
     public string? Email { get; private set; }
@@ -50,13 +48,11 @@ public sealed class UserEntity : Aggregate<Guid>
         string? phoneNumber = null,
         bool emailVerified = false,
         bool isActive = true,
-        string? keycloakUserNo = null,
         string createdBy = SystemConst.CreatedBySystem)
     {
         var user =  new UserEntity
         {
             Id = id,
-            KeycloakUserNo = keycloakUserNo,
             UserName = userName,
             Email = email,
             FirstName = firstName,
@@ -68,26 +64,21 @@ public sealed class UserEntity : Aggregate<Guid>
             LastModifiedBy = createdBy,
         };
 
-        var @event = new UserCreatedDomainEvent(id, keycloakUserNo, userName, firstName, lastName, phoneNumber, email, password);
-        
-        if (createdBy != SystemConst.CreatedByKeycloak)
-        {
-            user.AddDomainEvent(@event);
-        }
-        
+        var @event = new UserCreatedDomainEvent(id, userName, firstName, lastName, phoneNumber, email, password);
+
+        user.AddDomainEvent(@event);
+
         return user;
     }
 
-    public void Update(string keycloakUserNo,
-        string email, 
+    public void Update(string email, 
         string firstName, 
         string lastName,
         string phoneNumber,
         bool emailVerified,
         bool isActive,
-        string modifiedBy)
+        string modifiedBy = SystemConst.CreatedBySystem)
     {
-        KeycloakUserNo = keycloakUserNo;
         Email = email;
         FirstName = firstName;
         LastName = lastName;
@@ -96,17 +87,14 @@ public sealed class UserEntity : Aggregate<Guid>
         IsActive = isActive;
         LastModifiedBy = modifiedBy;
 
-        if (modifiedBy != SystemConst.CreatedByKeycloak)
-        {
-            AddDomainEvent(new UserUpdatedDomainEvent(Id, KeycloakUserNo, Email, FirstName, LastName, PhoneNumber, IsActive));
-        }
+        AddDomainEvent(new UserUpdatedDomainEvent(Id, Email!, FirstName!, LastName!, PhoneNumber, IsActive));
     }
 
     public void Update(string email,
         string firstName,
         string lastName,
         string phoneNumber,
-        string modifiedBy)
+        string modifiedBy = SystemConst.CreatedBySystem)
     {
         Email = email;
         FirstName = firstName;
@@ -114,21 +102,15 @@ public sealed class UserEntity : Aggregate<Guid>
         PhoneNumber = phoneNumber;
         LastModifiedBy = modifiedBy;
 
-        if (modifiedBy != SystemConst.CreatedByKeycloak)
-        {
-            AddDomainEvent(new UserUpdatedDomainEvent(Id, KeycloakUserNo, Email, FirstName, LastName, PhoneNumber, IsActive));
-        }
+        AddDomainEvent(new UserUpdatedDomainEvent(Id, Email!, FirstName!, LastName!, PhoneNumber, IsActive));
     }
 
-    public void ChangeStatus(bool isActive, string modifiedBy)
+    public void ChangeStatus(bool isActive, string modifiedBy = SystemConst.CreatedBySystem)
     {
         IsActive = isActive;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
         LastModifiedBy = modifiedBy;
 
-        if (modifiedBy != SystemConst.CreatedByKeycloak)
-        {
-            AddDomainEvent(new UserUpdatedDomainEvent(Id, KeycloakUserNo, Email!, FirstName!, LastName!, PhoneNumber, IsActive));
-        }
+        AddDomainEvent(new UserUpdatedDomainEvent(Id, Email!, FirstName!, LastName!, PhoneNumber, IsActive));
     }
 
     public void VerifyEmail(bool emailVerified)
@@ -136,12 +118,9 @@ public sealed class UserEntity : Aggregate<Guid>
         EmailVerified = emailVerified;
     }
 
-    public void Delete(string deletedBy)
+    public void Delete()
     {
-        if (deletedBy != SystemConst.CreatedByKeycloak)
-        {
-            AddDomainEvent(new UserDeletedDomainEvent(Id, KeycloakUserNo));
-        }
+        AddDomainEvent(new UserDeletedDomainEvent(Id));
     }
 
     #endregion

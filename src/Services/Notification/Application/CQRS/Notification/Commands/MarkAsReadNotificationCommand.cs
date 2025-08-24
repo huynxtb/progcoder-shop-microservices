@@ -7,9 +7,9 @@ using SourceCommon.Models.Reponses;
 
 namespace Notification.Application.CQRS.Notification.Commands;
 
-public record MarkAsReadNotificationCommand(Guid Id, Guid UserId) : ICommand<ResultSharedResponse<string>>;
+public sealed record MarkAsReadNotificationCommand(Guid Id, Guid UserId) : ICommand<ResultSharedResponse<string>>;
 
-public class MarkAsReadNotificationCommandValidator : AbstractValidator<MarkAsReadNotificationCommand>
+public sealed class MarkAsReadNotificationCommandValidator : AbstractValidator<MarkAsReadNotificationCommand>
 {
     #region Ctors
 

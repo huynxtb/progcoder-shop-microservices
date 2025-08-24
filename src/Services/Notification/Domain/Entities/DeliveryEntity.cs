@@ -79,7 +79,7 @@ public sealed class DeliveryEntity : Aggregate<Guid>
         };
     }
 
-    public void UpdateStatus(DeliveryStatus status, string modifiedBy)
+    public void UpdateStatus(DeliveryStatus status, string modifiedBy = SystemConst.CreatedBySystem)
     {
         Status = status;
         LastModifiedBy = modifiedBy;

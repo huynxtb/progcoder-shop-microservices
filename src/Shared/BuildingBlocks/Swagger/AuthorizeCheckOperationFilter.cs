@@ -8,7 +8,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace BuildingBlocks.Swagger;
 
-public class AuthorizeCheckOperationFilter : IOperationFilter
+public sealed class AuthorizeCheckOperationFilter : IOperationFilter
 {
     #region Implementations
 

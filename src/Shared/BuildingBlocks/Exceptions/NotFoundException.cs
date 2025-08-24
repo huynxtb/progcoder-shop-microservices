@@ -1,6 +1,6 @@
 ﻿namespace BuildingBlocks.Exceptions;
 
-public class NotFoundException : Exception
+public sealed class NotFoundException : Exception
 {
     #region Ctors
 

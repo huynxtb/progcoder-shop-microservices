@@ -11,7 +11,7 @@ using User.Application.Services;
 
 namespace User.Infrastructure.Services;
 
-public class KeycloakService : IKeycloakService
+public sealed class KeycloakService : IKeycloakService
 {
     #region Fields, Properties and Indexers
 

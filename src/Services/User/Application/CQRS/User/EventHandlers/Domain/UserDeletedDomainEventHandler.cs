@@ -19,7 +19,7 @@ public sealed class UserDeletedDomainEventHandler(
     {
         logger.LogInformation("Domain Event handled: {DomainEvent}", @event.GetType().Name);
 
-        await keycloak.DeleteUserAsync(@event.KeycloakUserNo!);
+        await keycloak.DeleteUserAsync(@event.Id.ToString());
     }
 
     #endregion

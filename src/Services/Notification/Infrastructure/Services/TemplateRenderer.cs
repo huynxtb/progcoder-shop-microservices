@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace Notification.Infrastructure.Services;
 
-public class TemplateRenderer : ITemplateRenderer
+public sealed class TemplateRenderer : ITemplateRenderer
 {
     #region Fields, Properties and Indexers
 

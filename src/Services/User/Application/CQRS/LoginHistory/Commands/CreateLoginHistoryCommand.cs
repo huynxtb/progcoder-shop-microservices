@@ -10,9 +10,9 @@ using User.Domain.Entities;
 
 namespace User.Application.CQRS.LoginHistory.Commands;
 
-public record CreateLoginHistoryCommand(CreateLoginHistoryDto Dto) : ICommand<ResultSharedResponse<string>>;
+public sealed record CreateLoginHistoryCommand(CreateLoginHistoryDto Dto) : ICommand<ResultSharedResponse<string>>;
 
-public class CreateLoginHistoryCommandValidator : AbstractValidator<CreateLoginHistoryCommand>
+public sealed class CreateLoginHistoryCommandValidator : AbstractValidator<CreateLoginHistoryCommand>
 {
     #region Ctors
 
@@ -37,7 +37,7 @@ public class CreateLoginHistoryCommandValidator : AbstractValidator<CreateLoginH
     #endregion
 }
 
-public class CreateLoginHistoryCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<CreateLoginHistoryCommand, ResultSharedResponse<string>>
+public sealed class CreateLoginHistoryCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<CreateLoginHistoryCommand, ResultSharedResponse<string>>
 {
     #region Implementations
 

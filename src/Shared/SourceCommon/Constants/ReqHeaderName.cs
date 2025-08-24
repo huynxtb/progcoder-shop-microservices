@@ -1,6 +1,6 @@
 ﻿namespace SourceCommon.Constants;
 
-public class ReqHeaderName
+public sealed class ReqHeaderName
 {
     #region Constants
 

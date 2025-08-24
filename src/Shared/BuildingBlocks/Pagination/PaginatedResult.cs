@@ -1,6 +1,6 @@
 ﻿namespace BuildingBlocks.Pagination;
 
-public class PaginatedResult<T>
+public sealed class PaginatedResult<T>
     (int pageNumber, int pageSize, long count, List<T> items, bool hasItem = false) 
     where T : class
 {

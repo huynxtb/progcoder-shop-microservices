@@ -11,7 +11,7 @@ using SourceCommon.Models.Reponses;
 
 namespace User.Application.CQRS.User.Queries;
 
-public record class GetUsersFilter(string? SearchText);
+public sealed record class GetUsersFilter(string? SearchText);
 
 public sealed record GetUsersQuery(
     GetUsersFilter Filter,

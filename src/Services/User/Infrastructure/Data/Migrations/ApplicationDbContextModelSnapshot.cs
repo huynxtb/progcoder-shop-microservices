@@ -107,11 +107,6 @@ namespace User.Infrastructure.Data.Migrations
                         .HasDefaultValue(true)
                         .HasColumnName("is_active");
 
-                    b.Property<string>("KeycloakUserNo")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("keycloak_user_no");
-
                     b.Property<string>("LastModifiedBy")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
@@ -141,10 +136,6 @@ namespace User.Infrastructure.Data.Migrations
                     b.HasIndex("Email")
                         .IsUnique()
                         .HasFilter("[email] IS NOT NULL");
-
-                    b.HasIndex("KeycloakUserNo")
-                        .IsUnique()
-                        .HasFilter("[keycloak_user_no] IS NOT NULL");
 
                     b.HasIndex("UserName")
                         .IsUnique()

@@ -6,6 +6,4 @@ using User.Domain.Abstractions;
 
 namespace User.Domain.Events;
 
-public sealed record class UserDeletedDomainEvent(
-    Guid Id,
-    string? KeycloakUserNo) : IDomainEvent;
+public sealed record class UserDeletedDomainEvent(Guid Id) : IDomainEvent;

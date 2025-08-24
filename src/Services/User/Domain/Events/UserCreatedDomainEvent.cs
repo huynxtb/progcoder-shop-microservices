@@ -8,7 +8,6 @@ namespace User.Domain.Events;
 
 public sealed record class UserCreatedDomainEvent(
     Guid Id,
-    string? KeycloakUserNo,
     string UserName,
     string FirstName, 
     string LastName, 

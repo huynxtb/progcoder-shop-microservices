@@ -9,7 +9,7 @@ using User.Domain.Entities;
 
 namespace User.Infrastructure.Data;
 
-public class ApplicationDbContext : DbContext, IApplicationDbContext
+public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
 {
     #region Ctors
 

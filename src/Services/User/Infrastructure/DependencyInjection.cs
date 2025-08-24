@@ -35,12 +35,6 @@ public static class DependencyInjection
             .AsImplementedInterfaces()
             .WithScopedLifetime());
 
-        services.AddMinio(configureClient => configureClient
-                    .WithEndpoint(cfg[$"{MinIoCfg.Section}:{MinIoCfg.Endpoint}"])
-                    .WithCredentials(cfg[$"{MinIoCfg.Section}:{MinIoCfg.AccessKey}"], cfg[$"{MinIoCfg.Section}:{MinIoCfg.SecretKey}"])
-                    .WithSSL(cfg.GetValue<bool>(cfg[$"{MinIoCfg.Section}:{MinIoCfg.Secure}"]!))
-                    .Build());
-
         // DbContext
         {
             var dbType = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.DbType}"];

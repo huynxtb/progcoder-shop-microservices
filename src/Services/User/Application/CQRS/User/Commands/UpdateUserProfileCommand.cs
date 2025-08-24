@@ -11,9 +11,9 @@ using User.Application.Services;
 
 namespace User.Application.CQRS.User.Commands;
 
-public record UpdateUserProfileCommand(Guid UserId, UpdateUserDto Dto) : ICommand<ResultSharedResponse<string>>;
+public sealed record UpdateUserProfileCommand(Guid UserId, UpdateUserDto Dto) : ICommand<ResultSharedResponse<string>>;
 
-public class UpdateUserProfileCommandValidator : AbstractValidator<UpdateUserProfileCommand>
+public sealed class UpdateUserProfileCommandValidator : AbstractValidator<UpdateUserProfileCommand>
 {
     #region Ctors
 
@@ -44,7 +44,7 @@ public class UpdateUserProfileCommandValidator : AbstractValidator<UpdateUserPro
     #endregion
 }
 
-public class UpdateUserProfileCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<UpdateUserProfileCommand, ResultSharedResponse<string>>
+public sealed class UpdateUserProfileCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<UpdateUserProfileCommand, ResultSharedResponse<string>>
 {
     #region Implementations
 
@@ -53,7 +53,7 @@ public class UpdateUserProfileCommandHandler(IApplicationDbContext dbContext) : 
         var dto = command.Dto;
         var user = await dbContext.Users
             .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.KeycloakUserNo == command.UserId.ToString(), cancellationToken)
+            .SingleOrDefaultAsync(x => x.Id == command.UserId, cancellationToken)
             ?? throw new NotFoundException(MessageCode.UserNotFound);
 
         user.Update(

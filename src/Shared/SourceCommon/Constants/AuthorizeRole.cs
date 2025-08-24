@@ -1,6 +1,6 @@
 ﻿namespace SourceCommon.Constants;
 
-public class AuthorizeRole
+public sealed class AuthorizeRole
 {
     #region Constants
 

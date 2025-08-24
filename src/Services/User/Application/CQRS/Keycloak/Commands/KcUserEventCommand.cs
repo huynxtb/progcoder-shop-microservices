@@ -16,9 +16,9 @@ using User.Application.Constants;
 
 namespace User.Application.CQRS.Keycloak.Commands;
 
-public record KcUserEventCommand(KcUserEventDto Dto, string ApiKey) : ICommand<ResultSharedResponse<string>>;
+public sealed record KcUserEventCommand(KcUserEventDto Dto, string ApiKey) : ICommand<ResultSharedResponse<string>>;
 
-public class KeycloakUserEventCommandValidator : AbstractValidator<KcUserEventCommand>
+public sealed class KeycloakUserEventCommandValidator : AbstractValidator<KcUserEventCommand>
 {
     #region Ctors
 
@@ -38,7 +38,7 @@ public class KeycloakUserEventCommandValidator : AbstractValidator<KcUserEventCo
     #endregion
 }
 
-public class KeycloakUserEventCommandHandler(
+public sealed class KeycloakUserEventCommandHandler(
     IApplicationDbContext dbContext,
     ISender sender,
     IConfiguration cfg) : ICommandHandler<KcUserEventCommand, ResultSharedResponse<string>>
@@ -52,7 +52,7 @@ public class KeycloakUserEventCommandHandler(
             throw new UnauthorizedException(MessageCode.Unauthorized);
         }
         var dto = command.Dto;
-        var user = await dbContext.Users.SingleOrDefaultAsync(x => x.UserName == dto.Username! || x.KeycloakUserNo == dto.Id);
+        var user = await dbContext.Users.SingleOrDefaultAsync(x => x.UserName == dto.Username! || x.Id.ToString() == dto.Id);
 
         switch (dto.Action)
         {
@@ -60,15 +60,14 @@ public class KeycloakUserEventCommandHandler(
                 await CreateUserAsync(dto);
                 break;
 
-            case KeycloakUserEvent.Created:
-                UpdateUser(dto, user!);
-                break;
-
-            case KeycloakUserEvent.Updated or
-            KeycloakUserEvent.Deleted or
+            case KeycloakUserEvent.Deleted or
             KeycloakUserEvent.VerifyEmail or
             KeycloakUserEvent.Login when user is null:
                 throw new NotFoundException(MessageCode.UserNotFound);
+
+            case KeycloakUserEvent.Updated when user is null:
+                await CreateUserAsync(dto);
+                break;
 
             case KeycloakUserEvent.Updated:
                 UpdateUser(dto, user!);
@@ -104,8 +103,7 @@ public class KeycloakUserEventCommandHandler(
     private async Task CreateUserAsync(KcUserEventDto user)
     {
         var entity = UserEntity.Create(
-            id: Guid.NewGuid(),
-            keycloakUserNo: user.Id!,
+            id: Guid.Parse(user.Id!),
             userName: user.Username!,
             email: user.Email!,
             emailVerified: user.EmailVerified,
@@ -121,7 +119,6 @@ public class KeycloakUserEventCommandHandler(
     private void UpdateUser(KcUserEventDto user, UserEntity userEntity)
     {
         userEntity.Update(
-            keycloakUserNo: user.Id!,
             email: user.Email!,
             phoneNumber: user.Attributes!.FirstOrDefault(x => x.Key == KeycloakUserAttributes.PhoneNumber)?.Value ?? string.Empty,
             emailVerified: user.EmailVerified,
@@ -135,7 +132,7 @@ public class KeycloakUserEventCommandHandler(
 
     private void DeleteUser(UserEntity user)
     {
-        user.Delete(SystemConst.CreatedByKeycloak);
+        user.Delete();
         dbContext.Users.Remove(user);
     }
 

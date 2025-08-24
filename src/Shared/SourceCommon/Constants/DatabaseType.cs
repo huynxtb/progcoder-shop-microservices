@@ -1,6 +1,6 @@
 ﻿namespace SourceCommon.Constants;
 
-public class DatabaseType
+public sealed class DatabaseType
 {
     #region Constants
 

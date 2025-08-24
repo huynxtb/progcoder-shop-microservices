@@ -1,6 +1,6 @@
 ﻿namespace SourceCommon.Constants;
 
-public static class SystemConst
+public sealed class SystemConst
 {
     #region Constants
 

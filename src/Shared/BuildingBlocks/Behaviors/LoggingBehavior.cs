@@ -7,7 +7,8 @@ using System.Diagnostics;
 #endregion
 
 namespace BuildingBlocks.Behaviors;
-public class LoggingBehavior<TRequest, TResponse>
+
+public sealed class LoggingBehavior<TRequest, TResponse>
     (ILogger<LoggingBehavior<TRequest, TResponse>> logger)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull, IRequest<TResponse>

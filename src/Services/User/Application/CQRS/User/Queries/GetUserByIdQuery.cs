@@ -20,7 +20,7 @@ public sealed class GetUserByIdQueryHandler(IApplicationDbContext dbContext)
     {
         var result = await dbContext.Users
             .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.KeycloakUserNo == query.UserId.ToString(), cancellationToken);
+            .SingleOrDefaultAsync(x => x.Id == query.UserId, cancellationToken);
 
         var reponse = result.Adapt<GetUserByIdReponse>();
 

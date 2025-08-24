@@ -1,6 +1,6 @@
 ﻿namespace Notification.Infrastructure.Exceptions;
 
-public class InfrastructureException : Exception
+public sealed class InfrastructureException : Exception
 {
     #region Ctors
 

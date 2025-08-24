@@ -1,6 +1,6 @@
 ﻿namespace User.Application.Exceptions;
 
-public class ApplicationException : Exception
+public sealed class ApplicationException : Exception
 {
     #region Ctors
 

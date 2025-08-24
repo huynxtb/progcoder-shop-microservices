@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace User.Infrastructure.Data.Interceptors;
 
-public class AuditableEntityInterceptor : SaveChangesInterceptor
+public sealed class AuditableEntityInterceptor : SaveChangesInterceptor
 {
     #region Override Methods
 

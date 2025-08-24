@@ -1,6 +1,6 @@
 ﻿namespace SourceCommon.Constants;
 
-public static class MessageCode
+public sealed class MessageCode
 {
     #region Constants
 

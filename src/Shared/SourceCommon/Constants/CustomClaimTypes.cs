@@ -1,6 +1,6 @@
 ﻿namespace SourceCommon.Constants;
 
-public class CustomClaimTypes
+public sealed class CustomClaimTypes
 {
     #region Constants
 

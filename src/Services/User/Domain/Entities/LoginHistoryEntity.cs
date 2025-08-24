@@ -1,5 +1,6 @@
 ﻿#region using
 
+using SourceCommon.Constants;
 using User.Domain.Abstractions;
 using User.Domain.Events;
 
@@ -7,7 +8,7 @@ using User.Domain.Events;
 
 namespace User.Domain.Entities;
 
-public sealed class LoginHistoryEntity : Aggregate<Guid>
+public sealed class LoginHistoryEntity : Entity<Guid>
 {
     #region Fields, Properties and Indexers
 
@@ -34,7 +35,7 @@ public sealed class LoginHistoryEntity : Aggregate<Guid>
         Guid userId, 
         string? ipAddress, 
         DateTimeOffset loggedAt,
-        string createdBy)
+        string createdBy = SystemConst.CreatedBySystem)
     {
         return new LoginHistoryEntity
         {

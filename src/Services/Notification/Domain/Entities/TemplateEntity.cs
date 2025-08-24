@@ -2,6 +2,7 @@
 
 using Notification.Domain.Abstractions;
 using Notification.Domain.Enums;
+using SourceCommon.Constants;
 
 #endregion
 
@@ -38,7 +39,7 @@ public sealed class TemplateEntity : Entity<Guid>
         string subject,
         bool isHtml,
         string body,
-        string createdBy)
+        string createdBy = SystemConst.CreatedBySystem)
     {
         return new TemplateEntity()
         {

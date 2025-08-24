@@ -14,7 +14,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.5" />
-    <PackageReference Include="Minio" Version="6.0.3" />
     <PackageReference Include="Polly" Version="8.6.2" />
     <PackageReference Include="Polly.Extensions.Http" Version="3.0.0" />
     <PackageReference Include="Refit.HttpClientFactory" Version="8.0.0" />

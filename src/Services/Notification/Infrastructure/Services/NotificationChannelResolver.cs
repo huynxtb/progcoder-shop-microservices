@@ -7,7 +7,7 @@ using Notification.Domain.Enums;
 
 namespace Notification.Infrastructure.Services;
 
-public class NotificationChannelResolver : INotificationChannelResolver
+public sealed class NotificationChannelResolver : INotificationChannelResolver
 {
     #region Fields, Properties and Indexers
 

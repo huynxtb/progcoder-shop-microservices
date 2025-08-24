@@ -9,9 +9,9 @@ using User.Application.Services;
 
 namespace User.Application.CQRS.User.Commands;
 
-public record DeleteUserCommand(Guid UserId, Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
+public sealed record DeleteUserCommand(Guid UserId, Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
 
-public class DeleteUserCommandValidator : AbstractValidator<DeleteUserCommand>
+public sealed class DeleteUserCommandValidator : AbstractValidator<DeleteUserCommand>
 {
     #region Ctors
 
@@ -25,7 +25,7 @@ public class DeleteUserCommandValidator : AbstractValidator<DeleteUserCommand>
     #endregion
 }
 
-public class DeleteUserCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<DeleteUserCommand, ResultSharedResponse<string>>
+public sealed class DeleteUserCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<DeleteUserCommand, ResultSharedResponse<string>>
 {
     #region Implementations
 
@@ -36,7 +36,7 @@ public class DeleteUserCommandHandler(IApplicationDbContext dbContext) : IComman
             .SingleOrDefaultAsync(x => x.Id == command.UserId, cancellationToken) 
             ?? throw new NotFoundException(MessageCode.UserNotFound);
 
-        entity.Delete(command.CurrentUserId.ToString());
+        entity.Delete();
 
         dbContext.Users.Remove(entity);
         await dbContext.SaveChangesAsync(cancellationToken);

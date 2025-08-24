@@ -1,7 +1,5 @@
 ﻿#region using
 
-using EventSourcing.Events.UserEvents;
-using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using User.Application.Constants;
@@ -14,7 +12,6 @@ using User.Domain.Events;
 namespace User.Application.CQRS.User.EventHandlers.Domain;
 
 public sealed class UserCreatedDomainEventHandler(
-    IPublishEndpoint publish,
     IKeycloakService keycloak,
     ILogger<UserCreatedDomainEventHandler> logger) : INotificationHandler<UserCreatedDomainEvent>
 {
@@ -42,16 +39,6 @@ public sealed class UserCreatedDomainEventHandler(
         };
 
         await keycloak.CreateUserAsync(keycloakUser);
-
-        var userCreatedEvent = new UserCreatedEvent()
-        {
-            Email = @event.Email,
-            FirstName = @event.FirstName,
-            LastName = @event.LastName,
-            UserId = @event.Id
-        };
-
-        await publish.Publish(userCreatedEvent);
     }
 
     #endregion

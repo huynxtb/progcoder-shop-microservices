@@ -33,7 +33,7 @@ public sealed class UserUpdatedDomainEventHandler(
             }
         };
 
-        await keycloak.UpdateUserAsync(@event.KeycloakUserNo!, keycloakUser);
+        await keycloak.UpdateUserAsync(@event.Id.ToString()!, keycloakUser);
     }
 
     #endregion

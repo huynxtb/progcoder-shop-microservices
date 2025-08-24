@@ -1,57 +1,57 @@
-﻿#region using
+﻿//#region using
 
-using EventSourcing.Events.UserEvents;
-using MassTransit;
-using Notification.Application.Constants;
-using Notification.Application.Data.Repositories;
-using Notification.Application.Services;
-using Notification.Domain.Entities;
-using SourceCommon.Constants;
+//using EventSourcing.Events.UserEvents;
+//using MassTransit;
+//using Notification.Application.Constants;
+//using Notification.Application.Data.Repositories;
+//using Notification.Application.Services;
+//using Notification.Domain.Entities;
+//using SourceCommon.Constants;
 
-#endregion
+//#endregion
 
-namespace Notification.Worker.EventHandlers.Integrations;
+//namespace Notification.Worker.EventHandlers.Integrations;
 
-public sealed class UserCreatedEventHandler(
-    ITemplateRenderer renderer,
-    IQueryTemplateRepository tmplRepo,
-    ICommandDeliveryRepository deliveryRepo,
-    IQueryDeliveryRepository delivQueryRepo,
-    ILogger<UserCreatedEventHandler> logger)
-    : IConsumer<UserCreatedEvent>
-{
-    public async Task Consume(ConsumeContext<UserCreatedEvent> context)
-    {
-        logger.LogInformation("Integration Event handled: {IntegrationEvent}", context.Message.GetType().Name);
+//public sealed class UserCreatedEventHandler(
+//    ITemplateRenderer renderer,
+//    IQueryTemplateRepository tmplRepo,
+//    ICommandDeliveryRepository deliveryRepo,
+//    IQueryDeliveryRepository delivQueryRepo,
+//    ILogger<UserCreatedEventHandler> logger)
+//    : IConsumer<UserCreatedEvent>
+//{
+//    public async Task Consume(ConsumeContext<UserCreatedEvent> context)
+//    {
+//        logger.LogInformation("Integration Event handled: {IntegrationEvent}", context.Message.GetType().Name);
 
-        var message = context.Message;
+//        var message = context.Message;
 
-        var existing = await delivQueryRepo.GetByEventIdAsync(message.EventId);
+//        var existing = await delivQueryRepo.GetByEventIdAsync(message.EventId);
 
-        if (existing != null) return;
+//        if (existing != null) return;
 
-        var tmplDoc = await tmplRepo.GetAsync(
-            key: TemplateKey.UserRegistered,
-            channel: Domain.Enums.ChannelType.Email);
+//        var tmplDoc = await tmplRepo.GetAsync(
+//            key: TemplateKey.UserRegistered,
+//            channel: Domain.Enums.ChannelType.Email);
 
-        var data = new Dictionary<string, object>()
-        {
-            { TemplateKeyMap.DisplayName, $"{message.FirstName} {message.LastName}" }
-        };
+//        var data = new Dictionary<string, object>()
+//        {
+//            { TemplateKeyMap.DisplayName, $"{message.FirstName} {message.LastName}" }
+//        };
 
-        var body = renderer.Render(tmplDoc.Body!, data);
+//        var body = renderer.Render(tmplDoc.Body!, data);
 
-        var ndDocs = DeliveryEntity.Create(
-            id: Guid.NewGuid(),
-            eventId: message.EventId,
-            channel: Domain.Enums.ChannelType.Email,
-            to: [message.Email!],
-            subject: tmplDoc.Subject!,
-            body: body,
-            isHtml: tmplDoc.IsHtml,
-            priority: Domain.Enums.DeliveryPriority.Medium,
-            createdBy: SystemConst.CreatedBySystem);
+//        var ndDocs = DeliveryEntity.Create(
+//            id: Guid.NewGuid(),
+//            eventId: message.EventId,
+//            channel: Domain.Enums.ChannelType.Email,
+//            to: [message.Email!],
+//            subject: tmplDoc.Subject!,
+//            body: body,
+//            isHtml: tmplDoc.IsHtml,
+//            priority: Domain.Enums.DeliveryPriority.Medium,
+//            createdBy: SystemConst.CreatedBySystem);
 
-        await deliveryRepo.UpsertAsync(ndDocs);
-    }
-}
+//        await deliveryRepo.UpsertAsync(ndDocs);
+//    }
+//}
