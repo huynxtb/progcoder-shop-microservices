@@ -28,6 +28,8 @@ public sealed class DeliveryEntity : Aggregate<Guid>
 
     public DateTimeOffset? SentOnUtc { get; private set; }
 
+    public DateTimeOffset? ProcessedOnUtc { get; private set; }
+
     public DateTimeOffset? NextAttemptUtc { get; private set; }
 
     #endregion
@@ -83,6 +85,7 @@ public sealed class DeliveryEntity : Aggregate<Guid>
         LastModifiedBy = modifiedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
         SentOnUtc = status == DeliveryStatus.Sent ? DateTimeOffset.UtcNow : SentOnUtc;
+        ProcessedOnUtc = DateTimeOffset.UtcNow;
     }
 
     public void RaiseError(

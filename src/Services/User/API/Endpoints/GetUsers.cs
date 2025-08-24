@@ -39,9 +39,7 @@ public sealed class GetUsers : ICarterModule
             filter,
             paging);
 
-        var result = await sender.Send(query);
-
-        return result;
+        return await sender.Send(query);
     }
 
     #endregion

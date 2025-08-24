@@ -36,16 +36,13 @@ public sealed class GetLoginHistories : ICarterModule
         [AsParameters] GetLoginHistoriesFilter filter,
         [AsParameters] PaginationRequest paging)
     {
-        var userId = httpContext.GetCurrentUser().Id;
-
+        var currentUser = httpContext.GetCurrentUser();
         var query = new GetLoginHistoriesQuery(
             filter,
             paging,
-            userId);
+            currentUser.Id);
 
-        var result = await sender.Send(query);
-
-        return result;
+        return await sender.Send(query);
     }
 
     #endregion

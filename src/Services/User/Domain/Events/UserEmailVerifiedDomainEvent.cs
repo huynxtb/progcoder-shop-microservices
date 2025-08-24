@@ -1,3 +1,11 @@
-﻿namespace User.Domain.Events;
+﻿#region using
 
-public sealed record class UserEmailVerifiedDomainEvent(Entities.UserEntity User);
+using User.Domain.Abstractions;
+
+#endregion
+
+namespace User.Domain.Events;
+
+public sealed record class UserEmailVerifiedDomainEvent(
+    Guid Id,
+    string? KeycloakUserNo) : IDomainEvent;

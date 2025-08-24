@@ -1,10 +1,5 @@
 ﻿#region using
 
-using User.Application.Data;
-using User.Infrastructure.ApiClients;
-using User.Infrastructure.Data;
-using User.Infrastructure.Data.Extensions;
-using User.Infrastructure.Data.Interceptors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -14,6 +9,12 @@ using Minio;
 using Refit;
 using SourceCommon.Configurations;
 using SourceCommon.Constants;
+using User.Application.Data;
+using User.Infrastructure.ApiClients;
+using User.Infrastructure.Data;
+using User.Infrastructure.Data.Collectors;
+using User.Infrastructure.Data.Extensions;
+using User.Infrastructure.Data.Interceptors;
 
 #endregion
 
@@ -67,6 +68,8 @@ public static class DependencyInjection
             });
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
         }
+
+        services.AddScoped<IDomainEventsCollector, DomainEventsCollector>();
 
         // HttpClient
         {

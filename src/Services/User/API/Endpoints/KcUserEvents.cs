@@ -41,9 +41,7 @@ public class KcUserEvents : ICarterModule
             req,
             apiKey);
 
-        var result = await sender.Send(command);
-
-        return result;
+        return await sender.Send(command);
     }
 
     #endregion

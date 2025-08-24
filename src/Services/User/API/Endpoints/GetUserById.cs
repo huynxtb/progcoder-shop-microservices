@@ -36,9 +36,7 @@ public sealed class GetUserById : ICarterModule
     {
         var query = new GetUserByIdQuery(userId);
 
-        var result = await sender.Send(query);
-
-        return result;
+        return await sender.Send(query);
     }
 
     #endregion

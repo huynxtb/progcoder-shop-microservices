@@ -40,7 +40,7 @@ public class MarkAsReadNotificationCommandHandler(
 
         return ResultSharedResponse<string>.Success(
             data: doc.Id.ToString(),
-            message: MessageCode.UpdatedSuccessfully);
+            message: MessageCode.UpdateSuccess);
     }
 
     #endregion

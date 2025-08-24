@@ -32,14 +32,14 @@ public sealed class UpdateUserStatus : ICarterModule
 
     private async Task<ResultSharedResponse<string>> HandleUpdateUserStatusAsync(
         ISender sender,
+        IHttpContextAccessor httpContext,
         [FromRoute] Guid userId,
         [FromBody] UpdateUserStatusDto req)
     {
-        var command = new UpdateUserStatusCommand(userId, req);
+        var currentUser = httpContext.GetCurrentUser();
+        var command = new UpdateUserStatusCommand(userId, req, currentUser.Id);
 
-        var result = await sender.Send(command);
-
-        return result;
+        return await sender.Send(command);
     }
 
     #endregion

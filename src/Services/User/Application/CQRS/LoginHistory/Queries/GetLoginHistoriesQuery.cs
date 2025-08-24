@@ -53,7 +53,7 @@ public sealed class GetLoginHistoriesQueryHandler(IApplicationDbContext dbContex
         };
 
         return ResultSharedResponse<GetLoginHistoriesReponse>
-            .Success(reponse, MessageCode.GetSuccessfully);
+            .Success(reponse, MessageCode.GetSuccess);
     }
 
     #endregion

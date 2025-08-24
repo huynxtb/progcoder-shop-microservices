@@ -11,15 +11,15 @@ using SourceCommon.Models.Reponses;
 
 namespace User.Api.Endpoints;
 
-public sealed class UpdateUser : ICarterModule
+public sealed class UpdateUserProfile : ICarterModule
 {
     #region Implementations
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPut(ApiRoutes.User.Update, HandleUpdateUserAsync)
+        app.MapPut(ApiRoutes.User.UpdateCurrentUser, HandleUpdateUserAsync)
             .WithTags(ApiRoutes.User.Tags)
-            .WithName(nameof(UpdateUser))
+            .WithName(nameof(UpdateUserProfile))
             .Produces<ResultSharedResponse<string>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound)
@@ -35,13 +35,10 @@ public sealed class UpdateUser : ICarterModule
         IHttpContextAccessor httpContext,
         [FromBody] UpdateUserDto req)
     {
-        var userId = httpContext.GetCurrentUser().Id;
+        var currentUser = httpContext.GetCurrentUser();
+        var command = new UpdateUserProfileCommand(currentUser.Id, req);
 
-        var command = new UpdateUserCommand(userId, req);
-
-        var result = await sender.Send(command);
-
-        return result;
+        return await sender.Send(command);
     }
 
     #endregion

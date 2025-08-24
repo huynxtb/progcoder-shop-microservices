@@ -57,7 +57,7 @@ public sealed class GetUsersQueryHandler(IApplicationDbContext dbContext)
         };
 
         return ResultSharedResponse<GetUsersReponse>
-            .Success(reponse, MessageCode.GetSuccessfully);
+            .Success(reponse, MessageCode.GetSuccess);
     }
 
     #endregion

@@ -1,10 +1,11 @@
 ﻿
 #region using
 
-using User.Api.Constants;
-using User.Application.CQRS.User.Commands;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SourceCommon.Models.Reponses;
+using User.Api.Constants;
+using User.Application.CQRS.User.Commands;
 
 #endregion
 
@@ -31,13 +32,13 @@ public sealed class DeleteUser : ICarterModule
 
     private async Task<ResultSharedResponse<string>> HandleDeleteUserAsync(
         ISender sender,
+        IHttpContextAccessor httpContext,
         [FromRoute] Guid userId)
     {
-        var command = new DeleteUserCommand(userId);
+        var currentUser = httpContext.GetCurrentUser();
+        var command = new DeleteUserCommand(userId, currentUser.Id);
 
-        var result = await sender.Send(command);
-
-        return result;
+        return await sender.Send(command);
     }
 
     #endregion

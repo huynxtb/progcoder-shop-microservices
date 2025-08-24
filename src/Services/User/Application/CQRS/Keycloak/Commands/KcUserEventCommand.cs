@@ -8,8 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SourceCommon.Configurations;
 using SourceCommon.Models.Reponses;
-using SourceSourceCommon.Constants;
 using User.Application.CQRS.LoginHistory.Commands;
+using User.Domain.Entities;
+using User.Application.Constants;
 
 #endregion
 
@@ -50,93 +51,101 @@ public class KeycloakUserEventCommandHandler(
         {
             throw new UnauthorizedException(MessageCode.Unauthorized);
         }
+        var dto = command.Dto;
+        var user = await dbContext.Users.SingleOrDefaultAsync(x => x.UserName == dto.Username! || x.KeycloakUserNo == dto.Id);
 
-        var user = await dbContext.Users
-            .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id == Guid.Parse(command.Dto.Id!));
-
-        switch (command.Dto.Action)
+        switch (dto.Action)
         {
+            case KeycloakUserEvent.Created when user is null:
+                await CreateUserAsync(dto);
+                break;
+
             case KeycloakUserEvent.Created:
-                await CreateUserAsync(command.Dto);
+                UpdateUser(dto, user!);
                 break;
+
+            case KeycloakUserEvent.Updated or
+            KeycloakUserEvent.Deleted or
+            KeycloakUserEvent.VerifyEmail or
+            KeycloakUserEvent.Login when user is null:
+                throw new NotFoundException(MessageCode.UserNotFound);
+
             case KeycloakUserEvent.Updated:
-                if (user == null) throw new NotFoundException(MessageCode.UserNotFound);
-                UpdateUser(command.Dto, user);
+                UpdateUser(dto, user!);
                 break;
+
             case KeycloakUserEvent.Deleted:
-                if (user == null) throw new NotFoundException(MessageCode.UserNotFound);
-                DeleteUser(user);
+                DeleteUser(user!);
                 break;
+
             case KeycloakUserEvent.VerifyEmail:
-                if (user == null) throw new NotFoundException(MessageCode.UserNotFound);
-                VerifyEmail(user, command.Dto.EmailVerified);
+                VerifyEmail(user!, dto.EmailVerified);
                 break;
+
             case KeycloakUserEvent.Login:
-                if (user == null) throw new NotFoundException(MessageCode.UserNotFound);
-                await CreateLoginHistoryAsync(user, command.Dto);
+                await CreateLoginHistoryAsync(user!, dto);
                 break;
+
             default:
-                break;
+                return ResultSharedResponse<string>.Failure(message: MessageCode.UpdateFailure);
         }
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return ResultSharedResponse<string>.Success(
-            data: command.Dto.Id!.ToString(),
-            message: MessageCode.UpdatedSuccessfully);
+            data: dto.Id!.ToString(),
+            message: MessageCode.UpdateSuccess);
     }
 
     #endregion
 
     #region Methods
 
-    private async Task<Domain.Entities.UserEntity> CreateUserAsync(KcUserEventDto user)
+    private async Task CreateUserAsync(KcUserEventDto user)
     {
-        var entity = Domain.Entities.UserEntity.Create(
-            id: Guid.Parse(user.Id!),
+        var entity = UserEntity.Create(
+            id: Guid.NewGuid(),
+            keycloakUserNo: user.Id!,
             userName: user.Username!,
             email: user.Email!,
             emailVerified: user.EmailVerified,
             isActive: user.Enabled,
-            phoneNumber: "",
-            firstName: user.Attributes!.FirstOrDefault(x => x.Key == "firstName")?.Value ?? string.Empty,
-            lastName: user.Attributes!.FirstOrDefault(x => x.Key == "lastName")?.Value ?? string.Empty,
-            createdBy: user.RealmName!);
+            phoneNumber: user.Attributes!.FirstOrDefault(x => x.Key == KeycloakUserAttributes.FirstName)?.Value ?? string.Empty,
+            firstName: user.Attributes!.FirstOrDefault(x => x.Key == KeycloakUserAttributes.FirstName)?.Value ?? string.Empty,
+            lastName: user.Attributes!.FirstOrDefault(x => x.Key == KeycloakUserAttributes.LastName)?.Value ?? string.Empty,
+            createdBy: SystemConst.CreatedByKeycloak);
 
         await dbContext.Users.AddAsync(entity);
-
-        return entity;
     }
 
-    private void UpdateUser(KcUserEventDto user, Domain.Entities.UserEntity existingUser)
+    private void UpdateUser(KcUserEventDto user, UserEntity userEntity)
     {
-        existingUser.Update(
-            userName: user.Username!,
+        userEntity.Update(
+            keycloakUserNo: user.Id!,
             email: user.Email!,
-            phoneNumber: "",
+            phoneNumber: user.Attributes!.FirstOrDefault(x => x.Key == KeycloakUserAttributes.PhoneNumber)?.Value ?? string.Empty,
             emailVerified: user.EmailVerified,
             isActive: user.Enabled,
-            firstName: user.Attributes!.FirstOrDefault(x => x.Key == "firstName")?.Value ?? existingUser.FirstName!,
-            lastName: user.Attributes!.FirstOrDefault(x => x.Key == "lastName")?.Value ?? existingUser.LastName!,
-            modifiedBy: user.RealmName!);
+            firstName: user.Attributes!.FirstOrDefault(x => x.Key == KeycloakUserAttributes.FirstName)?.Value ?? string.Empty,
+            lastName: user.Attributes!.FirstOrDefault(x => x.Key == KeycloakUserAttributes.LastName)?.Value ?? string.Empty,
+            modifiedBy: SystemConst.CreatedByKeycloak);
 
-        dbContext.Users.Update(existingUser);
+        dbContext.Users.Update(userEntity);
     }
 
-    private void DeleteUser(Domain.Entities.UserEntity user)
+    private void DeleteUser(UserEntity user)
     {
-        user.Delete();
+        user.Delete(SystemConst.CreatedByKeycloak);
         dbContext.Users.Remove(user);
     }
 
-    private void VerifyEmail(Domain.Entities.UserEntity user, bool emailVerified)
+    private void VerifyEmail(UserEntity user, bool emailVerified)
     {
         user.VerifyEmail(emailVerified);
         dbContext.Users.Update(user);
     }
 
-    private async Task CreateLoginHistoryAsync(Domain.Entities.UserEntity user, KcUserEventDto kcDto)
+    private async Task CreateLoginHistoryAsync(UserEntity user, KcUserEventDto kcDto)
     {
         var dto = new CreateLoginHistoryDto()
         {

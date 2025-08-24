@@ -12,8 +12,6 @@ public sealed class ApiRoutes
 
         public const string Create = Base;
 
-        public const string Update = Base;
-
         public const string UpdateStatus = $"{Base}/{{userId}}/status";
 
         public const string Delete = $"{Base}/{{userId}}";
@@ -21,6 +19,8 @@ public sealed class ApiRoutes
         public const string GetById = $"{Base}/{{userId}}";
 
         public const string GetCurrentUserInfo = $"{Base}/me";
+
+        public const string UpdateCurrentUser = $"{Base}/me";
 
         public const string GetUsers = Base;
 

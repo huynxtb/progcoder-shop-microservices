@@ -14,13 +14,21 @@ public static class MessageCode
 
     public const string Min5Characters = "MIN_5_CHARACTERS";
 
-    public const string CreatedSuccessfully = "CREATED_SUCCESSFULLY";
+    public const string CreateSuccess = "CREATE_SUCCESS";
 
-    public const string UpdatedSuccessfully = "UPDATED_SUCCESSFULLY";
+    public const string GetSuccess = "GET_SUCCESS";
 
-    public const string DeletedSuccessfully = "DELETED_SUCCESSFULLY";
+    public const string UpdateSuccess = "UPDATE_SUCCESS";
 
-    public const string GetSuccessfully = "GET_SUCCESSFULLY";
+    public const string DeleteSuccess = "DELETE_SUCCESS";
+
+    public const string CreateFailure = "CREATE_FAILURE";
+
+    public const string GetFailure = "GET_FAILURE";
+
+    public const string UpdateFailure = "UPDATE_FAILURE";
+
+    public const string DeleteFailure = "DELETE_FAILURE";
 
     public const string AccessDenied = "ACCESS_DENIED";
 
@@ -63,10 +71,6 @@ public static class MessageCode
     public const string UserNameAlreadyExists = "USERNAME_ALREADY_EXISTS";
 
     public const string RequestUserIdIsRequired = "REQUEST_USER_ID_IS_REQUIRED";
-
-    public const string SynchronizedSuccessfully = "SYNCHRONIZED_SUCCESSFULLY";
-
-    public const string SynchronizedFail = "SYNCHRONIZED_FAIL";
 
     public const string UserIdIsRequired = "USER_ID_IS_REQUIRED";
 

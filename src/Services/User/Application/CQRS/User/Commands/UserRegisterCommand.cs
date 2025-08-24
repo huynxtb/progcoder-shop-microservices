@@ -1,11 +1,12 @@
 ﻿#region using
 
+using Microsoft.EntityFrameworkCore;
+using SourceCommon.Models.Reponses;
 using User.Application.Data;
 using User.Application.Dtos.Keycloaks;
 using User.Application.Dtos.Users;
-using Microsoft.EntityFrameworkCore;
-using SourceCommon.Models.Reponses;
 using User.Application.Services;
+using User.Domain.Entities;
 
 #endregion
 
@@ -61,50 +62,42 @@ public class UserRegisterCommandValidator : AbstractValidator<UserRegisterComman
     #endregion
 }
 
-public class UserRegisterCommandHandler(
-    IApplicationDbContext dbContext,
-    IKeycloakService keycloakService) : ICommandHandler<UserRegisterCommand, ResultSharedResponse<string>>
+public class UserRegisterCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<UserRegisterCommand, ResultSharedResponse<string>>
 {
     #region Implementations
 
     public async Task<ResultSharedResponse<string>> Handle(UserRegisterCommand command, CancellationToken cancellationToken)
     {
-        var existingEmail = await dbContext.Users
+        var dto = command.Dto;
+        var conflicts = await dbContext.Users
             .AsNoTracking()
-            .AnyAsync(x => x.Email == command.Dto.Email, cancellationToken);
+            .Where(u => u.Email == dto.Email || u.UserName == dto.UserName)
+            .Select(u => new { u.Email, u.UserName })
+            .ToListAsync(cancellationToken);
 
-        if (existingEmail)
+        var emailClash = conflicts.Any(x => x.Email == dto.Email);
+        var userNameClash = conflicts.Any(x => x.UserName == dto.UserName);
+
+        if (emailClash)
             throw new BadRequestException(MessageCode.EmailAlreadyExists);
-
-        var existingUsername = await dbContext.Users
-            .AsNoTracking()
-            .AnyAsync(x => x.UserName == command.Dto.UserName, cancellationToken);
-
-        if (existingUsername)
+        if (userNameClash)
             throw new BadRequestException(MessageCode.UserNameAlreadyExists);
 
-        var keycloakUser = new KcUserDto
-        {
-            UserName = command.Dto.UserName,
-            Email = command.Dto.Email,
-            FirstName = command.Dto.FirstName,
-            LastName = command.Dto.LastName,
-            Credentials =
-            [
-                new()
-                {
-                    Type = "password",
-                    Value = command.Dto.Password,
-                    Temporary = false
-                }
-            ],
-        };
+        var entity = UserEntity.Create(
+            id: Guid.NewGuid(),
+            userName: dto.UserName!,
+            password: dto.Password!,
+            email: dto.Email!,
+            firstName: dto.FirstName!,
+            lastName: dto.LastName!,
+            createdBy: SystemConst.CreatedBySystem);
 
-        await keycloakService.CreateUserAsync(keycloakUser);
+        dbContext.Users.Add(entity);
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return ResultSharedResponse<string>.Success(
-            data: keycloakUser.Email!,
-            message: MessageCode.CreatedSuccessfully);
+            data: entity.Id.ToString(),
+            message: MessageCode.CreateSuccess);
     }
 
     #endregion

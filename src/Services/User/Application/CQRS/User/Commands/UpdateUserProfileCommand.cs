@@ -11,13 +11,13 @@ using User.Application.Services;
 
 namespace User.Application.CQRS.User.Commands;
 
-public record UpdateUserCommand(Guid UserId, UpdateUserDto Dto) : ICommand<ResultSharedResponse<string>>;
+public record UpdateUserProfileCommand(Guid UserId, UpdateUserDto Dto) : ICommand<ResultSharedResponse<string>>;
 
-public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
+public class UpdateUserProfileCommandValidator : AbstractValidator<UpdateUserProfileCommand>
 {
     #region Ctors
 
-    public UpdateUserCommandValidator()
+    public UpdateUserProfileCommandValidator()
     {
         RuleFor(x => x.Dto)
             .NotNull()
@@ -44,31 +44,31 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
     #endregion
 }
 
-public class UpdateUserCommandHandler(
-    IApplicationDbContext dbContext,
-    IKeycloakService keycloakService) : ICommandHandler<UpdateUserCommand, ResultSharedResponse<string>>
+public class UpdateUserProfileCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<UpdateUserProfileCommand, ResultSharedResponse<string>>
 {
     #region Implementations
 
-    public async Task<ResultSharedResponse<string>> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
+    public async Task<ResultSharedResponse<string>> Handle(UpdateUserProfileCommand command, CancellationToken cancellationToken)
     {
+        var dto = command.Dto;
         var user = await dbContext.Users
             .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id == command.UserId, cancellationToken)
+            .SingleOrDefaultAsync(x => x.KeycloakUserNo == command.UserId.ToString(), cancellationToken)
             ?? throw new NotFoundException(MessageCode.UserNotFound);
 
-        var keycloakUser = new KcUserDto
-        {
-            Email = command.Dto.Email,
-            FirstName = command.Dto.FirstName,
-            LastName = command.Dto.LastName,
-        };
+        user.Update(
+            email: dto.Email!,
+            firstName: dto.FirstName!,
+            lastName: dto.LastName!,
+            phoneNumber: dto.PhoneNumber!,
+            modifiedBy: command.UserId.ToString());
 
-        await keycloakService.UpdateUserAsync(user.Id.ToString(), keycloakUser);
+        dbContext.Users.Update(user);
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return ResultSharedResponse<string>.Success(
-            data: keycloakUser.Email!,
-            message: MessageCode.UpdatedSuccessfully);
+            data: user.Id.ToString(),
+            message: MessageCode.UpdateSuccess);
     }
 
     #endregion

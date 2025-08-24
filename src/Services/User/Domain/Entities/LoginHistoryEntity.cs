@@ -36,7 +36,7 @@ public sealed class LoginHistoryEntity : Aggregate<Guid>
         DateTimeOffset loggedAt,
         string createdBy)
     {
-        var loginHistory = new LoginHistoryEntity
+        return new LoginHistoryEntity
         {
             Id = id,
             UserId = userId,
@@ -45,10 +45,6 @@ public sealed class LoginHistoryEntity : Aggregate<Guid>
             CreatedBy = createdBy,
             LastModifiedBy = createdBy,
         };
-
-        loginHistory.AddDomainEvent(new LoginHistoryCreatedDomainEvent(loginHistory));
-
-        return loginHistory;
     }
 
     #endregion

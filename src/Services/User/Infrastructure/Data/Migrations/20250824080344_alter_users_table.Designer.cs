@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using User.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using User.Infrastructure.Data;
 namespace User.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250824080344_alter_users_table")]
+    partial class alter_users_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,9 +111,7 @@ namespace User.Infrastructure.Data.Migrations
                         .HasColumnName("is_active");
 
                     b.Property<string>("KeycloakUserNo")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("keycloak_user_no");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastModifiedBy")
                         .HasMaxLength(50)
@@ -141,10 +142,6 @@ namespace User.Infrastructure.Data.Migrations
                     b.HasIndex("Email")
                         .IsUnique()
                         .HasFilter("[email] IS NOT NULL");
-
-                    b.HasIndex("KeycloakUserNo")
-                        .IsUnique()
-                        .HasFilter("[keycloak_user_no] IS NOT NULL");
 
                     b.HasIndex("UserName")
                         .IsUnique()

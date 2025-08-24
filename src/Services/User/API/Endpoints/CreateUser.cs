@@ -32,13 +32,13 @@ public sealed class CreateUser : ICarterModule
 
     private async Task<ResultSharedResponse<string>> HandleCreateUserAsync(
         ISender sender,
+        IHttpContextAccessor httpContext,
         [FromBody] CreateUserDto req)
     {
-        var command = new CreateUserCommand(req);
+        var currentUser = httpContext.GetCurrentUser();
+        var command = new CreateUserCommand(req, currentUser.Id);
 
-        var result = await sender.Send(command);
-
-        return result;
+        return await sender.Send(command);
     }
 
     #endregion

@@ -35,9 +35,7 @@ public sealed class UserRegister : ICarterModule
     {
         var command = new UserRegisterCommand(req);
 
-        var result = await sender.Send(command);
-
-        return result;
+        return await sender.Send(command);
     }
 
     #endregion

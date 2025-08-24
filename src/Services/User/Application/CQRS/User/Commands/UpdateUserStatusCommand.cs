@@ -11,7 +11,7 @@ using User.Application.Services;
 
 namespace User.Application.CQRS.User.Commands;
 
-public record UpdateUserStatusCommand(Guid UserId, UpdateUserStatusDto Dto) : ICommand<ResultSharedResponse<string>>;
+public record UpdateUserStatusCommand(Guid UserId, UpdateUserStatusDto Dto, Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
 
 public class UpdateUserStatusCommandValidator : AbstractValidator<UpdateUserStatusCommand>
 {
@@ -27,9 +27,7 @@ public class UpdateUserStatusCommandValidator : AbstractValidator<UpdateUserStat
     #endregion
 }
 
-public class UpdateUserStatusCommandHandler(
-    IApplicationDbContext dbContext,
-    IKeycloakService keycloakService) : ICommandHandler<UpdateUserStatusCommand, ResultSharedResponse<string>>
+public class UpdateUserStatusCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<UpdateUserStatusCommand, ResultSharedResponse<string>>
 {
     #region Implementations
 
@@ -40,20 +38,14 @@ public class UpdateUserStatusCommandHandler(
             .SingleOrDefaultAsync(x => x.Id == command.UserId, cancellationToken)
             ?? throw new NotFoundException(MessageCode.UserNotFound);
 
-        var keycloakUser = new KcUserDto
-        {
-            UserName = user.UserName,
-            Email = user.Email,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Enabled = command.Dto.Enable,
-        };
-
-        await keycloakService.UpdateUserAsync(user.Id.ToString(), keycloakUser);
+        user.ChangeStatus(command.Dto.Enable, command.CurrentUserId.ToString());
+        
+        dbContext.Users.Update(user);
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return ResultSharedResponse<string>.Success(
-            data: keycloakUser.Email!,
-            message: MessageCode.CreatedSuccessfully);
+            data: user.Id.ToString(),
+            message: MessageCode.CreateSuccess);
     }
 
     #endregion

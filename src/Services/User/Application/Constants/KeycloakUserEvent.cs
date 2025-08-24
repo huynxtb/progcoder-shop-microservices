@@ -1,4 +1,4 @@
-﻿namespace SourceSourceCommon.Constants;
+﻿namespace User.Application.Constants;
 
 public sealed class KeycloakUserEvent
 {

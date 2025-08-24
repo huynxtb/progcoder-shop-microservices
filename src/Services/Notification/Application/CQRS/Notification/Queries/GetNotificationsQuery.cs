@@ -26,7 +26,7 @@ public sealed class GetNotificationsQueryHandler(IQueryNotificationRepository qu
         };
 
         return ResultSharedResponse<GetNotificationsReponse>
-            .Success(reponse, MessageCode.GetSuccessfully);
+            .Success(reponse, MessageCode.GetSuccess);
     }
 
     #endregion

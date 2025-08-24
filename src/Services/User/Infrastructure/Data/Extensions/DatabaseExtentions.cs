@@ -19,10 +19,7 @@ public static class DatabaseExtentions
     public static async Task InitialiseDatabaseAsync(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
-
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-        await dbContext.Database.MigrateAsync();;
 
         await SeedDataAsync(dbContext);
     }

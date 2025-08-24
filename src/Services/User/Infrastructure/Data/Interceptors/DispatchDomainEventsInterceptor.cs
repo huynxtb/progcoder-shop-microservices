@@ -1,52 +1,86 @@
 ﻿#region using
-
-using User.Domain.Abstractions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-
+using User.Domain.Abstractions;
+using User.Infrastructure.Data.Collectors;
 #endregion
 
 namespace User.Infrastructure.Data.Interceptors;
-public class DispatchDomainEventsInterceptor(IMediator mediator)
-    : SaveChangesInterceptor
+
+public sealed class DispatchDomainEventsInterceptor(
+    IDomainEventsCollector collector,
+    IMediator mediator) : SaveChangesInterceptor
 {
-    #region Override Methods
-
-    public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
+    // ---- 1) SNAPSHOT TRƯỚC KHI EF GHI DB ----
+    public override InterceptionResult<int> SavingChanges(
+        DbContextEventData eventData,
+        InterceptionResult<int> result)
     {
-        DispatchDomainEvents(eventData.Context).GetAwaiter().GetResult();
-        return base.SavingChanges(eventData, result);
+        Snapshot(eventData.Context);
+        return result;
     }
 
-    public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
+    public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
+        DbContextEventData eventData,
+        InterceptionResult<int> result,
+        CancellationToken cancellationToken = default)
     {
-        await DispatchDomainEvents(eventData.Context);
-        return await base.SavingChangesAsync(eventData, result, cancellationToken);
+        Snapshot(eventData.Context);
+        return ValueTask.FromResult(result);
     }
 
-    #endregion
-
-    #region Methods
-
-    public async Task DispatchDomainEvents(DbContext? context)
+    // ---- 2) PUBLISH SAU KHI COMMIT THÀNH CÔNG ----
+    public override int SavedChanges(SaveChangesCompletedEventData eventData, int result)
     {
-        if (context == null) return;
+        PublishFromCollectorAsync(cancellationToken: default).GetAwaiter().GetResult();
+        return result;
+    }
 
-        var aggregates = context.ChangeTracker
-            .Entries<IAggregate>()
-            .Where(a => a.Entity.DomainEvents.Any())
-            .Select(a => a.Entity);
+    public override async ValueTask<int> SavedChangesAsync(
+        SaveChangesCompletedEventData eventData, int result,
+        CancellationToken cancellationToken = default)
+    {
+        await PublishFromCollectorAsync(cancellationToken);
+        return result;
+    }
 
-        var domainEvents = aggregates
-            .SelectMany(a => a.DomainEvents)
+    // ---- 3) NẾU COMMIT FAIL → KHÔNG PUBLISH, XÓA BỘ ĐỆM ----
+    public override void SaveChangesFailed(DbContextErrorEventData eventData)
+    {
+        collector.Drain(); // bỏ mọi events đã snapshot
+        base.SaveChangesFailed(eventData);
+    }
+
+    // ====================== helpers ======================
+
+    private void Snapshot(DbContext? ctx)
+    {
+        if (ctx is null) return;
+
+        // Lấy tất cả aggregates có DomainEvents
+        var events = ctx.ChangeTracker.Entries<IAggregate>()
+            .Where(e => e.Entity.DomainEvents.Any())
+            .SelectMany(e =>
+            {
+                // chụp & clear để tránh duplicate khi EF re-save
+                var list = e.Entity.DomainEvents.ToList();
+                e.Entity.ClearDomainEvents();
+                return list;
+            })
             .ToList();
 
-        aggregates.ToList().ForEach(a => a.ClearDomainEvents());
-
-        foreach (var domainEvent in domainEvents)
-            await mediator.Publish(domainEvent);
+        if (events.Count > 0)
+            collector.AddRange(events);
     }
 
-    #endregion
+    private async Task PublishFromCollectorAsync(CancellationToken cancellationToken)
+    {
+        // LẤY TỪ COLLECTOR – KHÔNG QUÉT CHANGETRACKER NỮA
+        var events = collector.Drain();
+        if (events.Count == 0) return;
+
+        foreach (var @event in events)
+            await mediator.Publish(@event, cancellationToken);
+    }
 }

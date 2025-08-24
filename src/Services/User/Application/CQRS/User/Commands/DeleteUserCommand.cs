@@ -9,7 +9,7 @@ using User.Application.Services;
 
 namespace User.Application.CQRS.User.Commands;
 
-public record DeleteUserCommand(Guid UserId) : ICommand<ResultSharedResponse<string>>;
+public record DeleteUserCommand(Guid UserId, Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
 
 public class DeleteUserCommandValidator : AbstractValidator<DeleteUserCommand>
 {
@@ -25,24 +25,25 @@ public class DeleteUserCommandValidator : AbstractValidator<DeleteUserCommand>
     #endregion
 }
 
-public class DeleteUserCommandHandler(
-    IApplicationDbContext dbContext,
-    IKeycloakService keycloakService) : ICommandHandler<DeleteUserCommand, ResultSharedResponse<string>>
+public class DeleteUserCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<DeleteUserCommand, ResultSharedResponse<string>>
 {
     #region Implementations
 
     public async Task<ResultSharedResponse<string>> Handle(DeleteUserCommand command, CancellationToken cancellationToken)
     {
-        var user = await dbContext.Users
+        var entity = await dbContext.Users
             .AsNoTracking()
             .SingleOrDefaultAsync(x => x.Id == command.UserId, cancellationToken) 
             ?? throw new NotFoundException(MessageCode.UserNotFound);
 
-        await keycloakService.DeleteUserAsync(user.Id.ToString());
+        entity.Delete(command.CurrentUserId.ToString());
+
+        dbContext.Users.Remove(entity);
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return ResultSharedResponse<string>.Success(
-            data: user.Id.ToString(),
-            message: MessageCode.DeletedSuccessfully);
+            data: command.UserId.ToString(),
+            message: MessageCode.DeleteSuccess);
     }
 
     #endregion

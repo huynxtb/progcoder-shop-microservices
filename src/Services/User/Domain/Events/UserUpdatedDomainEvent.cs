@@ -6,4 +6,11 @@ using User.Domain.Abstractions;
 
 namespace User.Domain.Events;
 
-public sealed record class UserUpdatedDomainEvent(Entities.UserEntity User) : IDomainEvent;
+public sealed record class UserUpdatedDomainEvent(
+    Guid Id,
+    string? KeycloakUserNo,
+    string Email,
+    string FirstName,
+    string LastName,
+    string? PhoneNumber,
+    bool Enable) : IDomainEvent;

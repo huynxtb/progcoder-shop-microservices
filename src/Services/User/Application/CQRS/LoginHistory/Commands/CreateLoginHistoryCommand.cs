@@ -61,7 +61,7 @@ public class CreateLoginHistoryCommandHandler(IApplicationDbContext dbContext) :
 
         return ResultSharedResponse<string>.Success(
             data: entity.Id.ToString(),
-            message: MessageCode.CreatedSuccessfully);
+            message: MessageCode.CreateSuccess);
     }
 
     #endregion

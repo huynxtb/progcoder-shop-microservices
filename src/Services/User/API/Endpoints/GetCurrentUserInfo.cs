@@ -1,10 +1,11 @@
 ﻿
 #region using
 
-using User.Api.Constants;
-using User.Application.Models.Responses;
 using SourceCommon.Models.Reponses;
+using User.Api.Constants;
 using User.Application.CQRS.User.Queries;
+using User.Application.Models.Responses;
+using Volo.Abp.Users;
 
 #endregion
 
@@ -33,13 +34,10 @@ public sealed class GetCurrentUserInfo : ICarterModule
         ISender sender,
         IHttpContextAccessor httpContext)
     {
-        var userId = httpContext.GetCurrentUser().Id;
+        var currentUser = httpContext.GetCurrentUser();
+        var query = new GetUserByIdQuery(currentUser.Id);
 
-        var query = new GetUserByIdQuery(userId);
-
-        var result = await sender.Send(query);
-
-        return result;
+        return await sender.Send(query);
     }
 
     #endregion

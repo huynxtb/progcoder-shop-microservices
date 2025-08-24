@@ -28,5 +28,8 @@ public class KcUserDto
     [JsonPropertyName("credentials")]
     public List<KcCredential> Credentials { get; set; } = [];
 
+    [JsonPropertyName("attributes")]
+    public Dictionary<string, string[]>? Attributes { get; set; }
+
     #endregion
 }
