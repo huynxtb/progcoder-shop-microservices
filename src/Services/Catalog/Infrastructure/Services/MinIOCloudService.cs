@@ -1,10 +1,10 @@
 ﻿#region using
 
+using System.Text.Json;
 using Catalog.Application.Services;
-using Microsoft.AspNetCore.Http;
+using Minio;
 using Minio.DataModel.Args;
 using Minio.Exceptions;
-using Minio;
 
 #endregion
 
@@ -12,7 +12,7 @@ namespace Catalog.Infrastructure.Services;
 
 public sealed class MinIOCloudService : IMinIOCloudService
 {
-    #region Fields, Properties and Indexers
+    #region Fields
 
     private readonly IMinioClient _minioClient;
 
@@ -30,87 +30,51 @@ public sealed class MinIOCloudService : IMinIOCloudService
 
     #endregion
 
-    #region Methods
+    #region Implementations
 
-    public async Task<List<UploadFileResult>> UploadFileAsync(List<IFormFile> files, string bucketName, bool isPublicBucket = false)
+    public async Task<List<UploadFileResult>> UploadFilesAsync(
+        List<UploadFileBytes> files,
+        string bucketName,
+        bool isPublicBucket = false,
+        CancellationToken ct = default)
     {
-        var fileResponse = new List<UploadFileResult>();
+        var results = new List<UploadFileResult>();
+        if (files == null || files.Count == 0) return results;
 
         try
         {
-            if (files.Count <= 0) return fileResponse;
+            await EnsureBucketAsync(bucketName, isPublicBucket, ct).ConfigureAwait(false);
 
-            var isExists = await _minioClient.BucketExistsAsync(new BucketExistsArgs().WithBucket(bucketName));
-
-            if (!isExists)
+            foreach (var f in files)
             {
-                await _minioClient.MakeBucketAsync(new MakeBucketArgs().WithBucket(bucketName));
-                if (isPublicBucket)
-                {
-                    // Define public policy for the bucket
-                    string publicReadPolicy = @"
-                                                {
-                                                    ""Version"": ""2012-10-17"",
-                                                    ""Statement"": [
-                                                        {
-                                                            ""Effect"": ""Allow"",
-                                                            ""Principal"": ""*"",
-                                                            ""Action"": ""s3:GetObject"",
-                                                            ""Resource"": ""arn:aws:s3:::" + bucketName + @"/*""
-                                                        }
-                                                    ]
-                                                }";
-
-                    var policyArgs = new SetPolicyArgs()
-                        .WithPolicy(publicReadPolicy)
-                        .WithBucket(bucketName);
-                    await _minioClient.SetPolicyAsync(policyArgs);
-                }
-            }
-
-            foreach (var file in files)
-            {
-                using var stream = new MemoryStream();
-
-                await file.CopyToAsync(stream);
-
-                stream.Position = 0;
-
                 var fileCloudId = Guid.NewGuid();
-                var objectName = fileCloudId.ToString("N") + "." + file.FileName.Split(".").Last();
+                var ext = Path.GetExtension(f.FileName); 
+                var objectName = $"{fileCloudId:N}{ext}";
 
-                var putObjectArgs = new PutObjectArgs()
+                using var stream = new MemoryStream(f.Bytes, 0, f.Bytes.Length, writable: false, publiclyVisible: true);
+
+                var putArgs = new PutObjectArgs()
                     .WithBucket(bucketName)
                     .WithObject(objectName)
                     .WithStreamData(stream)
                     .WithObjectSize(stream.Length)
-                    .WithContentType(file.ContentType);
+                    .WithContentType(f.ContentType);
 
-                await _minioClient.PutObjectAsync(putObjectArgs);
+                var putResp = await _minioClient.PutObjectAsync(putArgs, ct).ConfigureAwait(false);
 
-                var statObject =
-                    await _minioClient.StatObjectAsync(
-                        new StatObjectArgs()
-                            .WithBucket(bucketName)
-                            .WithObject(objectName));
-
-                if (!string.IsNullOrEmpty(statObject.ObjectName))
+                results.Add(new UploadFileResult
                 {
-
-                    fileResponse.Add(new UploadFileResult()
-                    {
-                        FileId = fileCloudId.ToString(),
-                        FolderName = bucketName,
-                        OriginalFileName = file.FileName,
-                        FileName = statObject.ObjectName,
-                        FileSize = statObject.Size,
-                        ContentType = statObject.ContentType,
-                        PublicURL = isPublicBucket ? $"{_endPoint}/{bucketName}/{statObject.ObjectName}" : string.Empty
-                    });
-                }
+                    FileId = fileCloudId.ToString(),
+                    FolderName = bucketName,
+                    OriginalFileName = f.FileName,
+                    FileName = objectName,
+                    FileSize = f.Bytes.LongLength,
+                    ContentType = f.ContentType,
+                    PublicURL = isPublicBucket ? $"{_endPoint}/{bucketName}/{objectName}" : string.Empty,
+                });
             }
 
-            return fileResponse;
+            return results;
         }
         catch (MinioException e)
         {
@@ -118,47 +82,16 @@ public sealed class MinIOCloudService : IMinIOCloudService
         }
     }
 
-    public async Task<Stream> DownloadFileAsync(string bucketName, string objectName)
-    {
-        try
-        {
-            var memoryStream = new MemoryStream();
-
-            var arg = new StatObjectArgs()
-                .WithBucket(bucketName)
-                .WithObject(objectName);
-
-            var statObject = await _minioClient.StatObjectAsync(arg);
-            if (!string.IsNullOrEmpty(statObject.ObjectName))
-            {
-                var getObjectArgs = new GetObjectArgs()
-                    .WithBucket(bucketName)
-                    .WithObject(objectName)
-                    .WithCallbackStream((stream) => { stream.CopyTo(memoryStream); });
-
-                await _minioClient.GetObjectAsync(getObjectArgs);
-            }
-
-            memoryStream.Position = 0;
-
-            return memoryStream;
-        }
-        catch (MinioException e)
-        {
-            throw new InfrastructureException(e.Message);
-        }
-    }
-
-    public async Task<string> GetShareLinkAsync(string bucketName, string objectName, int expireTime)
+    public async Task<string> GetShareLinkAsync(string bucketName, string objectName, int expireTimeMinutes)
     {
         try
         {
             var args = new PresignedGetObjectArgs()
-                                  .WithBucket(bucketName)
-                                  .WithObject(objectName)
-                                  .WithExpiry(expireTime * 60);
+                .WithBucket(bucketName)
+                .WithObject(objectName)
+                .WithExpiry(expireTimeMinutes * 60);
 
-            return await _minioClient.PresignedGetObjectAsync(args);
+            return await _minioClient.PresignedGetObjectAsync(args).ConfigureAwait(false);
         }
         catch (Exception e)
         {
@@ -168,4 +101,43 @@ public sealed class MinIOCloudService : IMinIOCloudService
 
     #endregion
 
+    #region Helpers
+
+    private async Task EnsureBucketAsync(string bucketName, bool isPublicBucket, CancellationToken ct)
+    {
+        var exists = await _minioClient
+            .BucketExistsAsync(new BucketExistsArgs().WithBucket(bucketName), ct)
+            .ConfigureAwait(false);
+
+        if (!exists)
+        {
+            await _minioClient.MakeBucketAsync(new MakeBucketArgs().WithBucket(bucketName), ct).ConfigureAwait(false);
+
+            if (isPublicBucket)
+            {
+                // Set read-only bucket policy
+                var policy = new
+                {
+                    Version = "2012-10-17",
+                    Statement = new[]
+                    {
+                        new
+                        {
+                            Effect = "Allow",
+                            Principal = "*",
+                            Action = new[] { "s3:GetObject" },
+                            Resource = $"arn:aws:s3:::{bucketName}/*"
+                        }
+                    }
+                };
+
+                var policyJson = JsonSerializer.Serialize(policy);
+                await _minioClient.SetPolicyAsync(
+                    new SetPolicyArgs().WithBucket(bucketName).WithPolicy(policyJson), ct
+                ).ConfigureAwait(false);
+            }
+        }
+    }
+
+    #endregion
 }

@@ -10,7 +10,6 @@ using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using SourceCommon.Constants;
 using SourceCommon.Models.Reponses;
-using System.Threading;
 
 #endregion
 
