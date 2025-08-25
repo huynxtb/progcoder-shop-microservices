@@ -1,28 +1,36 @@
 ﻿#region using
 
 using Catalog.Application.Dtos.Abstractions;
+using Catalog.Domain.Entities;
+using Catalog.Domain.Enums;
 
 #endregion
 
-namespace Catalog.Application.Dtos.Users;
+namespace Catalog.Application.Dtos.Products;
 
 public class ProductDto : EntityDto<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public string? UserName { get; set; }
+    public string? Name { get; private set; }
 
-    public string? Email { get; set; }
+    public string? Sku { get; private set; }
 
-    public string? PhoneNumber { get; set; }
+    public string? ShortDescription { get; private set; }
 
-    public string? FirstName { get; set; }
+    public string? LongDescription { get; private set; }
 
-    public string? LastName { get; set; }
+    public string? Slug { get; private set; }
 
-    public bool EmailVerified { get; set; }
+    public decimal Price { get; private set; }
 
-    public bool IsActive { get; set; }
+    public decimal? SalesPrice { get; private set; }
+
+    public List<string>? Categories { get; private set; }
+
+    public ProductStatus Status { get; private set; }
+
+    public List<ProductImageDto>? Images {  get; set; }
 
     #endregion
 }

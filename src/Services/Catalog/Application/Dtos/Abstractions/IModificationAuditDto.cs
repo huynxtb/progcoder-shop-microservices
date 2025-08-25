@@ -1,4 +1,4 @@
-﻿namespace NotiCatalogfication.Application.Dtos.Abstractions;
+﻿namespace Catalog.Application.Dtos.Abstractions;
 
 public interface IModificationAuditDto
 {

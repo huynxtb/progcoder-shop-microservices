@@ -1,6 +1,12 @@
-﻿namespace Catalog.Application.Dtos.Products;
+﻿#region using
 
-public class CreateProductDto
+using Catalog.Application.Dtos.Products;
+
+#endregion
+
+namespace Catalog.Api.Models;
+
+public sealed class CreateProductRequest
 {
     #region Fields, Properties and Indexers
 
@@ -18,7 +24,7 @@ public class CreateProductDto
 
     public decimal? SalesPrice { get; set; }
 
-    public List<ProductImageFileDto>? Files { get; set; }
+    public List<IFormFile>? FormFiles { get; set; }
 
     #endregion
 }

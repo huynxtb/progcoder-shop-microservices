@@ -7,6 +7,7 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using SourceCommon.Configurations;
 using SourceCommon.Constants;
+using System.Xml.Linq;
 
 #endregion
 
@@ -41,11 +42,6 @@ public static class DependencyInjection
                     services.AddHealthChecks()
                         .AddNpgSql(connectionString: conn!);
                     break;
-                //case "MONGO":
-                //    services.AddHealthChecks()
-                //        .AddMongoDb(connectionString: writeConn!, name: "wirte_db")
-                //        .AddMongoDb(connectionString: readConn!, name: "read_db");
-                //    break;
                 default:
                     throw new Exception("Unsupported database type");
             }
