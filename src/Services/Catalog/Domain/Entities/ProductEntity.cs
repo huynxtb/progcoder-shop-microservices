@@ -12,25 +12,25 @@ public sealed class ProductEntity : Entity<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public string? Name { get; private set; }
+    public string? Name { get; set; }
 
-    public string? Sku { get; private set; }
+    public string? Sku { get; set; }
 
-    public string? ShortDescription { get; private set; }
+    public string? ShortDescription { get; set; }
 
-    public string? LongDescription { get; private set; }
+    public string? LongDescription { get; set; }
 
-    public string? Slug { get; private set; }
+    public string? Slug { get; set; }
 
-    public decimal Price { get; private set; }
+    public decimal Price { get; set; }
 
-    public decimal? SalesPrice { get; private set; }
+    public decimal? SalesPrice { get; set; }
 
-    public List<string>? CategoryIds { get; private set; }
+    public List<string>? CategoryIds { get; set; }
 
-    public List<ProductImage>? Images { get; private set; }
+    public List<ProductImage>? Images { get; set; }
 
-    public ProductStatus Status { get; private set; }
+    public ProductStatus Status { get; set; }
 
     #endregion
 
@@ -97,9 +97,31 @@ public sealed class ProductEntity : Entity<Guid>
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
     }
 
-    public void AddOrUpdateImages(IEnumerable<ProductImage> newImgs)
+    public void AddOrUpdateImages(IEnumerable<ProductImage>? newImgs = null, IEnumerable<ProductImage>? original = null)
     {
+        if (newImgs == null && original == null) return;
 
+        newImgs ??= [];
+        original ??= [];
+
+        var imges = newImgs.ToList();
+
+        if (Images == null || !Images.Any())
+        {
+            Images = imges;
+        }
+        else
+        {
+            Images ??= [];
+            foreach (var img in original)
+            {
+                var existing = Images.FirstOrDefault(i => i.FileId == img.FileId);
+                if (existing != null)
+                {
+                    Images.Add(img);
+                }
+            }
+        }
     }
 
     public void Approve(string modifiedBy = SystemConst.CreatedBySystem)

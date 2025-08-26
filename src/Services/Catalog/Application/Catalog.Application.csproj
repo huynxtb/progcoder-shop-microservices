@@ -20,6 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="CQRS\Category\Commands\" />
+    <Folder Include="CQRS\Category\EventHandlers\" />
     <Folder Include="CQRS\Product\EventHandlers\Domain\" />
   </ItemGroup>
 

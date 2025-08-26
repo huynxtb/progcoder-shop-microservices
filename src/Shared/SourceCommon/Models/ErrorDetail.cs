@@ -16,9 +16,9 @@ public sealed class ErrorDetail
 
     #region Fields, Properties and Indexers
 
-    public string? ErrorMessage { get; private set; }
+    public string? ErrorMessage { get; set; }
 
-    public string? PropertyPath { get; private set; }
+    public string? PropertyPath { get; set; }
 
     #endregion
 }

@@ -12,23 +12,23 @@ public class ProductDto : EntityDto<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public string? Name { get; private set; }
+    public string? Name { get; set; }
 
-    public string? Sku { get; private set; }
+    public string? Sku { get; set; }
 
-    public string? ShortDescription { get; private set; }
+    public string? ShortDescription { get; set; }
 
-    public string? LongDescription { get; private set; }
+    public string? LongDescription { get; set; }
 
-    public string? Slug { get; private set; }
+    public string? Slug { get; set; }
 
-    public decimal Price { get; private set; }
+    public decimal Price { get; set; }
 
-    public decimal? SalesPrice { get; private set; }
+    public decimal? SalesPrice { get; set; }
 
-    public List<string>? Categories { get; private set; }
+    public List<string>? Categories { get; set; }
 
-    public ProductStatus Status { get; private set; }
+    public ProductStatus Status { get; set; }
 
     public List<ProductImageDto>? Images {  get; set; }
 

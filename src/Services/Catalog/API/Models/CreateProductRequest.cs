@@ -1,10 +1,4 @@
-﻿#region using
-
-using Catalog.Application.Dtos.Products;
-
-#endregion
-
-namespace Catalog.Api.Models;
+﻿namespace Catalog.Api.Models;
 
 public sealed class CreateProductRequest
 {
@@ -17,8 +11,6 @@ public sealed class CreateProductRequest
     public string? ShortDescription { get; set; }
 
     public string? LongDescription { get; set; }
-
-    public string? Slug { get; set; }
 
     public decimal Price { get; set; }
 

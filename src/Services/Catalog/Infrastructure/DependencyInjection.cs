@@ -1,6 +1,5 @@
 ﻿#region using
 
-using Catalog.Infrastructure.Data;
 using Marten;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -38,7 +37,7 @@ public static class DependencyInjection
                     .WithSSL(cfg.GetValue<bool>(cfg[$"{MinIoCfg.Section}:{MinIoCfg.Secure}"]!))
                     .Build());
 
-        services.InitializeMartenWith<InitialData>();
+        services.InitializeMartenWith<InitialCategoryData>();
 
         return services;
     }

@@ -4,15 +4,15 @@ public sealed class ResultSharedResponse<T> where T : class
 {
     #region Fields, Properties and Indexers
 
-    public T Data { get; private set; } = default!;
+    public T Data { get; set; } = default!;
 
-    public string? Message { get; private set; }
+    public string? Message { get; set; }
 
-    public int StatusCode { get; private set; }
+    public int StatusCode { get; set; }
 
-    public string? Instance { get; private set; }
+    public string? Instance { get; set; }
 
-    public List<ErrorDetail>? Errors { get; private set; }
+    public List<ErrorDetail>? Errors { get; set; }
 
     #endregion
 

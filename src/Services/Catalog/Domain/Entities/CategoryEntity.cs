@@ -11,13 +11,13 @@ public sealed class CategoryEntity : Entity<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public string? Name { get; private set; }
+    public string? Name { get; set; }
 
-    public string? Description { get; private set; }
+    public string? Description { get; set; }
 
-    public string? Slug { get; private set; }
+    public string? Slug { get; set; }
 
-    public Guid? ParentId { get; private set; }
+    public Guid? ParentId { get; set; }
 
     #endregion
 
@@ -29,7 +29,7 @@ public sealed class CategoryEntity : Entity<Guid>
 
     #region Methods
 
-    public CategoryEntity Create(Guid id,
+    public static CategoryEntity Create(Guid id,
         string name,
         string desctiption,
         string slug,

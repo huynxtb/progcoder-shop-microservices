@@ -13,19 +13,19 @@ public sealed class UserEntity : Aggregate<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public string? UserName { get; private set; }
+    public string? UserName { get; set; }
 
-    public string? Email { get; private set; }
+    public string? Email { get; set; }
 
-    public string? FirstName { get; private set; }
+    public string? FirstName { get; set; }
     
-    public string? LastName { get; private set; }
+    public string? LastName { get; set; }
 
-    public string? PhoneNumber { get; private set; }
+    public string? PhoneNumber { get; set; }
 
-    public bool EmailVerified { get; private set; }
+    public bool EmailVerified { get; set; }
 
-    public bool IsActive { get; private set; }
+    public bool IsActive { get; set; }
 
     public ICollection<LoginHistoryEntity> LoginHistories { get; } = [];
 

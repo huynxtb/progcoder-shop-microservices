@@ -14,4 +14,17 @@ public sealed class ApiRoutes
 
         #endregion
     }
+
+    public static class Category
+    {
+        #region Constants
+
+        public const string Tags = "Categories";
+
+        private const string Base = "/categories";
+
+        public const string GetAll = Base;
+
+        #endregion
+    }
 }
