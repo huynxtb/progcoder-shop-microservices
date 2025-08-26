@@ -1,6 +1,6 @@
 ﻿namespace User.Application.Dtos.Keycloaks;
 
-public sealed class KcUserAttrDto
+public class KcUserAttrDto
 {
     #region Fields, Properties and Indexers
 

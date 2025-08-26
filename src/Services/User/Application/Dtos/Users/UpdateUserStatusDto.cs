@@ -1,6 +1,6 @@
 ﻿namespace User.Application.Dtos.Users;
 
-public sealed class UpdateUserStatusDto
+public class UpdateUserStatusDto
 {
     #region Fields, Properties and Indexers
 

@@ -24,6 +24,8 @@ public sealed class CreateProductRequest
 
     public decimal? SalesPrice { get; set; }
 
+    public List<string>? CategoryIds { get; set; }
+
     public List<IFormFile>? FormFiles { get; set; }
 
     #endregion

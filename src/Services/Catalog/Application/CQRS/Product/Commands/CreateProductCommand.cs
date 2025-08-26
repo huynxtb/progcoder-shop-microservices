@@ -1,75 +1,99 @@
-﻿//#region using
+﻿#region using
 
-//using SourceCommon.Models.Reponses;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+using Catalog.Application.Dtos.Products;
+using Catalog.Application.Services;
+using Catalog.Domain.Entities;
+using Mapster;
+using Marten;
+using Microsoft.AspNetCore.Http.HttpResults;
+using SourceCommon.Models.Reponses;
 
-//#endregion
+#endregion
 
-//namespace Catalog.Application.CQRS.Product.Commands;
+namespace Catalog.Application.CQRS.Product.Commands;
 
-//public record CreateProductCommand(UpdateUserDto Dto, Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
+public record CreateProductCommand(CreateProductDto Dto, Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
 
-//public class UpdateUserProfileCommandValidator : AbstractValidator<CreateProductCommand>
-//{
-//    #region Ctors
+public class UpdateUserProfileCommandValidator : AbstractValidator<CreateProductCommand>
+{
+    #region Ctors
 
-//    public UpdateUserProfileCommandValidator()
-//    {
-//        RuleFor(x => x.Dto)
-//            .NotNull()
-//            .WithMessage(MessageCode.BadRequest)
-//            .DependentRules(() =>
-//            {
-//                RuleFor(x => x.Dto.Email)
-//                    .NotEmpty()
-//                    .WithMessage(MessageCode.EmailIsRequired)
-//                    .EmailAddress()
-//                    .WithMessage(MessageCode.InvalidEmailAddress);
+    public UpdateUserProfileCommandValidator()
+    {
+        RuleFor(x => x.Dto)
+            .NotNull()
+            .WithMessage(MessageCode.BadRequest)
+            .DependentRules(() =>
+            {
+                RuleFor(x => x.Dto.Name)
+                    .NotEmpty()
+                    .WithMessage(MessageCode.ProductNameIsRequired);
 
-//                RuleFor(x => x.Dto.FirstName)
-//                    .NotEmpty()
-//                    .WithMessage(MessageCode.FirstNameIsRequired);
+                RuleFor(x => x.Dto.Sku)
+                    .NotEmpty()
+                    .WithMessage(MessageCode.SkuIsRequired);
 
-//                RuleFor(x => x.Dto.LastName)
-//                    .NotEmpty()
-//                    .WithMessage(MessageCode.LastNameIsRequired);
-//            });
+                RuleFor(x => x.Dto.ShortDescription)
+                    .NotEmpty()
+                    .WithMessage(MessageCode.ShortDescriptionIsRequired);
 
-//    }
+                RuleFor(x => x.Dto.LongDescription)
+                    .NotEmpty()
+                    .WithMessage(MessageCode.LongDescriptionIsRequired);
 
-//    #endregion
-//}
+                RuleFor(x => x.Dto.Price)
+                    .NotEmpty()
+                    .WithMessage(MessageCode.PriceIsRequired)
+                    .GreaterThan(1)
+                    .WithMessage(MessageCode.PriceIsRequired);
+            });
 
-//public class UpdateUserProfileCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<CreateProductCommand, ResultSharedResponse<string>>
-//{
-//    #region Implementations
+    }
 
-//    public async Task<ResultSharedResponse<string>> Handle(CreateProductCommand command, CancellationToken cancellationToken)
-//    {
-//        var dto = command.Dto;
-//        var user = await dbContext.Users
-//            .AsNoTracking()
-//            .SingleOrDefaultAsync(x => x.Id == command.UserId, cancellationToken)
-//            ?? throw new NotFoundException(MessageCode.UserNotFound);
+    #endregion
+}
 
-//        user.Update(
-//            email: dto.Email!,
-//            firstName: dto.FirstName!,
-//            lastName: dto.LastName!,
-//            phoneNumber: dto.PhoneNumber!,
-//            modifiedBy: command.UserId.ToString());
+public class UpdateUserProfileCommandHandler(
+    IDocumentSession session,
+    IMinIOCloudService minIO) : ICommandHandler<CreateProductCommand, ResultSharedResponse<string>>
+{
+    #region Implementations
 
-//        dbContext.Users.Update(user);
-//        await dbContext.SaveChangesAsync(cancellationToken);
+    public async Task<ResultSharedResponse<string>> Handle(CreateProductCommand command, CancellationToken cancellationToken)
+    {
+        var dto = command.Dto;
+        var entity = ProductEntity.Create(
+            id: Guid.NewGuid(),
+            name: dto.Name!,
+            sku: dto.Sku!,
+            slug: dto.Name!.Slugify(),
+            shortDescription: dto.ShortDescription!,
+            longDescription: dto.LongDescription!,
+            price: dto.Price,
+            salesPrice: dto.SalesPrice,
+            categoryIds: dto.CategoryIds,
+            createdBy: command.CurrentUserId.ToString());
 
-//        return ResultSharedResponse<string>.Success(
-//            data: user.Id.ToString(),
-//            message: MessageCode.UpdateSuccess);
-//    }
+        if (dto.Files != null && dto.Files.Any())
+        {
+            var fileUploadResult = await UploadImagesAsync(dto.Files, cancellationToken);
+            entity.AddOrUpdateImages(fileUploadResult);
+        }
 
-//    #endregion
-//}
+        session.Store(entity);
+        await session.SaveChangesAsync(cancellationToken);
+
+        return ResultSharedResponse<string>.Success(
+            data: entity.Id.ToString(),
+            message: MessageCode.UpdateSuccess);
+    }
+
+    private async Task<List<ProductImage>> UploadImagesAsync(List<UploadFileBytes> files, CancellationToken cancellationToken)
+    {
+        var result = await minIO.UploadFilesAsync(files, BucketName.Products, true, cancellationToken);
+
+        return result.Adapt<List<ProductImage>>();
+    }
+
+    #endregion
+}

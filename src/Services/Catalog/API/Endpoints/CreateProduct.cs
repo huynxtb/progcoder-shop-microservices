@@ -5,10 +5,12 @@ using BuildingBlocks.Exceptions;
 using BuildingBlocks.Swagger.Extensions;
 using Catalog.Api.Constants;
 using Catalog.Api.Models;
+using Catalog.Application.CQRS.Product.Commands;
 using Catalog.Application.Dtos.Products;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using SourceCommon.Constants;
+using SourceCommon.Models;
 using SourceCommon.Models.Reponses;
 
 #endregion
@@ -54,17 +56,18 @@ public sealed class CreateProduct : ICarterModule
         {
             using var ms = new MemoryStream();
             await file.CopyToAsync(ms);
-            dto.Files.Add(new ProductImageFileDto
+            dto.Files.Add(new UploadFileBytes
             {
                 FileName = file.FileName,
-                FileBytes = ms.ToArray()
+                Bytes = ms.ToArray(),
+                ContentType = file.ContentType
             });
         }
 
-        //var currentUser = httpContext.GetCurrentUser();
-        //var command = new DeleteProductCommand(userId, currentUser.Id);
+        var currentUser = httpContext.GetCurrentUser();
+        var command = new CreateProductCommand(dto, currentUser.Id);
 
-        return null;
+        return await sender.Send(command);
     }
 
     #endregion

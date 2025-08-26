@@ -82,5 +82,15 @@ public sealed class MessageCode
 
     public const string BodyIsRequired = "BODY_IS_REQUIRED";
 
+    public const string ProductNameIsRequired = "PRODUCT_NAME_IS_REQUIRED";
+
+    public const string SkuIsRequired = "SKU_IS_REQUIRED";
+
+    public const string ShortDescriptionIsRequired = "SHORT_DESCRIPTION_IS_REQUIRED";
+
+    public const string LongDescriptionIsRequired = "LONG_DESCRIPTION_IS_REQUIRED";
+
+    public const string PriceIsRequired = "PRICE_IS_REQUIRED";
+
     #endregion
 }

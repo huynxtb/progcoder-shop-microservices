@@ -1,6 +1,6 @@
 ﻿namespace User.Application.Dtos.Keycloaks;
 
-public sealed class KcUserEventDto
+public class KcUserEventDto
 {
     #region Fields, Properties and Indexers
 

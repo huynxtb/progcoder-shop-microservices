@@ -45,8 +45,8 @@ public sealed class ProductEntity : Entity<Guid>
     public static ProductEntity Create(Guid id,
         string name,
         string sku,
-        string shortDesciption,
-        string longDesciption,
+        string shortDescription,
+        string longDescription,
         string slug,
         decimal price,
         decimal? salesPrice,
@@ -58,8 +58,8 @@ public sealed class ProductEntity : Entity<Guid>
             Id = id,
             Name = name,
             Sku = sku,
-            ShortDescription = shortDesciption,
-            LongDescription = longDesciption,
+            ShortDescription = shortDescription,
+            LongDescription = longDescription,
             Slug = slug,
             Price = price,
             SalesPrice = salesPrice,
@@ -76,8 +76,8 @@ public sealed class ProductEntity : Entity<Guid>
 
     public void Update(string name,
         string sku,
-        string shortDesciption,
-        string longDesciption,
+        string shortDescription,
+        string longDescription,
         string slug,
         decimal price,
         decimal? salesPrice,
@@ -86,8 +86,8 @@ public sealed class ProductEntity : Entity<Guid>
     {
         Name = name;
         Sku = sku;
-        ShortDescription = shortDesciption;
-        LongDescription = longDesciption;
+        ShortDescription = shortDescription;
+        LongDescription = longDescription;
         Slug = slug;
         Price = price;
         SalesPrice = salesPrice;
@@ -97,7 +97,7 @@ public sealed class ProductEntity : Entity<Guid>
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
     }
 
-    public void AddOrUpdateImages(IEnumerable<ProductImage> originalImgs, IEnumerable<ProductImage> newImgs)
+    public void AddOrUpdateImages(IEnumerable<ProductImage> newImgs)
     {
 
     }

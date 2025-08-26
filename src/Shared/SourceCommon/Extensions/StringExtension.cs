@@ -1,4 +1,6 @@
-﻿namespace SourceCommon.Extensions;
+﻿using System.Text.RegularExpressions;
+
+namespace SourceCommon.Extensions;
 
 public static class StringExtension
 {
@@ -52,6 +54,24 @@ public static class StringExtension
         }
 
         return false;
+    }
+
+    public static string Slugify(this string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return string.Empty;
+
+        // Replace spaces with '-'
+        string result = Regex.Replace(input, @"\s+", "-");
+
+        // Remove everything except letters, digits, and '-'
+        result = Regex.Replace(result, @"[^a-zA-Z0-9\-]", "");
+
+        // Replace multiple '-' with single '-'
+        result = Regex.Replace(result, "-{2,}", "-");
+
+        // Trim '-' from start and end
+        return result.Trim('-');
     }
 
     #endregion

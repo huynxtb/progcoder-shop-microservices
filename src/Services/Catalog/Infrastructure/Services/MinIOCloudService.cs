@@ -12,7 +12,7 @@ namespace Catalog.Infrastructure.Services;
 
 public sealed class MinIOCloudService : IMinIOCloudService
 {
-    #region Fields
+    #region Fields, Properties and Indexers
 
     private readonly IMinioClient _minioClient;
 
@@ -43,7 +43,7 @@ public sealed class MinIOCloudService : IMinIOCloudService
 
         try
         {
-            await EnsureBucketAsync(bucketName, isPublicBucket, ct).ConfigureAwait(false);
+            await EnsureBucketAsync(bucketName, isPublicBucket, ct);
 
             foreach (var f in files)
             {
@@ -60,7 +60,7 @@ public sealed class MinIOCloudService : IMinIOCloudService
                     .WithObjectSize(stream.Length)
                     .WithContentType(f.ContentType);
 
-                var putResp = await _minioClient.PutObjectAsync(putArgs, ct).ConfigureAwait(false);
+                var putResp = await _minioClient.PutObjectAsync(putArgs, ct);
 
                 results.Add(new UploadFileResult
                 {
@@ -91,7 +91,7 @@ public sealed class MinIOCloudService : IMinIOCloudService
                 .WithObject(objectName)
                 .WithExpiry(expireTimeMinutes * 60);
 
-            return await _minioClient.PresignedGetObjectAsync(args).ConfigureAwait(false);
+            return await _minioClient.PresignedGetObjectAsync(args);
         }
         catch (Exception e)
         {
@@ -106,12 +106,11 @@ public sealed class MinIOCloudService : IMinIOCloudService
     private async Task EnsureBucketAsync(string bucketName, bool isPublicBucket, CancellationToken ct)
     {
         var exists = await _minioClient
-            .BucketExistsAsync(new BucketExistsArgs().WithBucket(bucketName), ct)
-            .ConfigureAwait(false);
+            .BucketExistsAsync(new BucketExistsArgs().WithBucket(bucketName), ct);
 
         if (!exists)
         {
-            await _minioClient.MakeBucketAsync(new MakeBucketArgs().WithBucket(bucketName), ct).ConfigureAwait(false);
+            await _minioClient.MakeBucketAsync(new MakeBucketArgs().WithBucket(bucketName), ct);
 
             if (isPublicBucket)
             {
@@ -134,7 +133,7 @@ public sealed class MinIOCloudService : IMinIOCloudService
                 var policyJson = JsonSerializer.Serialize(policy);
                 await _minioClient.SetPolicyAsync(
                     new SetPolicyArgs().WithBucket(bucketName).WithPolicy(policyJson), ct
-                ).ConfigureAwait(false);
+                );
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿namespace User.Application.Dtos.Users;
 
-public sealed class UserRegisterDto : CreateUserDto
+public class UserRegisterDto : CreateUserDto
 {
     #region Fields, Properties and Indexers
 

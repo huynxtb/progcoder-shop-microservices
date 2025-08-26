@@ -12,13 +12,13 @@ public class CreateProductDto
 
     public string? LongDescription { get; set; }
 
-    public string? Slug { get; set; }
-
     public decimal Price { get; set; }
 
     public decimal? SalesPrice { get; set; }
 
-    public List<ProductImageFileDto>? Files { get; set; }
+    public List<string>? CategoryIds { get; set; }
+
+    public List<UploadFileBytes>? Files { get; set; }
 
     #endregion
 }
