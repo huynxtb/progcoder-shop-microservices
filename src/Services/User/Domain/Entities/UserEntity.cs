@@ -13,7 +13,7 @@ public sealed class UserEntity : Aggregate<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public string? UserName { get; set; }
+    public string? UserName { get; private set; }
 
     public string? Email { get; set; }
 

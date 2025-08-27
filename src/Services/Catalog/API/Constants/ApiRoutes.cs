@@ -14,6 +14,14 @@ public sealed class ApiRoutes
 
         public const string Delete = $"{Base}/{{productId}}";
 
+        public const string Update = $"{Base}/{{productId}}";
+
+        public const string Approve = $"{Base}/{{productId}}/approve";
+
+        public const string Reject = $"{Base}/{{productId}}/reject";
+
+        public const string SendToApproval = $"{Base}/{{productId}}/send-to-approval";
+
         #endregion
     }
 

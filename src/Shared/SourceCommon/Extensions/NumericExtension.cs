@@ -48,14 +48,11 @@ public static class NumericExtension
         return str;
     }
 
-    public static T ToEnumByValue<T>(this int value) where T : struct, Enum
+    public static TEnum? ToEnum<TEnum>(this int value) where TEnum : struct, Enum
     {
-        var type = typeof(T);
-        if (!Enum.IsDefined(type, value))
-            throw new ArgumentException(
-                $"'{value}' is not a valid value for enum {type.Name}.",
-                nameof(value));
-        return (T)Enum.ToObject(type, value);
+        return Enum.IsDefined(typeof(TEnum), value)
+            ? (TEnum)Enum.ToObject(typeof(TEnum), value)
+            : null;
     }
 
     #endregion

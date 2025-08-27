@@ -12,7 +12,7 @@ public sealed class ResultSharedResponse<T> where T : class
 
     public string? Instance { get; set; }
 
-    public List<ErrorDetail>? Errors { get; set; }
+    public List<ErrorResult>? Errors { get; set; }
 
     #endregion
 
@@ -23,7 +23,7 @@ public sealed class ResultSharedResponse<T> where T : class
         string message,
         int statusCode,
         string instance,
-        List<ErrorDetail>? errors)
+        List<ErrorResult>? errors)
     {
         Data = data;
         Message = message;
@@ -35,7 +35,7 @@ public sealed class ResultSharedResponse<T> where T : class
     private ResultSharedResponse(
         int statusCode,
         string instance,
-        List<ErrorDetail>? errors,
+        List<ErrorResult>? errors,
         string? message)
     {
         StatusCode = statusCode;
@@ -51,7 +51,7 @@ public sealed class ResultSharedResponse<T> where T : class
     public static ResultSharedResponse<T> Failure(
         int statusCode = 400,
         string instance = "",
-        List<ErrorDetail>? errors = null,
+        List<ErrorResult>? errors = null,
         string? message = "")
     {
         return new ResultSharedResponse<T>(statusCode, instance, errors, message);

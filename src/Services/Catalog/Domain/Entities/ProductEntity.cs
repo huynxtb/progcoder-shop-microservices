@@ -2,7 +2,10 @@
 
 using Catalog.Domain.Abstractions;
 using Catalog.Domain.Enums;
+using Catalog.Domain.Exceptions;
 using SourceCommon.Constants;
+using System.Data;
+using System.Text.Json.Serialization;
 
 #endregion
 
@@ -12,30 +15,41 @@ public sealed class ProductEntity : Entity<Guid>
 {
     #region Fields, Properties and Indexers
 
+    [JsonInclude]
     public string? Name { get; set; }
 
+    [JsonInclude]
     public string? Sku { get; set; }
 
+    [JsonInclude]
     public string? ShortDescription { get; set; }
 
+    [JsonInclude]
     public string? LongDescription { get; set; }
 
+    [JsonInclude]
     public string? Slug { get; set; }
 
+    [JsonInclude]
     public decimal Price { get; set; }
 
+    [JsonInclude]
     public decimal? SalesPrice { get; set; }
 
+    [JsonInclude]
     public List<Guid>? CategoryIds { get; set; }
 
-    public List<ProductImage>? Images { get; set; }
+    [JsonInclude]
+    public List<ProductImageEntity>? Images { get; set; }
 
+    [JsonInclude]
     public ProductStatus Status { get; set; }
 
     #endregion
 
     #region Ctors
 
+    [JsonConstructor]
     private ProductEntity() { }
 
     #endregion
@@ -97,53 +111,59 @@ public sealed class ProductEntity : Entity<Guid>
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
     }
 
-    public void AddOrUpdateImages(IEnumerable<ProductImage>? newImgs = null, IEnumerable<ProductImage>? original = null)
+    public void AddOrUpdateImages(
+        IEnumerable<ProductImageEntity>? newImgs = null,
+        IEnumerable<string>? curentImageUrls = null)
     {
-        if (newImgs == null && original == null) return;
+        if ((newImgs == null || !newImgs.Any()) &&
+            (curentImageUrls == null || !curentImageUrls.Any())) return;
 
-        newImgs ??= [];
-        original ??= [];
+        Images ??= new List<ProductImageEntity>();
 
-        var imges = newImgs.ToList();
+        var oldByUrl = Images
+            .Where(i => !string.IsNullOrWhiteSpace(i.PublicURL))
+            .ToDictionary(i => i.PublicURL!, StringComparer.OrdinalIgnoreCase);
 
-        if (Images == null || !Images.Any())
+        var keepOld = (curentImageUrls ?? Enumerable.Empty<string>())
+            .Where(u => !string.IsNullOrWhiteSpace(u) && oldByUrl.ContainsKey(u))
+            .Select(u => oldByUrl[u]);
+
+        var result = (newImgs ?? Enumerable.Empty<ProductImageEntity>())
+            .Concat(keepOld)
+            .GroupBy(i => string.IsNullOrWhiteSpace(i.FileId) ? i.PublicURL : i.FileId,
+                     StringComparer.OrdinalIgnoreCase)
+            .Select(g => g.First())
+            .ToList();
+
+        Images = result;
+    }
+
+
+    public void ChangeStatus(ProductStatus newStatus, string modifiedBy = SystemConst.CreatedBySystem)
+    {
+        if (Status == newStatus)
         {
-            Images = imges;
+            throw new DomainException(MessageCode.DecisionFlowIllegal);
         }
-        else
+
+        bool isValidTransition = Status switch
         {
-            Images ??= [];
-            foreach (var img in original)
-            {
-                var existing = Images.FirstOrDefault(i => i.FileId == img.FileId);
-                if (existing != null)
-                {
-                    Images.Add(img);
-                }
-            }
+            ProductStatus.Draft when newStatus == ProductStatus.AwaitingApproval => true,
+            ProductStatus.AwaitingApproval when newStatus is ProductStatus.Approved or ProductStatus.Rejected => true,
+            ProductStatus.Rejected when newStatus == ProductStatus.AwaitingApproval => true,
+            _ => false
+        };
+
+        if (!isValidTransition)
+        {
+            throw new DomainException(MessageCode.DecisionFlowIllegal);
         }
-    }
 
-    public void Approve(string modifiedBy = SystemConst.CreatedBySystem)
-    {
-        Status = ProductStatus.Approved;
+        Status = newStatus;
         LastModifiedBy = modifiedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
     }
 
-    public void Reject(string modifiedBy = SystemConst.CreatedBySystem)
-    {
-        Status = ProductStatus.Rejected;
-        LastModifiedBy = modifiedBy;
-        LastModifiedOnUtc = DateTimeOffset.UtcNow;
-    }
-
-    public void SendToApproval(string modifiedBy = SystemConst.CreatedBySystem)
-    {
-        Status = ProductStatus.AwaitingApproval;
-        LastModifiedBy = modifiedBy;
-        LastModifiedOnUtc = DateTimeOffset.UtcNow;
-    }
 
     #endregion
 }

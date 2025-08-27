@@ -11,17 +11,17 @@ public static class EnumExtension
 {
     #region methods
 
-    public static string ReadDescription<T>(this T enumChild)
+    public static string GetDescription<TEnum>(this TEnum? value) where TEnum : struct, Enum
     {
-        Type type = typeof(T);
-        FieldInfo? fieldInfo = type.GetField(enumChild?.ToString() ?? string.Empty);
+        if (!value.HasValue)
+            return string.Empty;
 
-        if (fieldInfo is null) return type.Name;
+        var field = typeof(TEnum).GetField(value.ToString()!);
+        if (field == null)
+            return value.ToString() ?? string.Empty;
 
-        DescriptionAttribute[] attr = (DescriptionAttribute[])
-            fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
-
-        return attr[0].Description;
+        var attribute = field.GetCustomAttribute<DescriptionAttribute>();
+        return attribute?.Description ?? value.ToString() ?? string.Empty;
     }
 
     #endregion

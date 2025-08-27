@@ -10,19 +10,19 @@ public sealed class MessagePayloadEntity
 {
     #region Fields, Properties and Indexers
 
-    public ChannelType Channel { get; set; }
+    public ChannelType Channel { get; private set; }
 
-    public IReadOnlyCollection<string>? To { get; set; }
+    public IReadOnlyCollection<string>? To { get; private set; }
 
-    public IReadOnlyCollection<string>? Cc { get; set; }
+    public IReadOnlyCollection<string>? Cc { get; private set; }
 
-    public IReadOnlyCollection<string>? Bcc { get; set; }
+    public IReadOnlyCollection<string>? Bcc { get; private set; }
 
-    public string? Subject { get; set; }
+    public string? Subject { get; private set; }
 
-    public string? Body { get; set; }
+    public string? Body { get; private set; }
 
-    public bool IsHtml { get; set; }
+    public bool IsHtml { get; private set; }
 
     #endregion
 

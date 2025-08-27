@@ -1,12 +1,12 @@
 ﻿namespace SourceCommon.Models;
 
-public sealed class ErrorDetail
+public sealed class ErrorResult
 {
     #region Ctors
 
-    public ErrorDetail(
+    public ErrorResult(
         string errorMessage,
-        string details)
+        object? details)
     {
         ErrorMessage = errorMessage;
         Details = details;
@@ -18,7 +18,7 @@ public sealed class ErrorDetail
 
     public string? ErrorMessage { get; set; }
 
-    public string? Details { get; set; }
+    public object? Details { get; set; }
 
     #endregion
 }

@@ -1,6 +1,6 @@
 ﻿namespace Catalog.Domain.Entities;
 
-public sealed class ProductImage
+public sealed class ProductImageEntity
 {
     #region Fields, Properties and Indexers
 
@@ -13,4 +13,5 @@ public sealed class ProductImage
     public string? PublicURL { get; set; }
 
     #endregion
+
 }

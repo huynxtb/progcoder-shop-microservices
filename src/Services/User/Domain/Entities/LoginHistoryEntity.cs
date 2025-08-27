@@ -12,13 +12,13 @@ public sealed class LoginHistoryEntity : Entity<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public Guid UserId { get; set; }
+    public Guid UserId { get; private set; }
 
-    public string? IpAddress { get; set; }
+    public string? IpAddress { get; private set; }
 
-    public DateTimeOffset LoggedOnUtc { get; set; }
+    public DateTimeOffset LoggedOnUtc { get; private set; }
 
-    public UserEntity User { get; set; } = default!;
+    public UserEntity User { get; private set; } = default!;
 
     #endregion
 

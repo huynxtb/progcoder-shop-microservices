@@ -104,5 +104,7 @@ public sealed class MessageCode
 
     public const string ProductIsNotExists = "PRODUCT_IS_NOT_EXISTS";
 
+    public const string StatusIsInvalid = "STATUS_IS_INVALID";
+
     #endregion
 }

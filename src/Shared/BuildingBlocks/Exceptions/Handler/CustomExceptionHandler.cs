@@ -75,26 +75,26 @@ public sealed class CustomExceptionHandler(
             )
         };
 
-        var errors = new List<ErrorDetail>();
+        var errors = new List<ErrorResult>();
 
         if (exception is ValidationException validationException)
         {
             foreach (var error in validationException.Errors)
             {
-                errors.Add(new ErrorDetail(error.ErrorMessage, error.PropertyName));
+                errors.Add(new ErrorResult(error.ErrorMessage, error.PropertyName));
             }
         }
         else if (exception is BadRequestException badRequestException)
         {
-            errors.Add(new ErrorDetail(badRequestException.Message, badRequestException.Details!));
+            errors.Add(new ErrorResult(badRequestException.Message, badRequestException.Details!));
         }
         else if (exception is NotFoundException notFoundException)
         {
-            errors.Add(new ErrorDetail(notFoundException.Message, notFoundException.Details!));
+            errors.Add(new ErrorResult(notFoundException.Message, notFoundException.Details!));
         }
         else
         {
-            errors.Add(new ErrorDetail(details.ErrorMessage, details.InnerException));
+            errors.Add(new ErrorResult(details.ErrorMessage, details.InnerException));
         }
 
         var response = ResultSharedResponse<object>.Failure(

@@ -1,52 +1,54 @@
-﻿//#region using
+﻿#region using
 
-//using Catalog.Application.Data;
-//using Catalog.Application.Dtos.Keycloaks;
-//using Catalog.Application.Dtos.Users;
-//using Microsoft.EntityFrameworkCore;
-//using SourceCommon.Models.Reponses;
-//using Catalog.Application.Services;
+using Catalog.Domain.Entities;
+using Catalog.Domain.Enums;
+using Marten;
+using SourceCommon.Models.Reponses;
 
-//#endregion
+#endregion
 
-//namespace Catalog.Application.CQRS.User.Commands;
+namespace Catalog.Application.CQRS.Product.Commands;
 
-//public record UpdateProductStatusCommand(Guid UserId, UpdateUserStatusDto Dto, Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
+public record UpdateProductStatusCommand(Guid ProductId, ProductStatus Status, Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
 
-//public class UpdateUserStatusCommandValidator : AbstractValidator<UpdateProductStatusCommand>
-//{
-//    #region Ctors
+public class UpdateProductStatusCommandValidator : AbstractValidator<UpdateProductStatusCommand>
+{
+    #region Ctors
 
-//    public UpdateUserStatusCommandValidator()
-//    {
-//        RuleFor(x => x.Dto)
-//            .NotEmpty()
-//            .WithMessage(MessageCode.IdIsRequired);
-//    }
+    public UpdateProductStatusCommandValidator()
+    {
+        RuleFor(x => x.ProductId)
+            .NotEmpty()
+            .WithMessage(MessageCode.ProductIdIsRequired);
 
-//    #endregion
-//}
+        RuleFor(x => x.Status)
+            .IsInEnum()
+            .Must(status => Enum.IsDefined(typeof(ProductStatus), status))
+            .WithMessage(MessageCode.StatusIsInvalid);
+    }
 
-//public class UpdateUserStatusCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<UpdateProductStatusCommand, ResultSharedResponse<string>>
-//{
-//    #region Implementations
+    #endregion
+}
 
-//    public async Task<ResultSharedResponse<string>> Handle(UpdateProductStatusCommand command, CancellationToken cancellationToken)
-//    {
-//        var user = await dbContext.Users
-//            .AsNoTracking()
-//            .SingleOrDefaultAsync(x => x.Id == command.UserId, cancellationToken)
-//            ?? throw new NotFoundException(MessageCode.UserNotFound);
+public class UpdateProductStatusCommandHandler(IDocumentSession session) : ICommandHandler<UpdateProductStatusCommand, ResultSharedResponse<string>>
+{
+    #region Implementations
 
-//        user.ChangeStatus(command.Dto.Enable, command.CurrentUserId.ToString());
-        
-//        dbContext.Users.Update(user);
-//        await dbContext.SaveChangesAsync(cancellationToken);
+    public async Task<ResultSharedResponse<string>> Handle(UpdateProductStatusCommand command, CancellationToken cancellationToken)
+    {
+        var entity = await session.LoadAsync<ProductEntity>(command.ProductId)
+            ?? throw new BadRequestException(MessageCode.ProductIsNotExists, command.ProductId);
 
-//        return ResultSharedResponse<string>.Success(
-//            data: user.Id.ToString(),
-//            message: MessageCode.CreateSuccess);
-//    }
+        entity.ChangeStatus(command.Status, command.CurrentUserId.ToString());
+        session.Store(entity);
 
-//    #endregion
-//}
+        await session.SaveChangesAsync(cancellationToken);
+
+        return ResultSharedResponse<string>.Success(
+            data: entity.Id.ToString(),
+            message: MessageCode.UpdateSuccess);
+    }
+
+    #endregion
+
+}

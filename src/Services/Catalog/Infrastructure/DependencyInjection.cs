@@ -22,6 +22,7 @@ public static class DependencyInjection
         services.AddMarten(opts =>
         {
             opts.Connection(cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.Database}"]!);
+            opts.UseSystemTextJsonForSerialization();
         }).UseLightweightSessions();
 
         services.Scan(s => s

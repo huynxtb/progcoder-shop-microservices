@@ -1,75 +1,126 @@
-﻿//#region using
+﻿#region using
 
-//using Catalog.Application.Data;
-//using Catalog.Application.Dtos.Keycloaks;
-//using Catalog.Application.Dtos.Users;
-//using Microsoft.EntityFrameworkCore;
-//using SourceCommon.Models.Reponses;
-//using Catalog.Application.Services;
+using Catalog.Application.Dtos.Products;
+using Catalog.Application.Services;
+using Catalog.Domain.Entities;
+using Marten;
+using SourceCommon.Models.Reponses;
 
-//#endregion
+#endregion
 
-//namespace Catalog.Application.CQRS.User.Commands;
+namespace Catalog.Application.CQRS.Product.Commands;
 
-//public record UpdateProductCommand(Guid UserId, UpdateUserDto Dto) : ICommand<ResultSharedResponse<string>>;
+public record UpdateProductCommand(Guid ProductId, UpdateProductDto Dto, Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
 
-//public class UpdateUserProfileCommandValidator : AbstractValidator<UpdateProductCommand>
-//{
-//    #region Ctors
+public class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand>
+{
+    #region Ctors
 
-//    public UpdateUserProfileCommandValidator()
-//    {
-//        RuleFor(x => x.Dto)
-//            .NotNull()
-//            .WithMessage(MessageCode.BadRequest)
-//            .DependentRules(() =>
-//            {
-//                RuleFor(x => x.Dto.Email)
-//                    .NotEmpty()
-//                    .WithMessage(MessageCode.EmailIsRequired)
-//                    .EmailAddress()
-//                    .WithMessage(MessageCode.InvalidEmailAddress);
+    public UpdateProductCommandValidator()
+    {
+        RuleFor(x => x.ProductId)
+            .NotEmpty()
+            .WithMessage(MessageCode.ProductIdIsRequired);
 
-//                RuleFor(x => x.Dto.FirstName)
-//                    .NotEmpty()
-//                    .WithMessage(MessageCode.FirstNameIsRequired);
+        RuleFor(x => x.Dto)
+            .NotNull()
+            .WithMessage(MessageCode.BadRequest)
+            .DependentRules(() =>
+            {
+                RuleFor(x => x.Dto.Name)
+                    .NotEmpty()
+                    .WithMessage(MessageCode.ProductNameIsRequired);
 
-//                RuleFor(x => x.Dto.LastName)
-//                    .NotEmpty()
-//                    .WithMessage(MessageCode.LastNameIsRequired);
-//            });
+                RuleFor(x => x.Dto.Sku)
+                    .NotEmpty()
+                    .WithMessage(MessageCode.SkuIsRequired);
 
-//    }
+                RuleFor(x => x.Dto.ShortDescription)
+                    .NotEmpty()
+                    .WithMessage(MessageCode.ShortDescriptionIsRequired);
 
-//    #endregion
-//}
+                RuleFor(x => x.Dto.LongDescription)
+                    .NotEmpty()
+                    .WithMessage(MessageCode.LongDescriptionIsRequired);
 
-//public class UpdateUserProfileCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<UpdateProductCommand, ResultSharedResponse<string>>
-//{
-//    #region Implementations
+                RuleFor(x => x.Dto.Price)
+                    .NotEmpty()
+                    .WithMessage(MessageCode.PriceIsRequired)
+                    .GreaterThan(1)
+                    .WithMessage(MessageCode.PriceIsRequired);
+            });
+    }
 
-//    public async Task<ResultSharedResponse<string>> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
-//    {
-//        var dto = command.Dto;
-//        var user = await dbContext.Users
-//            .AsNoTracking()
-//            .SingleOrDefaultAsync(x => x.Id == command.UserId, cancellationToken)
-//            ?? throw new NotFoundException(MessageCode.UserNotFound);
+    #endregion
+}
 
-//        user.Update(
-//            email: dto.Email!,
-//            firstName: dto.FirstName!,
-//            lastName: dto.LastName!,
-//            phoneNumber: dto.PhoneNumber!,
-//            modifiedBy: command.UserId.ToString());
+public class UpdateProductCommandHandler(
+    IDocumentSession session,
+    IMinIOCloudService minIO) : ICommandHandler<UpdateProductCommand, ResultSharedResponse<string>>
+{
+    #region Implementations
 
-//        dbContext.Users.Update(user);
-//        await dbContext.SaveChangesAsync(cancellationToken);
+    public async Task<ResultSharedResponse<string>> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
+    {
+        var entity = await session.LoadAsync<ProductEntity>(command.ProductId)
+            ?? throw new BadRequestException(MessageCode.ProductIsNotExists, command.ProductId);
 
-//        return ResultSharedResponse<string>.Success(
-//            data: user.Id.ToString(),
-//            message: MessageCode.UpdateSuccess);
-//    }
+        var dto = command.Dto;
+        var categories = await session.Query<CategoryEntity>().ToListAsync(token: cancellationToken);
+        ValidateCategory(dto.CategoryIds, categories.ToList());
 
-//    #endregion
-//}
+        entity.Update(name: dto.Name!,
+            sku: dto.Sku!,
+            slug: dto.Name!.Slugify(),
+            shortDescription: dto.ShortDescription!,
+            longDescription: dto.LongDescription!,
+            price: dto.Price,
+            salesPrice: dto.SalesPrice,
+            categoryIds: dto.CategoryIds?.Distinct().ToList(),
+            modifiedBy: command.CurrentUserId.ToString());
+
+        await UploadImagesAsync(dto.Files, dto.CurrentImageUrls, entity, cancellationToken);
+
+        session.Store(entity);
+        await session.SaveChangesAsync(cancellationToken);
+
+        return ResultSharedResponse<string>.Success(
+            data: entity.Id.ToString(),
+            message: MessageCode.UpdateSuccess);
+    }
+
+    #endregion
+
+    #region Methods
+
+    private async Task UploadImagesAsync(
+        List<UploadFileBytes>? filesDto,
+        List<string>? currentImageUrls,
+        ProductEntity entity,
+        CancellationToken cancellationToken)
+    {
+        var newImages = new List<ProductImageEntity>();
+        if (filesDto != null && filesDto.Any())
+        {
+            var result = await minIO.UploadFilesAsync(filesDto, BucketName.Products, true, cancellationToken);
+            newImages = result.Adapt<List<ProductImageEntity>>();
+        }
+        entity.AddOrUpdateImages(newImages, currentImageUrls);
+    }
+
+    private void ValidateCategory(List<Guid>? inputCategoryIds, List<CategoryEntity> categories)
+    {
+        if (inputCategoryIds is { Count: > 0 })
+        {
+            var existingIds = categories.Select(c => c.Id).ToHashSet();
+            var invalidIds = inputCategoryIds.Where(id => !existingIds.Contains(id)).ToList();
+
+            if (invalidIds.Any())
+            {
+                throw new BadRequestException(MessageCode.CategoryIsNotExists, string.Join(", ", invalidIds));
+            }
+        }
+    }
+
+    #endregion
+}

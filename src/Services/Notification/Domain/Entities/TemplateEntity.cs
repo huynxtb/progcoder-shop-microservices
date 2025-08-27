@@ -12,15 +12,15 @@ public sealed class TemplateEntity : Entity<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public string? Key { get; set; }
+    public string? Key { get; private set; }
 
-    public ChannelType Channel { get; set; }
+    public ChannelType Channel { get; private set; }
 
-    public string? Subject { get; set; }
+    public string? Subject { get; private set; }
 
-    public string? Body { get; set; }
+    public string? Body { get; private set; }
 
-    public bool IsHtml { get; set; }
+    public bool IsHtml { get; private set; }
 
     #endregion
 

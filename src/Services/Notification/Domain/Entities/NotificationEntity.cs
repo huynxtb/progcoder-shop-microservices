@@ -13,15 +13,15 @@ public sealed class NotificationEntity : Entity<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public Guid? UserId { get; set; }
+    public Guid? UserId { get; private set; }
 
-    public string? Title { get; set; }
+    public string? Title { get; private set; }
 
-    public string? Message { get; set; }
+    public string? Message { get; private set; }
 
-    public bool IsRead { get; set; }
+    public bool IsRead { get; private set; }
 
-    public DateTimeOffset? ReadAt { get; set; }
+    public DateTimeOffset? ReadAt { get; private set; }
 
     #endregion
 
