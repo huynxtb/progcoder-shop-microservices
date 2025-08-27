@@ -6,10 +6,10 @@ public sealed class ErrorDetail
 
     public ErrorDetail(
         string errorMessage,
-        string propertyPath)
+        string details)
     {
         ErrorMessage = errorMessage;
-        PropertyPath = propertyPath;
+        Details = details;
     }
 
     #endregion
@@ -18,7 +18,7 @@ public sealed class ErrorDetail
 
     public string? ErrorMessage { get; set; }
 
-    public string? PropertyPath { get; set; }
+    public string? Details { get; set; }
 
     #endregion
 }

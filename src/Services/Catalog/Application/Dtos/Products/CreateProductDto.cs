@@ -16,7 +16,7 @@ public class CreateProductDto
 
     public decimal? SalesPrice { get; set; }
 
-    public List<string>? CategoryIds { get; set; }
+    public List<Guid>? CategoryIds { get; set; }
 
     public List<UploadFileBytes>? Files { get; set; }
 

@@ -62,6 +62,9 @@ public class UpdateUserProfileCommandHandler(
     public async Task<ResultSharedResponse<string>> Handle(CreateProductCommand command, CancellationToken cancellationToken)
     {
         var dto = command.Dto;
+        var categories = await session.Query<CategoryEntity>().ToListAsync(token: cancellationToken);
+        ValidateCategory(dto.CategoryIds, categories.ToList());
+
         var entity = ProductEntity.Create(
             id: Guid.NewGuid(),
             name: dto.Name!,
@@ -71,15 +74,11 @@ public class UpdateUserProfileCommandHandler(
             longDescription: dto.LongDescription!,
             price: dto.Price,
             salesPrice: dto.SalesPrice,
-            categoryIds: dto.CategoryIds,
+            categoryIds: dto.CategoryIds?.Distinct().ToList(),
             createdBy: command.CurrentUserId.ToString());
 
-        if (dto.Files != null && dto.Files.Any())
-        {
-            var fileUploadResult = await UploadImagesAsync(dto.Files, cancellationToken);
-            entity.AddOrUpdateImages(fileUploadResult);
-        }
-
+        await UploadImagesAsync(dto.Files, entity, cancellationToken);
+        
         session.Store(entity);
         await session.SaveChangesAsync(cancellationToken);
 
@@ -88,11 +87,34 @@ public class UpdateUserProfileCommandHandler(
             message: MessageCode.UpdateSuccess);
     }
 
-    private async Task<List<ProductImage>> UploadImagesAsync(List<UploadFileBytes> files, CancellationToken cancellationToken)
-    {
-        var result = await minIO.UploadFilesAsync(files, BucketName.Products, true, cancellationToken);
+    #endregion
 
-        return result.Adapt<List<ProductImage>>();
+    #region Methods
+
+    private async Task UploadImagesAsync(
+        List<UploadFileBytes>? filesDto,
+        ProductEntity entity,
+        CancellationToken cancellationToken)
+    {
+        if (filesDto != null && filesDto.Any())
+        {
+            var result = await minIO.UploadFilesAsync(filesDto, BucketName.Products, true, cancellationToken);
+            entity.AddOrUpdateImages(result.Adapt<List<ProductImage>>());
+        }
+    }
+
+    private void ValidateCategory(List<Guid>? inputCategoryIds, List<CategoryEntity> categories)
+    {
+        if (inputCategoryIds is { Count: > 0 })
+        {
+            var existingIds = categories.Select(c => c.Id).ToHashSet();
+            var invalidIds = inputCategoryIds.Where(id => !existingIds.Contains(id)).ToList();
+
+            if (invalidIds.Any())
+            {
+                throw new BadRequestException(MessageCode.CategoryIsNotExists, string.Join(", ", invalidIds));
+            }
+        }
     }
 
     #endregion

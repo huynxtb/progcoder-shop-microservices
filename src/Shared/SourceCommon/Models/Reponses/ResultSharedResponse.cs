@@ -46,7 +46,7 @@ public sealed class ResultSharedResponse<T> where T : class
 
     #endregion
 
-    #region Static Methods
+    #region Methods
 
     public static ResultSharedResponse<T> Failure(
         int statusCode = 400,

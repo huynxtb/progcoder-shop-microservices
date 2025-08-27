@@ -92,5 +92,17 @@ public sealed class MessageCode
 
     public const string PriceIsRequired = "PRICE_IS_REQUIRED";
 
+    public const string CategoryIsNotExists = "CATEGORY_IS_NOT_EXISTS";
+
+    public const string CurrencyIsRequired = "CURRENCY_IS_REQUIRED";
+
+    public const string MoneyCannotBeNegative = "MONEY_CANNOT_BE_NEGATIVE";
+
+    public const string ProductIdIsRequired = "PRODUCT_ID_IS_REQUIRED";
+
+    public const string ProductIsNotFound = "PRODUCT_IS_NOT_FOUND";
+
+    public const string ProductIsNotExists = "PRODUCT_IS_NOT_EXISTS";
+
     #endregion
 }

@@ -1,34 +1,35 @@
 ﻿#region using
 
-using SourceCommon.Constants;
-using SourceCommon.Models;
-using SourceCommon.Models.Reponses;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SourceCommon.Configurations;
+using SourceCommon.Constants;
+using SourceCommon.Models;
+using SourceCommon.Models.Reponses;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 #endregion
 
 namespace BuildingBlocks.Exceptions.Handler;
 
 public sealed class CustomExceptionHandler(
-    ILogger<CustomExceptionHandler> logger, 
+    ILogger<CustomExceptionHandler> logger,
     IConfiguration cfg) : IExceptionHandler
 {
     #region Implementations
 
     public async ValueTask<bool> TryHandleAsync(
-        HttpContext context, 
-        Exception exception, 
+        HttpContext context,
+        Exception exception,
         CancellationToken cancellationToken)
     {
         var includeInnerEx = cfg.GetValue<bool>($"{AppConfigCfg.Section}:{AppConfigCfg.IncludeInnerException}");
         var includeStackTrace = cfg.GetValue<bool>($"{AppConfigCfg.Section}:{AppConfigCfg.IncludeExceptionStackTrace}");
 
-        (string ErrorMessage, int StatusCode, string? Message, string InnerException) details = exception switch
+        (string ErrorMessage, int StatusCode, string? Details, string InnerException) details = exception switch
         {
             ValidationException =>
             (
@@ -83,6 +84,14 @@ public sealed class CustomExceptionHandler(
                 errors.Add(new ErrorDetail(error.ErrorMessage, error.PropertyName));
             }
         }
+        else if (exception is BadRequestException badRequestException)
+        {
+            errors.Add(new ErrorDetail(badRequestException.Message, badRequestException.Details!));
+        }
+        else if (exception is NotFoundException notFoundException)
+        {
+            errors.Add(new ErrorDetail(notFoundException.Message, notFoundException.Details!));
+        }
         else
         {
             errors.Add(new ErrorDetail(details.ErrorMessage, details.InnerException));
@@ -92,7 +101,7 @@ public sealed class CustomExceptionHandler(
             statusCode: details.StatusCode,
             instance: context.Request.Path,
             errors: errors,
-            message: details.Message);
+            message: details.Details);
 
         if (details.StatusCode == StatusCodes.Status500InternalServerError)
         {

@@ -9,7 +9,7 @@ using SourceCommon.Models.Reponses;
 
 #endregion
 
-namespace Catalog.Application.CQRS.User.Queries;
+namespace Catalog.Application.CQRS.Category.Queries;
 
 public record class GetAllCategoriesFilter(Guid? ParentId);
 

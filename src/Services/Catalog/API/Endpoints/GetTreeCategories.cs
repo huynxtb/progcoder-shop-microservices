@@ -3,23 +3,22 @@
 using Catalog.Api.Constants;
 using Catalog.Application.CQRS.Category.Queries;
 using Catalog.Application.Models.Responses;
-using Microsoft.AspNetCore.Mvc;
 using SourceCommon.Models.Reponses;
 
 #endregion
 
 namespace Catalog.Api.Endpoints;
 
-public sealed class GetAllCategories : ICarterModule
+public sealed class GetTreeCategories : ICarterModule
 {
     #region Implementations
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet(ApiRoutes.Category.GetAll, HandleGetAllCategoriesAsync)
+        app.MapGet(ApiRoutes.Category.GetTree, HandleGetTreeCategoriesAsync)
             .WithTags(ApiRoutes.Category.Tags)
-            .WithName(nameof(GetAllCategories))
-            .Produces<ResultSharedResponse<GetAllCategoriesResponse>>(StatusCodes.Status200OK)
+            .WithName(nameof(GetTreeCategories))
+            .Produces<ResultSharedResponse<GetTreeCategoriesResponse>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound);
     }
@@ -28,11 +27,9 @@ public sealed class GetAllCategories : ICarterModule
 
     #region Methods
 
-    private async Task<ResultSharedResponse<GetAllCategoriesResponse>> HandleGetAllCategoriesAsync(
-        ISender sender,
-        [AsParameters] GetAllCategoriesFilter req)
+    private async Task<ResultSharedResponse<GetTreeCategoriesResponse>> HandleGetTreeCategoriesAsync(ISender sender)
     {
-        var query = new GetAllCategoriesQuery(req);
+        var query = new GetTreeCategoriesQuery();
 
         return await sender.Send(query);
     }

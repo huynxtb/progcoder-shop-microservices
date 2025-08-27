@@ -26,7 +26,7 @@ public sealed class ProductEntity : Entity<Guid>
 
     public decimal? SalesPrice { get; set; }
 
-    public List<string>? CategoryIds { get; set; }
+    public List<Guid>? CategoryIds { get; set; }
 
     public List<ProductImage>? Images { get; set; }
 
@@ -50,7 +50,7 @@ public sealed class ProductEntity : Entity<Guid>
         string slug,
         decimal price,
         decimal? salesPrice,
-        List<string>? categoryIds,
+        List<Guid>? categoryIds,
         string createdBy = SystemConst.CreatedBySystem)
     {
         var product = new ProductEntity
@@ -81,7 +81,7 @@ public sealed class ProductEntity : Entity<Guid>
         string slug,
         decimal price,
         decimal? salesPrice,
-        List<string>? categoryIds,
+        List<Guid>? categoryIds,
         string modifiedBy = SystemConst.CreatedBySystem)
     {
         Name = name;

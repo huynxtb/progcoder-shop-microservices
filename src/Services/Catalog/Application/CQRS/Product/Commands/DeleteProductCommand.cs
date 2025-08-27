@@ -1,50 +1,46 @@
-﻿//#region using
+﻿#region using
 
-//using Catalog.Application.Data;
-//using Microsoft.EntityFrameworkCore;
-//using SourceCommon.Models.Reponses;
-//using Catalog.Application.Services;
+using Catalog.Domain.Entities;
+using Marten;
+using SourceCommon.Models.Reponses;
 
-//#endregion
+#endregion
 
-//namespace Catalog.Application.CQRS.User.Commands;
+namespace Catalog.Application.CQRS.Product.Commands;
 
-//public record DeleteProductCommand(Guid UserId, Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
+public record DeleteProductCommand(Guid ProductId, Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
 
-//public class DeleteUserCommandValidator : AbstractValidator<DeleteProductCommand>
-//{
-//    #region Ctors
+public class DeleteProductCommandValidator : AbstractValidator<DeleteProductCommand>
+{
+    #region Ctors
 
-//    public DeleteUserCommandValidator()
-//    {
-//        RuleFor(x => x.UserId)
-//            .NotEmpty()
-//            .WithMessage(MessageCode.UserIdIsRequired);
-//    }
+    public DeleteProductCommandValidator()
+    {
+        RuleFor(x => x.ProductId)
+            .NotEmpty()
+            .WithMessage(MessageCode.ProductIdIsRequired);
+    }
 
-//    #endregion
-//}
+    #endregion
+}
 
-//public class DeleteUserCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<DeleteProductCommand, ResultSharedResponse<string>>
-//{
-//    #region Implementations
+public class DeleteProductCommandHandler(IDocumentSession session) : ICommandHandler<DeleteProductCommand, ResultSharedResponse<string>>
+{
+    #region Implementations
 
-//    public async Task<ResultSharedResponse<string>> Handle(DeleteProductCommand command, CancellationToken cancellationToken)
-//    {
-//        var entity = await dbContext.Users
-//            .AsNoTracking()
-//            .SingleOrDefaultAsync(x => x.Id == command.UserId, cancellationToken) 
-//            ?? throw new NotFoundException(MessageCode.UserNotFound);
+    public async Task<ResultSharedResponse<string>> Handle(DeleteProductCommand command, CancellationToken cancellationToken)
+    {
+        var product = await session.LoadAsync<ProductEntity>(command.ProductId) 
+            ?? throw new BadRequestException(MessageCode.ProductIsNotExists, command.ProductId.ToString());
 
-//        entity.Delete(command.CurrentUserId.ToString());
+        session.Delete<ProductEntity>(command.ProductId);
+        await session.SaveChangesAsync(cancellationToken);
 
-//        dbContext.Users.Remove(entity);
-//        await dbContext.SaveChangesAsync(cancellationToken);
+        return ResultSharedResponse<string>.Success(
+            data: product.Id.ToString(),
+            message: MessageCode.DeleteSuccess);
+    }
 
-//        return ResultSharedResponse<string>.Success(
-//            data: command.UserId.ToString(),
-//            message: MessageCode.DeleteSuccess);
-//    }
+    #endregion
 
-//    #endregion
-//}
+}

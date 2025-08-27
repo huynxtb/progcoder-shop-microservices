@@ -12,6 +12,8 @@ public sealed class ApiRoutes
 
         public const string Create = Base;
 
+        public const string Delete = $"{Base}/{{productId}}";
+
         #endregion
     }
 
@@ -24,6 +26,8 @@ public sealed class ApiRoutes
         private const string Base = "/categories";
 
         public const string GetAll = Base;
+
+        public const string GetTree = $"{Base}/tree";
 
         #endregion
     }
