@@ -24,7 +24,7 @@ public class KcUserEvents : ICarterModule
             .WithTags(ApiRoutes.Keycloak.Tags)
             .Produces<ResultSharedResponse<string>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status404NotFound);
+            .ProducesProblem(StatusCodes.Status404NotFound);
     }
 
     #endregion

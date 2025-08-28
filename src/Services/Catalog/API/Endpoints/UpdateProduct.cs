@@ -28,8 +28,9 @@ public sealed class UpdateProduct : ICarterModule
             .WithName(nameof(UpdateProduct))
             .WithMultipartForm<UpdateProductRequest>()
             .Produces<ResultSharedResponse<string>>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status403Forbidden)
+			.ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status404NotFound)
             .DisableAntiforgery()
             .RequireAuthorization();
     }

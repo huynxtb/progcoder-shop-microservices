@@ -20,8 +20,9 @@ public sealed class DeleteProduct : ICarterModule
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(DeleteProduct))
             .Produces<ResultSharedResponse<string>>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
     }
 

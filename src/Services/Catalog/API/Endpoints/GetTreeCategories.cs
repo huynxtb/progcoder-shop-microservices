@@ -20,7 +20,7 @@ public sealed class GetTreeCategories : ICarterModule
             .WithName(nameof(GetTreeCategories))
             .Produces<ResultSharedResponse<GetTreeCategoriesResponse>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status404NotFound);
+            .ProducesProblem(StatusCodes.Status404NotFound);
     }
 
     #endregion

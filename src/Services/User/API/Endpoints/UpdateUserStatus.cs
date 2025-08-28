@@ -21,8 +21,9 @@ public sealed class UpdateUserStatus : ICarterModule
             .WithTags(ApiRoutes.User.Tags)
             .WithName(nameof(UpdateUserStatus))
             .Produces<ResultSharedResponse<string>>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
     }
 

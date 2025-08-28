@@ -1,7 +1,6 @@
 ﻿#region using
 
 using Catalog.Domain.Abstractions;
-using Catalog.Domain.Enums;
 using Catalog.Domain.Exceptions;
 using SourceCommon.Constants;
 using System.Data;
@@ -43,7 +42,7 @@ public sealed class ProductEntity : Entity<Guid>
     public List<ProductImageEntity>? Images { get; set; }
 
     [JsonInclude]
-    public ProductStatus Status { get; set; }
+    public bool Published { get; set; }
 
     #endregion
 
@@ -77,7 +76,7 @@ public sealed class ProductEntity : Entity<Guid>
             Slug = slug,
             Price = price,
             SalesPrice = salesPrice,
-            Status = ProductStatus.Draft,
+            Published = false,
             CategoryIds = categoryIds,
             CreatedBy = createdBy,
             LastModifiedBy = createdBy,
@@ -105,7 +104,6 @@ public sealed class ProductEntity : Entity<Guid>
         Slug = slug;
         Price = price;
         SalesPrice = salesPrice;
-        Status = ProductStatus.Draft;
         CategoryIds = categoryIds;
         LastModifiedBy = modifiedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
@@ -139,31 +137,29 @@ public sealed class ProductEntity : Entity<Guid>
     }
 
 
-    public void ChangeStatus(ProductStatus newStatus, string modifiedBy = SystemConst.CreatedBySystem)
+    public void Publish(string modifiedBy = SystemConst.CreatedBySystem)
     {
-        if (Status == newStatus)
+        if (Published)
         {
             throw new DomainException(MessageCode.DecisionFlowIllegal);
         }
 
-        bool isValidTransition = Status switch
-        {
-            ProductStatus.Draft when newStatus == ProductStatus.AwaitingApproval => true,
-            ProductStatus.AwaitingApproval when newStatus is ProductStatus.Approved or ProductStatus.Rejected => true,
-            ProductStatus.Rejected when newStatus == ProductStatus.AwaitingApproval => true,
-            _ => false
-        };
-
-        if (!isValidTransition)
-        {
-            throw new DomainException(MessageCode.DecisionFlowIllegal);
-        }
-
-        Status = newStatus;
+        Published = true;
         LastModifiedBy = modifiedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
     }
 
+    public void Unpublish(string modifiedBy = SystemConst.CreatedBySystem)
+    {
+        if (!Published)
+        {
+            throw new DomainException(MessageCode.DecisionFlowIllegal);
+        }
+
+        Published = false;
+        LastModifiedBy = modifiedBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+    }
 
     #endregion
 }

@@ -28,8 +28,9 @@ public sealed class CreateProduct : ICarterModule
             .WithName(nameof(CreateProduct))
             .WithMultipartForm<CreateProductRequest>()
             .Produces<ResultSharedResponse<string>>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status404NotFound)
             .DisableAntiforgery()
             .RequireAuthorization();
     }

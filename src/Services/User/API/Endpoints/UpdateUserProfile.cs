@@ -22,7 +22,7 @@ public sealed class UpdateUserProfile : ICarterModule
             .WithName(nameof(UpdateUserProfile))
             .Produces<ResultSharedResponse<string>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
     }
 

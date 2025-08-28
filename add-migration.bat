@@ -7,15 +7,14 @@ cls
 echo.
 echo ==== Select a service ====
 echo  1. User
-echo  2. Payment
-echo  3. Order
+echo  2. Inventory
 echo.
 set /p userChoice=Enter your choice (1-2): 
 
 if "%userChoice%"=="1" (
     set serviceName=User
 ) else if "%userChoice%"=="2" (
-    set serviceName=Payment
+    set serviceName=Inventory
 ) else (
     echo Invalid choice. Exiting...
     goto end

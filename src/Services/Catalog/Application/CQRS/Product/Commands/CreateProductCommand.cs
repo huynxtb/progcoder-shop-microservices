@@ -84,7 +84,7 @@ public class UpdateUserProfileCommandHandler(
 
         return ResultSharedResponse<string>.Success(
             data: entity.Id.ToString(),
-            message: MessageCode.UpdateSuccess);
+            message: MessageCode.CreateSuccess);
     }
 
     #endregion

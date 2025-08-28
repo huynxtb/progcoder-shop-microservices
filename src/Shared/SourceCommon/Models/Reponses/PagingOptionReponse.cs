@@ -4,7 +4,7 @@ public sealed class PagingOptionReponse
 {
     #region Fields, Properties and Indexers
 
-    public int Total { get; set; }
+    public long Total { get; set; }
 
     public int PageNumber { get; set; }
 
@@ -12,7 +12,7 @@ public sealed class PagingOptionReponse
 
     public bool HasItem { get; set; }
 
-    public int TotalPages { get; set; }
+    public long TotalPages { get; set; }
 
     public bool HasNextPage { get; set; }
 

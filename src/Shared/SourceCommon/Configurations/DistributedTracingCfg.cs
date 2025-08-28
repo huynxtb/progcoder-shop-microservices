@@ -4,7 +4,7 @@ public sealed class DistributedTracingCfg
 {
     #region Constants
 
-    public const string Section = "DistributedTracingAndLogging";
+    public const string Section = "DistributedTracing";
 
     public const string Source = "Source";
 

@@ -24,7 +24,7 @@ services:
       - MessageBroker__Password=123456789Aa
       - SerilogServer__ServerLog=http://seq_logger:5341
       - SerilogServer__Password=UBAn2vc9E4XPIuajmBDKOrYpjL8hNWmZhtW/AJEjjS4=
-      - DistributedTracingAndLogging__Zipkin__Endpoint=http://zipkin:9411/api/v2/spans
+      - DistributedTracing__Zipkin__Endpoint=http://zipkin:9411/api/v2/spans
     volumes:
       - ~/.aspnet/https:/https
       - ./idsrv-keys:/app/keys
@@ -54,7 +54,7 @@ services:
   #     - MessageBroker__Password=123456789Aa
   #     - SerilogServer__ServerLog=http://seq_logger:5341
   #     - SerilogServer__Password=UBAn2vc9E4XPIuajmBDKOrYpjL8hNWmZhtW/AJEjjS4=
-  #     - DistributedTracingAndLogging__Zipkin__Endpoint=http://zipkin:9411/api/v2/spans
+  #     - DistributedTracing__Zipkin__Endpoint=http://zipkin:9411/api/v2/spans
   #     - AppConfig__ServiceName=catalog-service
   #     - AppConfig__ApiKey=123456
   #     - IdentityServer__Authority=https://distinct-elk-wanted.ngrok-free.app

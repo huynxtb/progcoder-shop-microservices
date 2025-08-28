@@ -22,7 +22,7 @@ public sealed class GetCurrentUserInfo : ICarterModule
             .WithName(nameof(GetCurrentUserInfo))
             .Produces<ResultSharedResponse<GetUserByIdReponse>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
     }
 

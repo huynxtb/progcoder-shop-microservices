@@ -22,7 +22,7 @@ public sealed class GetLoginHistories : ICarterModule
             .WithName(nameof(GetLoginHistories))
             .Produces<ResultSharedResponse<GetLoginHistoriesReponse>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
     }
 

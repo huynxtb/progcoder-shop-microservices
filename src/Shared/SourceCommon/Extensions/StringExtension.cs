@@ -1,4 +1,8 @@
-﻿using System.Text.RegularExpressions;
+﻿#region using
+
+using System.Text.RegularExpressions;
+
+#endregion
 
 namespace SourceCommon.Extensions;
 

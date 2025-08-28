@@ -22,7 +22,7 @@ public sealed class GetUsers : ICarterModule
             .WithName(nameof(GetUsers))
             .Produces<ResultSharedResponse<GetUsersReponse>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
     }
 

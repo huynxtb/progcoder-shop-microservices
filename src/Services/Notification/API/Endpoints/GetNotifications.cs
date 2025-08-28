@@ -21,7 +21,7 @@ public sealed class GetNotifications : ICarterModule
             .WithName(nameof(GetNotifications))
             .Produces<ResultSharedResponse<GetNotificationsReponse>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
     }
 
