@@ -1,39 +1,39 @@
-﻿//#region using
+﻿#region using
 
-//using Microsoft.EntityFrameworkCore;
-//using Inventory.Application.Data;
-//using System.Reflection;
-//using Inventory.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Inventory.Application.Data;
+using System.Reflection;
+using Inventory.Domain.Entities;
 
-//#endregion
+#endregion
 
-//namespace Inventory.Infrastructure.Data;
+namespace Inventory.Infrastructure.Data;
 
-//public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
-//{
-//    #region Ctors
+public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
+{
+    #region Ctors
 
-//    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-//        : base(options) { }
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options) { }
 
-//    #endregion
+    #endregion
 
-//    #region Implementations
+    #region Implementations
 
-//    public DbSet<InventoryHistoryEntity> Users => Set<Domain.Entities.InventoryHistoryEntity>();
+    public DbSet<InventoryItemEntity> InventoryItems => Set<InventoryItemEntity>();
 
-//    public DbSet<InventoryItemEntity> LoginHistories => Set<InventoryItemEntity>();
+    public DbSet<InventoryReservationEntity> InventoryReservations => Set<InventoryReservationEntity>();
 
-//    #endregion
+    #endregion
 
-//    #region Override Methods
+    #region Override Methods
 
-//    protected override void OnModelCreating(ModelBuilder builder)
-//    {
-//        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-//        base.OnModelCreating(builder);
-//    }
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        base.OnModelCreating(builder);
+    }
 
-//    #endregion
+    #endregion
 
-//}
+}

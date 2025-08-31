@@ -36,7 +36,7 @@ public class UnpublishProductCommandHandler(IDocumentSession session) : ICommand
     public async Task<ResultSharedResponse<string>> Handle(UnpublishProductCommand command, CancellationToken cancellationToken)
     {
         var entity = await session.LoadAsync<ProductEntity>(command.ProductId)
-            ?? throw new BadRequestException(MessageCode.ProductIsNotExists, command.ProductId);
+            ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, command.ProductId);
 
         entity.Unpublish(command.CurrentUserId.ToString());
         session.Store(entity);

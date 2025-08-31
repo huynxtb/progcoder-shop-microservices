@@ -28,5 +28,7 @@ public class ProductInfoDto : DtoId<Guid>
 
     public bool Published { get; set; }
 
+    public bool IsAvaiable { get; set; }
+
     #endregion
 }

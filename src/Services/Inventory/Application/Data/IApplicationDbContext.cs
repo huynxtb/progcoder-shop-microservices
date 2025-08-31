@@ -1,21 +1,21 @@
-﻿//#region using
+﻿#region using
 
-//using Microsoft.EntityFrameworkCore;
-//using Inventory.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Inventory.Domain.Entities;
 
-//#endregion
+#endregion
 
-//namespace Inventory.Application.Data;
+namespace Inventory.Application.Data;
 
-//public interface IApplicationDbContext
-//{
-//    #region Fields, Properties and Indexers
+public interface IApplicationDbContext
+{
+    #region Fields, Properties and Indexers
 
-//    DbSet<InventoryHistoryEntity> Users { get; }
+    DbSet<InventoryItemEntity> InventoryItems { get; }
 
-//    DbSet<InventoryItemEntity> LoginHistories { get; }
+    DbSet<InventoryReservationEntity> InventoryReservations { get; }
 
-//    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
-//    #endregion
-//}
+    #endregion
+}

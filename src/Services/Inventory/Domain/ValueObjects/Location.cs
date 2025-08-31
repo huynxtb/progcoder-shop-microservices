@@ -4,30 +4,26 @@ public sealed class Location
 {
     #region Fields, Properties and Indexers
 
-    public string Code { get; } = default!;
-
-    public string Address { get; } = default!;
+    public string? Address { get; private set; }
 
     #endregion
 
     #region Ctors
 
-    private Location(string code, string address)
-    {
-        Code = code;
-        Address = address;
-    }
+    private Location() { }
 
     #endregion
 
     #region Methods
 
-    public static Location Of(string code, string address)
+    public static Location Of(string? address)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(code);
-        ArgumentException.ThrowIfNullOrWhiteSpace(address);
+        if (string.IsNullOrWhiteSpace(address)) throw new ArgumentException(nameof(address));
 
-        return new Location(code, address);
+        return new Location
+        {
+            Address = address
+        };
     }
 
     #endregion

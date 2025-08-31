@@ -2,8 +2,8 @@
 
 using Catalog.Api.Constants;
 using Catalog.Application.CQRS.Category.Queries;
+using Catalog.Application.Models.Filters;
 using Catalog.Application.Models.Responses;
-using Microsoft.AspNetCore.Mvc;
 using SourceCommon.Models.Reponses;
 
 #endregion

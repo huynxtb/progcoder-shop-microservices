@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
   </ItemGroup>
 
@@ -15,6 +16,7 @@
     <ProjectReference Include="..\..\..\Shared\BuildingBlocks\BuildingBlocks.csproj" />
     <ProjectReference Include="..\..\..\Shared\EventSourcing\EventSourcing.csproj" />
     <ProjectReference Include="..\..\..\Shared\SourceCommon\SourceCommon.csproj" />
+    <ProjectReference Include="..\Domain\Inventory.Domain.csproj" />
     <ProjectReference Include="..\Infrastructure\Inventory.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

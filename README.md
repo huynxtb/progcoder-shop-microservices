@@ -21,3 +21,5 @@ PORTS:
 7. Basket 5006
 8. Payment 5007
 9. Search 5008
+10. Report 5009
+11. JobScheduler 5010

@@ -18,7 +18,7 @@ public static class HashExtension
         }
     }
 
-    public static byte[] UseSha256(this byte[] input)
+    public static byte[]? UseSha256(this byte[] input)
     {
         if (input == null)
         {

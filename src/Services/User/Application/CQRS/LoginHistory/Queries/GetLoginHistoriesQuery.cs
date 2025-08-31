@@ -16,14 +16,14 @@ public sealed record GetLoginHistoriesFilter(string? SearchText);
 public sealed record GetLoginHistoriesQuery(
     GetLoginHistoriesFilter Filter,
     PaginationRequest Paging,
-    Guid CurrentUserId) : IQuery<ResultSharedResponse<GetLoginHistoriesReponse>>;
+    Guid CurrentUserId) : IQuery<ResultSharedResponse<GetLoginHistoriesResponse>>;
 
 public sealed class GetLoginHistoriesQueryHandler(IApplicationDbContext dbContext)
-    : IQueryHandler<GetLoginHistoriesQuery, ResultSharedResponse<GetLoginHistoriesReponse>>
+    : IQueryHandler<GetLoginHistoriesQuery, ResultSharedResponse<GetLoginHistoriesResponse>>
 {
     #region Implementations
 
-    public async Task<ResultSharedResponse<GetLoginHistoriesReponse>> Handle(GetLoginHistoriesQuery query, CancellationToken cancellationToken)
+    public async Task<ResultSharedResponse<GetLoginHistoriesResponse>> Handle(GetLoginHistoriesQuery query, CancellationToken cancellationToken)
     {
         var total = await dbContext.LoginHistories.CountAsync(cancellationToken);
         var totalPages = (int)Math.Ceiling(total / (double)query.Paging.PageSize);
@@ -37,7 +37,7 @@ public sealed class GetLoginHistoriesQueryHandler(IApplicationDbContext dbContex
             .WithPaging(query.Paging)
             .ToListAsync(cancellationToken);
 
-        var reponse = new GetLoginHistoriesReponse()
+        var reponse = new GetLoginHistoriesResponse()
         {
             Items = result.Adapt<List<LoginHistoryDto>>(),
             Paging = new()
@@ -52,7 +52,7 @@ public sealed class GetLoginHistoriesQueryHandler(IApplicationDbContext dbContex
             }
         };
 
-        return ResultSharedResponse<GetLoginHistoriesReponse>
+        return ResultSharedResponse<GetLoginHistoriesResponse>
             .Success(reponse, MessageCode.GetSuccess);
     }
 

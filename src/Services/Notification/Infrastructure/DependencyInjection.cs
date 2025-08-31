@@ -1,20 +1,15 @@
 ﻿#region using
 
-using BuildingBlocks.DistributedTracing;
-using BuildingBlocks.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using Notification.Application.Data.Repositories;
-using Notification.Application.Services;
-using Notification.Domain.Entities;
+using Notification.Application.Providers;
+using Notification.Application.Resolvers;
 using Notification.Infrastructure.Data.Extensions;
-using Notification.Infrastructure.Data.Repositories;
-using Notification.Infrastructure.Services;
+using Notification.Infrastructure.Providers;
+using Notification.Infrastructure.Resolvers;
 using SourceCommon.Configurations;
-using SourceCommon.Extensions;
 
 #endregion
 
@@ -58,7 +53,7 @@ public static class DependencyInjection
             });
         }
 
-        services.AddSingleton<ITemplateRenderer, TemplateRenderer>();
+        services.AddSingleton<ITemplateProvider, TemplateProvider>();
         services.AddSingleton<INotificationChannelResolver, NotificationChannelResolver>();
 
         return services;

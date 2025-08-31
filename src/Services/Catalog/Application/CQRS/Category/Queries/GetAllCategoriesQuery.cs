@@ -1,6 +1,7 @@
 ﻿#region using
 
 using Catalog.Application.Dtos.Categories;
+using Catalog.Application.Models.Filters;
 using Catalog.Application.Models.Responses;
 using Catalog.Domain.Entities;
 using Marten;
@@ -10,8 +11,6 @@ using SourceCommon.Models.Reponses;
 #endregion
 
 namespace Catalog.Application.CQRS.Category.Queries;
-
-public record class GetAllCategoriesFilter(Guid? ParentId);
 
 public sealed record GetAllCategoriesQuery(GetAllCategoriesFilter Filter) : IQuery<ResultSharedResponse<GetAllCategoriesResponse>>;
 

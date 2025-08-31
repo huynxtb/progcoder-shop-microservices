@@ -60,6 +60,19 @@ services:
     networks:
       - prog_coder_network
 
+  mysql:
+    image: ${MYSQL_IMAGE_NAME}
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - ${MYSQL_PORT}:3306
+    volumes:
+      - ./local-data/mysql:/var/lib/mysql
+    networks:
+      - prog_coder_network
+
   # =========================
   # Storage / Object store
   # =========================

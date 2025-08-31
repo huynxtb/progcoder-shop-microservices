@@ -51,9 +51,7 @@ public sealed class UpdateUserProfileCommandHandler(IApplicationDbContext dbCont
     public async Task<ResultSharedResponse<string>> Handle(UpdateUserProfileCommand command, CancellationToken cancellationToken)
     {
         var dto = command.Dto;
-        var user = await dbContext.Users
-            .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id == command.UserId, cancellationToken)
+        var user = await dbContext.Users.SingleOrDefaultAsync(x => x.Id == command.UserId, cancellationToken)
             ?? throw new NotFoundException(MessageCode.UserNotFound);
 
         user.Update(

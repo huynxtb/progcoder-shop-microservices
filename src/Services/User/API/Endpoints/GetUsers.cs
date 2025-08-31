@@ -6,6 +6,7 @@ using User.Application.Models.Responses;
 using BuildingBlocks.Pagination;
 using SourceCommon.Models.Reponses;
 using User.Application.CQRS.User.Queries;
+using User.Application.Models.Filters;
 
 #endregion
 
@@ -20,7 +21,7 @@ public sealed class GetUsers : ICarterModule
         app.MapGet(ApiRoutes.User.GetUsers, HandleGetUsersAsync)
             .WithTags(ApiRoutes.User.Tags)
             .WithName(nameof(GetUsers))
-            .Produces<ResultSharedResponse<GetUsersReponse>>(StatusCodes.Status200OK)
+            .Produces<ResultSharedResponse<GetUsersResponse>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
@@ -30,7 +31,7 @@ public sealed class GetUsers : ICarterModule
 
     #region Methods
 
-    private async Task<ResultSharedResponse<GetUsersReponse>> HandleGetUsersAsync(
+    private async Task<ResultSharedResponse<GetUsersResponse>> HandleGetUsersAsync(
         ISender sender,
         [AsParameters] GetUsersFilter filter,
         [AsParameters] PaginationRequest paging)

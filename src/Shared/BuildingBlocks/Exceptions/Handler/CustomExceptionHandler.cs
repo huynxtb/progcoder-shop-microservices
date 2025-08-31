@@ -31,14 +31,14 @@ public sealed class CustomExceptionHandler(
 
         (string ErrorMessage, int StatusCode, string? Details, string InnerException) details = exception switch
         {
-            ValidationException =>
+            FluentValidation.ValidationException =>
             (
                 exception.Message,
                 context.Response.StatusCode = StatusCodes.Status400BadRequest,
                 MessageCode.BadRequest,
                 includeInnerEx ? exception.GetType().Name : string.Empty
             ),
-            BadRequestException =>
+            ClientValidationException =>
             (
                 exception.Message,
                 context.Response.StatusCode = StatusCodes.Status400BadRequest,
@@ -77,14 +77,14 @@ public sealed class CustomExceptionHandler(
 
         var errors = new List<ErrorResult>();
 
-        if (exception is ValidationException validationException)
+        if (exception is FluentValidation.ValidationException validationException)
         {
             foreach (var error in validationException.Errors)
             {
                 errors.Add(new ErrorResult(error.ErrorMessage, error.PropertyName));
             }
         }
-        else if (exception is BadRequestException badRequestException)
+        else if (exception is ClientValidationException badRequestException)
         {
             errors.Add(new ErrorResult(badRequestException.Message, badRequestException.Details!));
         }

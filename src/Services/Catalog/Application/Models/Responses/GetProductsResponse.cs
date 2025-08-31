@@ -13,7 +13,7 @@ public sealed class GetProductsResponse
 
     public List<ProductDto>? Items { get; set; }
 
-    public PagingOptionReponse Paging { get; set; } = new();
+    public PaginationResponse Paging { get; set; } = new();
 
     #endregion
 }

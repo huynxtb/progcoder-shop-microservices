@@ -33,9 +33,7 @@ public sealed class UpdateUserStatusCommandHandler(IApplicationDbContext dbConte
 
     public async Task<ResultSharedResponse<string>> Handle(UpdateUserStatusCommand command, CancellationToken cancellationToken)
     {
-        var user = await dbContext.Users
-            .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id == command.UserId, cancellationToken)
+        var user = await dbContext.Users.SingleOrDefaultAsync(x => x.Id == command.UserId, cancellationToken)
             ?? throw new NotFoundException(MessageCode.UserNotFound);
 
         user.ChangeStatus(command.Dto.Enable, command.CurrentUserId.ToString());

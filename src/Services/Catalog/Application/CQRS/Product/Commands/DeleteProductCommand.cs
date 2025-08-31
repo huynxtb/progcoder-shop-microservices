@@ -31,7 +31,7 @@ public class DeleteProductCommandHandler(IDocumentSession session) : ICommandHan
     public async Task<ResultSharedResponse<string>> Handle(DeleteProductCommand command, CancellationToken cancellationToken)
     {
         var product = await session.LoadAsync<ProductEntity>(command.ProductId) 
-            ?? throw new BadRequestException(MessageCode.ProductIsNotExists, command.ProductId.ToString());
+            ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, command.ProductId.ToString());
 
         session.Delete<ProductEntity>(command.ProductId);
         await session.SaveChangesAsync(cancellationToken);

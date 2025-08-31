@@ -36,7 +36,7 @@ public class PublishProductCommandHandler(IDocumentSession session) : ICommandHa
     public async Task<ResultSharedResponse<string>> Handle(PublishProductCommand command, CancellationToken cancellationToken)
     {
         var entity = await session.LoadAsync<ProductEntity>(command.ProductId)
-            ?? throw new BadRequestException(MessageCode.ProductIsNotExists, command.ProductId);
+            ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, command.ProductId);
 
         entity.Publish(command.CurrentUserId.ToString());
         session.Store(entity);

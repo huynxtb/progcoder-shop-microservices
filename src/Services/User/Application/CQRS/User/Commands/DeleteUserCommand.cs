@@ -31,9 +31,7 @@ public sealed class DeleteUserCommandHandler(IApplicationDbContext dbContext) : 
 
     public async Task<ResultSharedResponse<string>> Handle(DeleteUserCommand command, CancellationToken cancellationToken)
     {
-        var entity = await dbContext.Users
-            .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id == command.UserId, cancellationToken) 
+        var entity = await dbContext.Users.SingleOrDefaultAsync(x => x.Id == command.UserId, cancellationToken) 
             ?? throw new NotFoundException(MessageCode.UserNotFound);
 
         entity.Delete();

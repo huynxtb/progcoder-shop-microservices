@@ -9,22 +9,22 @@ using SourceCommon.Models.Reponses;
 
 namespace User.Application.CQRS.User.Queries;
 
-public sealed record GetUserByIdQuery(Guid UserId) : IQuery<ResultSharedResponse<GetUserByIdReponse>>;
+public sealed record GetUserByIdQuery(Guid UserId) : IQuery<ResultSharedResponse<GetUserByIdResponse>>;
 
 public sealed class GetUserByIdQueryHandler(IApplicationDbContext dbContext)
-    : IQueryHandler<GetUserByIdQuery, ResultSharedResponse<GetUserByIdReponse>>
+    : IQueryHandler<GetUserByIdQuery, ResultSharedResponse<GetUserByIdResponse>>
 {
     #region Implementations
 
-    public async Task<ResultSharedResponse<GetUserByIdReponse>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
+    public async Task<ResultSharedResponse<GetUserByIdResponse>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
     {
         var result = await dbContext.Users
             .AsNoTracking()
             .SingleOrDefaultAsync(x => x.Id == query.UserId, cancellationToken);
 
-        var reponse = result.Adapt<GetUserByIdReponse>();
+        var reponse = result.Adapt<GetUserByIdResponse>();
 
-        return ResultSharedResponse<GetUserByIdReponse>
+        return ResultSharedResponse<GetUserByIdResponse>
             .Success(reponse, MessageCode.GetSuccess);
     }
 

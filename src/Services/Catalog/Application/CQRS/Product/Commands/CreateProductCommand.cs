@@ -112,7 +112,7 @@ public class UpdateUserProfileCommandHandler(
 
             if (invalidIds.Any())
             {
-                throw new BadRequestException(MessageCode.CategoryIsNotExists, string.Join(", ", invalidIds));
+                throw new ClientValidationException(MessageCode.CategoryIsNotExists, string.Join(", ", invalidIds));
             }
         }
     }

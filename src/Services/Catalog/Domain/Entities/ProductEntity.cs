@@ -44,6 +44,9 @@ public sealed class ProductEntity : Entity<Guid>
     [JsonInclude]
     public bool Published { get; set; }
 
+    [JsonInclude]
+    public bool IsAvaiable { get; set; }
+
     #endregion
 
     #region Ctors

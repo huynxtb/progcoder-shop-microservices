@@ -1,6 +1,7 @@
 ﻿#region using
 
 using Catalog.Application.Dtos.Products;
+using Catalog.Application.Models.Filters;
 using Catalog.Application.Models.Responses;
 using Catalog.Domain.Entities;
 using Marten;
@@ -10,8 +11,6 @@ using SourceCommon.Models.Reponses;
 #endregion
 
 namespace Catalog.Application.CQRS.Product.Queries;
-
-public record class GetPublishProductsFilter(string? SearchText);
 
 public sealed record GetPublishProductsQuery(
     GetPublishProductsFilter Filter,
@@ -34,6 +33,9 @@ public sealed class GetPublishProductsQueryHandler(IDocumentSession session)
             productQuery = productQuery.Where(x => x.Name != null && x.Name.Contains(search));
         }
 
+        var total = await productQuery.CountAsync(cancellationToken);
+        var totalPages = (int)Math.Ceiling(total / (double)paging.PageSize);
+
         var result = await productQuery
             .OrderByDescending(x => x.CreatedOnUtc)
             .ToPagedListAsync(paging.PageNumber, paging.PageSize, cancellationToken);
@@ -44,13 +46,13 @@ public sealed class GetPublishProductsQueryHandler(IDocumentSession session)
             Items = products.Adapt<List<PublishProductDto>>(),
             Paging = new()
             {
-                Total = result.TotalItemCount,
+                Total = total,
                 PageNumber = paging.PageNumber,
                 PageSize = paging.PageSize,
-                HasItem = result.HasNextPage,
-                TotalPages = result.PageCount,
-                HasNextPage = result.HasNextPage,
-                HasPreviousPage = result.HasPreviousPage
+                HasItem = products.Any(),
+                TotalPages = totalPages,
+                HasNextPage = paging.PageNumber < totalPages,
+                HasPreviousPage = paging.PageNumber > 1
             }
         };
 

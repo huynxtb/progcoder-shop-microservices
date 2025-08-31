@@ -20,7 +20,7 @@ public sealed class GetUserById : ICarterModule
         app.MapGet(ApiRoutes.User.GetById, HandleGetUserByIdAsync)
             .WithTags(ApiRoutes.User.Tags)
             .WithName(nameof(GetUserById))
-            .Produces<ResultSharedResponse<GetUserByIdReponse>>(StatusCodes.Status200OK)
+            .Produces<ResultSharedResponse<GetUserByIdResponse>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
@@ -30,7 +30,7 @@ public sealed class GetUserById : ICarterModule
 
     #region Methods
 
-    private async Task<ResultSharedResponse<GetUserByIdReponse>> HandleGetUserByIdAsync(
+    private async Task<ResultSharedResponse<GetUserByIdResponse>> HandleGetUserByIdAsync(
         ISender sender,
         [FromRoute] Guid userId)
     {

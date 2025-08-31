@@ -20,7 +20,7 @@ public sealed class GetLoginHistories : ICarterModule
         app.MapGet(ApiRoutes.LoginHistory.GetLoginHistories, HandleGetLoginHistoriesAsync)
             .WithTags(ApiRoutes.User.Tags)
             .WithName(nameof(GetLoginHistories))
-            .Produces<ResultSharedResponse<GetLoginHistoriesReponse>>(StatusCodes.Status200OK)
+            .Produces<ResultSharedResponse<GetLoginHistoriesResponse>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
@@ -30,7 +30,7 @@ public sealed class GetLoginHistories : ICarterModule
 
     #region Methods
 
-    private async Task<ResultSharedResponse<GetLoginHistoriesReponse>> HandleGetLoginHistoriesAsync(
+    private async Task<ResultSharedResponse<GetLoginHistoriesResponse>> HandleGetLoginHistoriesAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
         [AsParameters] GetLoginHistoriesFilter filter,

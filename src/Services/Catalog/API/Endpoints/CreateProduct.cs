@@ -44,7 +44,7 @@ public sealed class CreateProduct : ICarterModule
         IHttpContextAccessor httpContext,
         [FromForm] CreateProductRequest req)
     {
-        if (req == null) throw new BadRequestException(MessageCode.BadRequest);
+        if (req == null) throw new ClientValidationException(MessageCode.BadRequest);
         if ((req.FormFiles == null || req.FormFiles.Count == 0) && httpContext.HttpContext != null)
         {
             req.FormFiles = httpContext.HttpContext.Request.Form.Files.ToList();

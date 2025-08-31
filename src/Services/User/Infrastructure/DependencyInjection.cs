@@ -67,11 +67,11 @@ public static class DependencyInjection
         // HttpClient
         {
             services.AddRefitClient<IKeycloakApi>()
-            .ConfigureHttpClient(c =>
-            {
-                c.BaseAddress = new Uri(cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.BaseUrl}"]!);
-                c.Timeout = TimeSpan.FromSeconds(30);
-            });
+                .ConfigureHttpClient(c =>
+                {
+                    c.BaseAddress = new Uri(cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.BaseUrl}"]!);
+                    c.Timeout = TimeSpan.FromSeconds(30);
+                });
         }
 
         return services;

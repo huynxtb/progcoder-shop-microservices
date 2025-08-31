@@ -63,7 +63,7 @@ public class UpdateProductCommandHandler(
     public async Task<ResultSharedResponse<string>> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
     {
         var entity = await session.LoadAsync<ProductEntity>(command.ProductId)
-            ?? throw new BadRequestException(MessageCode.ProductIsNotExists, command.ProductId);
+            ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, command.ProductId);
 
         var dto = command.Dto;
         var categories = await session.Query<CategoryEntity>().ToListAsync(token: cancellationToken);
@@ -117,7 +117,7 @@ public class UpdateProductCommandHandler(
 
             if (invalidIds.Any())
             {
-                throw new BadRequestException(MessageCode.CategoryIsNotExists, string.Join(", ", invalidIds));
+                throw new ClientValidationException(MessageCode.CategoryIsNotExists, string.Join(", ", invalidIds));
             }
         }
     }

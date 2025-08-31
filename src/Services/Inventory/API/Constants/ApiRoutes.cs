@@ -2,58 +2,21 @@
 
 public sealed class ApiRoutes
 {
-    public static class User
+    public static class InventoryItem
     {
         #region Constants
 
-        public const string Tags = "Users";
+        public const string Tags = "Inventory Items";
 
-        private const string Base = "/users";
+        private const string Base = "/inventory-items";
+
+        public const string GetInventoryItems = Base;
 
         public const string Create = Base;
 
-        public const string UpdateStatus = $"{Base}/{{userId}}/status";
+        public const string UpdateStock = $"{Base}/{{inventoryItemId}}";
 
-        public const string Delete = $"{Base}/{{userId}}";
-
-        public const string GetById = $"{Base}/{{userId}}";
-
-        public const string GetCurrentUserInfo = $"{Base}/me";
-
-        public const string UpdateCurrentUser = $"{Base}/me";
-
-        public const string GetUsers = Base;
-
-        public const string Register = $"{Base}/register";
-
-        #endregion
-    }
-
-    public static class LoginHistory
-    {
-        #region Constants
-
-        public const string Tags = "LoginHistories";
-
-        private const string Base = "/login-histories";
-
-        public const string GetLoginHistories = Base;
-
-        #endregion
-    }
-
-    public static class Keycloak
-    {
-        #region Constants
-
-        public const string Tags = "Keycloaks";
-
-        private const string Base = "/keycloaks";
-
-        public const string UserEvents = $"{Base}/user-events/{{apiKey}}";
-
-        public const string SyncRole = $"{Base}/roles/sync";
-
+        public const string Delete = $"{Base}/{{inventoryItemId}}";
 
         #endregion
     }

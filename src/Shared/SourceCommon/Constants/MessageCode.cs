@@ -106,5 +106,27 @@ public sealed class MessageCode
 
     public const string StatusIsInvalid = "STATUS_IS_INVALID";
 
+    public const string QuantityCannotBeNegative = "QUANTITY_CANNOT_BE_NEGATIVE";
+
+    public const string LocationIsRequired = "LOCATION_IS_REQUIRED";
+
+    public const string InsufficientStock = "INSUFFICIENT_STOCK";
+
+    public const string InventoryChangeTypeIsRequired = "INVENTORY_CHANGE_TYPE_IS_REQUIRED";
+
+    public const string SourceIsRequired = "SOURCE_IS_REQUIRED";
+
+    public const string OutOfRange = "OUT_OF_RANGE";
+
+    public const string NotEnoughAvailable = "NOT_ENOUGH_AVAILABLE";
+
+    public const string ReleaseExceedsReserved = "RELEASE_EXCEEDS_RESERVED";
+
+    public const string CommitExceedsReserved = "COMMIT_EXCEEDS_RESERVED";
+
+    public const string CommitExceedsQuantity = "COMMIT_EXCEEDS_QUANTITY";
+
+    public const string InventoryItemIdIsRequired = "INVENTORY_ITEM_ID_IS_REQUIRED";
+
     #endregion
 }

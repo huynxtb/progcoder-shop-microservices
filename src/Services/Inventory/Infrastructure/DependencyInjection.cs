@@ -1,9 +1,21 @@
 ﻿#region using
 
+using Inventory.Application.Data;
+using Inventory.Application.Services;
+using Inventory.Infrastructure.ApiClients;
+using Inventory.Infrastructure.Data;
+using Inventory.Infrastructure.Data.Collectors;
+using Inventory.Infrastructure.Data.Extensions;
+using Inventory.Infrastructure.Data.Interceptors;
+using Inventory.Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Inventory.Infrastructure.Data.Extensions;
+using Refit;
+using SourceCommon.Configurations;
+using SourceCommon.Constants;
 
 #endregion
 
@@ -24,45 +36,55 @@ public static class DependencyInjection
             .AsImplementedInterfaces()
             .WithScopedLifetime());
 
-        //// DbContext
-        //{
-        //    var dbType = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.DbType}"];
-        //    services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
-        //    services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
-        //    services.AddDbContext<ApplicationDbContext>((sp, options) =>
-        //    {
-        //        var conn = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.Database}"];
-        //        options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
+        // DbContext
+        {
+            var dbType = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.DbType}"];
+            services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+            services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
+            services.AddDbContext<ApplicationDbContext>((sp, options) =>
+            {
+                var conn = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.Database}"];
+                options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
 
-        //        switch (dbType)
-        //        {
-        //            case DatabaseType.SqlServer:
-        //                options.UseSqlServer(conn);
-        //                break;
-        //            case DatabaseType.MySql:
-        //                options.UseMySQL(conn!);
-        //                break;
-        //            case DatabaseType.PostgreSql:
-        //                options.UseNpgsql(conn);
-        //                break;
-        //            default:
-        //                throw new Exception("Unsupported database type");
-        //        }
-        //    });
-        //    services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
-        //}
+                switch (dbType)
+                {
+                    case DatabaseType.SqlServer:
+                        options.UseSqlServer(conn);
+                        break;
+                    case DatabaseType.MySql:
+                        options.UseMySQL(conn!); 
+                        break;
+                    case DatabaseType.PostgreSql:
+                        options.UseNpgsql(conn);
+                        break;
+                    default:
+                        throw new Exception("Unsupported database type");
+                }
+            });
 
-        //services.AddScoped<IDomainEventsCollector, DomainEventsCollector>();
+            services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+        }
 
-        //// HttpClient
-        //{
-        //    services.AddRefitClient<IKeycloakApi>()
-        //    .ConfigureHttpClient(c =>
-        //    {
-        //        c.BaseAddress = new Uri(cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.BaseUrl}"]!);
-        //        c.Timeout = TimeSpan.FromSeconds(30);
-        //    });
-        //}
+        services.AddScoped<IDomainEventsCollector, DomainEventsCollector>();
+
+        // HttpClient
+        {
+            services.AddRefitClient<IKeycloakApi>()
+                .ConfigureHttpClient(c =>
+                {
+                    c.BaseAddress = new Uri(cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.BaseUrl}"]!);
+                    c.Timeout = TimeSpan.FromSeconds(30);
+                });
+
+            services.AddRefitClient<ICatalogApi>()
+                .ConfigureHttpClient(c =>
+                {
+                    c.BaseAddress = new Uri(cfg[$"{CatalogApiCfg.Section}:{CatalogApiCfg.BaseUrl}"]!);
+                    c.Timeout = TimeSpan.FromSeconds(30);
+                });
+        }
+
+        services.AddScoped<ICatalogApiService, CatalogApiService>();
 
         return services;
     }

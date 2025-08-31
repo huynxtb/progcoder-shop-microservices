@@ -20,7 +20,7 @@ public sealed class GetCurrentUserInfo : ICarterModule
         app.MapGet(ApiRoutes.User.GetCurrentUserInfo, HandleGetCurrentUserInfoAsync)
             .WithTags(ApiRoutes.User.Tags)
             .WithName(nameof(GetCurrentUserInfo))
-            .Produces<ResultSharedResponse<GetUserByIdReponse>>(StatusCodes.Status200OK)
+            .Produces<ResultSharedResponse<GetUserByIdResponse>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
@@ -30,7 +30,7 @@ public sealed class GetCurrentUserInfo : ICarterModule
 
     #region Methods
 
-    private async Task<ResultSharedResponse<GetUserByIdReponse>> HandleGetCurrentUserInfoAsync(
+    private async Task<ResultSharedResponse<GetUserByIdResponse>> HandleGetCurrentUserInfoAsync(
         ISender sender,
         IHttpContextAccessor httpContext)
     {

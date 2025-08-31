@@ -6,42 +6,39 @@ using User.Application.Models.Responses;
 using BuildingBlocks.Pagination.Extensions;
 using Microsoft.EntityFrameworkCore;
 using SourceCommon.Models.Reponses;
+using User.Application.Models.Filters;
 
 #endregion
 
 namespace User.Application.CQRS.User.Queries;
 
-public sealed record class GetUsersFilter(string? SearchText);
-
 public sealed record GetUsersQuery(
     GetUsersFilter Filter,
-    PaginationRequest Paging) : IQuery<ResultSharedResponse<GetUsersReponse>>;
+    PaginationRequest Paging) : IQuery<ResultSharedResponse<GetUsersResponse>>;
 
 public sealed class GetUsersQueryHandler(IApplicationDbContext dbContext)
-    : IQueryHandler<GetUsersQuery, ResultSharedResponse<GetUsersReponse>>
+    : IQueryHandler<GetUsersQuery, ResultSharedResponse<GetUsersResponse>>
 {
     #region Implementations
 
-    public async Task<ResultSharedResponse<GetUsersReponse>> Handle(GetUsersQuery query, CancellationToken cancellationToken)
+    public async Task<ResultSharedResponse<GetUsersResponse>> Handle(GetUsersQuery query, CancellationToken cancellationToken)
     {
-        var total = await dbContext.Users
+        var filteredQuery = dbContext.Users
             .AsNoTracking()
-            .CountAsync(cancellationToken);
+            .Where(x => string.IsNullOrEmpty(query.Filter.SearchText)
+                || x.UserName!.Contains(query.Filter.SearchText)
+                || x.FirstName!.Contains(query.Filter.SearchText)
+                || x.LastName!.Contains(query.Filter.SearchText));
 
+        var total = await filteredQuery.CountAsync(cancellationToken);
         var totalPages = (int)Math.Ceiling(total / (double)query.Paging.PageSize);
 
-        var result = await dbContext.Users
-            .Where(
-                x => string.IsNullOrEmpty(query.Filter.SearchText) || 
-                x.UserName!.Contains(query.Filter.SearchText) ||
-                x.FirstName!.Contains(query.Filter.SearchText) ||
-                x.LastName!.Contains(query.Filter.SearchText))
+        var result = await filteredQuery
             .OrderByDescending(x => x.CreatedOnUtc)
             .WithPaging(query.Paging)
-            .AsNoTracking()
             .ToListAsync(cancellationToken);
 
-        var reponse = new GetUsersReponse()
+        var reponse = new GetUsersResponse()
         {
             Items = result.Adapt<List<UserDto>>(),
             Paging = new()
@@ -56,8 +53,7 @@ public sealed class GetUsersQueryHandler(IApplicationDbContext dbContext)
             }
         };
 
-        return ResultSharedResponse<GetUsersReponse>
-            .Success(reponse, MessageCode.GetSuccess);
+        return ResultSharedResponse<GetUsersResponse>.Success(reponse, MessageCode.GetSuccess);
     }
 
     #endregion
