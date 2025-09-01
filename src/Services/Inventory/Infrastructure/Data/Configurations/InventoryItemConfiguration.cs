@@ -19,25 +19,54 @@ public sealed class InventoryItemConfiguration : IEntityTypeConfiguration<Invent
 
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.Id).HasColumnName("id");
-        builder.Property(x => x.ProductId).HasColumnName("product_id").IsRequired();
-        builder.Property(x => x.Quantity).HasColumnName("quantity").IsRequired();
-        builder.Property(x => x.Reserved).HasColumnName("reserved");
-        builder.Property(x => x.CreatedOnUtc).HasColumnName("created_on_utc").IsRequired();
-        builder.Property(x => x.CreatedBy).HasColumnName("created_by").HasMaxLength(50).IsRequired();
-        builder.Property(x => x.LastModifiedOnUtc).HasColumnName("last_modified_on_utc");
-        builder.Property(x => x.LastModifiedBy).HasColumnName("last_modified_by").HasMaxLength(50);
+        builder.Property(x => x.Id)
+            .HasColumnName("id");
+
+        builder.Property(x => x.Quantity)
+            .HasColumnName("quantity")
+            .IsRequired();
+
+        builder.Property(x => x.Reserved)
+            .HasColumnName("reserved");
+
+        builder.Property(x => x.CreatedOnUtc)
+            .HasColumnName("created_on_utc")
+            .IsRequired();
+
+        builder.Property(x => x.CreatedBy)
+            .HasColumnName("created_by")
+            .HasMaxLength(50)
+            .IsRequired();
+
+        builder.Property(x => x.LastModifiedOnUtc)
+            .HasColumnName("last_modified_on_utc");
+
+        builder.Property(x => x.LastModifiedBy)
+            .HasColumnName("last_modified_by")
+            .HasMaxLength(50);
 
         builder.ComplexProperty(
-            o => o.Location, nameBuilder =>
+            o => o.Product, b =>
             {
-                nameBuilder.Property(n => n.Address)
-                    .HasColumnName("location_address")
+                b.Property(n => n.Id)
+                    .HasColumnName("product_id")
+                    .HasMaxLength(50)
+                    .IsRequired();
+
+                b.Property(n => n.Name)
+                    .HasColumnName("product_name")
                     .HasMaxLength(255)
                     .IsRequired();
             });
 
-        builder.HasIndex(x => new { x.ProductId });
+        builder.ComplexProperty(
+            o => o.Location, b =>
+            {
+                b.Property(n => n.Address)
+                    .HasColumnName("location_address")
+                    .HasMaxLength(255)
+                    .IsRequired();
+            });
     }
 
     #endregion

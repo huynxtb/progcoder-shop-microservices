@@ -10,7 +10,11 @@ using SourceCommon.Models.Reponses;
 
 namespace Inventory.Application.CQRS.InventoryItem.Commands;
 
-public sealed record UpdateStockCommand(Guid InventoryItemId, UpdateStockDto Dto, Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
+public sealed record UpdateStockCommand(
+    Guid InventoryItemId,
+    InventoryChangeType ChangeType,
+    UpdateStockDto Dto,
+    Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
 
 public sealed class UpdateStockCommandValidator : AbstractValidator<UpdateStockCommand>
 {
@@ -31,7 +35,7 @@ public sealed class UpdateStockCommandValidator : AbstractValidator<UpdateStockC
                     .NotEmpty()
                     .WithMessage(MessageCode.SourceIsRequired);
 
-                RuleFor(x => x.Dto.ChangeType)
+                RuleFor(x => x.ChangeType)
                     .Must(status => Enum.IsDefined(typeof(InventoryChangeType), status))
                     .WithMessage(MessageCode.InventoryChangeTypeIsRequired);
             });
@@ -47,10 +51,10 @@ public sealed class UpdateStockCommandHandler(IApplicationDbContext dbContext) :
     public async Task<ResultSharedResponse<string>> Handle(UpdateStockCommand command, CancellationToken cancellationToken)
     {
         var dto = command.Dto;
-        var entity = await dbContext.InventoryItems.SingleOrDefaultAsync(x => x.Id == dto.Id, cancellationToken)
+        var entity = await dbContext.InventoryItems.SingleOrDefaultAsync(x => x.Id == command.InventoryItemId, cancellationToken)
             ?? throw new NotFoundException(MessageCode.ResourceNotFound);
 
-        switch (dto.ChangeType)
+        switch (command.ChangeType)
         {
             case InventoryChangeType.Increase:
                 entity.Increase(dto.Amount, dto.Source!, command.CurrentUserId.ToString());

@@ -1,7 +1,6 @@
 ﻿#region using
 
 using Inventory.Application.Dtos.Abstractions;
-using Inventory.Application.Dtos.Products;
 
 #endregion
 
@@ -13,7 +12,7 @@ public class InventoryItemDto : EntityDto<Guid>
 
     public Guid ProductId { get; set; }
 
-    public ProductApiDto Product { get; set; } = default!;
+    public ProductDto Product { get; set; } = default!;
 
     public int Quantity { get; set; }
 

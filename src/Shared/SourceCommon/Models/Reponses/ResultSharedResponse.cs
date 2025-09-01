@@ -18,11 +18,15 @@ public sealed class ResultSharedResponse<T> where T : class
 
     #region Ctors
 
-    private ResultSharedResponse(
+    public ResultSharedResponse()
+    {
+    }
+
+    public ResultSharedResponse(
         T data,
         string message,
         int statusCode,
-        string instance,
+        string? instance,
         List<ErrorResult>? errors)
     {
         Data = data;
@@ -32,9 +36,9 @@ public sealed class ResultSharedResponse<T> where T : class
         Errors = errors;
     }
 
-    private ResultSharedResponse(
+    public ResultSharedResponse(
         int statusCode,
-        string instance,
+        string? instance,
         List<ErrorResult>? errors,
         string? message)
     {
@@ -50,9 +54,9 @@ public sealed class ResultSharedResponse<T> where T : class
 
     public static ResultSharedResponse<T> Failure(
         int statusCode = 400,
-        string instance = "",
+        string? instance = null,
         List<ErrorResult>? errors = null,
-        string? message = "")
+        string? message = null)
     {
         return new ResultSharedResponse<T>(statusCode, instance, errors, message);
     }
@@ -60,7 +64,7 @@ public sealed class ResultSharedResponse<T> where T : class
     public static ResultSharedResponse<T> Success(
         T data,
         string message,
-        string instance = "")
+        string? instance = null)
     {
         return new ResultSharedResponse<T>(data, message, 200, instance, null);
     }

@@ -31,7 +31,7 @@ public sealed class CustomExceptionHandler(
 
         (string ErrorMessage, int StatusCode, string? Details, string InnerException) details = exception switch
         {
-            FluentValidation.ValidationException =>
+            ValidationException =>
             (
                 exception.Message,
                 context.Response.StatusCode = StatusCodes.Status400BadRequest,

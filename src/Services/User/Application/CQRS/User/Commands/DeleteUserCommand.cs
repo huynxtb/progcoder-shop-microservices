@@ -39,9 +39,7 @@ public sealed class DeleteUserCommandHandler(IApplicationDbContext dbContext) : 
         dbContext.Users.Remove(entity);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return ResultSharedResponse<string>.Success(
-            data: command.UserId.ToString(),
-            message: MessageCode.DeleteSuccess);
+        return ResultSharedResponse<string>.Success(data: command.UserId.ToString(), message: MessageCode.DeleteSuccess);
     }
 
     #endregion

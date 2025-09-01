@@ -14,7 +14,9 @@ public sealed class ApiRoutes
 
         public const string Create = Base;
 
-        public const string UpdateStock = $"{Base}/{{inventoryItemId}}";
+        public const string DecreaseStock = $"{Base}/{{inventoryItemId}}/stock/decrease";
+
+        public const string IncreaseStock = $"{Base}/{{inventoryItemId}}/stock/increase";
 
         public const string Delete = $"{Base}/{{inventoryItemId}}";
 

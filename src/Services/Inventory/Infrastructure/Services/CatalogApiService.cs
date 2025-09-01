@@ -5,7 +5,10 @@ using Inventory.Application.Models.Responses;
 using Inventory.Application.Services;
 using Inventory.Infrastructure.ApiClients;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Refit;
 using SourceCommon.Configurations;
+using SourceCommon.Models.Reponses;
 
 #endregion
 
@@ -18,6 +21,8 @@ public sealed class CatalogApiService : ICatalogApiService
     private readonly IKeycloakApi _keycloakApi;
 
     private readonly ICatalogApi _catalogApi;
+
+    private readonly ILogger<CatalogApiService> _logger;
 
     private readonly string _realm;
 
@@ -36,8 +41,10 @@ public sealed class CatalogApiService : ICatalogApiService
     public CatalogApiService(
         IKeycloakApi keycloakApi,
         ICatalogApi catalogApi,
+        ILogger<CatalogApiService> logger,
         IConfiguration cfg)
     {
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _catalogApi = catalogApi ?? throw new ArgumentNullException(nameof(catalogApi));
         _keycloakApi = keycloakApi ?? throw new ArgumentNullException(nameof(keycloakApi));
         _realm = cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.Realm}"]!;
@@ -52,11 +59,19 @@ public sealed class CatalogApiService : ICatalogApiService
 
     #region Implementations
 
-    public async Task<ProductApiDto> GetProductByIdAsync(string productId)
+    public async Task<ResultSharedResponse<ProductApiDto>?> GetProductByIdAsync(string productId)
     {
-        var tokenResponse = await GetAccessTokenAsync();
-        var response = await _catalogApi.GetProductByIdAsync(productId, tokenResponse.AccessToken!);
-        return response;
+        try
+        {
+            var tokenResponse = await GetAccessTokenAsync();
+            var response = await _catalogApi.GetProductByIdAsync(productId, $"Bearer {tokenResponse.AccessToken}");
+            return response;
+        }
+        catch (ApiException ex)
+        {
+            _logger.LogWarning(ex, "Error calling Catalog API for productId: {ProductId}", productId);
+            return null;
+        }
     }
 
     #endregion

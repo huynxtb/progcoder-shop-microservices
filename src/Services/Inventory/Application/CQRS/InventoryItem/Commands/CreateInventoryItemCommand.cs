@@ -1,9 +1,11 @@
 ﻿#region using
 
+using EventSourcing.Events.Inventories;
 using Inventory.Application.Data;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Application.Services;
 using Inventory.Domain.Entities;
+using Inventory.Domain.Enums;
 using SourceCommon.Models.Reponses;
 
 #endregion
@@ -51,14 +53,28 @@ public sealed class CreateInventoryItemCommandHandler(
     {
         var dto = command.Dto;
         var product = await catalogApi.GetProductByIdAsync(dto.ProductId.ToString())
-            ?? throw new ClientValidationException(MessageCode.ProductIsNotExists);
+            ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, dto.ProductId);
 
         var entity = InventoryItemEntity.Create(
             id: Guid.NewGuid(),
-            productId: product.Id,
-            location: dto.Location,
+            productId: product.Data.Id,
+            productName: product.Data.Name!,
+            location: dto.Location!,
             quantity: dto.Quantity,
             createdBy: command.CurrentUserId.ToString());
+
+        var message = new StockChangedIntegrationEvent()
+        {
+            Amount = dto.Quantity,
+            ChangeType = (int)InventoryChangeType.Increase,
+            InventoryItemId = entity.Id,
+            ProductId = entity.ProductId,
+        }
+        var outboxMessage = OutboxMessageEntity.Create(
+            type: "InventoryItemCreated",
+            payload: entity.Adapt<InventoryItemCreatedEvent>(),
+            occurredOnUtc: DateTime.UtcNow,
+            processedOnUtc: null);
 
         await dbContext.InventoryItems.AddAsync(entity);
         await dbContext.SaveChangesAsync(cancellationToken);
@@ -66,6 +82,15 @@ public sealed class CreateInventoryItemCommandHandler(
         return ResultSharedResponse<string>.Success(
             data: entity.Id.ToString(),
             message: MessageCode.CreateSuccess);
+    }
+
+    #endregion
+
+    #region Methods
+
+    private void PushToOutbox(OutboxMessageEntity outboxMessage)
+    {
+        dbContext.OutboxMessages.Add(outboxMessage);
     }
 
     #endregion

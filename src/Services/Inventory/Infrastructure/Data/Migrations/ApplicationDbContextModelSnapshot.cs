@@ -46,10 +46,6 @@ namespace Inventory.Infrastructure.Data.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("last_modified_on_utc");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("product_id");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("int")
                         .HasColumnName("quantity");
@@ -69,9 +65,23 @@ namespace Inventory.Infrastructure.Data.Migrations
                                 .HasColumnName("location_address");
                         });
 
-                    b.HasKey("Id");
+                    b.ComplexProperty<Dictionary<string, object>>("Product", "Inventory.Domain.Entities.InventoryItemEntity.Product#Product", b1 =>
+                        {
+                            b1.IsRequired();
 
-                    b.HasIndex("ProductId");
+                            b1.Property<Guid>("Id")
+                                .HasMaxLength(50)
+                                .HasColumnType("char(50)")
+                                .HasColumnName("product_id");
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasMaxLength(255)
+                                .HasColumnType("varchar(255)")
+                                .HasColumnName("product_name");
+                        });
+
+                    b.HasKey("Id");
 
                     b.ToTable("inventory_items", (string)null);
                 });
@@ -106,10 +116,6 @@ namespace Inventory.Infrastructure.Data.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("last_modified_on_utc");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("product_id");
-
                     b.Property<long>("Quantity")
                         .HasColumnType("bigint")
                         .HasColumnName("quantity");
@@ -118,8 +124,11 @@ namespace Inventory.Infrastructure.Data.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("reference_id");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int")
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("varchar(255)")
+                        .HasDefaultValue("Pending")
                         .HasColumnName("status");
 
                     b.ComplexProperty<Dictionary<string, object>>("Location", "Inventory.Domain.Entities.InventoryReservationEntity.Location#Location", b1 =>
@@ -133,9 +142,23 @@ namespace Inventory.Infrastructure.Data.Migrations
                                 .HasColumnName("location_address");
                         });
 
-                    b.HasKey("Id");
+                    b.ComplexProperty<Dictionary<string, object>>("Product", "Inventory.Domain.Entities.InventoryReservationEntity.Product#Product", b1 =>
+                        {
+                            b1.IsRequired();
 
-                    b.HasIndex("ProductId");
+                            b1.Property<Guid>("Id")
+                                .HasMaxLength(50)
+                                .HasColumnType("char(50)")
+                                .HasColumnName("product_id");
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("varchar(50)")
+                                .HasColumnName("product_name");
+                        });
+
+                    b.HasKey("Id");
 
                     b.HasIndex("ReferenceId");
 

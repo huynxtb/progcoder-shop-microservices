@@ -6,7 +6,7 @@ public sealed record StockChangedIntegrationEvent : IntegrationEvent
 
     public Guid ProductId { get; init; }
 
-    public int InventoryChangeType { get; init; }
+    public int ChangeType { get; init; }
 
     public int Amount { get; init; }
 

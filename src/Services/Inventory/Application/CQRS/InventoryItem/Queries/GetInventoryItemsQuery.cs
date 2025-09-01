@@ -25,8 +25,9 @@ public sealed class GetInventoryItemsQueryHandler(IApplicationDbContext dbContex
     {
         var filteredQuery = dbContext.InventoryItems
             .AsNoTracking()
-            .Where(x => string.IsNullOrEmpty(query.Filter.SearchText)
-                || x.Id.ToString().Contains(query.Filter.SearchText));
+            .Where(x => string.IsNullOrEmpty(query.Filter.SearchText) || 
+                    x.Product.Name!.Contains(query.Filter.SearchText) ||
+                    x.Location.Address!.Contains(query.Filter.SearchText));
 
         var total = await filteredQuery.CountAsync(cancellationToken);
         var totalPages = (int)Math.Ceiling(total / (double)query.Paging.PageSize);

@@ -22,7 +22,8 @@ public sealed class GetInventoryItems : ICarterModule
             .WithName(nameof(GetInventoryItems))
             .Produces<ResultSharedResponse<GetInventoryItemsResponse>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status404NotFound);
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .RequireAuthorization();
     }
 
     #endregion

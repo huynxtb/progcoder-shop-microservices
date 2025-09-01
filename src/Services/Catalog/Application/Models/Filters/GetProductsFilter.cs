@@ -1,3 +1,3 @@
 ﻿namespace Catalog.Application.Models.Filters;
 
-public record class GetProductsFilter(string? SearchText);
+public record class GetProductsFilter(string? SearchText, Guid[]? Ids);

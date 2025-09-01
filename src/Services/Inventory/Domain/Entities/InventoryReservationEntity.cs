@@ -14,7 +14,7 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public Guid ProductId { get; private set; }
+    public Product Product { get; private set; } = default!;
 
     public Guid ReferenceId { get; private set; }
 
@@ -39,7 +39,7 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
     public static InventoryReservationEntity Create(
         Guid id,
         Guid productId,
-        Guid locationId,
+        string productName,
         Guid referenceId,
         long quantity,
         DateTimeOffset? expiresAt,
@@ -50,7 +50,7 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
         var entity = new InventoryReservationEntity
         {
             Id = id,
-            ProductId = productId,
+            Product = Product.Of(productId, productName),
             ReferenceId = referenceId,
             Quantity = quantity,
             ExpiresAt = expiresAt,
@@ -58,7 +58,7 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
             LastModifiedBy = createdBy
         };
 
-        //entity.AddDomainEvent(new ReservationCreatedDomainEvent(id, productId, location.ToString(), referenceId, quantity, expiresAt));
+        //entity.AddDomainEvent(new ReservationCreatedDomainEvent(id, Product.Id, location.ToString(), referenceId, quantity, expiresAt));
 
         return entity;
     }
@@ -71,7 +71,7 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
         LastModifiedBy = modifiedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
 
-        //AddDomainEvent(new ReservationCommittedDomainEvent(Id, ProductId, Location.ToString(), ReferenceId, Quantity));
+        //AddDomainEvent(new ReservationCommittedDomainEvent(Id, Product.Id, Location.ToString(), ReferenceId, Quantity));
     }
 
     public void Release(string reason, string modifiedBy = SystemConst.CreatedBySystem)
@@ -82,7 +82,7 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
         LastModifiedBy = modifiedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
 
-        //AddDomainEvent(new ReservationReleasedDomainEvent(Id, ProductId, Location.ToString(), ReferenceId, Quantity, reason));
+        //AddDomainEvent(new ReservationReleasedDomainEvent(Id, Product.Id, Location.ToString(), ReferenceId, Quantity, reason));
     }
 
     public void Expire()
@@ -91,7 +91,7 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
         {
             Status = ReservationStatus.Expired;
 
-            //AddDomainEvent(new ReservationExpiredDomainEvent(Id, ProductId, Location.ToString(), ReferenceId, Quantity));
+            //AddDomainEvent(new ReservationExpiredDomainEvent(Id, Product.Id, Location.ToString(), ReferenceId, Quantity));
         }
     }
 

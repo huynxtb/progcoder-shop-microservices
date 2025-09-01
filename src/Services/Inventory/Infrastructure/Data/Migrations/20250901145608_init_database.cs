@@ -19,10 +19,11 @@ namespace Inventory.Infrastructure.Data.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "char(36)", nullable: false),
-                    product_id = table.Column<Guid>(type: "char(36)", nullable: false),
                     quantity = table.Column<int>(type: "int", nullable: false),
                     reserved = table.Column<int>(type: "int", nullable: false),
                     location_address = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
+                    product_id = table.Column<Guid>(type: "char(50)", maxLength: 50, nullable: false),
+                    product_name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
                     created_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: false),
                     created_by = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     last_modified_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
@@ -39,12 +40,13 @@ namespace Inventory.Infrastructure.Data.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "char(36)", nullable: false),
-                    product_id = table.Column<Guid>(type: "char(36)", nullable: false),
                     reference_id = table.Column<Guid>(type: "char(36)", nullable: false),
                     quantity = table.Column<long>(type: "bigint", nullable: false),
                     expires_at = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
-                    status = table.Column<int>(type: "int", nullable: false),
+                    status = table.Column<string>(type: "varchar(255)", nullable: false, defaultValue: "Pending"),
                     location_address = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
+                    product_id = table.Column<Guid>(type: "char(50)", maxLength: 50, nullable: false),
+                    product_name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     created_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: false),
                     created_by = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     last_modified_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
@@ -76,16 +78,6 @@ namespace Inventory.Infrastructure.Data.Migrations
                     table.PrimaryKey("PK_outbox_messages", x => x.id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_inventory_items_product_id",
-                table: "inventory_items",
-                column: "product_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_inventory_reservations_product_id",
-                table: "inventory_reservations",
-                column: "product_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_inventory_reservations_reference_id",

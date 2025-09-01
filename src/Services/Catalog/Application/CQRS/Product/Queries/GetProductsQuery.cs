@@ -32,6 +32,10 @@ public sealed class GetProductsQueryHandler(IDocumentSession session)
             var search = filter.SearchText.Trim();
             productQuery = productQuery.Where(x => x.Name != null && x.Name.Contains(search));
         }
+        if (filter.Ids?.Length > 0)
+        {
+            productQuery = productQuery.Where(x => filter.Ids.Contains(x.Id));
+        }
 
         var total = await productQuery.CountAsync(cancellationToken);
         var totalPages = (int)Math.Ceiling(total / (double)paging.PageSize);

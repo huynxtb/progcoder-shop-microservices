@@ -15,7 +15,7 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public Guid ProductId { get; private set; }
+    public Product Product { get; private set; } = default!;
 
     public int Quantity { get; private set; }
 
@@ -38,7 +38,8 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
     public static InventoryItemEntity Create(
         Guid id,
         Guid productId,
-        string? location,
+        string productName,
+        string location,
         int quantity = 0,
         string createdBy = SystemConst.CreatedBySystem)
     {
@@ -48,7 +49,7 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
         var entity = new InventoryItemEntity
         {
             Id = id,
-            ProductId = productId,
+            Product = Product.Of(productId, productName),
             Quantity = quantity,
             Reserved = 0,
             CreatedBy = createdBy,
@@ -69,7 +70,7 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
         Quantity += amount;
         LastModifiedBy = modifiedBy;
 
-        AddDomainEvent(new StockChangedDomainEvent(Id, ProductId, amount, InventoryChangeType.Increase, source));
+        AddDomainEvent(new StockChangedDomainEvent(Id, Product.Id, amount, InventoryChangeType.Increase, source));
     }
 
     public void Decrease(
@@ -83,7 +84,7 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
         Quantity -= amount;
         LastModifiedBy = modifiedBy;
 
-        AddDomainEvent(new StockChangedDomainEvent(Id, ProductId, amount, InventoryChangeType.Decrease, source));
+        AddDomainEvent(new StockChangedDomainEvent(Id, Product.Id, amount, InventoryChangeType.Decrease, source));
     }
 
     public void Reserve(
@@ -97,8 +98,8 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
         Reserved += amount;
         LastModifiedBy = modifiedBy;
 
-        AddDomainEvent(new ReservedDomainEvent(Id, ProductId, reservationId, amount));
-        AddDomainEvent(new StockChangedDomainEvent(Id, ProductId, 0, InventoryChangeType.Reserve, $"reservation:{reservationId}"));
+        AddDomainEvent(new ReservedDomainEvent(Id, Product.Id, reservationId, amount));
+        AddDomainEvent(new StockChangedDomainEvent(Id, Product.Id, 0, InventoryChangeType.Reserve, $"reservation:{reservationId}"));
     }
 
     public void Release(
@@ -112,8 +113,8 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
         Reserved -= amount;
         LastModifiedBy = modifiedBy;
 
-        AddDomainEvent(new UnreservedDomainEvent(Id, ProductId, reservationId, amount));
-        AddDomainEvent(new StockChangedDomainEvent(Id, ProductId, 0, InventoryChangeType.Release, $"reservation:{reservationId}"));
+        AddDomainEvent(new UnreservedDomainEvent(Id, Product.Id, reservationId, amount));
+        AddDomainEvent(new StockChangedDomainEvent(Id, Product.Id, 0, InventoryChangeType.Release, $"reservation:{reservationId}"));
     }
 
     public void Commit(
@@ -129,7 +130,7 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
         Quantity -= amount;
         LastModifiedBy = modifiedBy;
 
-        AddDomainEvent(new StockChangedDomainEvent(Id, ProductId, amount, InventoryChangeType.Commit, $"reservation:{reservationId}"));
+        AddDomainEvent(new StockChangedDomainEvent(Id, Product.Id, amount, InventoryChangeType.Commit, $"reservation:{reservationId}"));
     }
 
     public bool HasAvailable(int amount)
