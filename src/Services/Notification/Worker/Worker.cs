@@ -4,8 +4,9 @@ using Notification.Application.Data.Repositories;
 using Notification.Application.Models;
 using Notification.Application.Resolvers;
 using Notification.Domain.Enums;
-using SourceCommon.Configurations;
-using SourceCommon.Constants;
+using Common.Configurations;
+using Common.Constants;
+using BuildingBlocks.Abstractions.ValueObjects;
 
 #endregion
 
@@ -39,12 +40,12 @@ public sealed class Worker(
                     if (doc.Payload == null || doc.Payload.To == null)
                     {
                         logger.LogWarning("DeliveryId={DeliveryId} has null payload, marking as Illegal", doc.Id);
-                        doc.UpdateStatus(DeliveryStatus.Illegal, SystemConst.CreatedByWorker);
+                        doc.UpdateStatus(DeliveryStatus.Illegal, Actor.Worker("notification").ToString());
                         await delivCommandRepo.UpsertAsync(doc, stoppingToken);
                         continue;
                     }
 
-                    doc.UpdateStatus(DeliveryStatus.Sending, SystemConst.CreatedByWorker);
+                    doc.UpdateStatus(DeliveryStatus.Sending, Actor.Worker("notification").ToString());
                     await delivCommandRepo.UpsertAsync(doc, stoppingToken);
                     logger.LogInformation("DeliveryId={DeliveryId} marked as Sending", doc.Id);
 
@@ -64,7 +65,7 @@ public sealed class Worker(
 
                     if (result.IsSuccess)
                     {
-                        doc.UpdateStatus(DeliveryStatus.Sent, SystemConst.CreatedByWorker);
+                        doc.UpdateStatus(DeliveryStatus.Sent, Actor.Worker("notification").ToString());
                         logger.LogInformation("DeliveryId={DeliveryId} sent successfully", doc.Id);
                     }
                     else

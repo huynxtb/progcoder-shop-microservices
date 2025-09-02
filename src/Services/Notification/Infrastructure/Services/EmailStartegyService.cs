@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Notification.Application.Models;
 using Notification.Application.Services;
 using Notification.Domain.Enums;
-using SourceCommon.Configurations;
+using Common.Configurations;
 using System.Net;
 using System.Net.Mail;
 using System.Text;

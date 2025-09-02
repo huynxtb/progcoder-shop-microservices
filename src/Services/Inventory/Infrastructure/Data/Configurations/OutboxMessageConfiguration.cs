@@ -30,27 +30,14 @@ public sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outbox
             .IsRequired();
 
         builder.Property(x => x.OccurredOnUtc)
-            .HasColumnName("occurred_on_utc");
+            .HasColumnName("occurred_on_utc")
+            .IsRequired();
 
         builder.Property(x => x.ProcessedOnUtc)
-            .HasColumnName("processed_on_utc")
-            .IsRequired();
+            .HasColumnName("processed_on_utc");
 
-        builder.Property(x => x.CreatedOnUtc)
-            .HasColumnName("created_on_utc")
-            .IsRequired();
-
-        builder.Property(x => x.CreatedBy)
-            .HasColumnName("created_by")
-            .HasMaxLength(50)
-            .IsRequired();
-
-        builder.Property(x => x.LastModifiedOnUtc)
-            .HasColumnName("last_modified_on_utc");
-
-        builder.Property(x => x.LastModifiedBy)
-            .HasColumnName("last_modified_by")
-            .HasMaxLength(50);
+        //builder.Property(x => x.Error)
+        //    .HasColumnName("error");
 
         builder.HasIndex(x => new { x.EventType });
         builder.HasIndex(x => new { x.OccurredOnUtc });

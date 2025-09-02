@@ -4,7 +4,8 @@ using BuildingBlocks.Pagination;
 using Notification.Api.Constants;
 using Notification.Application.CQRS.Notification.Queries;
 using Notification.Application.Models.Responses;
-using SourceCommon.Models.Reponses;
+using Common.Models.Reponses;
+using BuildingBlocks.Abstractions.ValueObjects;
 
 #endregion
 
@@ -34,12 +35,9 @@ public sealed class GetNotifications : ICarterModule
         IHttpContextAccessor httpContext,
         [AsParameters] PaginationRequest paging)
     {
-        var query = new GetNotificationsQuery(
-            httpContext.GetCurrentUser().Id,
-            paging);
-
+        var currentUser = httpContext.GetCurrentUser();
+        var query = new GetNotificationsQuery(Actor.User(currentUser.Id), paging);
         var result = await sender.Send(query);
-
         return result;
     }
 

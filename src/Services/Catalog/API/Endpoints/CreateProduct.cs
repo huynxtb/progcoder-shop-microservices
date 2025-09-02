@@ -9,9 +9,10 @@ using Catalog.Application.CQRS.Product.Commands;
 using Catalog.Application.Dtos.Products;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
-using SourceCommon.Constants;
-using SourceCommon.Models;
-using SourceCommon.Models.Reponses;
+using Common.Constants;
+using Common.Models;
+using Common.Models.Reponses;
+using BuildingBlocks.Abstractions.ValueObjects;
 
 #endregion
 
@@ -66,7 +67,7 @@ public sealed class CreateProduct : ICarterModule
         }
 
         var currentUser = httpContext.GetCurrentUser();
-        var command = new CreateProductCommand(dto, currentUser.Id);
+        var command = new CreateProductCommand(dto, Actor.User(currentUser.Id));
 
         return await sender.Send(command);
     }

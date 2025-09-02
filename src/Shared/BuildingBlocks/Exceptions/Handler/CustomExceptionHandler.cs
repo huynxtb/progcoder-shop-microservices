@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using SourceCommon.Configurations;
-using SourceCommon.Constants;
-using SourceCommon.Models;
-using SourceCommon.Models.Reponses;
+using Common.Configurations;
+using Common.Constants;
+using Common.Models;
+using Common.Models.Reponses;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 #endregion

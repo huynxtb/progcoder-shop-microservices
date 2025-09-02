@@ -10,6 +10,7 @@ namespace Inventory.Domain.Events;
 public sealed record class StockChangedDomainEvent(
     Guid Id,
     Guid ProductId,
-    int Amount,
+    int ChangeAmount,
+    int QuantityAfterChange,
     InventoryChangeType ChangeType,
     string Source) : IDomainEvent;

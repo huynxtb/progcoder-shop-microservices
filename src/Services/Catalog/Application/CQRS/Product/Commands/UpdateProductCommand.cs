@@ -1,16 +1,17 @@
 ﻿#region using
 
+using BuildingBlocks.Abstractions.ValueObjects;
 using Catalog.Application.Dtos.Products;
 using Catalog.Application.Services;
 using Catalog.Domain.Entities;
+using Common.Models.Reponses;
 using Marten;
-using SourceCommon.Models.Reponses;
 
 #endregion
 
 namespace Catalog.Application.CQRS.Product.Commands;
 
-public record UpdateProductCommand(Guid ProductId, UpdateProductDto Dto, Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
+public record UpdateProductCommand(Guid ProductId, UpdateProductDto Dto, Actor Actor) : ICommand<ResultSharedResponse<string>>;
 
 public class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand>
 {
@@ -77,7 +78,7 @@ public class UpdateProductCommandHandler(
             price: dto.Price,
             salesPrice: dto.SalesPrice,
             categoryIds: dto.CategoryIds?.Distinct().ToList(),
-            modifiedBy: command.CurrentUserId.ToString());
+            performedBy: command.Actor.ToString());
 
         await UploadImagesAsync(dto.Files, dto.CurrentImageUrls, entity, cancellationToken);
 

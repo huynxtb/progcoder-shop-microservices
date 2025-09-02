@@ -1,18 +1,19 @@
 ﻿#region using
 
+using BuildingBlocks.Abstractions.ValueObjects;
 using Catalog.Application.Dtos.Products;
 using Catalog.Application.Services;
 using Catalog.Domain.Entities;
+using Common.Models.Reponses;
 using Mapster;
 using Marten;
 using Microsoft.AspNetCore.Http.HttpResults;
-using SourceCommon.Models.Reponses;
 
 #endregion
 
 namespace Catalog.Application.CQRS.Product.Commands;
 
-public record CreateProductCommand(CreateProductDto Dto, Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
+public record CreateProductCommand(CreateProductDto Dto, Actor Actor) : ICommand<ResultSharedResponse<string>>;
 
 public class UpdateUserProfileCommandValidator : AbstractValidator<CreateProductCommand>
 {
@@ -75,7 +76,7 @@ public class UpdateUserProfileCommandHandler(
             price: dto.Price,
             salesPrice: dto.SalesPrice,
             categoryIds: dto.CategoryIds?.Distinct().ToList(),
-            createdBy: command.CurrentUserId.ToString());
+            performedBy: command.Actor.ToString());
 
         await UploadImagesAsync(dto.Files, entity, cancellationToken);
         

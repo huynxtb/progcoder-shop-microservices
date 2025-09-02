@@ -6,7 +6,7 @@ using EventSourcing.MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FeatureManagement;
-using SourceCommon.Configurations;
+using Common.Configurations;
 using System.Reflection;
 
 #endregion

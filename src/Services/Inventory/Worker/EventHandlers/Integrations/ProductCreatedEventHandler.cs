@@ -6,7 +6,7 @@
 //using Notification.Application.Data.Repositories;
 //using Notification.Application.Services;
 //using Notification.Domain.Entities;
-//using SourceCommon.Constants;
+//using Common.Constants;
 
 //#endregion
 

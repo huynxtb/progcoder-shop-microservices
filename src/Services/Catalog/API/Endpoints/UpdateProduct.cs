@@ -1,17 +1,18 @@
 ﻿
 #region using
 
+using BuildingBlocks.Abstractions.ValueObjects;
 using BuildingBlocks.Exceptions;
 using BuildingBlocks.Swagger.Extensions;
 using Catalog.Api.Constants;
 using Catalog.Api.Models;
 using Catalog.Application.CQRS.Product.Commands;
 using Catalog.Application.Dtos.Products;
+using Common.Constants;
+using Common.Models;
+using Common.Models.Reponses;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
-using SourceCommon.Constants;
-using SourceCommon.Models;
-using SourceCommon.Models.Reponses;
 
 #endregion
 
@@ -67,7 +68,7 @@ public sealed class UpdateProduct : ICarterModule
         }
 
         var currentUser = httpContext.GetCurrentUser();
-        var command = new UpdateProductCommand(productId, dto, currentUser.Id);
+        var command = new UpdateProductCommand(productId, dto, Actor.User(currentUser.Id));
 
         return await sender.Send(command);
     }

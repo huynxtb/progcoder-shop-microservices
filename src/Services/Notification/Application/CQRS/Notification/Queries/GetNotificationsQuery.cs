@@ -3,13 +3,14 @@
 using Notification.Application.Data.Repositories;
 using Notification.Application.Dtos.Notifications;
 using Notification.Application.Models.Responses;
-using SourceCommon.Models.Reponses;
+using Common.Models.Reponses;
+using BuildingBlocks.Abstractions.ValueObjects;
 
 #endregion
 
 namespace Notification.Application.CQRS.Notification.Queries;
 
-public sealed record GetNotificationsQuery(Guid UserId, PaginationRequest Paging) : IQuery<ResultSharedResponse<GetNotificationsReponse>>;
+public sealed record GetNotificationsQuery(Actor Actor, PaginationRequest Paging) : IQuery<ResultSharedResponse<GetNotificationsReponse>>;
 
 public sealed class GetNotificationsQueryHandler(IQueryNotificationRepository queryRepo)
     : IQueryHandler<GetNotificationsQuery, ResultSharedResponse<GetNotificationsReponse>>
@@ -18,7 +19,7 @@ public sealed class GetNotificationsQueryHandler(IQueryNotificationRepository qu
 
     public async Task<ResultSharedResponse<GetNotificationsReponse>> Handle(GetNotificationsQuery query, CancellationToken cancellationToken)
     {
-        var result = await queryRepo.GetNotificationsAsync(query.UserId, cancellationToken);
+        var result = await queryRepo.GetNotificationsAsync(Guid.Parse(query.Actor.ToString()), cancellationToken);
 
         var reponse = new GetNotificationsReponse()
         {

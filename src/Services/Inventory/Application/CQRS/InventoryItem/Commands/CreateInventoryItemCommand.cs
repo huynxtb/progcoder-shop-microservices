@@ -6,13 +6,15 @@ using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Application.Services;
 using Inventory.Domain.Entities;
 using Inventory.Domain.Enums;
-using SourceCommon.Models.Reponses;
+using Common.Models.Reponses;
+using Newtonsoft.Json;
+using BuildingBlocks.Abstractions.ValueObjects;
 
 #endregion
 
 namespace Inventory.Application.CQRS.InventoryItem.Commands;
 
-public sealed record CreateInventoryItemCommand(CreateInventoryItemDto Dto, Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
+public sealed record CreateInventoryItemCommand(CreateInventoryItemDto Dto, Actor Actor) : ICommand<ResultSharedResponse<string>>;
 
 public sealed class CreateInventoryItemCommandValidator : AbstractValidator<CreateInventoryItemCommand>
 {
@@ -31,6 +33,7 @@ public sealed class CreateInventoryItemCommandValidator : AbstractValidator<Crea
 
                 RuleFor(x => x.Dto.Quantity)
                     .NotEmpty()
+                    .WithMessage(MessageCode.QuantityIsRequired)
                     .GreaterThan(0)
                     .WithMessage(MessageCode.QuantityCannotBeNegative);
 
@@ -54,33 +57,19 @@ public sealed class CreateInventoryItemCommandHandler(
         var dto = command.Dto;
         var product = await catalogApi.GetProductByIdAsync(dto.ProductId.ToString())
             ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, dto.ProductId);
+        var inventoryItemId = Guid.NewGuid();
 
-        var entity = InventoryItemEntity.Create(
-            id: Guid.NewGuid(),
-            productId: product.Data.Id,
-            productName: product.Data.Name!,
-            location: dto.Location!,
-            quantity: dto.Quantity,
-            createdBy: command.CurrentUserId.ToString());
-
-        var message = new StockChangedIntegrationEvent()
-        {
-            Amount = dto.Quantity,
-            ChangeType = (int)InventoryChangeType.Increase,
-            InventoryItemId = entity.Id,
-            ProductId = entity.ProductId,
-        }
-        var outboxMessage = OutboxMessageEntity.Create(
-            type: "InventoryItemCreated",
-            payload: entity.Adapt<InventoryItemCreatedEvent>(),
-            occurredOnUtc: DateTime.UtcNow,
-            processedOnUtc: null);
-
-        await dbContext.InventoryItems.AddAsync(entity);
+        await AddInventoryItemAsync(inventoryItemId, 
+            product.Data.Id, 
+            product.Data.Name!, 
+            dto.Location!, 
+            dto.Quantity, 
+            command.Actor);
+        await PushToOutboxAsync(inventoryItemId, dto);
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return ResultSharedResponse<string>.Success(
-            data: entity.Id.ToString(),
+            data: inventoryItemId.ToString(),
             message: MessageCode.CreateSuccess);
     }
 
@@ -88,9 +77,45 @@ public sealed class CreateInventoryItemCommandHandler(
 
     #region Methods
 
-    private void PushToOutbox(OutboxMessageEntity outboxMessage)
+    private async Task PushToOutboxAsync(Guid inventoryItemId, CreateInventoryItemDto dto)
     {
-        dbContext.OutboxMessages.Add(outboxMessage);
+        if (dto.Quantity > 0)
+        {
+            var message = new StockChangedIntegrationEvent()
+            {
+                InventoryItemId = inventoryItemId,
+                ProductId = dto.ProductId,
+                ChangeType = (int)InventoryChangeType.Init,
+                Amount = dto.Quantity,
+                Source = InventorySource.ManualAdjustment.GetDescription()
+            };
+            var outboxMessage = OutboxMessageEntity.Create(
+                id: Guid.NewGuid(),
+                eventType: message.EventType!,
+                content: JsonConvert.SerializeObject(message),
+                occurredOnUtc: DateTimeOffset.UtcNow);
+
+            await dbContext.OutboxMessages.AddAsync(outboxMessage);
+        }
+    }
+
+    private async Task AddInventoryItemAsync(
+        Guid inventoryItemId, 
+        Guid productId, 
+        string productName, 
+        string location, 
+        int qty, 
+        Actor actor)
+    {
+        var entity = InventoryItemEntity.Create(
+            id: inventoryItemId,
+            productId: productId,
+            productName: productName,
+            location: location,
+            quantity: qty,
+            performedBy: actor.ToString());
+
+        await dbContext.InventoryItems.AddAsync(entity);
     }
 
     #endregion

@@ -2,7 +2,7 @@
 
 using Notification.Domain.Abstractions;
 using Notification.Domain.Enums;
-using SourceCommon.Constants;
+using Common.Constants;
 
 #endregion
 
@@ -51,9 +51,9 @@ public sealed class DeliveryEntity : Aggregate<Guid>
 		string body,
         DeliveryPriority priority,
         string eventId,
+        string performedBy,
         List<string>? cc = null,
-        List<string>? bcc = null,
-        string createdBy = SystemConst.CreatedBySystem)
+        List<string>? bcc = null)
     {
         var payload = MessagePayloadEntity.Create(
             channel: channel,
@@ -72,17 +72,17 @@ public sealed class DeliveryEntity : Aggregate<Guid>
             Priority = priority,
             EventId = eventId,
             MaxAttempts = SystemConst.MaxAttempts,
-            CreatedBy = createdBy,
-            LastModifiedBy = createdBy,
+            CreatedBy = performedBy,
+            LastModifiedBy = performedBy,
             CreatedOnUtc = DateTimeOffset.UtcNow,
             LastModifiedOnUtc = DateTimeOffset.UtcNow
         };
     }
 
-    public void UpdateStatus(DeliveryStatus status, string modifiedBy = SystemConst.CreatedBySystem)
+    public void UpdateStatus(DeliveryStatus status, string performedBy)
     {
         Status = status;
-        LastModifiedBy = modifiedBy;
+        LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
         SentOnUtc = status == DeliveryStatus.Sent ? DateTimeOffset.UtcNow : SentOnUtc;
         ProcessedOnUtc = DateTimeOffset.UtcNow;

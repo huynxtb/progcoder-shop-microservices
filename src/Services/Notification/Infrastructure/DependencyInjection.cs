@@ -9,7 +9,7 @@ using Notification.Application.Resolvers;
 using Notification.Infrastructure.Data.Extensions;
 using Notification.Infrastructure.Providers;
 using Notification.Infrastructure.Resolvers;
-using SourceCommon.Configurations;
+using Common.Configurations;
 
 #endregion
 

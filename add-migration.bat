@@ -6,15 +6,15 @@ setlocal enabledelayedexpansion
 cls
 echo.
 echo ==== Select a service ====
-echo  1. User
-echo  2. Inventory
+echo  1. Inventory
+echo  2. Customer
 echo.
 set /p userChoice=Enter your choice (1-2): 
 
 if "%userChoice%"=="1" (
-    set serviceName=User
-) else if "%userChoice%"=="2" (
     set serviceName=Inventory
+) else if "%userChoice%"=="2" (
+    set serviceName=Customer
 ) else (
     echo Invalid choice. Exiting...
     goto end

@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Shared\SourceCommon\SourceCommon.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Common\Common.csproj" />
     <ProjectReference Include="..\Application\Inventory.Application.csproj" />
     <ProjectReference Include="..\Infrastructure\Inventory.Infrastructure.csproj" />
   </ItemGroup>

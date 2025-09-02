@@ -4,7 +4,6 @@ using Inventory.Application.Data;
 using Inventory.Application.Services;
 using Inventory.Infrastructure.ApiClients;
 using Inventory.Infrastructure.Data;
-using Inventory.Infrastructure.Data.Collectors;
 using Inventory.Infrastructure.Data.Extensions;
 using Inventory.Infrastructure.Data.Interceptors;
 using Inventory.Infrastructure.Services;
@@ -14,8 +13,8 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
-using SourceCommon.Configurations;
-using SourceCommon.Constants;
+using Common.Configurations;
+using Common.Constants;
 
 #endregion
 
@@ -64,8 +63,6 @@ public static class DependencyInjection
 
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
         }
-
-        services.AddScoped<IDomainEventsCollector, DomainEventsCollector>();
 
         // HttpClient
         {

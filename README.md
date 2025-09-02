@@ -12,14 +12,14 @@ Create new Client
 
 
 PORTS:
-1. User 5000
-2. Catalog 5001
-3. Inventory 5002
-4. Notification 5003
-5. Discount 5004
-6. Order 5005
-7. Basket 5006
-8. Payment 5007
-9. Search 5008
-10. Report 5009
-11. JobScheduler 5010
+Catalog 5001
+Inventory 5002
+Notification 5003
+Customer 5000
+Discount 5004
+Order 5005
+Basket 5006
+Payment 5007
+Search 5008
+Report 5009
+JobScheduler 5010

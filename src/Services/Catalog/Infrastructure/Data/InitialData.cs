@@ -1,5 +1,6 @@
 ﻿#region using
 
+using BuildingBlocks.Abstractions.ValueObjects;
 using Catalog.Domain.Entities;
 using Marten;
 using Marten.Schema;
@@ -28,47 +29,54 @@ public sealed class InitialCategoryData : IInitialData
                 id: electronicsId,
                 name: "Electronics",
                 desctiption: "Electronic devices & accessories",
-                slug: "electronics"),
+                slug: "electronics",
+                performedBy: Actor.System("catalog-service").ToString()),
 
             CategoryEntity.Create(
                 id: phonesId,
                 name: "Phones",
                 desctiption: "Smartphones & accessories",
                 slug: "phones",
-                parentId: electronicsId),
+                parentId: electronicsId,
+                performedBy: Actor.System("catalog-service").ToString()),
 
             CategoryEntity.Create(
                 id: laptopsId,
                 name: "Laptops",
                 desctiption: "Laptops & accessories",
                 slug: "laptops",
-                parentId: electronicsId),
+                parentId: electronicsId,
+                performedBy: Actor.System("catalog-service").ToString()),
 
             CategoryEntity.Create(
                 id: fashionId,
                 name: "Fashion",
                 desctiption: "Clothing, shoes & accessories",
-                slug: "fashion"),
+                slug: "fashion",
+                performedBy : Actor.System("catalog-service").ToString()),
 
             CategoryEntity.Create(
                 id: menFashionId,
                 name: "Men",
                 desctiption: "Men's fashion",
                 slug: "men",
-                parentId: fashionId),
+                parentId: fashionId,
+                performedBy: Actor.System("catalog-service").ToString()),
 
             CategoryEntity.Create(
                 id: womenFashionId,
                 name: "Women",
                 desctiption: "Women's fashion",
                 slug: "women",
-                parentId: fashionId),
+                parentId: fashionId,
+                performedBy : Actor.System("catalog-service").ToString()),
 
             CategoryEntity.Create(
                 id: homeId,
                 name: "Home & Living",
                 desctiption: "Household goods & furniture",
-                slug: "home-living")
+                slug: "home-living",
+                performedBy : Actor.System("catalog-service").ToString())
         };
 
         session.Store(categories);

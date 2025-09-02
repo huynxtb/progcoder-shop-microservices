@@ -2,13 +2,13 @@
 
 using Catalog.Domain.Entities;
 using Marten;
-using SourceCommon.Models.Reponses;
+using Common.Models.Reponses;
 
 #endregion
 
 namespace Catalog.Application.CQRS.Product.Commands;
 
-public record DeleteProductCommand(Guid ProductId, Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
+public record DeleteProductCommand(Guid ProductId) : ICommand<ResultSharedResponse<string>>;
 
 public class DeleteProductCommandValidator : AbstractValidator<DeleteProductCommand>
 {

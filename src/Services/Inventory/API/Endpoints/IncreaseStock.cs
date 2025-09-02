@@ -1,11 +1,12 @@
 #region using
 
+using BuildingBlocks.Abstractions.ValueObjects;
+using Common.Models.Reponses;
 using Inventory.Api.Constants;
 using Inventory.Application.CQRS.InventoryItem.Commands;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
-using SourceCommon.Models.Reponses;
 
 #endregion
 
@@ -37,7 +38,7 @@ public sealed class IncreaseStock : ICarterModule
         [FromBody] UpdateStockDto dto)
     {
         var currentUser = httpContext.GetCurrentUser();
-        var command = new UpdateStockCommand(inventoryItemId, InventoryChangeType.Increase, dto, currentUser.Id);
+        var command = new UpdateStockCommand(inventoryItemId, InventoryChangeType.Increase, dto, Actor.User(currentUser.Id));
         return await sender.Send(command);
     }
 

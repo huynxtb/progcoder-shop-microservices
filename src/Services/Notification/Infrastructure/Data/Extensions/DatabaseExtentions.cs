@@ -1,12 +1,13 @@
 ﻿#region using
 
+using BuildingBlocks.Abstractions.ValueObjects;
+using Common.Constants;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using Notification.Application.Constants;
 using Notification.Domain.Entities;
 using Notification.Infrastructure.Constants;
-using SourceCommon.Constants;
 
 #endregion
 
@@ -30,7 +31,7 @@ public static class DatabaseExtentions
                 subject: "Welcome to ProG Coder",
                 isHtml: true,
                 body: "<p>Hello <strong>{{DisplayName}}</strong>,</p> <p>thank you for signing up. We’re glad to have you!</p> <p>Best regards,</p> <p>ProG Coder</p>",
-                createdBy: SystemConst.CreatedBySystem),
+                performedBy: Actor.System("notification-service").ToString()),
             TemplateEntity.Create(
                 id: Guid.Parse("c63f5f8d-daba-409f-88f9-fc3a9eb3e7e2"),
                 key: TemplateKey.UserRegistered,
@@ -38,7 +39,7 @@ public static class DatabaseExtentions
                 subject: "Welcome to ProG Coder",
                 isHtml: false,
                 body: "Hello {{DisplayName}}, thank you for signing up. We’re glad to have you!",
-                createdBy: SystemConst.CreatedBySystem),
+                performedBy: Actor.System("notification-service").ToString()),
             TemplateEntity.Create(
                 id: Guid.Parse("c63f5f8d-daba-409f-88f9-fc3a9eb3e7e3"),
                 key: TemplateKey.UserRegistered,
@@ -46,7 +47,7 @@ public static class DatabaseExtentions
                 subject: "Welcome to ProG Coder",
                 isHtml: false,
                 body: "Hello {{DisplayName}}, thank you for signing up",
-                createdBy: SystemConst.CreatedBySystem)
+                performedBy: Actor.System("notification-service").ToString())
         };
 
         foreach (var template in docs)

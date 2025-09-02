@@ -1,8 +1,9 @@
 ﻿#region using
 
 using Catalog.Domain.Abstractions;
+using Catalog.Domain.Enums;
 using Catalog.Domain.Exceptions;
-using SourceCommon.Constants;
+using Common.Constants;
 using System.Data;
 using System.Text.Json.Serialization;
 
@@ -15,37 +16,37 @@ public sealed class ProductEntity : Entity<Guid>
     #region Fields, Properties and Indexers
 
     [JsonInclude]
-    public string? Name { get; set; }
+    public string? Name { get; private set; }
 
     [JsonInclude]
-    public string? Sku { get; set; }
+    public string? Sku { get; private set; }
 
     [JsonInclude]
-    public string? ShortDescription { get; set; }
+    public string? ShortDescription { get; private set; }
 
     [JsonInclude]
-    public string? LongDescription { get; set; }
+    public string? LongDescription { get; private set; }
 
     [JsonInclude]
-    public string? Slug { get; set; }
+    public string? Slug { get; private set; }
 
     [JsonInclude]
-    public decimal Price { get; set; }
+    public decimal Price { get; private set; }
 
     [JsonInclude]
-    public decimal? SalesPrice { get; set; }
+    public decimal? SalesPrice { get; private set; }
 
     [JsonInclude]
-    public List<Guid>? CategoryIds { get; set; }
+    public List<Guid>? CategoryIds { get; private set; }
 
     [JsonInclude]
-    public List<ProductImageEntity>? Images { get; set; }
+    public List<ProductImageEntity>? Images { get; private set; }
 
     [JsonInclude]
-    public bool Published { get; set; }
+    public bool Published { get; private set; }
 
     [JsonInclude]
-    public bool IsAvaiable { get; set; }
+    public ProductStatus Status { get; private set; }
 
     #endregion
 
@@ -67,7 +68,7 @@ public sealed class ProductEntity : Entity<Guid>
         decimal price,
         decimal? salesPrice,
         List<Guid>? categoryIds,
-        string createdBy = SystemConst.CreatedBySystem)
+        string performedBy)
     {
         var product = new ProductEntity
         {
@@ -81,8 +82,8 @@ public sealed class ProductEntity : Entity<Guid>
             SalesPrice = salesPrice,
             Published = false,
             CategoryIds = categoryIds,
-            CreatedBy = createdBy,
-            LastModifiedBy = createdBy,
+            CreatedBy = performedBy,
+            LastModifiedBy = performedBy,
             CreatedOnUtc = DateTimeOffset.UtcNow,
             LastModifiedOnUtc = DateTimeOffset.UtcNow
         };
@@ -98,7 +99,7 @@ public sealed class ProductEntity : Entity<Guid>
         decimal price,
         decimal? salesPrice,
         List<Guid>? categoryIds,
-        string modifiedBy = SystemConst.CreatedBySystem)
+        string performedBy)
     {
         Name = name;
         Sku = sku;
@@ -108,7 +109,7 @@ public sealed class ProductEntity : Entity<Guid>
         Price = price;
         SalesPrice = salesPrice;
         CategoryIds = categoryIds;
-        LastModifiedBy = modifiedBy;
+        LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
     }
 
@@ -140,7 +141,7 @@ public sealed class ProductEntity : Entity<Guid>
     }
 
 
-    public void Publish(string modifiedBy = SystemConst.CreatedBySystem)
+    public void Publish(string performedBy)
     {
         if (Published)
         {
@@ -148,11 +149,11 @@ public sealed class ProductEntity : Entity<Guid>
         }
 
         Published = true;
-        LastModifiedBy = modifiedBy;
+        LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
     }
 
-    public void Unpublish(string modifiedBy = SystemConst.CreatedBySystem)
+    public void Unpublish(string performedBy)
     {
         if (!Published)
         {
@@ -160,7 +161,19 @@ public sealed class ProductEntity : Entity<Guid>
         }
 
         Published = false;
-        LastModifiedBy = modifiedBy;
+        LastModifiedBy = performedBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+    }
+
+    public void ChangeStatus(ProductStatus status, string performedBy)
+    {
+        if (Status == status)
+        {
+            throw new DomainException(MessageCode.DecisionFlowIllegal);
+        }
+
+        Status = status;
+        LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
     }
 

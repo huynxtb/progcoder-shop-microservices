@@ -20,6 +20,42 @@ namespace Inventory.Infrastructure.Data.Migrations
                 .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("Inventory.Domain.Entities.InventoryHistoryEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)")
+                        .HasColumnName("id");
+
+                    b.Property<int>("ChangeAmount")
+                        .HasColumnType("int")
+                        .HasColumnName("change_amount");
+
+                    b.Property<DateTimeOffset>("ChangedAt")
+                        .HasColumnType("datetime")
+                        .HasColumnName("changed_at");
+
+                    b.Property<Guid>("InventoryItemId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("inventory_item_id");
+
+                    b.Property<int>("QuantityAfterChange")
+                        .HasColumnType("int")
+                        .HasColumnName("quantity_after_change");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("source");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InventoryItemId", "ChangedAt");
+
+                    b.ToTable("inventory_histories", (string)null);
+                });
+
             modelBuilder.Entity("Inventory.Domain.Entities.InventoryItemEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -179,16 +215,6 @@ namespace Inventory.Infrastructure.Data.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("content");
 
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("created_by");
-
-                    b.Property<DateTimeOffset>("CreatedOnUtc")
-                        .HasColumnType("datetime")
-                        .HasColumnName("created_on_utc");
-
                     b.Property<string>("Error")
                         .HasColumnType("longtext");
 
@@ -197,22 +223,12 @@ namespace Inventory.Infrastructure.Data.Migrations
                         .HasColumnType("varchar(255)")
                         .HasColumnName("event_type");
 
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("last_modified_by");
-
-                    b.Property<DateTimeOffset?>("LastModifiedOnUtc")
+                    b.Property<DateTimeOffset>("OccurredOnUtc")
                         .HasColumnType("datetime")
-                        .HasColumnName("last_modified_on_utc");
-
-                    b.Property<DateTime>("OccurredOnUtc")
-                        .HasColumnType("datetime(6)")
                         .HasColumnName("occurred_on_utc");
 
-                    b.Property<DateTime?>("ProcessedOnUtc")
-                        .IsRequired()
-                        .HasColumnType("datetime(6)")
+                    b.Property<DateTimeOffset?>("ProcessedOnUtc")
+                        .HasColumnType("datetime")
                         .HasColumnName("processed_on_utc");
 
                     b.HasKey("Id");

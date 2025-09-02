@@ -2,7 +2,7 @@
 
 using Inventory.Application.Dtos.Products;
 using Refit;
-using SourceCommon.Models.Reponses;
+using Common.Models.Reponses;
 
 #endregion
 

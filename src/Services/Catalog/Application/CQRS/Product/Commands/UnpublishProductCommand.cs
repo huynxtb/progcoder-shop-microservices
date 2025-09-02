@@ -1,14 +1,15 @@
 ﻿#region using
 
+using BuildingBlocks.Abstractions.ValueObjects;
 using Catalog.Domain.Entities;
+using Common.Models.Reponses;
 using Marten;
-using SourceCommon.Models.Reponses;
 
 #endregion
 
 namespace Catalog.Application.CQRS.Product.Commands;
 
-public record UnpublishProductCommand(Guid ProductId, Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
+public record UnpublishProductCommand(Guid ProductId, Actor Actor) : ICommand<ResultSharedResponse<string>>;
 
 public class UnpublishProductCommandValidator : AbstractValidator<UnpublishProductCommand>
 {
@@ -38,7 +39,7 @@ public class UnpublishProductCommandHandler(IDocumentSession session) : ICommand
         var entity = await session.LoadAsync<ProductEntity>(command.ProductId)
             ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, command.ProductId);
 
-        entity.Unpublish(command.CurrentUserId.ToString());
+        entity.Unpublish(command.Actor.ToString());
         session.Store(entity);
 
         await session.SaveChangesAsync(cancellationToken);

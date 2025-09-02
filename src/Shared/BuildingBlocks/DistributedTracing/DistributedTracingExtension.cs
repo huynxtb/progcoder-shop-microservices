@@ -8,7 +8,7 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using SourceCommon.Configurations;
+using Common.Configurations;
 using System.Diagnostics;
 
 #endregion

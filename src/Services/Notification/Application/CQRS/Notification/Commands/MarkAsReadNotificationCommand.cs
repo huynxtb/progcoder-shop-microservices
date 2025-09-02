@@ -1,13 +1,14 @@
 ﻿#region using
 
 using Notification.Application.Data.Repositories;
-using SourceCommon.Models.Reponses;
+using Common.Models.Reponses;
+using BuildingBlocks.Abstractions.ValueObjects;
 
 #endregion
 
 namespace Notification.Application.CQRS.Notification.Commands;
 
-public sealed record MarkAsReadNotificationCommand(Guid Id, Guid UserId) : ICommand<ResultSharedResponse<string>>;
+public sealed record MarkAsReadNotificationCommand(Guid Id, Actor Actor) : ICommand<ResultSharedResponse<string>>;
 
 public sealed class MarkAsReadNotificationCommandValidator : AbstractValidator<MarkAsReadNotificationCommand>
 {
@@ -31,10 +32,10 @@ public class MarkAsReadNotificationCommandHandler(
     {
         var doc = await queryRepo.GetNotificationByIdAsync(
             id: command.Id,
-            userId: command.UserId,
+            userId: Guid.Parse(command.Actor.ToString()),
             cancellationToken: cancellationToken) ?? throw new NotFoundException(MessageCode.ResourceNotFound);
 
-        doc.MarkAsRead(command.UserId.ToString());
+        doc.MarkAsRead(command.Actor.ToString());
         
         await commandRepo.UpsertAsync(doc, cancellationToken);
 

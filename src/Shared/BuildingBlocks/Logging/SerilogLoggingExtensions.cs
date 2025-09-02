@@ -9,7 +9,7 @@ using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
 using Serilog.Sinks.OpenTelemetry;
-using SourceCommon.Configurations;
+using Common.Configurations;
 
 #endregion
 

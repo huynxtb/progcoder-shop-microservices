@@ -3,7 +3,7 @@
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SourceCommon.Configurations;
+using Common.Configurations;
 using System.Reflection;
 
 #endregion

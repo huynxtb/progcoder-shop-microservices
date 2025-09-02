@@ -4,7 +4,7 @@
 using Catalog.Api.Constants;
 using Catalog.Application.CQRS.Product.Commands;
 using Microsoft.AspNetCore.Mvc;
-using SourceCommon.Models.Reponses;
+using Common.Models.Reponses;
 
 #endregion
 
@@ -32,12 +32,9 @@ public sealed class DeleteProduct : ICarterModule
 
     private async Task<ResultSharedResponse<string>> HandleDeleteProductAsync(
         ISender sender,
-        IHttpContextAccessor httpContext,
         [FromRoute] Guid productId)
     {
-        var currentUser = httpContext.GetCurrentUser();
-        var command = new DeleteProductCommand(productId, currentUser.Id);
-
+        var command = new DeleteProductCommand(productId);
         return await sender.Send(command);
     }
 

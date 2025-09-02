@@ -6,7 +6,7 @@ using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Application.Models.Filters;
 using Inventory.Application.Models.Responses;
 using Microsoft.EntityFrameworkCore;
-using SourceCommon.Models.Reponses;
+using Common.Models.Reponses;
 
 #endregion
 

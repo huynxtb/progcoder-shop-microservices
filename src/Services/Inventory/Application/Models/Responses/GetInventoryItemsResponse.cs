@@ -1,7 +1,7 @@
 ﻿#region using
 
 using Inventory.Application.Dtos.InventoryItems;
-using SourceCommon.Models.Reponses;
+using Common.Models.Reponses;
 
 #endregion
 

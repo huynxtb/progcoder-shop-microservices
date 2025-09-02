@@ -4,7 +4,8 @@ using Inventory.Application.Data;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
-using SourceCommon.Models.Reponses;
+using Common.Models.Reponses;
+using BuildingBlocks.Abstractions.ValueObjects;
 
 #endregion
 
@@ -14,7 +15,7 @@ public sealed record UpdateStockCommand(
     Guid InventoryItemId,
     InventoryChangeType ChangeType,
     UpdateStockDto Dto,
-    Guid CurrentUserId) : ICommand<ResultSharedResponse<string>>;
+    Actor Actor) : ICommand<ResultSharedResponse<string>>;
 
 public sealed class UpdateStockCommandValidator : AbstractValidator<UpdateStockCommand>
 {
@@ -57,10 +58,10 @@ public sealed class UpdateStockCommandHandler(IApplicationDbContext dbContext) :
         switch (command.ChangeType)
         {
             case InventoryChangeType.Increase:
-                entity.Increase(dto.Amount, dto.Source!, command.CurrentUserId.ToString());
+                entity.Increase(dto.Amount, dto.Source!, command.Actor.ToString());
                 break;
             case InventoryChangeType.Decrease:
-                entity.Decrease(dto.Amount, dto.Source!, command.CurrentUserId.ToString());
+                entity.Decrease(dto.Amount, dto.Source!, command.Actor.ToString());
                 break;
             default:
                 throw new ClientValidationException(MessageCode.InventoryChangeTypeIsRequired);

@@ -2,7 +2,7 @@
 
 using Notification.Domain.Abstractions;
 using Notification.Domain.Enums;
-using SourceCommon.Constants;
+using Common.Constants;
 using System.Threading;
 
 #endregion
@@ -38,7 +38,7 @@ public sealed class NotificationEntity : Entity<Guid>
         Guid userId,
         string title,
         string message,
-        string createdBy = SystemConst.CreatedBySystem)
+        string performedBy)
     {
         return new NotificationEntity()
         {
@@ -46,14 +46,14 @@ public sealed class NotificationEntity : Entity<Guid>
             UserId = userId,
             Title = title,
             Message = message,
-            CreatedBy = createdBy,
-            LastModifiedBy = createdBy,
+            CreatedBy = performedBy,
+            LastModifiedBy = performedBy,
             CreatedOnUtc = DateTimeOffset.UtcNow,
             LastModifiedOnUtc = DateTimeOffset.UtcNow
         };
     }
 
-    public void MarkAsRead(string modifiedBy = SystemConst.CreatedBySystem)
+    public void MarkAsRead(string modifiedBy)
     {
         IsRead = true;
         ReadAt = DateTimeOffset.UtcNow;

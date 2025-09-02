@@ -1,10 +1,11 @@
 #region using
 
-using SourceCommon.Models.Reponses;
+using BuildingBlocks.Abstractions.ValueObjects;
+using Common.Models.Reponses;
 using Inventory.Api.Constants;
-using Microsoft.AspNetCore.Mvc;
-using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Application.CQRS.InventoryItem.Commands;
+using Inventory.Application.Dtos.InventoryItems;
+using Microsoft.AspNetCore.Mvc;
 
 #endregion
 
@@ -35,7 +36,7 @@ public sealed class CreateInventoryItem : ICarterModule
         [FromBody] CreateInventoryItemDto dto)
     {
         var currentUser = httpContext.GetCurrentUser();
-        var command = new CreateInventoryItemCommand(dto, currentUser.Id);
+        var command = new CreateInventoryItemCommand(dto, Actor.User(currentUser.Id));
         return await sender.Send(command);
     }
 

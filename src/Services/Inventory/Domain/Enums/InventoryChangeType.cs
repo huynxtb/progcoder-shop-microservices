@@ -6,5 +6,6 @@ public enum InventoryChangeType
     Decrease = 2,
     Reserve = 3,
     Release = 4,
-    Commit = 5
+    Commit = 5,
+    Init = 6
 }

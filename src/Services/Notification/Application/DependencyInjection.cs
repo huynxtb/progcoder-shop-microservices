@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FeatureManagement;
 using Notification.Application.Services;
-using SourceCommon.Configurations;
+using Common.Configurations;
 using System.Reflection;
 
 #endregion

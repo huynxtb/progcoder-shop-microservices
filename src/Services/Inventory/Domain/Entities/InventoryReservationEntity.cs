@@ -3,7 +3,7 @@
 using Inventory.Domain.Abstractions;
 using Inventory.Domain.Enums;
 using Inventory.Domain.ValueObjects;
-using SourceCommon.Constants;
+using Common.Constants;
 using System.Collections.Generic;
 
 #endregion
@@ -22,7 +22,7 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
 
     public DateTimeOffset? ExpiresAt { get; private set; }
 
-    public ReservationStatus Status { get; private set; } = ReservationStatus.Pending;
+    public ReservationStatus Status { get; private set; }
 
     public Location Location { get; private set; } = default!;
 
@@ -43,7 +43,7 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
         Guid referenceId,
         long quantity,
         DateTimeOffset? expiresAt,
-        string createdBy = SystemConst.CreatedBySystem)
+        string performedBy)
     {
         if (quantity <= 0) throw new ArgumentOutOfRangeException(nameof(quantity));
 
@@ -54,8 +54,8 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
             ReferenceId = referenceId,
             Quantity = quantity,
             ExpiresAt = expiresAt,
-            CreatedBy = createdBy,
-            LastModifiedBy = createdBy
+            CreatedBy = performedBy,
+            LastModifiedBy = performedBy
         };
 
         //entity.AddDomainEvent(new ReservationCreatedDomainEvent(id, Product.Id, location.ToString(), referenceId, quantity, expiresAt));
@@ -63,23 +63,23 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
         return entity;
     }
 
-    public void MarkCommitted(string modifiedBy = SystemConst.CreatedBySystem)
+    public void MarkCommitted(string performedBy)
     {
         if (Status != ReservationStatus.Pending) throw new InvalidOperationException("Only pending reservations can be committed.");
 
         Status = ReservationStatus.Committed;
-        LastModifiedBy = modifiedBy;
+        LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
 
         //AddDomainEvent(new ReservationCommittedDomainEvent(Id, Product.Id, Location.ToString(), ReferenceId, Quantity));
     }
 
-    public void Release(string reason, string modifiedBy = SystemConst.CreatedBySystem)
+    public void Release(string reason, string performedBy)
     {
         if (Status != ReservationStatus.Pending) return;
 
         Status = ReservationStatus.Released;
-        LastModifiedBy = modifiedBy;
+        LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
 
         //AddDomainEvent(new ReservationReleasedDomainEvent(Id, Product.Id, Location.ToString(), ReferenceId, Quantity, reason));

@@ -1,2 +1,2 @@
-﻿global using SourceCommon.Models;
+﻿global using Common.Models;
 global using Inventory.Infrastructure.Exceptions;

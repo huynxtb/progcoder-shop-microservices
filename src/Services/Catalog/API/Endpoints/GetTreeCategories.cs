@@ -3,7 +3,7 @@
 using Catalog.Api.Constants;
 using Catalog.Application.CQRS.Category.Queries;
 using Catalog.Application.Models.Responses;
-using SourceCommon.Models.Reponses;
+using Common.Models.Reponses;
 
 #endregion
 

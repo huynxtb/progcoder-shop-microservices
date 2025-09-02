@@ -5,7 +5,7 @@ using Inventory.Api.Constants;
 using Inventory.Application.CQRS.InventoryItem.Queries;
 using Inventory.Application.Models.Filters;
 using Inventory.Application.Models.Responses;
-using SourceCommon.Models.Reponses;
+using Common.Models.Reponses;
 
 #endregion
 

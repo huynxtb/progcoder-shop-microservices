@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\BuildingBlocks\BuildingBlocks.csproj" />
-    <ProjectReference Include="..\..\..\Shared\SourceCommon\SourceCommon.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Common\Common.csproj" />
     <ProjectReference Include="..\..\..\Shared\EventSourcing\EventSourcing.csproj" />
     <ProjectReference Include="..\Domain\Catalog.Domain.csproj" />
   </ItemGroup>

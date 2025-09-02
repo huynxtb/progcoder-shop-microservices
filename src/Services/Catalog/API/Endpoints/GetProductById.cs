@@ -4,7 +4,7 @@ using Catalog.Api.Constants;
 using Catalog.Application.CQRS.Product.Queries;
 using Catalog.Application.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
-using SourceCommon.Models.Reponses;
+using Common.Models.Reponses;
 
 #endregion
 

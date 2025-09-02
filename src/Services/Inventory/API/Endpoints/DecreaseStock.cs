@@ -5,7 +5,8 @@ using Inventory.Application.CQRS.InventoryItem.Commands;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
-using SourceCommon.Models.Reponses;
+using Common.Models.Reponses;
+using BuildingBlocks.Abstractions.ValueObjects;
 
 #endregion
 
@@ -37,7 +38,7 @@ public sealed class DecreaseStock : ICarterModule
         [FromBody] UpdateStockDto dto)
     {
         var currentUser = httpContext.GetCurrentUser();
-        var command = new UpdateStockCommand(inventoryItemId, InventoryChangeType.Decrease, dto, currentUser.Id);
+        var command = new UpdateStockCommand(inventoryItemId, InventoryChangeType.Decrease, dto, Actor.User(currentUser.Id));
         return await sender.Send(command);
     }
 

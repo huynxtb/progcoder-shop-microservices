@@ -1,10 +1,11 @@
 ﻿
 #region using
 
+using BuildingBlocks.Abstractions.ValueObjects;
 using Catalog.Api.Constants;
 using Catalog.Application.CQRS.Product.Commands;
+using Common.Models.Reponses;
 using Microsoft.AspNetCore.Mvc;
-using SourceCommon.Models.Reponses;
 
 #endregion
 
@@ -36,8 +37,7 @@ public sealed class PublishProduct : ICarterModule
         [FromRoute] Guid productId)
     {
         var currentUser = httpContext.GetCurrentUser();
-        var command = new PublishProductCommand(productId, currentUser.Id);
-
+        var command = new PublishProductCommand(productId, Actor.User(currentUser.Id));
         return await sender.Send(command);
     }
 

@@ -1,7 +1,7 @@
 ﻿#region using
 
 using Catalog.Domain.Abstractions;
-using SourceCommon.Constants;
+using Common.Constants;
 using System.Text.Json.Serialization;
 
 #endregion
@@ -39,8 +39,8 @@ public sealed class CategoryEntity : Entity<Guid>
         string name,
         string desctiption,
         string slug,
-        Guid? parentId = null,
-        string createdBy = SystemConst.CreatedBySystem)
+        string performedBy,
+        Guid? parentId = null)
     {
         return new CategoryEntity()
         {
@@ -49,8 +49,8 @@ public sealed class CategoryEntity : Entity<Guid>
             Description = desctiption,
             Slug = slug,
             ParentId = parentId,
-            CreatedBy = createdBy,
-            LastModifiedBy = createdBy,
+            CreatedBy = performedBy,
+            LastModifiedBy = performedBy,
             CreatedOnUtc = DateTimeOffset.UtcNow,
             LastModifiedOnUtc = DateTimeOffset.UtcNow,
         };
@@ -59,14 +59,14 @@ public sealed class CategoryEntity : Entity<Guid>
     public void Update(string name,
         string desciption,
         string slug,
-        Guid? parentId = null,
-        string modifiedBy = SystemConst.CreatedBySystem)
+        string performedBy,
+        Guid? parentId = null)
     {
         Name = name;
         Description = desciption;
         Slug = slug;
         ParentId = parentId;
-        LastModifiedBy = modifiedBy;
+        LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
     }
 

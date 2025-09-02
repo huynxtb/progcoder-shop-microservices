@@ -3,7 +3,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Notification.Api.Constants;
 using Notification.Application.CQRS.Notification.Commands;
-using SourceCommon.Models.Reponses;
+using Common.Models.Reponses;
+using BuildingBlocks.Abstractions.ValueObjects;
 
 #endregion
 
@@ -31,12 +32,11 @@ public sealed class MarkAsRead : ICarterModule
     private async Task<ResultSharedResponse<string>> HandleMarkAsReadAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
-        [FromRoute] string notificationId)
+        [FromRoute] Guid notificationId)
     {
-        var command = new MarkAsReadNotificationCommand(Guid.Parse(notificationId), httpContext.GetCurrentUser().Id);
-
+        var currentUser = httpContext.GetCurrentUser();
+        var command = new MarkAsReadNotificationCommand(notificationId, Actor.User(currentUser.Id));
         var result = await sender.Send(command);
-
         return result;
     }
 

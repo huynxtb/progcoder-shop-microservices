@@ -30,18 +30,18 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
 
     #region Methods
 
-    public static OutboxMessageEntity Create(string eventType, string content, DateTimeOffset occurredOnUtc)
+    public static OutboxMessageEntity Create(Guid id, string eventType, string content, DateTimeOffset occurredOnUtc)
     {
         return new OutboxMessageEntity()
         {
-            Id = Guid.NewGuid(),
+            Id = id,
             EventType = eventType,
             Content = content,
             OccurredOnUtc = occurredOnUtc
         };
     }
 
-    public void Processe(DateTimeOffset processedOnUtc, string? error = null)
+    public void Process(DateTimeOffset processedOnUtc, string? error = null)
     {
         ProcessedOnUtc = processedOnUtc;
         Error = error;
