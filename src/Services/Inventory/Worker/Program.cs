@@ -1,16 +1,20 @@
 #region using
 
+using Inventory.Application;
 using Inventory.Infrastructure;
 using Inventory.Worker;
-using Inventory.Worker.Outbox;
+using Inventory.Worker.BackgroundServices;
+
 
 #endregion
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddWorkerServices(builder.Configuration);
-builder.Services.AddHostedService<OutboxBackgroundService>();
+builder.Services
+    .AddApplicationServices()
+    .AddInfrastructureServices(builder.Configuration)
+    .AddWorkerServices(builder.Configuration)
+    .AddHostedService<OutboxBackgroundService>();
 
 var host = builder.Build();
 

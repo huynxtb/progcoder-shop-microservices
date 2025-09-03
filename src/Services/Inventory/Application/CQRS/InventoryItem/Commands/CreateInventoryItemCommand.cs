@@ -65,7 +65,6 @@ public sealed class CreateInventoryItemCommandHandler(
             dto.Location!, 
             dto.Quantity, 
             command.Actor);
-        await PushToOutboxAsync(inventoryItemId, dto);
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return ResultSharedResponse<string>.Success(
@@ -76,28 +75,6 @@ public sealed class CreateInventoryItemCommandHandler(
     #endregion
 
     #region Methods
-
-    private async Task PushToOutboxAsync(Guid inventoryItemId, CreateInventoryItemDto dto)
-    {
-        if (dto.Quantity > 0)
-        {
-            var message = new StockChangedIntegrationEvent()
-            {
-                InventoryItemId = inventoryItemId,
-                ProductId = dto.ProductId,
-                ChangeType = (int)InventoryChangeType.Init,
-                Amount = dto.Quantity,
-                Source = InventorySource.ManualAdjustment.GetDescription()
-            };
-            var outboxMessage = OutboxMessageEntity.Create(
-                id: Guid.NewGuid(),
-                eventType: message.EventType!,
-                content: JsonConvert.SerializeObject(message),
-                occurredOnUtc: DateTimeOffset.UtcNow);
-
-            await dbContext.OutboxMessages.AddAsync(outboxMessage);
-        }
-    }
 
     private async Task AddInventoryItemAsync(
         Guid inventoryItemId, 

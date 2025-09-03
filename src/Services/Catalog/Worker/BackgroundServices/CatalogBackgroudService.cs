@@ -1,4 +1,4 @@
-namespace Catalog.Worker;
+namespace Catalog.Worker.BackgroundServices;
 
 public class CatalogBackgroudService : BackgroundService
 {

@@ -8,7 +8,7 @@ using Inventory.Domain.Enums;
 namespace Inventory.Domain.Events;
 
 public sealed record class StockChangedDomainEvent(
-    Guid Id,
+    Guid InventoryItemId,
     Guid ProductId,
     int ChangeAmount,
     int QuantityAfterChange,

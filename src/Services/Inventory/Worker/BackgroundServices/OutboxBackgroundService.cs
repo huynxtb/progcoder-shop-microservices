@@ -1,4 +1,6 @@
-namespace Inventory.Worker.Outbox;
+using Inventory.Worker.Processors;
+
+namespace Inventory.Worker.BackgroundServices;
 
 internal class OutboxBackgroundService(
     IServiceScopeFactory serviceScopeFactory,

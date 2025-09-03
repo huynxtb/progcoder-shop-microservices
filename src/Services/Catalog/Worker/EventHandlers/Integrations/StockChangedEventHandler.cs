@@ -1,45 +1,33 @@
-﻿//namespace Catalog.Worker.EventHandlers.Integrations;
+﻿#region using
 
-//public sealed class StockChangedEventHandler(
-//    IApp renderer,
-//    IQueryTemplateRepository tmplRepo,
-//    ICommandDeliveryRepository deliveryRepo,
-//    IQueryDeliveryRepository delivQueryRepo,
-//    ILogger<UserCreatedEventHandler> logger)
-//    : IConsumer<UserCreatedEvent>
-//{
-//    public async Task Consume(ConsumeContext<StockChangedIntegrationEvent> context)
-//    {
-//        logger.LogInformation("Integration Event handled: {IntegrationEvent}", context.Message.GetType().Name);
+using BuildingBlocks.Abstractions.ValueObjects;
+using Catalog.Application.CQRS.Product.Commands;
+using Catalog.Domain.Enums;
+using Common.Constants;
+using EventSourcing.Events.Inventories;
+using MassTransit;
+using MediatR;
 
-//        var message = context.Message;
+#endregion
 
-//        var existing = await delivQueryRepo.GetByEventIdAsync(message.EventId);
+namespace Catalog.Worker.EventHandlers.Integrations;
 
-//        if (existing != null) return;
+public sealed class StockChangedEventHandler(IMediator sender, ILogger<StockChangedEventHandler> logger)
+    : IConsumer<StockChangedIntegrationEvent>
+{
+    public async Task Consume(ConsumeContext<StockChangedIntegrationEvent> context)
+    {
+        logger.LogInformation("Integration Event handled: {IntegrationEvent}", context.Message.GetType().Name);
 
-//        var tmplDoc = await tmplRepo.GetAsync(
-//            key: TemplateKey.UserRegistered,
-//            channel: Domain.Enums.ChannelType.Email);
+        var message = context.Message;
 
-//        var data = new Dictionary<string, object>()
-//        {
-//            { TemplateKeyMap.DisplayName, $"{message.FirstName} {message.LastName}" }
-//        };
-
-//        var body = renderer.Render(tmplDoc.Body!, data);
-
-//        var ndDocs = DeliveryEntity.Create(
-//            id: Guid.NewGuid(),
-//            eventId: message.EventId,
-//            channel: Domain.Enums.ChannelType.Email,
-//            to: [message.Email!],
-//            subject: tmplDoc.Subject!,
-//            body: body,
-//            isHtml: tmplDoc.IsHtml,
-//            priority: Domain.Enums.DeliveryPriority.Medium,
-//            createdBy: SystemConst.CreatedBySystem);
-
-//        await deliveryRepo.UpsertAsync(ndDocs);
-//    }
-//}
+        if (message.Amount > 0)
+        {
+            await sender.Send(new ChangeProductStatusCommand(message.ProductId, ProductStatus.InStock, Actor.Worker(Constants.Worker.Catalog)));
+        }
+        else
+        {
+            await sender.Send(new ChangeProductStatusCommand(message.ProductId, ProductStatus.OutOfStock, Actor.Worker(Constants.Worker.Catalog)));
+        }
+    }
+}

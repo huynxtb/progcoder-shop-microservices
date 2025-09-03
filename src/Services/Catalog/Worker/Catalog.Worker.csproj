@@ -14,7 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\EventSourcing\EventSourcing.csproj" />
     <ProjectReference Include="..\..\..\Shared\Common\Common.csproj" />
-    <ProjectReference Include="..\..\Inventory\Application\Inventory.Application.csproj" />
-    <ProjectReference Include="..\..\Inventory\Infrastructure\Inventory.Infrastructure.csproj" />
+    <ProjectReference Include="..\Application\Catalog.Application.csproj" />
+    <ProjectReference Include="..\Infrastructure\Catalog.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

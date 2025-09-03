@@ -99,7 +99,7 @@ public class UpdateUserProfileCommandHandler(
     {
         if (filesDto != null && filesDto.Any())
         {
-            var result = await minIO.UploadFilesAsync(filesDto, BucketName.Products, true, cancellationToken);
+            var result = await minIO.UploadFilesAsync(filesDto, Constants.Bucket.Products, true, cancellationToken);
             entity.AddOrUpdateImages(result.Adapt<List<ProductImageEntity>>());
         }
     }

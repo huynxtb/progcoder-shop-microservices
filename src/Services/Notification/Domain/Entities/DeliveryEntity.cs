@@ -52,6 +52,7 @@ public sealed class DeliveryEntity : Aggregate<Guid>
         DeliveryPriority priority,
         string eventId,
         string performedBy,
+        int maxAttempts,
         List<string>? cc = null,
         List<string>? bcc = null)
     {
@@ -71,7 +72,7 @@ public sealed class DeliveryEntity : Aggregate<Guid>
             Status = DeliveryStatus.Queued,
             Priority = priority,
             EventId = eventId,
-            MaxAttempts = SystemConst.MaxAttempts,
+            MaxAttempts = maxAttempts,
             CreatedBy = performedBy,
             LastModifiedBy = performedBy,
             CreatedOnUtc = DateTimeOffset.UtcNow,

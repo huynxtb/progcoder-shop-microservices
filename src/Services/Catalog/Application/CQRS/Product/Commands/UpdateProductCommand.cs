@@ -103,7 +103,7 @@ public class UpdateProductCommandHandler(
         var newImages = new List<ProductImageEntity>();
         if (filesDto != null && filesDto.Any())
         {
-            var result = await minIO.UploadFilesAsync(filesDto, BucketName.Products, true, cancellationToken);
+            var result = await minIO.UploadFilesAsync(filesDto, Constants.Bucket.Products, true, cancellationToken);
             newImages = result.Adapt<List<ProductImageEntity>>();
         }
         entity.AddOrUpdateImages(newImages, currentImageUrls);

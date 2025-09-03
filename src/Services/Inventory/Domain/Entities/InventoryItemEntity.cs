@@ -76,7 +76,7 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
         Quantity += amount;
         LastModifiedBy = performedBy;
 
-        //AddDomainEvent(new StockChangedDomainEvent(Id, Product.Id, Available, amount, InventoryChangeType.Increase, source));
+        AddDomainEvent(new StockChangedDomainEvent(Id, Product.Id, Available, amount, InventoryChangeType.Increase, source));
     }
 
     public void Decrease(
@@ -90,7 +90,7 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
         Quantity -= amount;
         LastModifiedBy = performedBy;
 
-        //AddDomainEvent(new StockChangedDomainEvent(Id, Product.Id, Available, amount, InventoryChangeType.Decrease, source));
+        AddDomainEvent(new StockChangedDomainEvent(Id, Product.Id, Available, amount, InventoryChangeType.Decrease, source));
     }
 
     //public void Reserve(

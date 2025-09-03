@@ -1,34 +1,45 @@
 ﻿#region using
 
+using Common.Configurations;
 using Dapper;
 using Inventory.Domain.Entities;
 using MassTransit;
-using Npgsql;
+using MySql.Data.MySqlClient;
 using System.Collections.Concurrent;
 using System.Text.Json;
 
 #endregion
 
-namespace Inventory.Worker.Outbox;
+namespace Inventory.Worker.Processors;
 
-internal sealed class OutboxProcessor(
-    NpgsqlDataSource dataSource,
-    IPublishEndpoint publishEndpoint,
-    ILogger<OutboxProcessor> logger)
+internal sealed class OutboxProcessor
 {
     private const int BatchSize = 1000;
-
     private static readonly ConcurrentDictionary<string, Type> TypeCache = new();
+    private readonly IConfiguration _cfg;
+    private readonly IPublishEndpoint _publishEndpoint;
+    private readonly ILogger<OutboxProcessor> _logger;
+
+    public OutboxProcessor(
+        IConfiguration cfg,
+        IPublishEndpoint publishEndpoint,
+        ILogger<OutboxProcessor> logger)
+    {
+        _cfg = cfg;
+        _publishEndpoint = publishEndpoint;
+        _logger = logger;
+    }
 
     public async Task<int> Execute(CancellationToken cancellationToken = default)
     {
-        await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        await using var connection = new MySqlConnection(_cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.Database}"]);
+        await connection.OpenAsync(cancellationToken);
         await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
 
         var messages = (await connection.QueryAsync<OutboxMessageEntity>(
             """
                 SELECT id AS Id, 
-                       type AS Type, 
+                       event_type AS EventType, 
                        content AS Content
                 FROM outbox_messages
                 WHERE processed_on_utc IS NULL
@@ -38,10 +49,10 @@ internal sealed class OutboxProcessor(
             new { BatchSize },
             transaction: transaction)).AsList();
 
-        var updateQueue = new ConcurrentQueue<OutboxUpdate>();
+      var updateQueue = new ConcurrentQueue<OutboxUpdate>();
 
         var publishTasks = messages
-            .Select(message => PublishMessage(message, updateQueue, publishEndpoint, cancellationToken))
+            .Select(message => PublishMessage(message, updateQueue, _publishEndpoint, cancellationToken))
             .ToList();
 
         await Task.WhenAll(publishTasks);
@@ -51,35 +62,39 @@ internal sealed class OutboxProcessor(
             var updateSql =
                 """
                     UPDATE outbox_messages
-                    SET processed_on_utc = v.processed_on_utc,
-                        error = v.error
-                    FROM (VALUES
+                    SET processed_on_utc = CASE 
                         {0}
-                    ) AS v(id, processed_on_utc, error)
-                    WHERE outbox_messages.id = v.id::uuid
+                    END,
+                    error = CASE 
+                        {1}
+                    END
+                    WHERE id IN ({2})
                 """;
 
             var updates = updateQueue.ToList();
-            var valuesList = string.Join(",",
-                updateQueue.Select((_, i) => $"(@Id{i}, @ProcessedOn{i}, @Error{i})"));
+            var whenThenProcessed = string.Join(" ",
+                updates.Select((_, i) => $"WHEN id = @Id{i} THEN @ProcessedOn{i}"));
+            var whenThenError = string.Join(" ",
+                updates.Select((_, i) => $"WHEN id = @Id{i} THEN @Error{i}"));
+            var ids = string.Join(",", updates.Select((_, i) => $"@Id{i}"));
 
             var parameters = new DynamicParameters();
 
-            for (int i = 0; i < updateQueue.Count; i++)
+            for (int i = 0; i < updates.Count; i++)
             {
-                parameters.Add($"Id{i}", updates[i].Id.ToString());
+                parameters.Add($"Id{i}", updates[i].Id);
                 parameters.Add($"ProcessedOn{i}", updates[i].ProcessedOnUtc);
                 parameters.Add($"Error{i}", updates[i].Error);
             }
 
-            var formattedSql = string.Format(updateSql, valuesList);
+            var formattedSql = string.Format(updateSql, whenThenProcessed, whenThenError, ids);
 
             await connection.ExecuteAsync(formattedSql, parameters, transaction: transaction);
         }
 
         await transaction.CommitAsync(cancellationToken);
 
-        logger.LogInformation("dasd {Count}", messages.Count);
+        _logger.LogInformation("Processed {Count} messages from outbox", messages.Count);
 
         return messages.Count;
     }
@@ -107,13 +122,16 @@ internal sealed class OutboxProcessor(
 
     private static Type GetOrAddMessageType(string typename)
     {
-        return TypeCache.GetOrAdd(typename, name => EventSourcing.Events.AssemblyReference.Assembly.GetType(name)!);
+        var type = TypeCache.GetOrAdd(typename, name => Type.GetType(name)!);
+        return type;
     }
 
     private struct OutboxUpdate
     {
         public Guid Id { get; init; }
+
         public DateTime ProcessedOnUtc { get; init; }
+
         public string? Error { get; init; }
     }
 }

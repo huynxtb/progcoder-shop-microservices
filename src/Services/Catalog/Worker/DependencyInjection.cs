@@ -2,12 +2,11 @@
 
 using BuildingBlocks.Logging;
 using EventSourcing.MassTransit;
-using Inventory.Worker.Processors;
 using System.Reflection;
 
 #endregion
 
-namespace Inventory.Worker;
+namespace Catalog.Worker;
 
 public static class DependencyInjection
 {
@@ -19,7 +18,6 @@ public static class DependencyInjection
     {
         services.AddSerilogLogging(cfg);
         services.AddMessageBroker(cfg, Assembly.GetExecutingAssembly());
-        services.AddScoped<OutboxProcessor>();
 
         return services;
     }

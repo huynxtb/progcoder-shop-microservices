@@ -17,9 +17,7 @@ public static class DependencyInjection
 {
     #region Methods
 
-    public static IServiceCollection AddApplicationServices(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddExceptionHandler<CustomExceptionHandler>();
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
@@ -30,7 +28,6 @@ public static class DependencyInjection
             config.AddOpenBehavior(typeof(LoggingBehavior<,>));
         });
         services.AddFeatureManagement();
-        services.AddMessageBroker(configuration, Assembly.GetExecutingAssembly());
 
         return services;
     }
