@@ -14,11 +14,12 @@ Create new Client
 PORTS:
 Catalog 5001
 Inventory 5002
-Notification 5003
-Customer 5000
-Discount 5004
 Order 5005
 Basket 5006
+
+Notification 5003
+Discount 5004
+
 Payment 5007
 Search 5008
 Report 5009

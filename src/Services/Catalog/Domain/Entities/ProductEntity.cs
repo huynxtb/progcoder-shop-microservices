@@ -80,6 +80,7 @@ public sealed class ProductEntity : Entity<Guid>
             Slug = slug,
             Price = price,
             SalesPrice = salesPrice,
+            Status = ProductStatus.OutOfStock,
             Published = false,
             CategoryIds = categoryIds,
             CreatedBy = performedBy,

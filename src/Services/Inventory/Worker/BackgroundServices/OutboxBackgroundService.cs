@@ -1,4 +1,8 @@
+#region using
+
 using Inventory.Worker.Processors;
+
+#endregion
 
 namespace Inventory.Worker.BackgroundServices;
 
@@ -6,22 +10,28 @@ internal class OutboxBackgroundService(
     IServiceScopeFactory serviceScopeFactory,
     ILogger<OutboxBackgroundService> logger) : BackgroundService
 {
+    #region Fields, Properties and Indexers
+
     private const int OutboxProcessorFrequency = 5;
+    
     private readonly int _maxParallelism = 5;
+    
     private int _totalIterations = 0;
+    
     private int _totalProcessedMessage = 0;
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    #endregion
+
+    #region Methods
+
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        //OutboxLoggers.LogStarting(logger);
-
-        using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1));
-        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, stoppingToken);
-
+        logger.LogInformation("Outbox processor started");
+        
         var parallelOptions = new ParallelOptions
         {
             MaxDegreeOfParallelism = _maxParallelism,
-            CancellationToken = linkedCts.Token
+            CancellationToken = cancellationToken
         };
 
         try
@@ -36,15 +46,11 @@ internal class OutboxBackgroundService(
         }
         catch (OperationCanceledException)
         {
-            //OutboxLoggers.LogOperationCancelled(logger);
+            logger.LogInformation("Outbox processor operation cancelled");
         }
         catch (Exception ex)
         {
-            //OutboxLoggers.LogError(logger, ex);
-        }
-        finally
-        {
-            //OutboxLoggers.LogFinished(logger, _totalIterations, _totalProcessedMessage);
+            logger.LogError(ex, "An error occurred while processing outbox messages");
         }
     }
 
@@ -56,15 +62,16 @@ internal class OutboxBackgroundService(
         while (!cancellationToken.IsCancellationRequested)
         {
             var iterationCount = Interlocked.Increment(ref _totalIterations);
-            //OutboxLoggers.LogStartingIteration(logger, iterationCount);
+            logger.LogDebug("Starting outbox processing iteration {IterationCount}", iterationCount);
 
-            int processedMessages = await outboxProcessor.Execute(cancellationToken);
+            int processedMessages = await outboxProcessor.ExecuteAsync(cancellationToken);
             var totalProcessedMessages = Interlocked.Add(ref _totalProcessedMessage, processedMessages);
 
-            //OutboxLoggers.LogIterationCompleted(logger, iterationCount, processedMessages, totalProcessedMessages);
+            logger.LogDebug("Completed outbox processing iteration {IterationCount}. Processed {ProcessedMessages} messages. Total processed: {TotalProcessedMessages}", iterationCount, processedMessages, totalProcessedMessages);
 
-            // Simulate running Outbox processing every N seconds
             await Task.Delay(TimeSpan.FromSeconds(OutboxProcessorFrequency), cancellationToken);
         }
     }
+
+    #endregion
 }

@@ -1,6 +1,7 @@
 #region using
 
 using BuildingBlocks.Abstractions.ValueObjects;
+using Common.Extensions;
 using Common.Models.Reponses;
 using Inventory.Api.Constants;
 using Inventory.Application.CQRS.InventoryItem.Commands;
@@ -38,6 +39,7 @@ public sealed class IncreaseStock : ICarterModule
         [FromBody] UpdateStockDto dto)
     {
         var currentUser = httpContext.GetCurrentUser();
+        dto.Source = InventorySource.ManualAdjustment.GetDescription();
         var command = new UpdateStockCommand(inventoryItemId, InventoryChangeType.Increase, dto, Actor.User(currentUser.Id));
         return await sender.Send(command);
     }

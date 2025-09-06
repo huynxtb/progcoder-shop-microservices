@@ -43,7 +43,7 @@ public sealed class StockChangedDomainEventHandler(
             ProductId = @event.ProductId,
             ChangeType = (int)@event.ChangeType,
             Amount = @event.QuantityAfterChange,
-            Source = InventorySource.ManualAdjustment.GetDescription()
+            Source = @event.Source
         };
         var outboxMessage = OutboxMessageEntity.Create(
             id: Guid.NewGuid(),
