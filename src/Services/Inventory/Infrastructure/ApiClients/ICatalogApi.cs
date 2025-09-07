@@ -1,8 +1,7 @@
 ﻿#region using
 
-using Inventory.Application.Dtos.Products;
+using Inventory.Application.Models.Responses.Externals;
 using Refit;
-using Common.Models.Reponses;
 
 #endregion
 
@@ -13,9 +12,7 @@ public interface ICatalogApi
     #region Methods
 
     [Get("/products/{productId}")]
-    Task<ResultSharedResponse<ProductApiDto>?> GetProductByIdAsync(
-        [AliasAs("productId")] string productId,
-        [Header("Authorization")] string bearerToken);
+    Task<ProductReponse> GetProductByIdAsync([AliasAs("productId")] string productId, [Header("Authorization")] string bearerToken);
 
     #endregion
 }

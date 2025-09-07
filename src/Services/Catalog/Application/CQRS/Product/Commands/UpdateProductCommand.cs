@@ -11,7 +11,7 @@ using Marten;
 
 namespace Catalog.Application.CQRS.Product.Commands;
 
-public record UpdateProductCommand(Guid ProductId, UpdateProductDto Dto, Actor Actor) : ICommand<ResultSharedResponse<string>>;
+public record UpdateProductCommand(Guid ProductId, UpdateProductDto Dto, Actor Actor) : ICommand<Guid>;
 
 public class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand>
 {
@@ -57,11 +57,11 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
 
 public class UpdateProductCommandHandler(
     IDocumentSession session,
-    IMinIOCloudService minIO) : ICommandHandler<UpdateProductCommand, ResultSharedResponse<string>>
+    IMinIOCloudService minIO) : ICommandHandler<UpdateProductCommand, Guid>
 {
     #region Implementations
 
-    public async Task<ResultSharedResponse<string>> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
     {
         var entity = await session.LoadAsync<ProductEntity>(command.ProductId)
             ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, command.ProductId);
@@ -85,9 +85,7 @@ public class UpdateProductCommandHandler(
         session.Store(entity);
         await session.SaveChangesAsync(cancellationToken);
 
-        return ResultSharedResponse<string>.Success(
-            data: entity.Id.ToString(),
-            message: MessageCode.UpdateSuccess);
+        return entity.Id;
     }
 
     #endregion

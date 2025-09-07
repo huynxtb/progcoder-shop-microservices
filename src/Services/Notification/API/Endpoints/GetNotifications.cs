@@ -4,7 +4,6 @@ using BuildingBlocks.Pagination;
 using Notification.Api.Constants;
 using Notification.Application.CQRS.Notification.Queries;
 using Notification.Application.Models.Responses;
-using Common.Models.Reponses;
 using BuildingBlocks.Abstractions.ValueObjects;
 
 #endregion
@@ -20,7 +19,7 @@ public sealed class GetNotifications : ICarterModule
         app.MapGet(ApiRoutes.Notification.GetNotifications, HandleGetNotificationsAsync)
             .WithTags(ApiRoutes.Notification.Tags)
             .WithName(nameof(GetNotifications))
-            .Produces<ResultSharedResponse<GetNotificationsReponse>>(StatusCodes.Status200OK)
+            .Produces<GetNotificationsReponse>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
@@ -30,7 +29,7 @@ public sealed class GetNotifications : ICarterModule
 
     #region Methods
 
-    private async Task<ResultSharedResponse<GetNotificationsReponse>> HandleGetNotificationsAsync(
+    private async Task<GetNotificationsReponse> HandleGetNotificationsAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
         [AsParameters] PaginationRequest paging)

@@ -15,7 +15,7 @@ public sealed record UpdateStockCommand(
     Guid InventoryItemId,
     InventoryChangeType ChangeType,
     UpdateStockDto Dto,
-    Actor Actor) : ICommand<ResultSharedResponse<string>>;
+    Actor Actor) : ICommand<Guid>;
 
 public sealed class UpdateStockCommandValidator : AbstractValidator<UpdateStockCommand>
 {
@@ -45,11 +45,11 @@ public sealed class UpdateStockCommandValidator : AbstractValidator<UpdateStockC
     #endregion
 }
 
-public sealed class UpdateStockCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<UpdateStockCommand, ResultSharedResponse<string>>
+public sealed class UpdateStockCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<UpdateStockCommand, Guid>
 {
     #region Implementations
 
-    public async Task<ResultSharedResponse<string>> Handle(UpdateStockCommand command, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(UpdateStockCommand command, CancellationToken cancellationToken)
     {
         var dto = command.Dto;
         var entity = await dbContext.InventoryItems.SingleOrDefaultAsync(x => x.Id == command.InventoryItemId, cancellationToken)
@@ -70,7 +70,7 @@ public sealed class UpdateStockCommandHandler(IApplicationDbContext dbContext) :
         dbContext.InventoryItems.Update(entity);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return ResultSharedResponse<string>.Success(
+        return Guid.Success(
             data: entity.Id.ToString(),
             message: MessageCode.UpdateSuccess);
     }

@@ -14,6 +14,8 @@ public sealed class AppConfigCfg
 
     public const string IncludeExceptionStackTrace = "IncludeExceptionStackTrace";
 
+    public const string GrpcApiKey = "GrpcApiKey";
+
     #endregion
 
 }

@@ -3,10 +3,12 @@
 using BuildingBlocks.DistributedTracing;
 using BuildingBlocks.Logging;
 using BuildingBlocks.Swagger.Extensions;
-using HealthChecks.UI.Client;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Catalog.Api.GrpcServices;
+using Catalog.Api.GrpcServices.Interceptors;
 using Common.Configurations;
 using Common.Constants;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using System.Xml.Linq;
 
 #endregion
@@ -50,6 +52,13 @@ public static class DependencyInjection
         services.AddHttpContextAccessor();
         services.AddAuthenticationAndAuthorization(cfg);
         services.AddSwaggerServices(cfg);
+        services
+            .AddGrpc(o =>
+            {
+                o.Interceptors.Add<ApiKeyValidationInterceptor>();
+            })
+            .AddJsonTranscoding();
+        services.AddSingleton<ApiKeyValidationInterceptor>();
 
         return services;
     }
@@ -59,6 +68,7 @@ public static class DependencyInjection
         app.UseSerilogReqLogging();
         app.UsePrometheusEndpoint();
         app.MapCarter();
+        app.MapGrpcService<CatalogGrpc>();
         app.UseExceptionHandler(options => { });
         app.UseHealthChecks("/health",
             new HealthCheckOptions
@@ -72,4 +82,6 @@ public static class DependencyInjection
 
         return app;
     }
+
+
 }

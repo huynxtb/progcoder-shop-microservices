@@ -28,7 +28,7 @@ public sealed class CreateProduct : ICarterModule
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(CreateProduct))
             .WithMultipartForm<CreateProductRequest>()
-            .Produces<ResultSharedResponse<string>>(StatusCodes.Status200OK)
+            .Produces<Guid>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -40,7 +40,7 @@ public sealed class CreateProduct : ICarterModule
 
     #region Methods
 
-    private async Task<ResultSharedResponse<string>> HandleCreateProductAsync(
+    private async Task<Guid> HandleCreateProductAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
         [FromForm] CreateProductRequest req)

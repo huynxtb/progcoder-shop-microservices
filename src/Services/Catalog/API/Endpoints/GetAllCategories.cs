@@ -19,7 +19,7 @@ public sealed class GetAllCategories : ICarterModule
         app.MapGet(ApiRoutes.Category.GetAll, HandleGetAllCategoriesAsync)
             .WithTags(ApiRoutes.Category.Tags)
             .WithName(nameof(GetAllCategories))
-            .Produces<ResultSharedResponse<GetAllCategoriesResponse>>(StatusCodes.Status200OK)
+            .Produces<GetAllCategoriesResponse>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound);
     }
@@ -28,7 +28,7 @@ public sealed class GetAllCategories : ICarterModule
 
     #region Methods
 
-    private async Task<ResultSharedResponse<GetAllCategoriesResponse>> HandleGetAllCategoriesAsync(
+    private async Task<GetAllCategoriesResponse> HandleGetAllCategoriesAsync(
         ISender sender,
         [AsParameters] GetAllCategoriesFilter req)
     {

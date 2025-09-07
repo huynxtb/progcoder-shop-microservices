@@ -1,14 +1,12 @@
 ﻿#region using
 
-using Inventory.Application.Dtos.Products;
-using Inventory.Application.Models.Responses;
 using Inventory.Application.Services;
 using Inventory.Infrastructure.ApiClients;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Refit;
 using Common.Configurations;
-using Common.Models.Reponses;
+using Inventory.Application.Models.Responses.Externals;
 
 #endregion
 
@@ -47,19 +45,19 @@ public sealed class CatalogApiService : ICatalogApiService
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _catalogApi = catalogApi ?? throw new ArgumentNullException(nameof(catalogApi));
         _keycloakApi = keycloakApi ?? throw new ArgumentNullException(nameof(keycloakApi));
-        _realm = cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.Realm}"]!;
-        _clientId = cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.ClientId}"]!;
-        _clientSecret = cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.ClientSecret}"]!;
-        _grantType = cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.GrantType}"]!;
-        _scopes = cfg.GetRequiredSection($"{KeycloakApiCfg.Section}:{KeycloakApiCfg.Scopes}")
-            .Get<string[]>() ?? throw new ArgumentNullException($"{KeycloakApiCfg.Section}:{KeycloakApiCfg.Scopes}");
+        _realm = cfg[$"{ApiClientCfg.Keycloak.Section}:{ApiClientCfg.Keycloak.Realm}"]!;
+        _clientId = cfg[$"{ApiClientCfg.Keycloak.Section}:{ApiClientCfg.Keycloak.ClientId}"]!;
+        _clientSecret = cfg[$"{ApiClientCfg.Keycloak.Section}:{ApiClientCfg.Keycloak.ClientSecret}"]!;
+        _grantType = cfg[$"{ApiClientCfg.Keycloak.Section}:{ApiClientCfg.Keycloak.GrantType}"]!;
+        _scopes = cfg.GetRequiredSection($"{ApiClientCfg.Keycloak.Section}:{ApiClientCfg.Keycloak.Scopes}")
+            .Get<string[]>() ?? throw new ArgumentNullException($"{ApiClientCfg.Keycloak.Section}:{ApiClientCfg.Keycloak.Scopes}");
     }
 
     #endregion
 
     #region Implementations
 
-    public async Task<ResultSharedResponse<ProductApiDto>?> GetProductByIdAsync(string productId)
+    public async Task<ProductReponse?> GetProductByIdAsync(string productId)
     {
         try
         {

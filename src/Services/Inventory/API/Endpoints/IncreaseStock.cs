@@ -22,7 +22,7 @@ public sealed class IncreaseStock : ICarterModule
         app.MapPut(ApiRoutes.InventoryItem.IncreaseStock, HandleUpdateStockAsync)
             .WithTags(ApiRoutes.InventoryItem.Tags)
             .WithName(nameof(IncreaseStock))
-            .Produces<ResultSharedResponse<string>>(StatusCodes.Status200OK)
+            .Produces<Guid>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
@@ -32,7 +32,7 @@ public sealed class IncreaseStock : ICarterModule
 
     #region Methods
 
-    private async Task<ResultSharedResponse<string>> HandleUpdateStockAsync(
+    private async Task<Guid> HandleUpdateStockAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
         [FromRoute] Guid inventoryItemId,

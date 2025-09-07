@@ -29,7 +29,7 @@ public sealed class GetPublishProducts : ICarterModule
 
     #region Methods
 
-    private async Task<ResultSharedResponse<GetPublishProductsResponse>> HandleGetPublishProductsAsync(
+    private async Task<GetPublishProductsResponse> HandleGetPublishProductsAsync(
         ISender sender,
         [AsParameters] GetPublishProductsFilter req,
         [AsParameters] PaginationRequest paging)

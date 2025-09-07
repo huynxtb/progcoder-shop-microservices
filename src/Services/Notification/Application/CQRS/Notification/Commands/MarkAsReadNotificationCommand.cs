@@ -8,7 +8,7 @@ using BuildingBlocks.Abstractions.ValueObjects;
 
 namespace Notification.Application.CQRS.Notification.Commands;
 
-public sealed record MarkAsReadNotificationCommand(Guid Id, Actor Actor) : ICommand<ResultSharedResponse<string>>;
+public sealed record MarkAsReadNotificationCommand(Guid Id, Actor Actor) : ICommand<Guid>;
 
 public sealed class MarkAsReadNotificationCommandValidator : AbstractValidator<MarkAsReadNotificationCommand>
 {
@@ -24,11 +24,11 @@ public sealed class MarkAsReadNotificationCommandValidator : AbstractValidator<M
 public class MarkAsReadNotificationCommandHandler(
     ICommandNotificationRepository commandRepo,
     IQueryNotificationRepository queryRepo) 
-    : ICommandHandler<MarkAsReadNotificationCommand, ResultSharedResponse<string>>
+    : ICommandHandler<MarkAsReadNotificationCommand, Guid>
 {
     #region Implementations
 
-    public async Task<ResultSharedResponse<string>> Handle(MarkAsReadNotificationCommand command, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(MarkAsReadNotificationCommand command, CancellationToken cancellationToken)
     {
         var doc = await queryRepo.GetNotificationByIdAsync(
             id: command.Id,
@@ -39,9 +39,7 @@ public class MarkAsReadNotificationCommandHandler(
         
         await commandRepo.UpsertAsync(doc, cancellationToken);
 
-        return ResultSharedResponse<string>.Success(
-            data: doc.Id.ToString(),
-            message: MessageCode.UpdateSuccess);
+        return doc.Id;
     }
 
     #endregion

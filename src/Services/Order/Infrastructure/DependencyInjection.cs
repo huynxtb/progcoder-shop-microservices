@@ -76,7 +76,7 @@ public static class DependencyInjection
             services.AddRefitClient<ICatalogApi>()
                 .ConfigureHttpClient(c =>
                 {
-                    c.BaseAddress = new Uri(cfg[$"{CatalogApiCfg.Section}:{CatalogApiCfg.BaseUrl}"]!);
+                    c.BaseAddress = new Uri(cfg[$"{ApiClientCfg.Section}:{ApiClientCfg.BaseUrl}"]!);
                     c.Timeout = TimeSpan.FromSeconds(30);
                 });
         }

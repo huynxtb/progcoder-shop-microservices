@@ -28,7 +28,7 @@ public sealed class UpdateProduct : ICarterModule
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(UpdateProduct))
             .WithMultipartForm<UpdateProductRequest>()
-            .Produces<ResultSharedResponse<string>>(StatusCodes.Status200OK)
+            .Produces<Guid>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status403Forbidden)
 			.ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -40,7 +40,7 @@ public sealed class UpdateProduct : ICarterModule
 
     #region Methods
 
-    private async Task<ResultSharedResponse<string>> HandleUpdateProductAsync(
+    private async Task<Guid> HandleUpdateProductAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
         [FromRoute] Guid productId,

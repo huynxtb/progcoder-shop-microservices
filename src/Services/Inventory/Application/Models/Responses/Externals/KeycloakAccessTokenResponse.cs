@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 #endregion
 
-namespace Inventory.Application.Models.Responses;
+namespace Inventory.Application.Models.Responses.Externals;
 
 public sealed class KeycloakAccessTokenResponse
 {

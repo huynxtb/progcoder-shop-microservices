@@ -6,7 +6,6 @@ using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Application.Models.Filters;
 using Inventory.Application.Models.Responses;
 using Microsoft.EntityFrameworkCore;
-using Common.Models.Reponses;
 
 #endregion
 
@@ -14,14 +13,14 @@ namespace Inventory.Application.CQRS.InventoryItem.Queries;
 
 public sealed record GetInventoryItemsQuery(
     GetInventoryItemsFilter Filter,
-    PaginationRequest Paging) : IQuery<ResultSharedResponse<GetInventoryItemsResponse>>;
+    PaginationRequest Paging) : IQuery<GetInventoryItemsResponse>;
 
 public sealed class GetInventoryItemsQueryHandler(IApplicationDbContext dbContext)
-    : IQueryHandler<GetInventoryItemsQuery, ResultSharedResponse<GetInventoryItemsResponse>>
+    : IQueryHandler<GetInventoryItemsQuery, GetInventoryItemsResponse>
 {
     #region Implementations
 
-    public async Task<ResultSharedResponse<GetInventoryItemsResponse>> Handle(GetInventoryItemsQuery query, CancellationToken cancellationToken)
+    public async Task<GetInventoryItemsResponse> Handle(GetInventoryItemsQuery query, CancellationToken cancellationToken)
     {
         var filteredQuery = dbContext.InventoryItems
             .AsNoTracking()
@@ -50,7 +49,7 @@ public sealed class GetInventoryItemsQueryHandler(IApplicationDbContext dbContex
         };
         var reponse = new GetInventoryItemsResponse(items, paging);
 
-        return ResultSharedResponse<GetInventoryItemsResponse>.Success(reponse, MessageCode.GetSuccess);
+        return reponse;
     }
 
     #endregion

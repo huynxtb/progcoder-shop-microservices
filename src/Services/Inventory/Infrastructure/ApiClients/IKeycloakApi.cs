@@ -1,6 +1,6 @@
 ﻿#region using
 
-using Inventory.Application.Models.Responses;
+using Inventory.Application.Models.Responses.Externals;
 using Refit;
 
 #endregion

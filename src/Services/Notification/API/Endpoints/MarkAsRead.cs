@@ -19,7 +19,7 @@ public sealed class MarkAsRead : ICarterModule
         app.MapPost(ApiRoutes.Notification.MarkAsRead, HandleMarkAsReadAsync)
             .WithTags(ApiRoutes.Notification.Tags)
             .WithName(nameof(MarkAsRead))
-            .Produces<ResultSharedResponse<string>>(StatusCodes.Status200OK)
+            .Produces<Guid>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
@@ -29,7 +29,7 @@ public sealed class MarkAsRead : ICarterModule
 
     #region Methods
 
-    private async Task<ResultSharedResponse<string>> HandleMarkAsReadAsync(
+    private async Task<Guid> HandleMarkAsReadAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
         [FromRoute] Guid notificationId)

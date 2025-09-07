@@ -20,7 +20,7 @@ public sealed class GetProducts : ICarterModule
         app.MapGet(ApiRoutes.Product.GetProducts, HandleGetProductsAsync)
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(GetProducts))
-            .Produces<ResultSharedResponse<GetProductsResponse>>(StatusCodes.Status200OK)
+            .Produces<GetProductsResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -31,7 +31,7 @@ public sealed class GetProducts : ICarterModule
 
     #region Methods
 
-    private async Task<ResultSharedResponse<GetProductsResponse>> HandleGetProductsAsync(
+    private async Task<GetProductsResponse> HandleGetProductsAsync(
         ISender sender,
         [AsParameters] GetProductsFilter req,
         [AsParameters] PaginationRequest paging)

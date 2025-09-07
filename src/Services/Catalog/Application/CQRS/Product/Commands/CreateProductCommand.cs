@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Catalog.Application.CQRS.Product.Commands;
 
-public record CreateProductCommand(CreateProductDto Dto, Actor Actor) : ICommand<ResultSharedResponse<string>>;
+public record CreateProductCommand(CreateProductDto Dto, Actor Actor) : ICommand<Guid>;
 
 public class UpdateUserProfileCommandValidator : AbstractValidator<CreateProductCommand>
 {
@@ -56,11 +56,11 @@ public class UpdateUserProfileCommandValidator : AbstractValidator<CreateProduct
 
 public class UpdateUserProfileCommandHandler(
     IDocumentSession session,
-    IMinIOCloudService minIO) : ICommandHandler<CreateProductCommand, ResultSharedResponse<string>>
+    IMinIOCloudService minIO) : ICommandHandler<CreateProductCommand, Guid>
 {
     #region Implementations
 
-    public async Task<ResultSharedResponse<string>> Handle(CreateProductCommand command, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateProductCommand command, CancellationToken cancellationToken)
     {
         var dto = command.Dto;
         var categories = await session.Query<CategoryEntity>().ToListAsync(token: cancellationToken);
@@ -83,9 +83,7 @@ public class UpdateUserProfileCommandHandler(
         session.Store(entity);
         await session.SaveChangesAsync(cancellationToken);
 
-        return ResultSharedResponse<string>.Success(
-            data: entity.Id.ToString(),
-            message: MessageCode.CreateSuccess);
+        return entity.Id;
     }
 
     #endregion

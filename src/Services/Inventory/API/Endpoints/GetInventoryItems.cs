@@ -5,7 +5,6 @@ using Inventory.Api.Constants;
 using Inventory.Application.CQRS.InventoryItem.Queries;
 using Inventory.Application.Models.Filters;
 using Inventory.Application.Models.Responses;
-using Common.Models.Reponses;
 
 #endregion
 
@@ -20,7 +19,7 @@ public sealed class GetInventoryItems : ICarterModule
         app.MapGet(ApiRoutes.InventoryItem.GetInventoryItems, HandleGetInventoryItemsAsync)
             .WithTags(ApiRoutes.InventoryItem.Tags)
             .WithName(nameof(GetInventoryItems))
-            .Produces<ResultSharedResponse<GetInventoryItemsResponse>>(StatusCodes.Status200OK)
+            .Produces<GetInventoryItemsResponse>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
@@ -30,7 +29,7 @@ public sealed class GetInventoryItems : ICarterModule
 
     #region Methods
 
-    private async Task<ResultSharedResponse<GetInventoryItemsResponse>> HandleGetInventoryItemsAsync(
+    private async Task<GetInventoryItemsResponse> HandleGetInventoryItemsAsync(
         ISender sender,
         [AsParameters] GetInventoryItemsFilter filter,
         [AsParameters] PaginationRequest paging)

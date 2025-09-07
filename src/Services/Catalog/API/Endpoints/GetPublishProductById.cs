@@ -29,7 +29,7 @@ public sealed class GetPublishProductById : ICarterModule
 
     #region Methods
 
-    private async Task<ResultSharedResponse<GetPublishProductByIdResponse>> HandleGetPublishProductByIdAsync(
+    private async Task<GetPublishProductByIdResponse> HandleGetPublishProductByIdAsync(
         ISender sender,
         [FromRoute] Guid productId)
     {

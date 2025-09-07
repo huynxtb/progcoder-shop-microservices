@@ -10,7 +10,7 @@ using BuildingBlocks.Abstractions.ValueObjects;
 
 namespace Catalog.Application.CQRS.Product.Commands;
 
-public record ChangeProductStatusCommand(Guid ProductId, ProductStatus Status, Actor Actor) : ICommand<ResultSharedResponse<string>>;
+public record ChangeProductStatusCommand(Guid ProductId, ProductStatus Status, Actor Actor) : ICommand<Guid>;
 
 public class ChangeProductStatusCommandValidator : AbstractValidator<ChangeProductStatusCommand>
 {
@@ -30,11 +30,11 @@ public class ChangeProductStatusCommandValidator : AbstractValidator<ChangeProdu
     #endregion
 }
 
-public class ChangeProductStatusCommandHandler(IDocumentSession session) : ICommandHandler<ChangeProductStatusCommand, ResultSharedResponse<string>>
+public class ChangeProductStatusCommandHandler(IDocumentSession session) : ICommandHandler<ChangeProductStatusCommand, Guid>
 {
     #region Implementations
 
-    public async Task<ResultSharedResponse<string>> Handle(ChangeProductStatusCommand command, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(ChangeProductStatusCommand command, CancellationToken cancellationToken)
     {
         var entity = await session.LoadAsync<ProductEntity>(command.ProductId)
             ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, command.ProductId);
@@ -44,7 +44,7 @@ public class ChangeProductStatusCommandHandler(IDocumentSession session) : IComm
 
         await session.SaveChangesAsync(cancellationToken);
 
-        return ResultSharedResponse<string>.Success(entity.Id.ToString(), MessageCode.UpdateSuccess);
+        return entity.Id;
     }
 
     #endregion

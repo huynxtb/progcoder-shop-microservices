@@ -13,4 +13,13 @@ public sealed class GetNotificationsReponse
     public List<NotificationDto>? Items { get; set; }
 
     #endregion
+
+    #region Ctors
+
+    public GetNotificationsReponse(List<NotificationDto> items)
+    {
+        Items = items;
+    }
+
+    #endregion
 }

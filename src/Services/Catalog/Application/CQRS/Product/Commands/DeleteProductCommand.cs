@@ -3,12 +3,13 @@
 using Catalog.Domain.Entities;
 using Marten;
 using Common.Models.Reponses;
+using MediatR;
 
 #endregion
 
 namespace Catalog.Application.CQRS.Product.Commands;
 
-public record DeleteProductCommand(Guid ProductId) : ICommand<ResultSharedResponse<string>>;
+public record DeleteProductCommand(Guid ProductId) : ICommand<Unit>;
 
 public class DeleteProductCommandValidator : AbstractValidator<DeleteProductCommand>
 {
@@ -24,11 +25,11 @@ public class DeleteProductCommandValidator : AbstractValidator<DeleteProductComm
     #endregion
 }
 
-public class DeleteProductCommandHandler(IDocumentSession session) : ICommandHandler<DeleteProductCommand, ResultSharedResponse<string>>
+public class DeleteProductCommandHandler(IDocumentSession session) : ICommandHandler<DeleteProductCommand, Unit>
 {
     #region Implementations
 
-    public async Task<ResultSharedResponse<string>> Handle(DeleteProductCommand command, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(DeleteProductCommand command, CancellationToken cancellationToken)
     {
         var product = await session.LoadAsync<ProductEntity>(command.ProductId) 
             ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, command.ProductId.ToString());
@@ -36,9 +37,7 @@ public class DeleteProductCommandHandler(IDocumentSession session) : ICommandHan
         session.Delete<ProductEntity>(command.ProductId);
         await session.SaveChangesAsync(cancellationToken);
 
-        return ResultSharedResponse<string>.Success(
-            data: product.Id.ToString(),
-            message: MessageCode.DeleteSuccess);
+        return Unit.Value;
     }
 
     #endregion

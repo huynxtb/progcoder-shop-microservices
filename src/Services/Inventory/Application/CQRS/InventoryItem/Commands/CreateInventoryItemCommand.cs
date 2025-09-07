@@ -1,20 +1,17 @@
 ﻿#region using
 
-using EventSourcing.Events.Inventories;
 using Inventory.Application.Data;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Application.Services;
 using Inventory.Domain.Entities;
-using Inventory.Domain.Enums;
 using Common.Models.Reponses;
-using Newtonsoft.Json;
 using BuildingBlocks.Abstractions.ValueObjects;
 
 #endregion
 
 namespace Inventory.Application.CQRS.InventoryItem.Commands;
 
-public sealed record CreateInventoryItemCommand(CreateInventoryItemDto Dto, Actor Actor) : ICommand<ResultSharedResponse<string>>;
+public sealed record CreateInventoryItemCommand(CreateInventoryItemDto Dto, Actor Actor) : ICommand<Guid>;
 
 public sealed class CreateInventoryItemCommandValidator : AbstractValidator<CreateInventoryItemCommand>
 {
@@ -48,28 +45,32 @@ public sealed class CreateInventoryItemCommandValidator : AbstractValidator<Crea
 
 public sealed class CreateInventoryItemCommandHandler(
     IApplicationDbContext dbContext,
-    ICatalogApiService catalogApi) : ICommandHandler<CreateInventoryItemCommand, ResultSharedResponse<string>>
+    ICatalogApiService catalogApi,
+    ICatalogGrpcService catalogGrpc) : ICommandHandler<CreateInventoryItemCommand, Guid>
 {
     #region Implementations
 
-    public async Task<ResultSharedResponse<string>> Handle(CreateInventoryItemCommand command, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateInventoryItemCommand command, CancellationToken cancellationToken)
     {
         var dto = command.Dto;
-        var product = await catalogApi.GetProductByIdAsync(dto.ProductId.ToString())
+
+        //var product = await catalogApi.GetProductByIdAsync(dto.ProductId.ToString())
+        //    ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, dto.ProductId);
+
+        var product = await catalogGrpc.GetProductByIdAsync(dto.ProductId.ToString(), cancellationToken)
             ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, dto.ProductId);
+
         var inventoryItemId = Guid.NewGuid();
 
         await AddInventoryItemAsync(inventoryItemId, 
-            product.Data.Id, 
-            product.Data.Name!, 
+            product.Id,
+            product.Name!,
             dto.Location!, 
             dto.Quantity, 
             command.Actor);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return ResultSharedResponse<string>.Success(
-            data: inventoryItemId.ToString(),
-            message: MessageCode.CreateSuccess);
+        return inventoryItemId;
     }
 
     #endregion

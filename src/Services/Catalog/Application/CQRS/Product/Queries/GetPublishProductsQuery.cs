@@ -6,7 +6,6 @@ using Catalog.Application.Models.Responses;
 using Catalog.Domain.Entities;
 using Marten;
 using Marten.Pagination;
-using Common.Models.Reponses;
 
 #endregion
 
@@ -14,14 +13,14 @@ namespace Catalog.Application.CQRS.Product.Queries;
 
 public sealed record GetPublishProductsQuery(
     GetPublishProductsFilter Filter,
-    PaginationRequest Paging) : IQuery<ResultSharedResponse<GetPublishProductsResponse>>;
+    PaginationRequest Paging) : IQuery<GetPublishProductsResponse>;
 
 public sealed class GetPublishProductsQueryHandler(IDocumentSession session)
-    : IQueryHandler<GetPublishProductsQuery, ResultSharedResponse<GetPublishProductsResponse>>
+    : IQueryHandler<GetPublishProductsQuery, GetPublishProductsResponse>
 {
     #region Implementations
 
-    public async Task<ResultSharedResponse<GetPublishProductsResponse>> Handle(GetPublishProductsQuery query, CancellationToken cancellationToken)
+    public async Task<GetPublishProductsResponse> Handle(GetPublishProductsQuery query, CancellationToken cancellationToken)
     {
         var filter = query.Filter;
         var paging = query.Paging;
@@ -56,7 +55,7 @@ public sealed class GetPublishProductsQueryHandler(IDocumentSession session)
             }
         };
 
-        return ResultSharedResponse<GetPublishProductsResponse>.Success(reponse, MessageCode.GetSuccess);
+        return reponse;
     }
 
     #endregion

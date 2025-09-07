@@ -27,7 +27,7 @@ public sealed class GetTreeCategories : ICarterModule
 
     #region Methods
 
-    private async Task<ResultSharedResponse<GetTreeCategoriesResponse>> HandleGetTreeCategoriesAsync(ISender sender)
+    private async Task<GetTreeCategoriesResponse> HandleGetTreeCategoriesAsync(ISender sender)
     {
         var query = new GetTreeCategoriesQuery();
 

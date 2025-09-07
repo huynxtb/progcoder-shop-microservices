@@ -20,7 +20,7 @@ public sealed class PublishProduct : ICarterModule
         app.MapPost(ApiRoutes.Product.Publish, HandlePublishProductAsync)
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(PublishProduct))
-            .Produces<ResultSharedResponse<string>>(StatusCodes.Status200OK)
+            .Produces<Guid>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -31,7 +31,7 @@ public sealed class PublishProduct : ICarterModule
 
     #region Methods
 
-    private async Task<ResultSharedResponse<string>> HandlePublishProductAsync(
+    private async Task<Guid> HandlePublishProductAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
         [FromRoute] Guid productId)

@@ -6,20 +6,19 @@ using Catalog.Application.Models.Responses;
 using Catalog.Domain.Entities;
 using Marten;
 using Microsoft.EntityFrameworkCore;
-using Common.Models.Reponses;
 
 #endregion
 
 namespace Catalog.Application.CQRS.Category.Queries;
 
-public sealed record GetAllCategoriesQuery(GetAllCategoriesFilter Filter) : IQuery<ResultSharedResponse<GetAllCategoriesResponse>>;
+public sealed record GetAllCategoriesQuery(GetAllCategoriesFilter Filter) : IQuery<GetAllCategoriesResponse>;
 
 public sealed class GetAllCategoriesQueryHandler(IDocumentSession session)
-    : IQueryHandler<GetAllCategoriesQuery, ResultSharedResponse<GetAllCategoriesResponse>>
+    : IQueryHandler<GetAllCategoriesQuery, GetAllCategoriesResponse>
 {
     #region Implementations
 
-    public async Task<ResultSharedResponse<GetAllCategoriesResponse>> Handle(GetAllCategoriesQuery query, CancellationToken cancellationToken)
+    public async Task<GetAllCategoriesResponse> Handle(GetAllCategoriesQuery query, CancellationToken cancellationToken)
     {
         var filter = query.Filter;
         var result = await session.Query<CategoryEntity>()
@@ -29,8 +28,7 @@ public sealed class GetAllCategoriesQueryHandler(IDocumentSession session)
 
         var response = new GetAllCategoriesResponse(result.Adapt<List<CategoryDto>>());
 
-        return ResultSharedResponse<GetAllCategoriesResponse>
-            .Success(response, MessageCode.GetSuccess);
+        return response;
     }
 
     #endregion

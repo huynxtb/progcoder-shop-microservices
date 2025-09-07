@@ -9,7 +9,7 @@ namespace Common.Extensions;
 
 public static class EnumExtension
 {
-    #region methods
+    #region Methods
 
     public static string GetDescription<TEnum>(this TEnum? value) where TEnum : struct, Enum
     {

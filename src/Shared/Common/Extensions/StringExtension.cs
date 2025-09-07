@@ -36,5 +36,16 @@ public static class StringExtension
         return Enum.TryParse<TEnum>(str, true, out var result) ? result : null;
     }
 
+    public static string To(this string input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+
+        string result = Regex.Replace(input, @"\s+", "-");
+        result = Regex.Replace(result, @"[^a-zA-Z0-9\-]", "");
+        result = Regex.Replace(result, "-{2,}", "-");
+
+        return result.Trim('-');
+    }
+
     #endregion
 }

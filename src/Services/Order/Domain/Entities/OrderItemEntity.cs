@@ -2,11 +2,6 @@
 
 using Order.Domain.Abstractions;
 using Order.Domain.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 #endregion
 
@@ -14,7 +9,7 @@ namespace Order.Domain.Entities;
 
 public sealed class OrderItemEntity : Entity<Guid>
 {
-    #region MyRegion
+    #region Methods
 
     public Guid OrderId { get; private set; } = default!;
 
@@ -22,18 +17,18 @@ public sealed class OrderItemEntity : Entity<Guid>
 
     public int Quantity { get; private set; } = default!;
 
-    public decimal Price { get; private set; } = default!;
-
     #endregion
 
-    public OrderItemEntity(Guid orderId, Guid productId, int quantity, decimal price)
+    #region Ctors
+
+    public OrderItemEntity(Guid orderId, Product product, int quantity)
     {
         Id = orderId;
         OrderId = orderId;
-        ProductId = productId;
+        Product = product;
         Quantity = quantity;
-        Price = price;
     }
 
-    
+    #endregion
+
 }

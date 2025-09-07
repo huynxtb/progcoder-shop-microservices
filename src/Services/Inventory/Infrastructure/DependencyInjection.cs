@@ -1,20 +1,18 @@
 ﻿#region using
 
 using Inventory.Application.Data;
-using Inventory.Application.Services;
-using Inventory.Infrastructure.ApiClients;
 using Inventory.Infrastructure.Data;
 using Inventory.Infrastructure.Data.Extensions;
 using Inventory.Infrastructure.Data.Interceptors;
-using Inventory.Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Refit;
 using Common.Configurations;
 using Common.Constants;
+using Inventory.Infrastructure.ApiClients.Extensions;
+using Inventory.Infrastructure.GrpcClients.Extensions;
 
 #endregion
 
@@ -63,25 +61,9 @@ public static class DependencyInjection
 
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
         }
-
-        // HttpClient
-        {
-            services.AddRefitClient<IKeycloakApi>()
-                .ConfigureHttpClient(c =>
-                {
-                    c.BaseAddress = new Uri(cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.BaseUrl}"]!);
-                    c.Timeout = TimeSpan.FromSeconds(30);
-                });
-
-            services.AddRefitClient<ICatalogApi>()
-                .ConfigureHttpClient(c =>
-                {
-                    c.BaseAddress = new Uri(cfg[$"{CatalogApiCfg.Section}:{CatalogApiCfg.BaseUrl}"]!);
-                    c.Timeout = TimeSpan.FromSeconds(30);
-                });
-        }
-
-        services.AddScoped<ICatalogApiService, CatalogApiService>();
+        
+        services.AddApiClients(cfg);
+        services.AddGrpcClients(cfg);
 
         return services;
     }

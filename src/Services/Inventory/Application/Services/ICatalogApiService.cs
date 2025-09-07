@@ -1,7 +1,6 @@
 ﻿#region using
 
-using Inventory.Application.Dtos.Products;
-using Common.Models.Reponses;
+using Inventory.Application.Models.Responses.Externals;
 
 #endregion
 
@@ -11,7 +10,7 @@ public interface ICatalogApiService
 {
     #region Methods
 
-    Task<ResultSharedResponse<ProductApiDto>?> GetProductByIdAsync(string productId);
+    Task<ProductReponse?> GetProductByIdAsync(string productId);
 
     #endregion
 }

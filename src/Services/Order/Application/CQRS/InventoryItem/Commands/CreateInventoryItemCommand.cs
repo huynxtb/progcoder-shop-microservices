@@ -14,7 +14,7 @@ using BuildingBlocks.Abstractions.ValueObjects;
 
 namespace Order.Application.CQRS.InventoryItem.Commands;
 
-public sealed record CreateInventoryItemCommand(CreateInventoryItemDto Dto, Actor Actor) : ICommand<ResultSharedResponse<string>>;
+public sealed record CreateInventoryItemCommand(CreateInventoryItemDto Dto, Actor Actor) : ICommand<Guid>;
 
 public sealed class CreateInventoryItemCommandValidator : AbstractValidator<CreateInventoryItemCommand>
 {
@@ -48,11 +48,11 @@ public sealed class CreateInventoryItemCommandValidator : AbstractValidator<Crea
 
 public sealed class CreateInventoryItemCommandHandler(
     IApplicationDbContext dbContext,
-    ICatalogApiService catalogApi) : ICommandHandler<CreateInventoryItemCommand, ResultSharedResponse<string>>
+    ICatalogApiService catalogApi) : ICommandHandler<CreateInventoryItemCommand, Guid>
 {
     #region Implementations
 
-    public async Task<ResultSharedResponse<string>> Handle(CreateInventoryItemCommand command, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateInventoryItemCommand command, CancellationToken cancellationToken)
     {
         var dto = command.Dto;
         var product = await catalogApi.GetProductByIdAsync(dto.ProductId.ToString())
@@ -67,7 +67,7 @@ public sealed class CreateInventoryItemCommandHandler(
             command.Actor);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return ResultSharedResponse<string>.Success(
+        return Guid.Success(
             data: inventoryItemId.ToString(),
             message: MessageCode.CreateSuccess);
     }

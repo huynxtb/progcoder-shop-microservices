@@ -19,7 +19,7 @@ public sealed class GetProductById : ICarterModule
         app.MapGet(ApiRoutes.Product.GetProductById, HandleGetProductByIdAsync)
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(GetProductById))
-            .Produces<ResultSharedResponse<GetProductByIdResponse>>(StatusCodes.Status200OK)
+            .Produces<GetProductByIdResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -30,7 +30,7 @@ public sealed class GetProductById : ICarterModule
 
     #region Methods
 
-    private async Task<ResultSharedResponse<GetProductByIdResponse>> HandleGetProductByIdAsync(
+    private async Task<GetProductByIdResponse> HandleGetProductByIdAsync(
         ISender sender,
         [FromRoute] Guid productId)
     {

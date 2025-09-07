@@ -9,7 +9,7 @@ using Marten;
 
 namespace Catalog.Application.CQRS.Product.Commands;
 
-public record PublishProductCommand(Guid ProductId, Actor Actor) : ICommand<ResultSharedResponse<string>>;
+public record PublishProductCommand(Guid ProductId, Actor Actor) : ICommand<Guid>;
 
 public class PublishProductCommandValidator : AbstractValidator<PublishProductCommand>
 {
@@ -30,11 +30,11 @@ public class PublishProductCommandValidator : AbstractValidator<PublishProductCo
     #endregion
 }
 
-public class PublishProductCommandHandler(IDocumentSession session) : ICommandHandler<PublishProductCommand, ResultSharedResponse<string>>
+public class PublishProductCommandHandler(IDocumentSession session) : ICommandHandler<PublishProductCommand, Guid>
 {
     #region Implementations
 
-    public async Task<ResultSharedResponse<string>> Handle(PublishProductCommand command, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(PublishProductCommand command, CancellationToken cancellationToken)
     {
         var entity = await session.LoadAsync<ProductEntity>(command.ProductId)
             ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, command.ProductId);
@@ -44,9 +44,7 @@ public class PublishProductCommandHandler(IDocumentSession session) : ICommandHa
 
         await session.SaveChangesAsync(cancellationToken);
 
-        return ResultSharedResponse<string>.Success(
-            data: entity.Id.ToString(),
-            message: MessageCode.UpdateSuccess);
+        return entity.Id;
     }
 
     #endregion

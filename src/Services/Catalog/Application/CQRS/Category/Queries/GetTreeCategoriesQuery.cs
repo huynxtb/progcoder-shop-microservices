@@ -5,19 +5,18 @@ using Catalog.Application.Models.Responses;
 using Catalog.Domain.Entities;
 using Marten;
 using Microsoft.EntityFrameworkCore;
-using Common.Models.Reponses;
 
 #endregion
 namespace Catalog.Application.CQRS.Category.Queries;
 
-public sealed record GetTreeCategoriesQuery : IQuery<ResultSharedResponse<GetTreeCategoriesResponse>>;
+public sealed record GetTreeCategoriesQuery : IQuery<GetTreeCategoriesResponse>;
 
 public sealed class GetTreeCategoriesQueryHandler(IDocumentSession session)
-    : IQueryHandler<GetTreeCategoriesQuery, ResultSharedResponse<GetTreeCategoriesResponse>>
+    : IQueryHandler<GetTreeCategoriesQuery, GetTreeCategoriesResponse>
 {
     #region Implementations
 
-    public async Task<ResultSharedResponse<GetTreeCategoriesResponse>> Handle(GetTreeCategoriesQuery query, CancellationToken cancellationToken)
+    public async Task<GetTreeCategoriesResponse> Handle(GetTreeCategoriesQuery query, CancellationToken cancellationToken)
     {
         var flat = await session.Query<CategoryEntity>()
             .Select(x => new CategoryTreeItemDto
@@ -48,8 +47,7 @@ public sealed class GetTreeCategoriesQueryHandler(IDocumentSession session)
 
         var response = new GetTreeCategoriesResponse(roots);
 
-        return ResultSharedResponse<GetTreeCategoriesResponse>
-            .Success(response, MessageCode.GetSuccess);
+        return response;
     }
 
     #endregion
