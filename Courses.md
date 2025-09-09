@@ -36,22 +36,23 @@ Part 2: Create base code
 - Implement Clean Architecture
 - Explain
 
-Part: Deploy Postgres db using docker
+Part: Deploy all db using docker (only do it when needed)
 
 Part 2: Create first microervies with Catalog service and Implement Clean Architecture .NET
-- Analyz flow
+- Analyz flow, feature
 - Database
-
-Part 4: Catalog service - Add health check
-- Explain
+- Marten DB
 
 Part 4: Catalog service - Implement minial apis
 - Create product
 - Implement DDD
-- Implement Github Api with refit
+- Implement Github Api with refit upload image
 - Add Poly
 - Delete
 - Update
+
+Part 4: Catalog service - Add health check
+- Explain
 
 Part: Create Inventory Service
 - DB design
@@ -64,16 +65,47 @@ Part 5: Implement InterceptorSavechange
 - Focus on Interceptor
 - Explain
 
-Part 6: 
+Part 6: Implement Api feature
 - CRUD
 
+Part 6: Implement Refit to call catalog api
+- Explain
+
+Part 6: Implement poly
+- Explain
+
+PArt 6: Grpc
+- Explain
+
+Part 6 (**): Implement grpc server in catalog service
+
+Part 6 (**): Implement grpc client in inventory replace refit
+
 Part: create event sourcing
+- Explain
+- Why need event sourcing
 
-Part: create message queue
+Part: create message queue, rabbitmq, masstransit
+- Explain
+- Flow
 
-Part: Create worker
+Part: Implement event sourcing with rabbitmq for catalog service (consumer)
+- Explain
+- Flow
 
-Part: Implement outbox
+Part: cImplement event sourcing with rabbitmq for inventory service (consumer)
+- Explain
+- Flow
+
+
+Part: outbox pattern
+- Explain
+
+Part (**): Create worker in Inventory service + outbox pattern
+- Explain
+- Implement
+- Using postgres + dapper
+
 
 Part 6: Create notification services using Strategry Pattern
 - Email

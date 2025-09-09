@@ -8,6 +8,8 @@ public record Product
 
     public string Name { get; private set; } = default!;
 
+    public string ImageUrl { get; private set; } = default!;
+
     public decimal Price { get; private set; } = default!;
 
     #endregion
@@ -20,7 +22,7 @@ public record Product
 
     #region Methods
 
-    public static Product Of(Guid id, string name, decimal price)
+    public static Product Of(Guid id, string name, decimal price, string imageUrl)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
@@ -28,7 +30,8 @@ public record Product
         {
             Id = id,
             Name = name,
-            Price = price
+            Price = price,
+            ImageUrl = imageUrl
         };
     }
 
