@@ -11,7 +11,9 @@ public interface IApplicationDbContext
 {
     #region Fields, Properties and Indexers
 
-    
+    DbSet<OrderEntity> Orders { get; }
+
+    DbSet<OrderItemEntity> OrderItems { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 

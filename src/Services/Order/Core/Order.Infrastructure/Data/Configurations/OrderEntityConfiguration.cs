@@ -51,6 +51,9 @@ public sealed class OrderEntityConfiguration : IEntityTypeConfiguration<OrderEnt
         builder.ComplexProperty(
             o => o.Customer, b =>
             {
+                b.Property(c => c.Id)
+                   .HasColumnName("customer_id");
+
                 b.Property(c => c.PhoneNumber)
                     .HasColumnName("customer_phone_number")
                     .HasMaxLength(50)

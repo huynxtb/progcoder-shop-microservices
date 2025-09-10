@@ -2,8 +2,6 @@
 
 public sealed class MessageCode
 {
-    #region Constants
-
     public const string BadRequest = "BAD_REQUEST";
 
     public const string DecisionFlowIllegal = "DECISION_FLOW_ILLEGAL";
@@ -132,5 +130,21 @@ public sealed class MessageCode
 
     public const string StatusIsRequired = "STATUS_IS_REQUIRED";
 
-    #endregion
+    public const string NameIsRequired = "NAME_IS_REQUIRED";
+
+    public const string CustomerNameIsRequired = "CUSTOMER_NAME_IS_REQUIRED";
+
+    public const string PhoneNumberIsRequired = "PHONE_NUMBER_IS_REQUIRED";
+
+    public const string AddressLineIsRequired = "ADDRESS_LINE_IS_REQUIRED";
+
+    public const string CountryIsRequired = "COUNTRY_IS_REQUIRED";
+
+    public const string StateIsRequired = "STATE_IS_REQUIRED";
+
+    public const string ZipCodeIsRequired = "ZIP_CODE_IS_REQUIRED";
+
+    public const string OrderItemsIsRequired = "ORDER_ITEMS_IS_REQUIRED";
+
+    public const string ProductIsRequired = "PRODUCT_IS_REQUIRED";
 }

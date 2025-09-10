@@ -1,14 +1,20 @@
 ﻿#region using
 
 using BuildingBlocks.Abstractions.ValueObjects;
+using Order.Application.Data;
+using Order.Application.Dtos.Orders;
+using Order.Domain.Entities;
+using Order.Domain.ValueObjects;
+using Common.Models.Reponses;
+using Order.Application.Services;
 
 #endregion
 
 namespace Order.Application.CQRS.Order.Commands;
 
-public record CreateOrderCommand(CreateOrderDto Dto, Actor Actor) : ICommand<Guid>;
+public sealed record CreateOrderCommand(CreateOrderDto Dto, Actor Actor) : ICommand<Guid>;
 
-public class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
+public sealed class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
 {
     #region Ctors
 
@@ -19,27 +25,76 @@ public class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
             .WithMessage(MessageCode.BadRequest)
             .DependentRules(() =>
             {
-                RuleFor(x => x.Dto.Name)
-                    .NotEmpty()
-                    .WithMessage(MessageCode.ProductNameIsRequired);
+                RuleFor(x => x.Dto.Customer)
+                    .NotNull()
+                    .WithMessage(MessageCode.BadRequest)
+                    .DependentRules(() =>
+                    {
+                        RuleFor(x => x.Dto.Customer.Name)
+                            .NotEmpty()
+                            .WithMessage(MessageCode.NameIsRequired);
 
-                RuleFor(x => x.Dto.Sku)
-                    .NotEmpty()
-                    .WithMessage(MessageCode.SkuIsRequired);
+                        RuleFor(x => x.Dto.Customer.Email)
+                            .NotEmpty()
+                            .WithMessage(MessageCode.EmailIsRequired);
 
-                RuleFor(x => x.Dto.ShortDescription)
-                    .NotEmpty()
-                    .WithMessage(MessageCode.ShortDescriptionIsRequired);
+                        RuleFor(x => x.Dto.Customer.PhoneNumber)
+                            .NotEmpty()
+                            .WithMessage(MessageCode.PhoneNumberIsRequired);
+                    });
 
-                RuleFor(x => x.Dto.LongDescription)
-                    .NotEmpty()
-                    .WithMessage(MessageCode.LongDescriptionIsRequired);
+                RuleFor(x => x.Dto.ShippingAddress)
+                    .NotNull()
+                    .WithMessage(MessageCode.BadRequest)
+                    .DependentRules(() =>
+                    {
+                        RuleFor(x => x.Dto.ShippingAddress.FirstName)
+                            .NotEmpty()
+                            .WithMessage(MessageCode.FirstNameIsRequired);
 
-                RuleFor(x => x.Dto.Price)
-                    .NotEmpty()
-                    .WithMessage(MessageCode.PriceIsRequired)
-                    .GreaterThan(1)
-                    .WithMessage(MessageCode.PriceIsRequired);
+                        RuleFor(x => x.Dto.ShippingAddress.LastName)
+                            .NotEmpty()
+                            .WithMessage(MessageCode.LastNameIsRequired);
+
+                        RuleFor(x => x.Dto.ShippingAddress.EmailAddress)
+                            .NotEmpty()
+                            .WithMessage(MessageCode.EmailIsRequired);
+
+                        RuleFor(x => x.Dto.ShippingAddress.AddressLine)
+                            .NotEmpty()
+                            .WithMessage(MessageCode.AddressLineIsRequired);
+
+                        RuleFor(x => x.Dto.ShippingAddress.Country)
+                            .NotEmpty()
+                            .WithMessage(MessageCode.CountryIsRequired);
+
+                        RuleFor(x => x.Dto.ShippingAddress.State)
+                            .NotEmpty()
+                            .WithMessage(MessageCode.StateIsRequired);
+
+                        RuleFor(x => x.Dto.ShippingAddress.ZipCode)
+                            .NotEmpty()
+                            .WithMessage(MessageCode.ZipCodeIsRequired);
+                    });
+
+                RuleFor(x => x.Dto.OrderItems)
+                    .NotNull()
+                    .WithMessage(MessageCode.BadRequest)
+                    .Must(items => items != null && items.Count > 0)
+                    .WithMessage(MessageCode.OrderItemsIsRequired)
+                    .DependentRules(() =>
+                    {
+                        RuleForEach(x => x.Dto.OrderItems).ChildRules(item =>
+                        {
+                            item.RuleFor(i => i.ProductId)
+                                .NotEmpty()
+                                .WithMessage(MessageCode.ProductIdIsRequired);
+
+                            item.RuleFor(i => i.Quantity)
+                                .GreaterThan(0)
+                                .WithMessage(MessageCode.QuantityCannotBeNegative);
+                        });
+                    });
             });
 
     }
@@ -47,66 +102,48 @@ public class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
     #endregion
 }
 
-public class CreateOrderCommandHandler(
-    IDocumentSession session,
-    IMinIOCloudService minIO) : ICommandHandler<CreateOrderCommand, Guid>
+public sealed class CreateOrderCommandHandler(IApplicationDbContext dbContext, ICatalogGrpcService catalogGrpc) : ICommandHandler<CreateOrderCommand, Guid>
 {
     #region Implementations
 
     public async Task<Guid> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
     {
         var dto = command.Dto;
-        var categories = await session.Query<CategoryEntity>().ToListAsync(token: cancellationToken);
-        ValidateCategory(dto.CategoryIds, categories.ToList());
+        var orderId = Guid.NewGuid();
+        var orderNo = OrderNo.Create();
 
-        var entity = ProductEntity.Create(
-            id: Guid.NewGuid(),
-            name: dto.Name!,
-            sku: dto.Sku!,
-            slug: dto.Name!.Slugify(),
-            shortDescription: dto.ShortDescription!,
-            longDescription: dto.LongDescription!,
-            price: dto.Price,
-            salesPrice: dto.SalesPrice,
-            categoryIds: dto.CategoryIds?.Distinct().ToList(),
-            performedBy: command.Actor.ToString());
+        var customer = Customer.Of(
+            dto.Customer.Id,
+            dto.Customer.PhoneNumber,
+            dto.Customer.Name,
+            dto.Customer.Email);
 
-        await UploadImagesAsync(dto.Files, entity, cancellationToken);
+        var shippingAddress = Address.Of(
+            dto.ShippingAddress.FirstName,
+            dto.ShippingAddress.LastName,
+            dto.ShippingAddress.EmailAddress!,
+            dto.ShippingAddress.AddressLine,
+            dto.ShippingAddress.Country,
+            dto.ShippingAddress.State,
+            dto.ShippingAddress.ZipCode);
 
-        session.Store(entity);
-        await session.SaveChangesAsync(cancellationToken);
+        var order = OrderEntity.Create(orderId, customer, orderNo, shippingAddress);
 
-        return entity.Id;
-    }
+        //foreach (var item in dto.OrderItems)
+        //{
+        //    var product = Product.Of(
+        //        item.Product.Id,
+        //        item.Product.Name,
+        //        item.Product.Price,
+        //        item.Product.ImageUrl);
 
-    #endregion
+        //    order.AddOrderItem(product, item.Quantity);
+        //}
 
-    #region Methods
+        await dbContext.Orders.AddAsync(order, cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
 
-    private async Task UploadImagesAsync(
-        List<UploadFileBytes>? filesDto,
-        ProductEntity entity,
-        CancellationToken cancellationToken)
-    {
-        if (filesDto != null && filesDto.Any())
-        {
-            var result = await minIO.UploadFilesAsync(filesDto, Constants.Bucket.Products, true, cancellationToken);
-            entity.AddOrUpdateImages(result.Adapt<List<ProductImageEntity>>());
-        }
-    }
-
-    private void ValidateCategory(List<Guid>? inputCategoryIds, List<CategoryEntity> categories)
-    {
-        if (inputCategoryIds is { Count: > 0 })
-        {
-            var existingIds = categories.Select(c => c.Id).ToHashSet();
-            var invalidIds = inputCategoryIds.Where(id => !existingIds.Contains(id)).ToList();
-
-            if (invalidIds.Any())
-            {
-                throw new ClientValidationException(MessageCode.CategoryIsNotExists, string.Join(", ", invalidIds));
-            }
-        }
+        return order.Id;
     }
 
     #endregion

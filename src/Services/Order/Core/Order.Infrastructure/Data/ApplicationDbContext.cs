@@ -20,8 +20,9 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
 
     #region Implementations
 
-    
-    public DbSet<OutboxMessageEntity> OutboxMessages => Set<OutboxMessageEntity>();
+    public DbSet<OrderEntity> Orders => Set<OrderEntity>();
+
+    public DbSet<OrderItemEntity> OrderItems => Set<OrderItemEntity>();
 
 
     #endregion

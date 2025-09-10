@@ -22,7 +22,6 @@
     <PackageReference Include="Polly.Extensions.Http" Version="3.0.0" />
     <PackageReference Include="Refit.HttpClientFactory" Version="8.0.0" />
     <PackageReference Include="Scrutor" Version="6.1.0" />
-    <PackageReference Include="Grpc.AspNetCore" Version="2.65.0" />
     <PackageReference Include="Google.Protobuf" Version="3.28.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.65.0" />
     <PackageReference Include="Grpc.Tools" Version="2.66.0">

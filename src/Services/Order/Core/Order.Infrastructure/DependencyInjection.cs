@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Common.Configurations;
 using Common.Constants;
+using Order.Infrastructure.GrpcClients.Extensions;
 
 #endregion
 
@@ -59,6 +60,8 @@ public static class DependencyInjection
 
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
         }
+
+        services.AddGrpcClients(cfg);
 
         return services;
     }
