@@ -51,11 +51,8 @@ public sealed class InventoryReservationConfiguration : IEntityTypeConfiguration
 
         builder.Property(x => x.Status)
             .HasColumnName("status")
-            .IsRequired()
-            .HasDefaultValue(ReservationStatus.Pending)
-            .HasConversion(
-                s => s.ToString(),
-                dbStatus => (ReservationStatus)Enum.Parse(typeof(ReservationStatus), dbStatus));
+            .HasConversion<int>()
+            .IsRequired();
 
         builder.ComplexProperty(
             o => o.Product, nameBuilder =>

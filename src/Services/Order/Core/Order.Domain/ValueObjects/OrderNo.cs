@@ -1,10 +1,4 @@
-﻿#region using
-
-using Order.Domain.Exceptions;
-
-#endregion
-
-namespace Order.Domain.ValueObjects;
+﻿namespace Order.Domain.ValueObjects;
 
 public class OrderNo
 {
@@ -22,14 +16,12 @@ public class OrderNo
 
     #region Methods
 
-    public static OrderNo Create(string value)
+    public static OrderNo Create()
     {
-        // validate: ORD-YYYYMMDD-00000
-        if (string.IsNullOrWhiteSpace(value) ||
-            !System.Text.RegularExpressions.Regex.IsMatch(
-                value, @"^ORD-\d{8}-\d{5}$"))
-            throw new DomainException("Invalid order number format.");
-        return new OrderNo(value);
+        var dateString = DateTimeOffset.Now.ToString("yyyyMMdd");
+        var sequenceString = Guid.NewGuid().ToString().Split("-").First();
+        var orderNumber = $"ORD-{dateString}-{sequenceString}";
+        return new OrderNo(orderNumber);
     }
 
     public override string ToString() => Value;

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Inventory.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250902094717_init_database")]
+    [Migration("20250910002318_init_database")]
     partial class init_database
     {
         /// <inheritdoc />
@@ -163,11 +163,8 @@ namespace Inventory.Infrastructure.Data.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("reference_id");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("varchar(255)")
-                        .HasDefaultValue("Pending")
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
                         .HasColumnName("status");
 
                     b.ComplexProperty<Dictionary<string, object>>("Location", "Inventory.Domain.Entities.InventoryReservationEntity.Location#Location", b1 =>
@@ -219,7 +216,8 @@ namespace Inventory.Infrastructure.Data.Migrations
                         .HasColumnName("content");
 
                     b.Property<string>("Error")
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasColumnName("error");
 
                     b.Property<string>("EventType")
                         .IsRequired()

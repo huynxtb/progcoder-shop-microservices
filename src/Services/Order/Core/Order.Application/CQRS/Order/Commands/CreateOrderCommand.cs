@@ -1,25 +1,18 @@
 ﻿#region using
 
 using BuildingBlocks.Abstractions.ValueObjects;
-using Catalog.Application.Dtos.Products;
-using Catalog.Application.Services;
-using Catalog.Domain.Entities;
-using Common.Models.Reponses;
-using Mapster;
-using Marten;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 #endregion
 
-namespace Catalog.Application.CQRS.Product.Commands;
+namespace Order.Application.CQRS.Order.Commands;
 
-public record CreateProductCommand(CreateProductDto Dto, Actor Actor) : ICommand<Guid>;
+public record CreateOrderCommand(CreateOrderDto Dto, Actor Actor) : ICommand<Guid>;
 
-public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
+public class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
 {
     #region Ctors
 
-    public CreateProductCommandValidator()
+    public CreateOrderCommandValidator()
     {
         RuleFor(x => x.Dto)
             .NotNull()
@@ -54,13 +47,13 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
     #endregion
 }
 
-public class CreateProductCommandHandler(
+public class CreateOrderCommandHandler(
     IDocumentSession session,
-    IMinIOCloudService minIO) : ICommandHandler<CreateProductCommand, Guid>
+    IMinIOCloudService minIO) : ICommandHandler<CreateOrderCommand, Guid>
 {
     #region Implementations
 
-    public async Task<Guid> Handle(CreateProductCommand command, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
     {
         var dto = command.Dto;
         var categories = await session.Query<CategoryEntity>().ToListAsync(token: cancellationToken);
@@ -79,7 +72,7 @@ public class CreateProductCommandHandler(
             performedBy: command.Actor.ToString());
 
         await UploadImagesAsync(dto.Files, entity, cancellationToken);
-        
+
         session.Store(entity);
         await session.SaveChangesAsync(cancellationToken);
 

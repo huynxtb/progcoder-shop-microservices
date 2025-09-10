@@ -7,9 +7,9 @@ using Order.Domain.ValueObjects;
 
 namespace Order.Domain.Entities;
 
-public class OrderItemEntity : Entity<Guid>
+public sealed class OrderItemEntity : Entity<Guid>
 {
-    #region MyRegion
+    #region Fields, Properties and Indexers
 
     public Guid OrderId { get; private set; } = default!;
 
@@ -19,12 +19,28 @@ public class OrderItemEntity : Entity<Guid>
 
     #endregion
 
-    public OrderItemEntity(Guid orderId, Product product, int quantity)
+    #region Ctors
+
+    private OrderItemEntity() { }
+
+    #endregion
+
+    #region Methods
+
+    public static OrderItemEntity Create(Guid id, Guid orderId, Product product, int quantity)
     {
-        Id = orderId;
-        OrderId = orderId;
-        Product = product;
-        Quantity = quantity;
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quantity);
+
+        var orderItem = new OrderItemEntity
+        {
+            Id = id,
+            OrderId = orderId,
+            Product = product,
+            Quantity = quantity
+        };
+
+        return orderItem;
     }
 
+    #endregion
 }

@@ -20,6 +20,7 @@ Part: Demo
 - Monitoring
 - CI/CD (Optional) 
 
+============= CORE =================
 Part 2: BuildingBlocks - CQRS and Mediator pattern
 - Create abstractions ICommand, IQuery
 
@@ -38,6 +39,7 @@ Part 2: Create base code
 
 Part: Deploy all db using docker (only do it when needed)
 
+============= CATALOG =================
 Part 2: Create first microervies with Catalog service and Implement Clean Architecture .NET
 - Analyz flow, feature
 - Database
@@ -54,12 +56,17 @@ Part 4: Catalog service - Implement minial apis
 Part 4: Catalog service - Add health check
 - Explain
 
+============= INVENTORY =================
 Part: Create Inventory Service
 - DB design
 - Analyz flow
 
 Part: create entity
 - add migrations
+
+Part 5: Create script auto migrate
+- bat file
+- Explain
 
 Part 5: Implement InterceptorSavechange
 - Focus on Interceptor

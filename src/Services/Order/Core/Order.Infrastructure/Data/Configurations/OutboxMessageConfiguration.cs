@@ -36,8 +36,8 @@ public sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outbox
         builder.Property(x => x.ProcessedOnUtc)
             .HasColumnName("processed_on_utc");
 
-        //builder.Property(x => x.Error)
-        //    .HasColumnName("error");
+        builder.Property(x => x.Error)
+            .HasColumnName("error");
 
         builder.HasIndex(x => new { x.EventType });
         builder.HasIndex(x => new { x.OccurredOnUtc });

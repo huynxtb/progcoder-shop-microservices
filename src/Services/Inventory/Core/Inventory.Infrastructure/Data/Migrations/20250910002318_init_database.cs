@@ -60,7 +60,7 @@ namespace Inventory.Infrastructure.Data.Migrations
                     reference_id = table.Column<Guid>(type: "char(36)", nullable: false),
                     quantity = table.Column<long>(type: "bigint", nullable: false),
                     expires_at = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
-                    status = table.Column<string>(type: "varchar(255)", nullable: false, defaultValue: "Pending"),
+                    status = table.Column<int>(type: "int", nullable: false),
                     location_address = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
                     product_id = table.Column<Guid>(type: "char(50)", maxLength: 50, nullable: false),
                     product_name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
@@ -84,7 +84,7 @@ namespace Inventory.Infrastructure.Data.Migrations
                     content = table.Column<string>(type: "longtext", nullable: false),
                     occurred_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: false),
                     processed_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
-                    Error = table.Column<string>(type: "longtext", nullable: true)
+                    error = table.Column<string>(type: "longtext", nullable: true)
                 },
                 constraints: table =>
                 {

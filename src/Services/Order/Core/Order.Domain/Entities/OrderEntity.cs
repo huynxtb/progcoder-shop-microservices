@@ -10,6 +10,8 @@ namespace Order.Domain.Entities;
 
 public sealed class OrderEntity : Aggregate<Guid>
 {
+    #region Fields, Properties and Indexers
+
     private readonly List<OrderItemEntity> _orderItems = new();
 
     public IReadOnlyList<OrderItemEntity> OrderItems => _orderItems.AsReadOnly();
@@ -27,6 +29,8 @@ public sealed class OrderEntity : Aggregate<Guid>
         get => OrderItems.Sum(x => x.Product.Price * x.Quantity);
         private set { }
     }
+
+    #endregion
 
     public static OrderEntity Create(Guid id, Customer customer, OrderNo orderNo, Address shippingAddress)
     {
@@ -61,9 +65,9 @@ public sealed class OrderEntity : Aggregate<Guid>
     public void AddOrderItem(Product product, int quantity)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quantity);
-        //ArgumentOutOfRangeException.ThrowIfNegativeOrZero(price);
-
-        var orderItem = new OrderItemEntity(Id, product, quantity);
+        
+        var orderItemId = Guid.NewGuid();
+        var orderItem = OrderItemEntity.Create(orderItemId, Id, product, quantity);
         _orderItems.Add(orderItem);
     }
 
