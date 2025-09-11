@@ -10,5 +10,7 @@ public class ProductReponse
 
     public decimal Price { get; init; }
 
+    public string Thumbnail { get; init; } = default!;
+
     #endregion
 }

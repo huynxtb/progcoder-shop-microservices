@@ -43,6 +43,9 @@ public sealed class ProductEntity : Entity<Guid>
     public List<ProductImageEntity>? Images { get; private set; }
 
     [JsonInclude]
+    public string? Thumbnail { get; private set; }
+
+    [JsonInclude]
     public bool Published { get; private set; }
 
     [JsonInclude]
@@ -139,6 +142,7 @@ public sealed class ProductEntity : Entity<Guid>
             .ToList();
 
         Images = result;
+        Thumbnail = Images.FirstOrDefault()?.PublicURL;
     }
 
 

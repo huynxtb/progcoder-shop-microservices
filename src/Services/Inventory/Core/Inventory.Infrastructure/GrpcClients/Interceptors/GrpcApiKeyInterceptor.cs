@@ -19,7 +19,7 @@ public sealed class GrpcApiKeyInterceptor(IConfiguration cfg) : Interceptor
         ClientInterceptorContext<TRequest, TResponse> context,
         AsyncUnaryCallContinuation<TRequest, TResponse> continuation)
     {
-        var grpcKey = cfg.GetValue<string>($"{GrpcSettingsCfg.Catalog.Section}:{GrpcSettingsCfg.Catalog.ApiKey}")
+        var grpcKey = cfg.GetValue<string>($"{GrpcClientCfg.Catalog.Section}:{GrpcClientCfg.Catalog.ApiKey}")
             ?? throw new InvalidOperationException("gRPC Key is not configured.");
         var headers = context.Options.Headers ?? [];
         if (!headers.Any(h => h.Key.Equals(ReqHeaderName.GrpcKey, StringComparison.OrdinalIgnoreCase)))

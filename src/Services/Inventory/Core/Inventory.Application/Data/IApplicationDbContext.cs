@@ -17,6 +17,8 @@ public interface IApplicationDbContext
 
     DbSet<InventoryHistoryEntity> InventoryHistories { get; }
 
+    DbSet<OutboxMessageEntity> OutboxMessages { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
     #endregion

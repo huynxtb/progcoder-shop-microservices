@@ -20,8 +20,7 @@ public sealed class GetAllCategories : ICarterModule
             .WithTags(ApiRoutes.Category.Tags)
             .WithName(nameof(GetAllCategories))
             .Produces<GetAllCategoriesResponse>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status404NotFound);
+            .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
     #endregion

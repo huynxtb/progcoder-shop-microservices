@@ -2,23 +2,15 @@
 
 public sealed class ApiRoutes
 {
-    public static class InventoryItem
+    public static class Order
     {
         #region Constants
 
-        public const string Tags = "Inventory Items";
+        public const string Tags = "Orders";
 
-        private const string Base = "/inventory-items";
+        private const string Base = "orders";
 
-        public const string GetInventoryItems = Base;
-
-        public const string Create = Base;
-
-        public const string DecreaseStock = $"{Base}/{{inventoryItemId}}/stock/decrease";
-
-        public const string IncreaseStock = $"{Base}/{{inventoryItemId}}/stock/increase";
-
-        public const string Delete = $"{Base}/{{inventoryItemId}}";
+        public const string Create = $"/{Base}";
 
         #endregion
     }

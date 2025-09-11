@@ -12,6 +12,8 @@ public class ProductDto : ProductInfoDto, IAuditableDto
 
     public List<ProductImageDto>? Images {  get; set; }
 
+    public string? Thumbnail { get; set; }
+
     public DateTimeOffset CreatedOnUtc { get; set; }
 
     public string? CreatedBy { get; set; }

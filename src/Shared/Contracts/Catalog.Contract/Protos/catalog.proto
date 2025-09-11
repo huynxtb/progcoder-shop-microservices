@@ -6,27 +6,25 @@ package catalog;
 
 // ==== Definition ====
 service CatalogGrpc {
-
-  rpc ListProducts (ListProductsRequest) returns (ListProductsResponse);
-
-  rpc GetProductById (GetProductByIdRequest) returns (GetProductByIdResponse);
-
+	rpc GetProducts (GetProductsRequest) returns (GetProductsResponse);
+	rpc GetProductById (GetProductByIdRequest) returns (GetProductByIdResponse);
 }
 
 // ==== Messages ====
 
 message Product {
-  string id = 1;
-  string name = 2;
-  string description = 3;
-  double price = 4;
-  int32 stock = 5;
-  string image_url = 6;
+	string id = 1;
+	string name = 2;
+	double price = 3;
+	string thumbnail = 4;
 }
 
-message ListProductsRequest {}
+message GetProductsRequest {
+	string search_text = 1;
+	repeated string ids = 2;
+}
 
-message ListProductsResponse {
+message GetProductsResponse {
   repeated Product products = 1;
 }
 

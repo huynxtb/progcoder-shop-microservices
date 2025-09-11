@@ -10,7 +10,7 @@ public sealed class ApiRoutes
 
         private const string Base = "products";
 
-        public const string Create = $"{Base}";
+        public const string Create = $"/{Base}";
 
         public const string Delete = $"/{Base}/{{productId}}";
 
@@ -24,9 +24,11 @@ public sealed class ApiRoutes
 
         public const string GetPublishProductById = $"/public/{Base}/{{productId}}";
 
-        public const string GetProducts = $"{Base}";
+        public const string GetProducts = $"/{Base}";
 
         public const string GetPublishProducts = $"/public/{Base}";
+
+        public const string GetAllProducts = $"/all/products";
 
         #endregion
     }

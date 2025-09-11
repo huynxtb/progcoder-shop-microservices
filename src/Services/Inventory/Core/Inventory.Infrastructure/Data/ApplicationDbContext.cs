@@ -26,6 +26,8 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
 
     public DbSet<InventoryHistoryEntity> InventoryHistories => Set<InventoryHistoryEntity>();
 
+    public DbSet<OutboxMessageEntity> OutboxMessages => Set<OutboxMessageEntity>();
+
     #endregion
 
     #region Override Methods

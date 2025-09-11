@@ -129,16 +129,27 @@ public sealed class CreateOrderCommandHandler(IApplicationDbContext dbContext, I
 
         var order = OrderEntity.Create(orderId, customer, orderNo, shippingAddress);
 
-        //foreach (var item in dto.OrderItems)
-        //{
-        //    var product = Product.Of(
-        //        item.Product.Id,
-        //        item.Product.Name,
-        //        item.Product.Price,
-        //        item.Product.ImageUrl);
+        var productIds = dto.OrderItems.Select(x => x.ProductId.ToString()).ToArray();
+        var productsResponse = await catalogGrpc.GetProductsAsync(ids: productIds, cancellationToken: cancellationToken);
 
-        //    order.AddOrderItem(product, item.Quantity);
-        //}
+        if(productsResponse == null || productsResponse.Items == null || productsResponse.Items.Count == 0)
+        {
+            throw new ClientValidationException(MessageCode.ProductIsNotExists);
+        }
+
+        foreach (var item in dto.OrderItems)
+        {
+            var productInfo = productsResponse.Items.FirstOrDefault(x => x.Id == item.ProductId)
+                ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, item.ProductId);
+
+            var product = Product.Of(
+                productInfo.Id,
+                productInfo.Name,
+                productInfo.Price,
+                productInfo.Thumbnail);
+
+            order.AddOrderItem(product, item.Quantity);
+        }
 
         await dbContext.Orders.AddAsync(order, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);

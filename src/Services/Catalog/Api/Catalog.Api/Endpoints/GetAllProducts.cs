@@ -1,26 +1,24 @@
 ﻿#region using
 
-using BuildingBlocks.Pagination;
 using Catalog.Api.Constants;
 using Catalog.Application.CQRS.Product.Queries;
 using Catalog.Application.Models.Filters;
 using Catalog.Application.Models.Responses;
-using Common.Models.Reponses;
 
 #endregion
 
 namespace Catalog.Api.Endpoints;
 
-public sealed class GetProducts : ICarterModule
+public sealed class GetAllProducts : ICarterModule
 {
     #region Implementations
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet(ApiRoutes.Product.GetProducts, HandleGetProductsAsync)
+        app.MapGet(ApiRoutes.Product.GetAllProducts, HandleGetAllProductsAsync)
             .WithTags(ApiRoutes.Product.Tags)
-            .WithName(nameof(GetProducts))
-            .Produces<GetProductsResponse>(StatusCodes.Status200OK)
+            .WithName(nameof(GetAllProducts))
+            .Produces<GetAllProductsResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .RequireAuthorization();
@@ -30,12 +28,11 @@ public sealed class GetProducts : ICarterModule
 
     #region Methods
 
-    private async Task<GetProductsResponse> HandleGetProductsAsync(
+    private async Task<GetAllProductsResponse> HandleGetAllProductsAsync(
         ISender sender,
-        [AsParameters] GetProductsFilter req,
-        [AsParameters] PaginationRequest paging)
+        [AsParameters] GetAllProductsFilter req)
     {
-        var query = new GetProductsQuery(req, paging);
+        var query = new GetAllProductsQuery(req);
 
         return await sender.Send(query);
     }

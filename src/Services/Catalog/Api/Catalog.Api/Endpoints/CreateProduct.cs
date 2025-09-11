@@ -31,7 +31,6 @@ public sealed class CreateProduct : ICarterModule
             .Produces<Guid>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status404NotFound)
             .DisableAntiforgery()
             .RequireAuthorization();
     }
