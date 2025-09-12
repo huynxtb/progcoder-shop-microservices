@@ -1,5 +1,4 @@
-﻿
-#region using
+﻿#region using
 
 using BuildingBlocks.Abstractions.ValueObjects;
 using Catalog.Api.Constants;
@@ -37,7 +36,7 @@ public sealed class PublishProduct : ICarterModule
         [FromRoute] Guid productId)
     {
         var currentUser = httpContext.GetCurrentUser();
-        var command = new PublishProductCommand(productId, Actor.User(currentUser.Id));
+        var command = new PublishProductCommand(productId, Actor.User(currentUser.Email));
         return await sender.Send(command);
     }
 

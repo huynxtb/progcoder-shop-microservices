@@ -19,7 +19,7 @@ public class OrderNo
     public static OrderNo Create()
     {
         var dateString = DateTimeOffset.Now.ToString("yyyyMMdd");
-        var sequenceString = Guid.NewGuid().ToString().Split("-").First();
+        var sequenceString = Guid.NewGuid().ToString().Split("-").First().ToUpper();
         var orderNumber = $"ORD-{dateString}-{sequenceString}";
         return new OrderNo(orderNumber);
     }

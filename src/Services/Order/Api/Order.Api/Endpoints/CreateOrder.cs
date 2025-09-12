@@ -35,7 +35,7 @@ public sealed class CreateOrder : ICarterModule
         [FromBody] CreateOrderDto dto)
     {
         var currentUser = httpContext.GetCurrentUser();
-        var command = new CreateOrderCommand(dto, Actor.User(currentUser.Id));
+        var command = new CreateOrderCommand(dto, Actor.User(currentUser.Email));
         return await sender.Send(command);
     }
 

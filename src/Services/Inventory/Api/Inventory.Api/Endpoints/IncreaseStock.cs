@@ -40,7 +40,7 @@ public sealed class IncreaseStock : ICarterModule
     {
         var currentUser = httpContext.GetCurrentUser();
         dto.Source = InventorySource.ManualAdjustment.GetDescription();
-        var command = new UpdateStockCommand(inventoryItemId, InventoryChangeType.Increase, dto, Actor.User(currentUser.Id));
+        var command = new UpdateStockCommand(inventoryItemId, InventoryChangeType.Increase, dto, Actor.User(currentUser.Email));
         return await sender.Send(command);
     }
 

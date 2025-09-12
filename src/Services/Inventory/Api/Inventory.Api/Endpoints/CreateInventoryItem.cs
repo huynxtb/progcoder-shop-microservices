@@ -36,7 +36,7 @@ public sealed class CreateInventoryItem : ICarterModule
         [FromBody] CreateInventoryItemDto dto)
     {
         var currentUser = httpContext.GetCurrentUser();
-        var command = new CreateInventoryItemCommand(dto, Actor.User(currentUser.Id));
+        var command = new CreateInventoryItemCommand(dto, Actor.User(currentUser.Email));
         return await sender.Send(command);
     }
 

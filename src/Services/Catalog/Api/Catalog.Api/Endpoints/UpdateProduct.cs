@@ -1,5 +1,4 @@
-﻿
-#region using
+﻿#region using
 
 using BuildingBlocks.Abstractions.ValueObjects;
 using BuildingBlocks.Exceptions;
@@ -68,7 +67,7 @@ public sealed class UpdateProduct : ICarterModule
         }
 
         var currentUser = httpContext.GetCurrentUser();
-        var command = new UpdateProductCommand(productId, dto, Actor.User(currentUser.Id));
+        var command = new UpdateProductCommand(productId, dto, Actor.User(currentUser.Email));
 
         return await sender.Send(command);
     }

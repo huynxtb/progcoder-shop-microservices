@@ -36,7 +36,9 @@ public sealed class CreateOrderCommandValidator : AbstractValidator<CreateOrderC
 
                         RuleFor(x => x.Dto.Customer.Email)
                             .NotEmpty()
-                            .WithMessage(MessageCode.EmailIsRequired);
+                            .WithMessage(MessageCode.EmailIsRequired)
+                            .EmailAddress()
+                            .WithMessage(MessageCode.InvalidEmailAddress);
 
                         RuleFor(x => x.Dto.Customer.PhoneNumber)
                             .NotEmpty()
@@ -58,7 +60,9 @@ public sealed class CreateOrderCommandValidator : AbstractValidator<CreateOrderC
 
                         RuleFor(x => x.Dto.ShippingAddress.EmailAddress)
                             .NotEmpty()
-                            .WithMessage(MessageCode.EmailIsRequired);
+                            .WithMessage(MessageCode.EmailIsRequired)
+                            .EmailAddress()
+                            .WithMessage(MessageCode.InvalidEmailAddress);
 
                         RuleFor(x => x.Dto.ShippingAddress.AddressLine)
                             .NotEmpty()

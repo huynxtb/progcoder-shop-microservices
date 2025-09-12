@@ -16,7 +16,7 @@ public class AddressDto
 
     public string State { get; set; } = default!;
 
-    public string ZipCode { get; } = default!;
+    public string ZipCode { get; set; } = default!;
 
     #endregion
 }
