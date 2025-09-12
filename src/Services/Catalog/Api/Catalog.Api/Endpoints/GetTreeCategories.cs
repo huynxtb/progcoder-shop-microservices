@@ -2,7 +2,7 @@
 
 using Catalog.Api.Constants;
 using Catalog.Application.CQRS.Category.Queries;
-using Catalog.Application.Models.Responses;
+using Catalog.Application.Models.Results;
 using Common.Models.Reponses;
 
 #endregion
@@ -18,7 +18,7 @@ public sealed class GetTreeCategories : ICarterModule
         app.MapGet(ApiRoutes.Category.GetTree, HandleGetTreeCategoriesAsync)
             .WithTags(ApiRoutes.Category.Tags)
             .WithName(nameof(GetTreeCategories))
-            .Produces<ResultSharedResponse<GetTreeCategoriesResponse>>(StatusCodes.Status200OK)
+            .Produces<ResultSharedResponse<GetTreeCategoriesResult>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound);
     }
@@ -27,7 +27,7 @@ public sealed class GetTreeCategories : ICarterModule
 
     #region Methods
 
-    private async Task<GetTreeCategoriesResponse> HandleGetTreeCategoriesAsync(ISender sender)
+    private async Task<GetTreeCategoriesResult> HandleGetTreeCategoriesAsync(ISender sender)
     {
         var query = new GetTreeCategoriesQuery();
 

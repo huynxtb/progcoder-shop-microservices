@@ -44,6 +44,7 @@ Part 2: Create first microervies with Catalog service and Implement Clean Archit
 - Analyz flow, feature
 - Database
 - Marten DB
+- Global usings
 
 Part 4: Catalog service - Implement minial apis
 - Create product
@@ -88,6 +89,10 @@ Part 6 (**): Implement grpc server in catalog service
 
 Part 6 (**): Implement grpc client in inventory replace refit
 
+Part 6: Implement API Key for Grpc
+
+Part 7: Implenment Authentication with Keycloak
+
 Part: create event sourcing
 - Explain
 - Why need event sourcing
@@ -112,7 +117,6 @@ Part (**): Create worker in Inventory service + outbox pattern
 - Explain
 - Implement
 - Using postgres + dapper
-
 
 Part 6: Create notification services using Strategry Pattern
 - Email

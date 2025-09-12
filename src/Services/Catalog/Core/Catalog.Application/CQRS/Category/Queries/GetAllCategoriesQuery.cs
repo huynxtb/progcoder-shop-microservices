@@ -2,7 +2,7 @@
 
 using Catalog.Application.Dtos.Categories;
 using Catalog.Application.Models.Filters;
-using Catalog.Application.Models.Responses;
+using Catalog.Application.Models.Results;
 using Catalog.Domain.Entities;
 using Marten;
 using Microsoft.EntityFrameworkCore;
@@ -11,14 +11,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Application.CQRS.Category.Queries;
 
-public sealed record GetAllCategoriesQuery(GetAllCategoriesFilter Filter) : IQuery<GetAllCategoriesResponse>;
+public sealed record GetAllCategoriesQuery(GetAllCategoriesFilter Filter) : IQuery<GetAllCategoriesResult>;
 
 public sealed class GetAllCategoriesQueryHandler(IDocumentSession session)
-    : IQueryHandler<GetAllCategoriesQuery, GetAllCategoriesResponse>
+    : IQueryHandler<GetAllCategoriesQuery, GetAllCategoriesResult>
 {
     #region Implementations
 
-    public async Task<GetAllCategoriesResponse> Handle(GetAllCategoriesQuery query, CancellationToken cancellationToken)
+    public async Task<GetAllCategoriesResult> Handle(GetAllCategoriesQuery query, CancellationToken cancellationToken)
     {
         var filter = query.Filter;
         var result = await session.Query<CategoryEntity>()
@@ -26,7 +26,7 @@ public sealed class GetAllCategoriesQueryHandler(IDocumentSession session)
             .OrderByDescending(x => x.CreatedOnUtc)
             .ToListAsync(token: cancellationToken);
 
-        var response = new GetAllCategoriesResponse(result.Adapt<List<CategoryDto>>());
+        var response = new GetAllCategoriesResult(result.Adapt<List<CategoryDto>>());
 
         return response;
     }

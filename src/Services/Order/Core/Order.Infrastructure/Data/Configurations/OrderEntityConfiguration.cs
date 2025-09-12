@@ -76,7 +76,7 @@ public sealed class OrderEntityConfiguration : IEntityTypeConfiguration<OrderEnt
             {
                 b.Property(on => on.Value)
                     .HasColumnName("order_no")
-                    .HasMaxLength(20)
+                    .HasMaxLength(100)
                     .IsRequired();
             });
 
@@ -84,13 +84,8 @@ public sealed class OrderEntityConfiguration : IEntityTypeConfiguration<OrderEnt
         builder.ComplexProperty(
             o => o.ShippingAddress, b =>
             {
-                b.Property(a => a.FirstName)
-                    .HasColumnName("shipping_first_name")
-                    .HasMaxLength(100)
-                    .IsRequired();
-
-                b.Property(a => a.LastName)
-                    .HasColumnName("shipping_last_name")
+                b.Property(a => a.Name)
+                    .HasColumnName("shipping_name")
                     .HasMaxLength(100)
                     .IsRequired();
 

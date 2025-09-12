@@ -8,6 +8,8 @@ public sealed class MessageCode
 
     public const string InvalidEmailAddress = "INVALID_EMAIL_ADDRESS";
 
+    public const string InvalidPhoneNumber = "INVALID_PHONE_NUMBER";
+
     public const string Max255Characters = "MAX_255_CHARACTERS";
 
     public const string Min5Characters = "MIN_5_CHARACTERS";
@@ -147,4 +149,6 @@ public sealed class MessageCode
     public const string OrderItemsIsRequired = "ORDER_ITEMS_IS_REQUIRED";
 
     public const string ProductIsRequired = "PRODUCT_IS_REQUIRED";
+
+    public const string OrderIdIsRequired = "ORDER_ID_IS_REQUIRED";
 }

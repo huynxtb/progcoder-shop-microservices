@@ -1,12 +1,15 @@
 ﻿namespace BuildingBlocks.Pagination;
 
-public sealed class PaginatedResult<T>
-    (int pageNumber, int pageSize, long count, List<T> items, bool hasItem = false) 
-    where T : class
+public sealed class PaginatedResult<T>(
+    int pageNumber, 
+    int pageSize, 
+    long count, 
+    IEnumerable<T> items, 
+    bool hasItem = false) where T : class
 {
     #region Fields, Properties and Indexers
 
-    public List<T> Items { get; } = items;
+    public IEnumerable<T> Items { get; } = items;
 
     public int PageNumber { get; } = pageNumber;
 

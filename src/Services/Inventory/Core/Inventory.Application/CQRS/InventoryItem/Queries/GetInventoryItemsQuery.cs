@@ -4,7 +4,7 @@ using BuildingBlocks.Pagination.Extensions;
 using Inventory.Application.Data;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Application.Models.Filters;
-using Inventory.Application.Models.Responses;
+using Inventory.Application.Models.Results;
 using Microsoft.EntityFrameworkCore;
 
 #endregion
@@ -13,41 +13,32 @@ namespace Inventory.Application.CQRS.InventoryItem.Queries;
 
 public sealed record GetInventoryItemsQuery(
     GetInventoryItemsFilter Filter,
-    PaginationRequest Paging) : IQuery<GetInventoryItemsResponse>;
+    PaginationRequest Paging) : IQuery<GetInventoryItemsResult>;
 
 public sealed class GetInventoryItemsQueryHandler(IApplicationDbContext dbContext)
-    : IQueryHandler<GetInventoryItemsQuery, GetInventoryItemsResponse>
+    : IQueryHandler<GetInventoryItemsQuery, GetInventoryItemsResult>
 {
     #region Implementations
 
-    public async Task<GetInventoryItemsResponse> Handle(GetInventoryItemsQuery query, CancellationToken cancellationToken)
+    public async Task<GetInventoryItemsResult> Handle(GetInventoryItemsQuery query, CancellationToken cancellationToken)
     {
+        var filter = query.Filter;
+        var paging = query.Paging;
+
         var filteredQuery = dbContext.InventoryItems
             .AsNoTracking()
-            .Where(x => string.IsNullOrEmpty(query.Filter.SearchText) || 
-                    x.Product.Name!.Contains(query.Filter.SearchText) ||
-                    x.Location.Address!.Contains(query.Filter.SearchText));
+            .Where(x => string.IsNullOrEmpty(filter.SearchText) || 
+                    x.Product.Name!.Contains(filter.SearchText) ||
+                    x.Location.Address!.Contains(filter.SearchText));
 
         var total = await filteredQuery.CountAsync(cancellationToken);
-        var totalPages = (int)Math.Ceiling(total / (double)query.Paging.PageSize);
-
         var result = await filteredQuery
             .OrderByDescending(x => x.CreatedOnUtc)
             .WithPaging(query.Paging)
             .ToListAsync(cancellationToken);
 
         var items = result.Adapt<List<InventoryItemDto>>();
-        var paging = new PaginationResponse
-        {
-            Total = total,
-            PageNumber = query.Paging.PageNumber,
-            PageSize = query.Paging.PageSize,
-            HasItem = result.Any(),
-            TotalPages = totalPages,
-            HasNextPage = query.Paging.PageNumber < totalPages,
-            HasPreviousPage = query.Paging.PageNumber > 1
-        };
-        var reponse = new GetInventoryItemsResponse(items, paging);
+        var reponse = new GetInventoryItemsResult(items, total, paging.PageNumber, paging.PageSize);
 
         return reponse;
     }

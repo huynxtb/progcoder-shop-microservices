@@ -12,7 +12,7 @@ public interface ICatalogApi
     #region Methods
 
     [Get("/products/{productId}")]
-    Task<ProductReponse> GetProductByIdAsync([AliasAs("productId")] string productId, [Header("Authorization")] string bearerToken);
+    Task<GetProductByIdReponse> GetProductByIdAsync([AliasAs("productId")] string productId, [Header("Authorization")] string bearerToken);
 
     #endregion
 }

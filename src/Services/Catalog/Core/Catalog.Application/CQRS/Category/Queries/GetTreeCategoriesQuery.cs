@@ -1,7 +1,7 @@
 ﻿#region using
 
 using Catalog.Application.Dtos.Categories;
-using Catalog.Application.Models.Responses;
+using Catalog.Application.Models.Results;
 using Catalog.Domain.Entities;
 using Marten;
 using Microsoft.EntityFrameworkCore;
@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore;
 #endregion
 namespace Catalog.Application.CQRS.Category.Queries;
 
-public sealed record GetTreeCategoriesQuery : IQuery<GetTreeCategoriesResponse>;
+public sealed record GetTreeCategoriesQuery : IQuery<GetTreeCategoriesResult>;
 
 public sealed class GetTreeCategoriesQueryHandler(IDocumentSession session)
-    : IQueryHandler<GetTreeCategoriesQuery, GetTreeCategoriesResponse>
+    : IQueryHandler<GetTreeCategoriesQuery, GetTreeCategoriesResult>
 {
     #region Implementations
 
-    public async Task<GetTreeCategoriesResponse> Handle(GetTreeCategoriesQuery query, CancellationToken cancellationToken)
+    public async Task<GetTreeCategoriesResult> Handle(GetTreeCategoriesQuery query, CancellationToken cancellationToken)
     {
         var flat = await session.Query<CategoryEntity>()
             .Select(x => new CategoryTreeItemDto
@@ -45,7 +45,7 @@ public sealed class GetTreeCategoriesQueryHandler(IDocumentSession session)
             }
         }
 
-        var response = new GetTreeCategoriesResponse(roots);
+        var response = new GetTreeCategoriesResult(roots);
 
         return response;
     }

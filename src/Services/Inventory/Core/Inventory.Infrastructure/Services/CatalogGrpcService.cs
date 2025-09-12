@@ -11,7 +11,7 @@ namespace Inventory.Infrastructure.Services;
 
 public sealed class CatalogGrpcService(CatalogGrpc.CatalogGrpcClient grpcClient, ILogger<CatalogGrpcService> logger) : ICatalogGrpcService
 {
-    public async Task<ProductReponse?> GetProductByIdAsync(string productId, CancellationToken cancellationToken = default)
+    public async Task<GetProductByIdReponse?> GetProductByIdAsync(string productId, CancellationToken cancellationToken = default)
     {
 		try
 		{
@@ -21,11 +21,15 @@ public sealed class CatalogGrpcService(CatalogGrpc.CatalogGrpcClient grpcClient,
 
             var product = result.Product;
 
-            return new ProductReponse()
+            return new GetProductByIdReponse()
             {
-                Id = Guid.Parse(product.Id),
-                Price = (decimal)product.Price,
-                Name = product.Name
+                Product = new ProductInfoReponse
+                {
+                    Id = Guid.Parse(product.Id),
+                    Price = (decimal)product.Price,
+                    Name = product.Name,
+                    Thumbnail = product.Thumbnail
+                }
             };
         }
 		catch (Exception ex)

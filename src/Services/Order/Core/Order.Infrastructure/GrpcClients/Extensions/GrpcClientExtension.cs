@@ -4,6 +4,7 @@ using Catalog.Grpc;
 using Common.Configurations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Order.Infrastructure.GrpcClients.Interceptors;
 
 #endregion
 
@@ -22,6 +23,7 @@ public static class GrpcClientExtension
         {
             options.Address = new Uri(catalogServiceUrl);
         })
+        .AddInterceptor<GrpcApiKeyInterceptor>()
         .ConfigurePrimaryHttpMessageHandler(() =>
         {
             return new HttpClientHandler
@@ -29,6 +31,8 @@ public static class GrpcClientExtension
                 ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
             };
         });
+
+        services.AddSingleton<GrpcApiKeyInterceptor>();
 
         return services;
     }

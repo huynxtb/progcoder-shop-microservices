@@ -4,7 +4,7 @@ using BuildingBlocks.Pagination;
 using Catalog.Api.Constants;
 using Catalog.Application.CQRS.Product.Queries;
 using Catalog.Application.Models.Filters;
-using Catalog.Application.Models.Responses;
+using Catalog.Application.Models.Results;
 using Common.Models.Reponses;
 
 #endregion
@@ -20,7 +20,7 @@ public sealed class GetProducts : ICarterModule
         app.MapGet(ApiRoutes.Product.GetProducts, HandleGetProductsAsync)
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(GetProducts))
-            .Produces<GetProductsResponse>(StatusCodes.Status200OK)
+            .Produces<GetProductsResult>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .RequireAuthorization();
@@ -30,7 +30,7 @@ public sealed class GetProducts : ICarterModule
 
     #region Methods
 
-    private async Task<GetProductsResponse> HandleGetProductsAsync(
+    private async Task<GetProductsResult> HandleGetProductsAsync(
         ISender sender,
         [AsParameters] GetProductsFilter req,
         [AsParameters] PaginationRequest paging)

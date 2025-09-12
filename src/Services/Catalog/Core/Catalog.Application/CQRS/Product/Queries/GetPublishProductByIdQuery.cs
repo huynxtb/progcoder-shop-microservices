@@ -1,6 +1,6 @@
 ﻿#region using
 
-using Catalog.Application.Models.Responses;
+using Catalog.Application.Models.Results;
 using Catalog.Domain.Entities;
 using Marten;
 
@@ -8,21 +8,21 @@ using Marten;
 
 namespace Catalog.Application.CQRS.Product.Queries;
 
-public sealed record GetPublishProductByIdQuery(Guid ProductId) : IQuery<GetPublishProductByIdResponse>;
+public sealed record GetPublishProductByIdQuery(Guid ProductId) : IQuery<GetPublishProductByIdResult>;
 
 public sealed class GetPublishProductByIdQueryHandler(IDocumentSession session)
-    : IQueryHandler<GetPublishProductByIdQuery, GetPublishProductByIdResponse>
+    : IQueryHandler<GetPublishProductByIdQuery, GetPublishProductByIdResult>
 {
     #region Implementations
 
-    public async Task<GetPublishProductByIdResponse> Handle(GetPublishProductByIdQuery query, CancellationToken cancellationToken)
+    public async Task<GetPublishProductByIdResult> Handle(GetPublishProductByIdQuery query, CancellationToken cancellationToken)
     {
         var result = await session.Query<ProductEntity>()
             .Where(x => x.Id == query.ProductId && x.Published)
             .SingleOrDefaultAsync(cancellationToken)
             ?? throw new NotFoundException(MessageCode.ResourceNotFound, query.ProductId);
 
-        var reponse = result.Adapt<GetPublishProductByIdResponse>();
+        var reponse = result.Adapt<GetPublishProductByIdResult>();
 
         return reponse;
     }

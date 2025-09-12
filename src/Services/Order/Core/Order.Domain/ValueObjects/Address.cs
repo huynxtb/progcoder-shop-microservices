@@ -4,9 +4,7 @@ public record Address
 {
     #region Fields, Properties and Indexers
 
-    public string FirstName { get; } = default!;
-
-    public string LastName { get; } = default!;
+    public string Name { get; } = default!;
 
     public string? EmailAddress { get; } = default!;
 
@@ -22,8 +20,14 @@ public record Address
 
     #region Ctors
 
-    protected Address()
+    private Address(string name, string emailAddress, string addressLine, string country, string state, string zipCode)
     {
+        Name = name;
+        EmailAddress = emailAddress;
+        AddressLine = addressLine;
+        Country = country;
+        State = state;
+        ZipCode = zipCode;
     }
 
     #endregion
@@ -31,18 +35,16 @@ public record Address
     #region Methods
 
     public static Address Of(
-        string firstName, 
-        string lastName, 
+        string name, 
         string emailAddress, 
         string addressLine, 
         string country, 
         string state, 
         string zipCode)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(emailAddress);
         ArgumentException.ThrowIfNullOrWhiteSpace(addressLine);
 
-        return new Address();
+        return new Address(name, emailAddress, addressLine, country, state, zipCode);
     }
 
     #endregion

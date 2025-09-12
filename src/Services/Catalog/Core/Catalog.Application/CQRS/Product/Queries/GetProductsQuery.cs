@@ -2,7 +2,7 @@
 
 using Catalog.Application.Dtos.Products;
 using Catalog.Application.Models.Filters;
-using Catalog.Application.Models.Responses;
+using Catalog.Application.Models.Results;
 using Catalog.Domain.Entities;
 using Marten;
 using Marten.Pagination;
@@ -13,14 +13,14 @@ namespace Catalog.Application.CQRS.Product.Queries;
 
 public sealed record GetProductsQuery(
     GetProductsFilter Filter,
-    PaginationRequest Paging) : IQuery<GetProductsResponse>;
+    PaginationRequest Paging) : IQuery<GetProductsResult>;
 
 public sealed class GetProductsQueryHandler(IDocumentSession session)
-    : IQueryHandler<GetProductsQuery, GetProductsResponse>
+    : IQueryHandler<GetProductsQuery, GetProductsResult>
 {
     #region Implementations
 
-    public async Task<GetProductsResponse> Handle(GetProductsQuery query, CancellationToken cancellationToken)
+    public async Task<GetProductsResult> Handle(GetProductsQuery query, CancellationToken cancellationToken)
     {
         var filter = query.Filter;
         var paging = query.Paging;
@@ -37,27 +37,13 @@ public sealed class GetProductsQueryHandler(IDocumentSession session)
         }
 
         var total = await productQuery.CountAsync(cancellationToken);
-        var totalPages = (int)Math.Ceiling(total / (double)paging.PageSize);
-
         var result = await productQuery
             .OrderByDescending(x => x.CreatedOnUtc)
             .ToPagedListAsync(paging.PageNumber, paging.PageSize, cancellationToken);
+        
         var products = result.ToList();
-
-        var reponse = new GetProductsResponse()
-        {
-            Items = products.Adapt<List<ProductDto>>(),
-            Paging = new()
-            {
-                Total = total,
-                PageNumber = paging.PageNumber,
-                PageSize = paging.PageSize,
-                HasItem = products.Any(),
-                TotalPages = totalPages,
-                HasNextPage = paging.PageNumber < totalPages,
-                HasPreviousPage = paging.PageNumber > 1
-            }
-        };
+        var items = products.Adapt<List<ProductDto>>();
+        var reponse = new GetProductsResult(items, total, paging.PageNumber, paging.PageSize);
 
         return reponse;
     }

@@ -54,17 +54,17 @@ public sealed class CreateInventoryItemCommandHandler(
     {
         var dto = command.Dto;
 
-        //var product = await catalogApi.GetProductByIdAsync(dto.ProductId.ToString())
-        //    ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, dto.ProductId);
+        var productByApi = await catalogApi.GetProductByIdAsync(dto.ProductId.ToString())
+            ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, dto.ProductId);
 
-        var product = await catalogGrpc.GetProductByIdAsync(dto.ProductId.ToString(), cancellationToken)
+        var productByGrpc = await catalogGrpc.GetProductByIdAsync(dto.ProductId.ToString(), cancellationToken)
             ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, dto.ProductId);
 
         var inventoryItemId = Guid.NewGuid();
 
-        await AddInventoryItemAsync(inventoryItemId, 
-            product.Id,
-            product.Name!,
+        await AddInventoryItemAsync(inventoryItemId,
+            productByGrpc.Product.Id,
+            productByGrpc.Product.Name!,
             dto.Location!, 
             dto.Quantity, 
             command.Actor);

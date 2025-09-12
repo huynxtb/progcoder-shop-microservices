@@ -1,6 +1,6 @@
 ﻿namespace Order.Application.Dtos.Orders;
 
-public class CreateOrderDto
+public class CreateOrUpdateOrderDto
 {
     #region Fields, Properties and Indexers
 

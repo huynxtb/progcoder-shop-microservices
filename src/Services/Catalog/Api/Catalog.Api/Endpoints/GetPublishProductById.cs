@@ -2,7 +2,7 @@
 
 using Catalog.Api.Constants;
 using Catalog.Application.CQRS.Product.Queries;
-using Catalog.Application.Models.Responses;
+using Catalog.Application.Models.Results;
 using Microsoft.AspNetCore.Mvc;
 using Common.Models.Reponses;
 
@@ -19,7 +19,7 @@ public sealed class GetPublishProductById : ICarterModule
         app.MapGet(ApiRoutes.Product.GetPublishProductById, HandleGetPublishProductByIdAsync)
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(GetPublishProductById))
-            .Produces<ResultSharedResponse<GetPublishProductByIdResponse>>(StatusCodes.Status200OK)
+            .Produces<ResultSharedResponse<GetPublishProductByIdResult>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound);
@@ -29,7 +29,7 @@ public sealed class GetPublishProductById : ICarterModule
 
     #region Methods
 
-    private async Task<GetPublishProductByIdResponse> HandleGetPublishProductByIdAsync(
+    private async Task<GetPublishProductByIdResult> HandleGetPublishProductByIdAsync(
         ISender sender,
         [FromRoute] Guid productId)
     {

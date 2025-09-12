@@ -6,3 +6,4 @@ global using Common.Extensions;
 global using Mapster;
 global using BuildingBlocks.Pagination;
 global using BuildingBlocks.Exceptions;
+global using BuildingBlocks.Abstractions.ValueObjects;

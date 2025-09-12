@@ -1,14 +1,10 @@
-﻿#region using
+﻿namespace Order.Application.Dtos.Orders;
 
-using Order.Application.Dtos.Abstractions;
-
-#endregion
-
-namespace Order.Application.Dtos.Orders;
-
-public class CustomerDto : DtoId<Guid>
+public class CustomerDto
 {
     #region Fields, Properties and Indexers
+
+    public Guid? Id { get; set; }
 
     public string PhoneNumber { get; set; } = default!;
 

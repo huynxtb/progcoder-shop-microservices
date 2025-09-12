@@ -2,7 +2,7 @@
 
 using Catalog.Application.Dtos.Products;
 using Catalog.Application.Models.Filters;
-using Catalog.Application.Models.Responses;
+using Catalog.Application.Models.Results;
 using Catalog.Domain.Entities;
 using Marten;
 
@@ -10,14 +10,14 @@ using Marten;
 
 namespace Catalog.Application.CQRS.Product.Queries;
 
-public sealed record GetAllProductsQuery(GetAllProductsFilter Filter) : IQuery<GetAllProductsResponse>;
+public sealed record GetAllProductsQuery(GetAllProductsFilter Filter) : IQuery<GetAllProductsResult>;
 
 public sealed class GetAllProductsQueryHandler(IDocumentSession session)
-    : IQueryHandler<GetAllProductsQuery, GetAllProductsResponse>
+    : IQueryHandler<GetAllProductsQuery, GetAllProductsResult>
 {
     #region Implementations
 
-    public async Task<GetAllProductsResponse> Handle(GetAllProductsQuery query, CancellationToken cancellationToken)
+    public async Task<GetAllProductsResult> Handle(GetAllProductsQuery query, CancellationToken cancellationToken)
     {
         var filter = query.Filter;
         var productQuery = session.Query<ProductEntity>().AsQueryable();
@@ -37,7 +37,7 @@ public sealed class GetAllProductsQueryHandler(IDocumentSession session)
             .ToListAsync(cancellationToken);
         
         var items = result.Adapt<List<ProductDto>>();
-        var response = new GetAllProductsResponse(items);
+        var response = new GetAllProductsResult(items);
 
         return response;
     }

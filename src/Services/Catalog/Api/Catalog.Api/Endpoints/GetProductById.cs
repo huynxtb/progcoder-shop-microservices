@@ -2,7 +2,7 @@
 
 using Catalog.Api.Constants;
 using Catalog.Application.CQRS.Product.Queries;
-using Catalog.Application.Models.Responses;
+using Catalog.Application.Models.Results;
 using Microsoft.AspNetCore.Mvc;
 using Common.Models.Reponses;
 
@@ -19,7 +19,7 @@ public sealed class GetProductById : ICarterModule
         app.MapGet(ApiRoutes.Product.GetProductById, HandleGetProductByIdAsync)
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(GetProductById))
-            .Produces<GetProductByIdResponse>(StatusCodes.Status200OK)
+            .Produces<GetProductByIdResult>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -30,7 +30,7 @@ public sealed class GetProductById : ICarterModule
 
     #region Methods
 
-    private async Task<GetProductByIdResponse> HandleGetProductByIdAsync(
+    private async Task<GetProductByIdResult> HandleGetProductByIdAsync(
         ISender sender,
         [FromRoute] Guid productId)
     {

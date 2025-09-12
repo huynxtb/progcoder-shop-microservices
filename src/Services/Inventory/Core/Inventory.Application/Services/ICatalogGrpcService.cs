@@ -10,7 +10,7 @@ public interface ICatalogGrpcService
 {
 	#region Methods
 
-	Task<ProductReponse?> GetProductByIdAsync(string productId, CancellationToken cancellationToken = default);
+	Task<GetProductByIdReponse?> GetProductByIdAsync(string productId, CancellationToken cancellationToken = default);
 
     #endregion
 }

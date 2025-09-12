@@ -1,18 +1,16 @@
 ﻿#region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
 using Order.Application.Data;
 using Order.Application.Dtos.Orders;
 using Order.Domain.Entities;
 using Order.Domain.ValueObjects;
-using Common.Models.Reponses;
 using Order.Application.Services;
 
 #endregion
 
 namespace Order.Application.CQRS.Order.Commands;
 
-public sealed record CreateOrderCommand(CreateOrderDto Dto, Actor Actor) : ICommand<Guid>;
+public sealed record CreateOrderCommand(CreateOrUpdateOrderDto Dto, Actor Actor) : ICommand<Guid>;
 
 public sealed class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
 {
@@ -42,7 +40,9 @@ public sealed class CreateOrderCommandValidator : AbstractValidator<CreateOrderC
 
                         RuleFor(x => x.Dto.Customer.PhoneNumber)
                             .NotEmpty()
-                            .WithMessage(MessageCode.PhoneNumberIsRequired);
+                            .WithMessage(MessageCode.PhoneNumberIsRequired)
+                            .IsValidPhoneNumber()
+                            .WithMessage(MessageCode.InvalidPhoneNumber);
                     });
 
                 RuleFor(x => x.Dto.ShippingAddress)
@@ -50,13 +50,9 @@ public sealed class CreateOrderCommandValidator : AbstractValidator<CreateOrderC
                     .WithMessage(MessageCode.BadRequest)
                     .DependentRules(() =>
                     {
-                        RuleFor(x => x.Dto.ShippingAddress.FirstName)
+                        RuleFor(x => x.Dto.ShippingAddress.Name)
                             .NotEmpty()
-                            .WithMessage(MessageCode.FirstNameIsRequired);
-
-                        RuleFor(x => x.Dto.ShippingAddress.LastName)
-                            .NotEmpty()
-                            .WithMessage(MessageCode.LastNameIsRequired);
+                            .WithMessage(MessageCode.NameIsRequired);
 
                         RuleFor(x => x.Dto.ShippingAddress.EmailAddress)
                             .NotEmpty()
@@ -123,15 +119,14 @@ public sealed class CreateOrderCommandHandler(IApplicationDbContext dbContext, I
             dto.Customer.Email);
 
         var shippingAddress = Address.Of(
-            dto.ShippingAddress.FirstName,
-            dto.ShippingAddress.LastName,
+            dto.ShippingAddress.Name,
             dto.ShippingAddress.EmailAddress!,
             dto.ShippingAddress.AddressLine,
             dto.ShippingAddress.Country,
             dto.ShippingAddress.State,
             dto.ShippingAddress.ZipCode);
 
-        var order = OrderEntity.Create(orderId, customer, orderNo, shippingAddress);
+        var order = OrderEntity.Create(orderId, customer, orderNo, shippingAddress, command.Actor.ToString());
 
         var productIds = dto.OrderItems.Select(x => x.ProductId.ToString()).ToArray();
         var productsResponse = await catalogGrpc.GetProductsAsync(ids: productIds, cancellationToken: cancellationToken);

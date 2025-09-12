@@ -32,7 +32,7 @@ public sealed class OrderEntity : Aggregate<Guid>
 
     #endregion
 
-    public static OrderEntity Create(Guid id, Customer customer, OrderNo orderNo, Address shippingAddress)
+    public static OrderEntity Create(Guid id, Customer customer, OrderNo orderNo, Address shippingAddress, string performedBy)
     {
         var order = new OrderEntity
         {
@@ -40,7 +40,9 @@ public sealed class OrderEntity : Aggregate<Guid>
             Customer = customer,
             OrderNo = orderNo,
             ShippingAddress = shippingAddress,
-            Status = OrderStatus.Pending
+            Status = OrderStatus.Pending,
+            CreatedBy = performedBy,
+            LastModifiedBy = performedBy
         };
 
         //order.AddDomainEvent(new OrderCreatedEvent(order));
@@ -67,7 +69,7 @@ public sealed class OrderEntity : Aggregate<Guid>
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quantity);
         
         var orderItemId = Guid.NewGuid();
-        var orderItem = OrderItemEntity.Create(orderItemId, Id, product, quantity);
+        var orderItem = OrderItemEntity.Create(orderItemId, Id, product, quantity, CreatedBy!);
         _orderItems.Add(orderItem);
     }
 

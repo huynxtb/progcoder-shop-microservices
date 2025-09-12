@@ -3,7 +3,7 @@
 using Catalog.Api.Constants;
 using Catalog.Application.CQRS.Product.Queries;
 using Catalog.Application.Models.Filters;
-using Catalog.Application.Models.Responses;
+using Catalog.Application.Models.Results;
 
 #endregion
 
@@ -18,7 +18,7 @@ public sealed class GetAllProducts : ICarterModule
         app.MapGet(ApiRoutes.Product.GetAllProducts, HandleGetAllProductsAsync)
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(GetAllProducts))
-            .Produces<GetAllProductsResponse>(StatusCodes.Status200OK)
+            .Produces<GetAllProductsResult>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .RequireAuthorization();
@@ -28,7 +28,7 @@ public sealed class GetAllProducts : ICarterModule
 
     #region Methods
 
-    private async Task<GetAllProductsResponse> HandleGetAllProductsAsync(
+    private async Task<GetAllProductsResult> HandleGetAllProductsAsync(
         ISender sender,
         [AsParameters] GetAllProductsFilter req)
     {

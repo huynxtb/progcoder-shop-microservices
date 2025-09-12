@@ -18,8 +18,4 @@
     <ProjectReference Include="..\..\Core\Order.Domain\Order.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="CQRS\Order\Queries\" />
-  </ItemGroup>
-
 </Project>

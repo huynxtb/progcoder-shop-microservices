@@ -68,6 +68,10 @@ namespace Order.Infrastructure.Data.Migrations
                                 .HasColumnType("nvarchar(255)")
                                 .HasColumnName("customer_email");
 
+                            b1.Property<Guid?>("Id")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("customer_id");
+
                             b1.Property<string>("Name")
                                 .IsRequired()
                                 .HasMaxLength(255)
@@ -87,8 +91,8 @@ namespace Order.Infrastructure.Data.Migrations
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasMaxLength(20)
-                                .HasColumnType("nvarchar(20)")
+                                .HasMaxLength(100)
+                                .HasColumnType("nvarchar(100)")
                                 .HasColumnName("order_no");
                         });
 
@@ -113,17 +117,11 @@ namespace Order.Infrastructure.Data.Migrations
                                 .HasColumnType("nvarchar(255)")
                                 .HasColumnName("shipping_email");
 
-                            b1.Property<string>("FirstName")
+                            b1.Property<string>("Name")
                                 .IsRequired()
                                 .HasMaxLength(100)
                                 .HasColumnType("nvarchar(100)")
-                                .HasColumnName("shipping_first_name");
-
-                            b1.Property<string>("LastName")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("shipping_last_name");
+                                .HasColumnName("shipping_name");
 
                             b1.Property<string>("State")
                                 .IsRequired()

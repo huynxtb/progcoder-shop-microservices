@@ -10,7 +10,7 @@ public interface ICatalogApiService
 {
     #region Methods
 
-    Task<ProductReponse?> GetProductByIdAsync(string productId);
+    Task<GetProductByIdReponse?> GetProductByIdAsync(string productId);
 
     #endregion
 }

@@ -20,10 +20,10 @@ public sealed class CatalogGrpcService(ISender sender) : CatalogGrpc.CatalogGrpc
         {
             Product = new Product
             {
-                Id = result.Id.ToString(),
-                Name = result.Name,
-                Thumbnail = result.Thumbnail,
-                Price = (double)result.Price
+                Id = result.Product.Id.ToString(),
+                Name = result.Product.Name,
+                Thumbnail = result.Product.Thumbnail,
+                Price = (double)result.Product.Price
             }
         };
         return response;

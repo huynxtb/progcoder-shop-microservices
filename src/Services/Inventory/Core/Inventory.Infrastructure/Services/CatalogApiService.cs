@@ -57,7 +57,7 @@ public sealed class CatalogApiService : ICatalogApiService
 
     #region Implementations
 
-    public async Task<ProductReponse?> GetProductByIdAsync(string productId)
+    public async Task<GetProductByIdReponse?> GetProductByIdAsync(string productId)
     {
         try
         {

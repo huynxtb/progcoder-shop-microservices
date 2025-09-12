@@ -1,12 +1,6 @@
-﻿#region using
+﻿namespace Order.Application.Dtos.Orders;
 
-using Order.Application.Dtos.Abstractions;
-
-#endregion
-
-namespace Order.Application.Dtos.Orders;
-
-public sealed class CreateOrderItemDto : DtoId<Guid>
+public sealed class CreateOrderItemDto
 {
     #region Fields, Properties and Indexers
 

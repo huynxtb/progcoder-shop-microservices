@@ -27,7 +27,7 @@ public sealed class OrderItemEntity : Entity<Guid>
 
     #region Methods
 
-    public static OrderItemEntity Create(Guid id, Guid orderId, Product product, int quantity)
+    public static OrderItemEntity Create(Guid id, Guid orderId, Product product, int quantity, string performedBy)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quantity);
 
@@ -36,7 +36,9 @@ public sealed class OrderItemEntity : Entity<Guid>
             Id = id,
             OrderId = orderId,
             Product = product,
-            Quantity = quantity
+            Quantity = quantity,
+            CreatedBy = performedBy,
+            LastModifiedBy = performedBy
         };
 
         return orderItem;

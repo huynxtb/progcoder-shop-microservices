@@ -24,7 +24,7 @@ public record Customer
 
     #region Methods
 
-    public static Customer Of(Guid id, string phoneNumber, string name, string email)
+    public static Customer Of(Guid? id, string phoneNumber, string name, string email)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(phoneNumber);
         ArgumentException.ThrowIfNullOrWhiteSpace(name);

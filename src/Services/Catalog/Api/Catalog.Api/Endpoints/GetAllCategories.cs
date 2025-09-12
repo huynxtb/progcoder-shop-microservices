@@ -3,7 +3,7 @@
 using Catalog.Api.Constants;
 using Catalog.Application.CQRS.Category.Queries;
 using Catalog.Application.Models.Filters;
-using Catalog.Application.Models.Responses;
+using Catalog.Application.Models.Results;
 using Common.Models.Reponses;
 
 #endregion
@@ -19,7 +19,7 @@ public sealed class GetAllCategories : ICarterModule
         app.MapGet(ApiRoutes.Category.GetAll, HandleGetAllCategoriesAsync)
             .WithTags(ApiRoutes.Category.Tags)
             .WithName(nameof(GetAllCategories))
-            .Produces<GetAllCategoriesResponse>(StatusCodes.Status200OK)
+            .Produces<GetAllCategoriesResult>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
@@ -27,7 +27,7 @@ public sealed class GetAllCategories : ICarterModule
 
     #region Methods
 
-    private async Task<GetAllCategoriesResponse> HandleGetAllCategoriesAsync(
+    private async Task<GetAllCategoriesResult> HandleGetAllCategoriesAsync(
         ISender sender,
         [AsParameters] GetAllCategoriesFilter req)
     {

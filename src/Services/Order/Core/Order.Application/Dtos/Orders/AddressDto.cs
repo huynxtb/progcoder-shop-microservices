@@ -4,9 +4,7 @@ public class AddressDto
 {
     #region Fields, Properties and Indexers
 
-    public string FirstName { get; set; } = default!;
-
-    public string LastName { get; set; } = default!;
+    public string Name { get; set; } = default!;
 
     public string? EmailAddress { get; set; }
 

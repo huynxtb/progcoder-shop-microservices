@@ -21,7 +21,6 @@ public sealed class CreateOrder : ICarterModule
             .WithName(nameof(CreateOrder))
             .Produces<Guid>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
     }
 
@@ -32,7 +31,7 @@ public sealed class CreateOrder : ICarterModule
     private async Task<Guid> HandleCreateOrderAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
-        [FromBody] CreateOrderDto dto)
+        [FromBody] CreateOrUpdateOrderDto dto)
     {
         var currentUser = httpContext.GetCurrentUser();
         var command = new CreateOrderCommand(dto, Actor.User(currentUser.Email));
