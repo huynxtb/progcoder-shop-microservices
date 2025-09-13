@@ -21,12 +21,11 @@ public sealed class GetPublishProductsResult
 
     public GetPublishProductsResult(
         List<PublishProductDto> items,
-        long totalItems,
-        int pageNumber,
-        int pageSize)
+        long totalCount,
+        PaginationRequest pagination)
     {
         Items = items;
-        Paging = PagingResult.Of(totalItems, pageNumber, pageSize);
+        Paging = PagingResult.Of(totalCount, pagination);
     }
 
     #endregion

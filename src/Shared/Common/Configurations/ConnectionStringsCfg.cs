@@ -12,5 +12,7 @@ public sealed class ConnectionStringsCfg
 
     public const string DatabaseName = "DatabaseName"; // For MongoDB
 
+    public const string Redis = "Redis";
+
     #endregion
 }

@@ -20,7 +20,12 @@ public sealed class CreateOrder : ICarterModule
             .WithTags(ApiRoutes.Order.Tags)
             .WithName(nameof(CreateOrder))
             .Produces<Guid>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status422UnprocessableEntity)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
             .RequireAuthorization();
     }
 

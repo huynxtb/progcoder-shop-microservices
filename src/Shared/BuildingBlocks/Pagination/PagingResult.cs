@@ -1,10 +1,16 @@
-﻿namespace BuildingBlocks.Pagination;
+﻿#region using
+
+using BuildingBlocks.Pagination.Extensions;
+
+#endregion
+
+namespace BuildingBlocks.Pagination;
 
 public sealed class PagingResult
 {
     #region Fields, Properties and Indexers
 
-    public long Total { get; private set; }
+    public long TotalCount { get; private set; }
 
     public int PageNumber { get; private set; }
 
@@ -22,26 +28,26 @@ public sealed class PagingResult
 
     #region Ctors
 
-    private PagingResult(long total, int pageNumber, int pageSize)
+    private PagingResult(long totalCount, PaginationRequest pagination)
     {
-        Total = total;
-        PageNumber = pageNumber;
-        PageSize = pageSize;
-        HasItem = total > 0;
+        TotalCount = totalCount;
+        PageNumber = pagination.PageNumber;
+        PageSize = pagination.PageSize;
+        HasItem = totalCount > 0;
     }
 
     #endregion
 
     #region Methods
 
-    public static PagingResult Of(long total, int pageNumber, int pageSize)
+    public static PagingResult Of(long totalCount, PaginationRequest pagination)
     {
-        var result = new PagingResult(total, pageNumber, pageSize);
-        if (pageSize > 0)
+        var result = new PagingResult(totalCount, pagination);
+        if (pagination.PageSize > 0)
         {
-            result.TotalPages = (int)Math.Ceiling(total / (double)pageSize);
-            result.HasNextPage = pageNumber < result.TotalPages;
-            result.HasPreviousPage = pageNumber > 1 && pageNumber <= result.TotalPages;
+            result.TotalPages = pagination.GetTotalPages(totalCount);
+            result.HasNextPage = pagination.PageNumber < result.TotalPages;
+            result.HasPreviousPage = pagination.PageNumber > 1 && pagination.PageNumber <= result.TotalPages;
         }
         return result;
     }

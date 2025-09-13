@@ -31,14 +31,14 @@ public sealed class GetInventoryItemsQueryHandler(IApplicationDbContext dbContex
                     x.Product.Name!.Contains(filter.SearchText) ||
                     x.Location.Address!.Contains(filter.SearchText));
 
-        var total = await filteredQuery.CountAsync(cancellationToken);
+        var totalCount = await filteredQuery.CountAsync(cancellationToken);
         var result = await filteredQuery
             .OrderByDescending(x => x.CreatedOnUtc)
             .WithPaging(query.Paging)
             .ToListAsync(cancellationToken);
 
         var items = result.Adapt<List<InventoryItemDto>>();
-        var reponse = new GetInventoryItemsResult(items, total, paging.PageNumber, paging.PageSize);
+        var reponse = new GetInventoryItemsResult(items, totalCount, paging);
 
         return reponse;
     }

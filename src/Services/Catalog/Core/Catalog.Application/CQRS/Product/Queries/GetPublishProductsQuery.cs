@@ -32,14 +32,14 @@ public sealed class GetPublishProductsQueryHandler(IDocumentSession session)
             productQuery = productQuery.Where(x => x.Name != null && x.Name.Contains(search));
         }
 
-        var total = await productQuery.CountAsync(cancellationToken);
+        var totalCount = await productQuery.CountAsync(cancellationToken);
         var result = await productQuery
             .OrderByDescending(x => x.CreatedOnUtc)
             .ToPagedListAsync(paging.PageNumber, paging.PageSize, cancellationToken);
 
         var products = result.ToList();
         var items = products.Adapt<List<PublishProductDto>>();
-        var reponse = new GetPublishProductsResult(items, total, paging.PageNumber, paging.PageSize);
+        var reponse = new GetPublishProductsResult(items, totalCount, paging);
 
         return reponse;
     }

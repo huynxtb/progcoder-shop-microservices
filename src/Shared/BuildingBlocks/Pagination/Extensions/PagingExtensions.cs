@@ -32,7 +32,7 @@ public static class PagingExtensions
         return query.Skip(skip).Take(pageSize);
     }
 
-    public static int GetTotalPages(this PaginationRequest paging, int totalCount)
+    public static int GetTotalPages(this PaginationRequest paging, long totalCount)
     {
         if (paging.PageSize <= 0) throw new ArgumentOutOfRangeException(nameof(paging.PageSize), "Page size must be greater than zero.");
         return (int)Math.Ceiling(totalCount / (double)paging.PageSize);

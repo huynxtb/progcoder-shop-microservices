@@ -1,8 +1,12 @@
-﻿using Order.Application.Dtos.Orders;
+﻿#region using
+
+using Order.Application.Dtos.Orders;
+
+#endregion
 
 namespace Order.Application.Models.Results;
 
-public class GetOrdersResult
+public sealed class GetOrdersResult
 {
     #region Fields, Properties and Indexers
 
@@ -16,12 +20,11 @@ public class GetOrdersResult
 
     public GetOrdersResult(
         List<OrderDto> items,
-        long totalItems,
-        int pageNumber,
-        int pageSize)
+        long totalCount,
+        PaginationRequest pagination)
     {
         Items = items;
-        Paging = PagingResult.Of(totalItems, pageNumber, pageSize);
+        Paging = PagingResult.Of(totalCount, pagination);
     }
 
     #endregion

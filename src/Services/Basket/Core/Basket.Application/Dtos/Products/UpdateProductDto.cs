@@ -1,0 +1,32 @@
+﻿#region using
+
+using Basket.Application.Dtos.Abstractions;
+
+#endregion
+
+namespace Basket.Application.Dtos.Products;
+
+public class UpdateProductDto
+{
+    #region Fields, Properties and Indexers
+
+    public string? Name { get; set; }
+
+    public string? Sku { get; set; }
+
+    public string? ShortDescription { get; set; }
+
+    public string? LongDescription { get; set; }
+
+    public decimal Price { get; set; }
+
+    public decimal? SalesPrice { get; set; }
+
+    public List<Guid>? CategoryIds { get; set; }
+
+    public List<string>? CurrentImageUrls { get; set; }
+
+    public List<UploadFileBytes>? Files { get; set; }
+
+    #endregion
+}
