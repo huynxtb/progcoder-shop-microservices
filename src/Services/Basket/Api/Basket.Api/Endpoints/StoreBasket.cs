@@ -1,28 +1,27 @@
 ﻿#region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
 using Basket.Api.Constants;
-using Basket.Application.CQRS.Product.Commands;
-using Common.Models.Reponses;
 using Microsoft.AspNetCore.Mvc;
+using Basket.Application.Dtos.Baskets;
+using Basket.Application.CQRS.Basket.Commands;
 
 #endregion
 
 namespace Basket.Api.Endpoints;
 
-public sealed class PublishProduct : ICarterModule
+public sealed class StoreBasket : ICarterModule
 {
     #region Implementations
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost(ApiRoutes.Product.Publish, HandlePublishProductAsync)
-            .WithTags(ApiRoutes.Product.Tags)
-            .WithName(nameof(PublishProduct))
+        app.MapPost(ApiRoutes.Basket.StoreBasket, HandleCreateBasketAsync)
+            .WithTags(ApiRoutes.Basket.Tags)
+            .WithName(nameof(StoreBasket))
             .Produces<Guid>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status404NotFound)
+            .DisableAntiforgery()
             .RequireAuthorization();
     }
 
@@ -30,13 +29,13 @@ public sealed class PublishProduct : ICarterModule
 
     #region Methods
 
-    private async Task<Guid> HandlePublishProductAsync(
+    private async Task<Guid> HandleCreateBasketAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
-        [FromRoute] Guid productId)
+        [FromBody] StoreShoppingCartDto dto)
     {
         var currentUser = httpContext.GetCurrentUser();
-        var command = new PublishProductCommand(productId, Actor.User(currentUser.Email));
+        var command = new StoreBasketCommand(currentUser.Id, dto);
         return await sender.Send(command);
     }
 

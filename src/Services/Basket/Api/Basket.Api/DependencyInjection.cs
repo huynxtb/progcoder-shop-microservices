@@ -7,6 +7,7 @@ using Common.Configurations;
 using Common.Constants;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using System.Xml.Linq;
 
 #endregion
 
@@ -28,6 +29,7 @@ public static class DependencyInjection
         {
             var dbype = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.DbType}"];
             var conn = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.Database}"];
+            var dbName = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.DatabaseName}"];
 
             switch (dbype)
             {
@@ -42,6 +44,12 @@ public static class DependencyInjection
                 case DatabaseType.PostgreSql:
                     services.AddHealthChecks()
                         .AddNpgSql(connectionString: conn!);
+                    break;
+                case DatabaseType.MongoDb:
+                    services.AddHealthChecks()
+                        .AddMongoDb(
+                            clientFactory: sp => new MongoDB.Driver.MongoClient(conn!),
+                            databaseNameFactory: sp => dbName!);
                     break;
                 default:
                     throw new Exception("Unsupported database type");

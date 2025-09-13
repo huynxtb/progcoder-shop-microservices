@@ -2,23 +2,21 @@
 #region using
 
 using Basket.Api.Constants;
-using Basket.Application.CQRS.Product.Commands;
-using Microsoft.AspNetCore.Mvc;
-using Common.Models.Reponses;
+using Basket.Application.CQRS.Basket.Commands;
 
 #endregion
 
 namespace Basket.Api.Endpoints;
 
-public sealed class DeleteProduct : ICarterModule
+public sealed class DeleteBasket : ICarterModule
 {
     #region Implementations
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapDelete(ApiRoutes.Product.Delete, HandleDeleteProductAsync)
-            .WithTags(ApiRoutes.Product.Tags)
-            .WithName(nameof(DeleteProduct))
+        app.MapDelete(ApiRoutes.Basket.DeleteBasket, HandleDeleteBasketAsync)
+            .WithTags(ApiRoutes.Basket.Tags)
+            .WithName(nameof(DeleteBasket))
             .Produces<Unit>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
@@ -30,11 +28,12 @@ public sealed class DeleteProduct : ICarterModule
 
     #region Methods
 
-    private async Task<Unit> HandleDeleteProductAsync(
+    private async Task<Unit> HandleDeleteBasketAsync(
         ISender sender,
-        [FromRoute] Guid productId)
+        IHttpContextAccessor httpContext)
     {
-        var command = new DeleteProductCommand(productId);
+        var currentUser = httpContext.GetCurrentUser();
+        var command = new DeleteBasketCommand(currentUser.Id);
         return await sender.Send(command);
     }
 

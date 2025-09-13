@@ -1,6 +1,6 @@
-﻿namespace Basket.Domain.Entities;
+﻿namespace Basket.Application.Dtos.Baskets;
 
-public sealed class ShoppingCartItemEntity
+public class ShoppingCartItemDto
 {
     #region Fields, Properties and Indexers
 
@@ -17,5 +17,4 @@ public sealed class ShoppingCartItemEntity
     public string ProductImage { get; set; } = default!;
 
     #endregion
-
 }

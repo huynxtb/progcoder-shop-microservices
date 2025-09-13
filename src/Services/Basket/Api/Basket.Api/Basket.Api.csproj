@@ -23,4 +23,8 @@
     <ProjectReference Include="..\..\Core\Basket.Infrastructure\Basket.Infrastructure.csproj" />
   </ItemGroup>
   
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+  
 </Project>
