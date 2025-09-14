@@ -12,91 +12,98 @@ public sealed class ShoppingCartEntity : IEntityId<Guid>
 {
     #region Fields, Properties and Indexers
 
-    private readonly List<ShoppingCartItemEntity> _items = [];
-
     [BsonId]
     [BsonRepresentation(BsonType.String)]
     public Guid Id { get; set; }
 
     public string UserId { get; set; } = default!;
 
-    public IReadOnlyCollection<ShoppingCartItemEntity> Items => _items;
+    public List<ShoppingCartItemEntity> Items { get; set; } = new();
 
-    public decimal TotalPrice => _items.Sum(x => x.Price * x.Quantity);
+    public decimal TotalPrice => Items.Sum(x => x.LineTotal);
 
     #endregion
 
     #region Ctors
 
-    public ShoppingCartEntity(string userId)
-    {
-        UserId = userId;
-    }
+    public ShoppingCartEntity() { }
 
-    public ShoppingCartEntity()
+    private ShoppingCartEntity(string userId)
     {
+        Id = Guid.NewGuid();
+        UserId = userId;
     }
 
     #endregion
 
-    #region Methods
+    #region Factory
 
-    public ShoppingCartItemEntity AddItem(
+    public static ShoppingCartEntity Create(string userId) => new(userId);
+
+    #endregion
+
+    #region Item Operations
+
+    public ShoppingCartItemEntity AddOrIncreaseItem(
         Guid productId,
         string productName,
+        string productImage,
         decimal price,
         int quantity = 1)
     {
-        var existing = FindItem(productId);
-        
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quantity);
+        ArgumentOutOfRangeException.ThrowIfNegative(price);
+
+        var existing = Find(productId);
         if (existing is not null)
         {
-            existing.Quantity += quantity;
+            existing.Increase(quantity);
+            existing.UpdatePrice(price);
+            existing.UpdateMeta(productName, productImage);
             return existing;
         }
 
-        var item = new ShoppingCartItemEntity
-        {
-            ProductId = productId,
-            ProductName = productName,
-            Price = price,
-            Quantity = quantity
-        };
-
-        _items.Add(item);
+        var item = ShoppingCartItemEntity.Create(productId, productName, productImage, price, quantity);
+        Items.Add(item);
         return item;
     }
 
-    public bool RemoveItem(Guid productId)
+    public void UpdateQuantity(Guid productId, int quantity)
     {
-        var existing = FindItem(productId);
-        if (existing is null) return false;
-        _items.Remove(existing);
-        return true;
-    }
-
-    public bool UpdateQuantity(Guid productId, int quantity)
-    {
-        var existing = FindItem(productId);
-        
-        if (existing is null) return false;
+        var existing = Find(productId);
+        if (existing is null) return;
 
         if (quantity <= 0)
         {
-            _items.Remove(existing);
-            return true;
+            Items.Remove(existing);
+            return;
         }
 
-        existing.Quantity = quantity;
-        return true;
+        existing.SetQuantity(quantity);
     }
 
-    public void Clear() => _items.Clear();
-
-    private ShoppingCartItemEntity? FindItem(Guid productId)
+    public void UpdatePrice(Guid productId, decimal price)
     {
-        return _items.FirstOrDefault(x => x.ProductId == productId);
+        var existing = Find(productId);
+        if (existing is null) return;
+        existing.UpdatePrice(price);
     }
+
+    public void RemoveItem(Guid productId)
+    {
+        var existing = Find(productId);
+        if (existing is null) return;
+        Items.Remove(existing);
+    }
+
+    public void Clear() => Items.Clear();
+
+    #endregion
+
+    #region Helpers
+
+    private ShoppingCartItemEntity? Find(Guid productId) =>
+        Items.FirstOrDefault(x => x.ProductId == productId);
 
     #endregion
 }

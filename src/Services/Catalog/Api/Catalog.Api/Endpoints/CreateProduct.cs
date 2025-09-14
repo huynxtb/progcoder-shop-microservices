@@ -13,6 +13,7 @@ using Common.Constants;
 using Common.Models;
 using Common.Models.Reponses;
 using BuildingBlocks.Abstractions.ValueObjects;
+using BuildingBlocks.Authentication.Extensions;
 
 #endregion
 

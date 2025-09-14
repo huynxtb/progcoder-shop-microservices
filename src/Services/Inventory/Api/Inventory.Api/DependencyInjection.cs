@@ -7,6 +7,7 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Common.Configurations;
 using Common.Constants;
+using BuildingBlocks.Authentication.Extensions;
 
 #endregion
 

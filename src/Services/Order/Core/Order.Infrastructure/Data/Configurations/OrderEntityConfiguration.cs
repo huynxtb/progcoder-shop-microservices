@@ -27,10 +27,6 @@ public sealed class OrderEntityConfiguration : IEntityTypeConfiguration<OrderEnt
             .HasConversion<int>()
             .IsRequired();
 
-        builder.Property(x => x.TotalPrice)
-            .HasColumnName("total_price")
-            .HasPrecision(18, 2);
-
         builder.Property(x => x.CreatedOnUtc)
             .HasColumnName("created_on_utc")
             .IsRequired();

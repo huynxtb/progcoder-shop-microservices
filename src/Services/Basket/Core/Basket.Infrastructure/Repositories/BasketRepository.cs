@@ -40,20 +40,29 @@ public sealed class BasketRepository : IBasketRepository
             .Find(x => x.UserId == userId)
             .FirstOrDefaultAsync(cancellationToken);
 
-        return basket ?? new ShoppingCartEntity(userId);
+        return basket ?? ShoppingCartEntity.Create(userId);
     }
 
-    public async Task<bool> StoreBasketAsync(string userId, ShoppingCartEntity cart, CancellationToken cancellationToken = default)
+    public async Task<ShoppingCartEntity> StoreBasketAsync(string userId, ShoppingCartEntity cart, CancellationToken cancellationToken = default)
     {
-        cart.UserId = userId;
+        var basket = await GetBasketAsync(userId, cancellationToken);
+        if (basket == null)
+        {
+            basket = ShoppingCartEntity.Create(userId);
+        }
+        basket.Clear();
+        foreach (var item in cart.Items)
+        {
+            basket.AddOrIncreaseItem(item.ProductId, item.ProductName, item.ProductImage, item.Price, item.Quantity);
+        }
 
         var result = await _collection.ReplaceOneAsync(
             x => x.UserId == userId,
-            cart,
+            basket,
             new ReplaceOptions { IsUpsert = true },
             cancellationToken);
 
-        return result.IsAcknowledged && (result.ModifiedCount > 0 || result.UpsertedId != null);
+        return basket;
     }
 
     #endregion

@@ -9,11 +9,11 @@ namespace Basket.Application.CQRS.Basket.Commands;
 
 public record DeleteBasketCommand(string UserId) : ICommand<Unit>;
 
-public class DeleteProductCommandValidator : AbstractValidator<DeleteBasketCommand>
+public class DeleteBasketCommandValidator : AbstractValidator<DeleteBasketCommand>
 {
     #region Ctors
 
-    public DeleteProductCommandValidator()
+    public DeleteBasketCommandValidator()
     {
         RuleFor(x => x.UserId)
             .NotEmpty()
@@ -23,7 +23,7 @@ public class DeleteProductCommandValidator : AbstractValidator<DeleteBasketComma
     #endregion
 }
 
-public class DeleteProductCommandHandler(IBasketRepository repository) : ICommandHandler<DeleteBasketCommand, Unit>
+public class DeleteBasketCommandHandler(IBasketRepository repository) : ICommandHandler<DeleteBasketCommand, Unit>
 {
     #region Implementations
 

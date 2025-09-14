@@ -1,5 +1,6 @@
 ﻿#region using
 
+using BuildingBlocks.Authentication.Extensions;
 using BuildingBlocks.DistributedTracing;
 using BuildingBlocks.Logging;
 using BuildingBlocks.Swagger.Extensions;

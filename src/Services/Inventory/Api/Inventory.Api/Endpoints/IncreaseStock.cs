@@ -1,6 +1,7 @@
 #region using
 
 using BuildingBlocks.Abstractions.ValueObjects;
+using BuildingBlocks.Authentication.Extensions;
 using Common.Extensions;
 using Common.Models.Reponses;
 using Inventory.Api.Constants;

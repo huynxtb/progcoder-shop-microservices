@@ -25,7 +25,10 @@ public sealed class CachedBasketRepository(IBasketRepository repository, IDistri
     {
         var cachedBasket = await cache.GetStringAsync(userId, cancellationToken);
         if (!string.IsNullOrEmpty(cachedBasket))
-            return JsonConvert.DeserializeObject<ShoppingCartEntity>(cachedBasket)!;
+        {
+            var result = JsonConvert.DeserializeObject<ShoppingCartEntity>(cachedBasket);
+            return result!;
+        }
 
         var basket = await repository.GetBasketAsync(userId, cancellationToken);
         await cache.SetStringAsync(userId, JsonConvert.SerializeObject(basket), cancellationToken);
@@ -33,12 +36,12 @@ public sealed class CachedBasketRepository(IBasketRepository repository, IDistri
         return basket;
     }
 
-    public async Task<bool> StoreBasketAsync(string userId, ShoppingCartEntity cart, CancellationToken cancellationToken = default)
+    public async Task<ShoppingCartEntity> StoreBasketAsync(string userId, ShoppingCartEntity cart, CancellationToken cancellationToken = default)
     {
-        await repository.StoreBasketAsync(userId, cart, cancellationToken);
-        await cache.SetStringAsync(userId, JsonConvert.SerializeObject(cart), cancellationToken);
+        var basket = await repository.StoreBasketAsync(userId, cart, cancellationToken);
+        await cache.SetStringAsync(userId, JsonConvert.SerializeObject(basket), cancellationToken);
         
-        return true;
+        return basket;
     }
 
     #endregion

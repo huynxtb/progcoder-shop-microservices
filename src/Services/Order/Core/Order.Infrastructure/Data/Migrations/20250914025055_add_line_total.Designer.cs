@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Order.Infrastructure.Data;
 
@@ -12,9 +13,11 @@ using Order.Infrastructure.Data;
 namespace Order.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250914025055_add_line_total")]
+    partial class add_line_total
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,7 +57,9 @@ namespace Order.Infrastructure.Data.Migrations
                         .HasColumnName("status");
 
                     b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("total_price");
 
                     b.ComplexProperty<Dictionary<string, object>>("Customer", "Order.Domain.Entities.OrderEntity.Customer#Customer", b1 =>
                         {
@@ -166,7 +171,9 @@ namespace Order.Infrastructure.Data.Migrations
                         .HasColumnName("last_modified_on_utc");
 
                     b.Property<decimal>("LineTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("line_total");
 
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier")

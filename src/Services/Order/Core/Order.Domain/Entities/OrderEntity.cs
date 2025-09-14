@@ -26,7 +26,7 @@ public sealed class OrderEntity : Aggregate<Guid>
 
     public decimal TotalPrice
     {
-        get => OrderItems.Sum(x => x.Product.Price * x.Quantity);
+        get => OrderItems.Sum(x => x.LineTotal);
         private set { }
     }
 

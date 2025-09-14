@@ -12,7 +12,7 @@ public class ShoppingCartDto
 
     public string UserId { get; set; } = default!;
 
-    public List<ShoppingCartItemEntity> Items { get; set; } = default!;
+    public List<ShoppingCartItemDto> Items { get; set; } = default!;
 
     public decimal TotalPrice { get; set; }
 

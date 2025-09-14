@@ -3,6 +3,7 @@
 
 using Basket.Api.Constants;
 using Basket.Application.CQRS.Basket.Commands;
+using BuildingBlocks.Authentication.Extensions;
 
 #endregion
 

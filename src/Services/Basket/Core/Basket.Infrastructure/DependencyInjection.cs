@@ -2,6 +2,7 @@
 
 using Basket.Application.Repositories;
 using Basket.Infrastructure.Data.Extensions;
+using Basket.Infrastructure.GrpcClients.Extensions;
 using Basket.Infrastructure.Repositories;
 using Common.Configurations;
 using Microsoft.AspNetCore.Builder;
@@ -51,8 +52,21 @@ public static class DependencyInjection
             return sp.GetRequiredService<IMongoClient>().GetDatabase(dbName);
         });
 
-        services.AddSingleton<IConnectionMultiplexer>(
-            _ => ConnectionMultiplexer.Connect(cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.Redis}"]!));
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.ConfigurationOptions = new ConfigurationOptions
+            {
+                EndPoints = { cfg[$"{RedisCacheCfg.Section}:{RedisCacheCfg.EndPoint}"]! },
+                Password = cfg[$"{RedisCacheCfg.Section}:{RedisCacheCfg.Password}"]!,
+                AbortOnConnectFail = false,
+                ConnectRetry = 3,
+                ConnectTimeout = 5000,
+                DefaultDatabase = 0
+            };
+            options.InstanceName = cfg[$"{RedisCacheCfg.Section}:{RedisCacheCfg.InstanceName}"]!;
+        });
+
+        services.AddGrpcClients(cfg);
 
         return services;
     }

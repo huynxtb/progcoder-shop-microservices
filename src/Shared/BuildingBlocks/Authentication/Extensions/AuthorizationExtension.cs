@@ -10,6 +10,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text.Json;
 
+namespace BuildingBlocks.Authentication.Extensions;
+
 #endregion
 
 public static class AuthenticationExtensions

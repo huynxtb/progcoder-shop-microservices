@@ -4,7 +4,7 @@ public sealed class AuthorizationCfg
 {
     #region Constants
 
-    public const string Section = "AuthorizationServer";
+    public const string Section = "Authentication";
 
     public const string Authority = "Authority";
 

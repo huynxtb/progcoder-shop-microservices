@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 #endregion
 
-namespace BuildingBlocks.AuthorizationServer.Extensions;
+namespace BuildingBlocks.Authentication.Extensions;
 
 public static class UserIdentityExtension
 {

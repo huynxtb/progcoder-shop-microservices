@@ -10,7 +10,7 @@ namespace Basket.Application.CQRS.Basket.Queries;
 
 public sealed record GetBasketQuery(string UserId) : IQuery<GetBasketResult>;
 
-public sealed class GetProductByIdQueryHandler(IBasketRepository repository) : IQueryHandler<GetBasketQuery, GetBasketResult>
+public sealed class GetBasketQueryHandler(IBasketRepository repository) : IQueryHandler<GetBasketQuery, GetBasketResult>
 {
     #region Implementations
 
@@ -19,9 +19,9 @@ public sealed class GetProductByIdQueryHandler(IBasketRepository repository) : I
         var basket = await repository.GetBasketAsync(query.UserId, cancellationToken);
 
         var result = basket.Adapt<ShoppingCartDto>();
-        var reponse = new GetBasketResult(result);
+        var response = new GetBasketResult(result);
 
-        return reponse;
+        return response;
     }
 
     #endregion

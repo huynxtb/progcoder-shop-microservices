@@ -6,6 +6,7 @@ using Order.Application.CQRS.Order.Queries;
 using Order.Application.Models.Filters;
 using Order.Application.Models.Results;
 using BuildingBlocks.Abstractions.ValueObjects;
+using BuildingBlocks.Authentication.Extensions;
 
 #endregion
 

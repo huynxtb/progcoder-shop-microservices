@@ -109,7 +109,6 @@ Part: cImplement event sourcing with rabbitmq for inventory service (consumer)
 - Explain
 - Flow
 
-
 Part: outbox pattern
 - Explain
 
@@ -117,6 +116,12 @@ Part (**): Create worker in Inventory service + outbox pattern
 - Explain
 - Implement
 - Using postgres + dapper
+
+
+============= ORDER =================
+
+============= BASKET =================
+
 
 Part 6: Create notification services using Strategry Pattern
 - Email

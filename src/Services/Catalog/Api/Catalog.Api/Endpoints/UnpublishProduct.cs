@@ -2,6 +2,7 @@
 #region using
 
 using BuildingBlocks.Abstractions.ValueObjects;
+using BuildingBlocks.Authentication.Extensions;
 using Catalog.Api.Constants;
 using Catalog.Application.CQRS.Product.Commands;
 using Common.Models.Reponses;

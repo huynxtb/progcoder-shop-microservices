@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Common.Models.Reponses;
 using BuildingBlocks.Abstractions.ValueObjects;
 using Common.Extensions;
+using BuildingBlocks.Authentication.Extensions;
 
 #endregion
 

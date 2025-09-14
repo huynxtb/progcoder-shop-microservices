@@ -1,5 +1,6 @@
 ﻿#region using
 
+using BuildingBlocks.Authentication.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Order.Api.Constants;
 using Order.Application.CQRS.Order.Commands;

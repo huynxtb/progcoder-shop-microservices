@@ -2,6 +2,7 @@
 
 using Order.Domain.Abstractions;
 using Order.Domain.ValueObjects;
+using System.Diagnostics;
 
 #endregion
 
@@ -17,6 +18,12 @@ public sealed class OrderItemEntity : Entity<Guid>
 
     public int Quantity { get; private set; } = default!;
 
+    public decimal LineTotal
+    {
+        get => Product.Price * Quantity;
+        private set { }
+    }
+    
     #endregion
 
     #region Ctors

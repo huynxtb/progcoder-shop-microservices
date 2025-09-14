@@ -1,6 +1,7 @@
 ﻿#region using
 
 using BuildingBlocks.Abstractions.ValueObjects;
+using BuildingBlocks.Authentication.Extensions;
 using BuildingBlocks.Exceptions;
 using BuildingBlocks.Swagger.Extensions;
 using Catalog.Api.Constants;
