@@ -26,13 +26,7 @@ public sealed class ShoppingCartItemEntity
 
     #endregion
 
-    #region Ctors
-
-    public ShoppingCartItemEntity() { }
-
-    #endregion
-
-    #region Factory
+    #region Factories
 
     public static ShoppingCartItemEntity Create(
         Guid productId,

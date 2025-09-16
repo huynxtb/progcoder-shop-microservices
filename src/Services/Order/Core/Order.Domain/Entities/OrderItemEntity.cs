@@ -26,13 +26,7 @@ public sealed class OrderItemEntity : Entity<Guid>
     
     #endregion
 
-    #region Ctors
-
-    private OrderItemEntity() { }
-
-    #endregion
-
-    #region Methods
+    #region Factories
 
     public static OrderItemEntity Create(Guid id, Guid orderId, Product product, int quantity, string performedBy)
     {

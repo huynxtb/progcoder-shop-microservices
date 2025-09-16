@@ -28,13 +28,7 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
 
     #endregion
 
-    #region Ctors
-
-    private InventoryReservationEntity() { }
-
-    #endregion
-
-    #region Methods
+    #region Factories
 
     public static InventoryReservationEntity Create(
         Guid id,
@@ -62,6 +56,10 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
 
         return entity;
     }
+
+    #endregion
+
+    #region Methods
 
     public void MarkCommitted(string performedBy)
     {

@@ -22,13 +22,7 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
 
     #endregion
 
-    #region Ctors
-
-    private OutboxMessageEntity() { }
-
-    #endregion
-
-    #region Methods
+    #region Factories
 
     public static OutboxMessageEntity Create(Guid id, string eventType, string content, DateTimeOffset occurredOnUtc)
     {
@@ -40,6 +34,10 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
             OccurredOnUtc = occurredOnUtc
         };
     }
+
+    #endregion
+
+    #region Methods
 
     public void Process(DateTimeOffset processedOnUtc, string? error = null)
     {

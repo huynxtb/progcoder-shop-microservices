@@ -22,13 +22,7 @@ public sealed class InventoryHistoryEntity : EntityId<Guid>
 
     #endregion
 
-    #region Ctors
-
-    private InventoryHistoryEntity() { }
-
-    #endregion
-
-    #region Methods
+    #region Factories
 
     public static InventoryHistoryEntity Create(
         Guid id,

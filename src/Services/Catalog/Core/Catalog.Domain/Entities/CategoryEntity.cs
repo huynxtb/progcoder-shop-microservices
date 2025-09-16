@@ -26,14 +26,7 @@ public sealed class CategoryEntity : Entity<Guid>
 
     #endregion
 
-    #region Ctors
-
-    [JsonConstructor]
-    private CategoryEntity() { }
-
-    #endregion
-
-    #region Methods
+    #region Factories
 
     public static CategoryEntity Create(Guid id,
         string name,
@@ -55,6 +48,10 @@ public sealed class CategoryEntity : Entity<Guid>
             LastModifiedOnUtc = DateTimeOffset.UtcNow,
         };
     }
+
+    #endregion
+
+    #region Methods
 
     public void Update(string name,
         string desciption,

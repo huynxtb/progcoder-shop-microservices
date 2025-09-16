@@ -11,6 +11,16 @@ namespace Basket.Infrastructure.Repositories;
 
 public sealed class CachedBasketRepository(IBasketRepository repository, IDistributedCache cache) : IBasketRepository
 {
+    #region Fields, Properties and Indexers
+
+    private static readonly DistributedCacheEntryOptions _cacheOptions = new()
+    {
+        AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1),
+        SlidingExpiration = TimeSpan.FromHours(1)
+    };
+
+    #endregion
+
     #region Implementations
 
     public async Task<bool> DeleteBasketAsync(string userId, CancellationToken cancellationToken = default)
@@ -31,7 +41,7 @@ public sealed class CachedBasketRepository(IBasketRepository repository, IDistri
         }
 
         var basket = await repository.GetBasketAsync(userId, cancellationToken);
-        await cache.SetStringAsync(userId, JsonConvert.SerializeObject(basket), cancellationToken);
+        await cache.SetStringAsync(userId, JsonConvert.SerializeObject(basket), _cacheOptions, cancellationToken);
 
         return basket;
     }
@@ -39,7 +49,7 @@ public sealed class CachedBasketRepository(IBasketRepository repository, IDistri
     public async Task<ShoppingCartEntity> StoreBasketAsync(string userId, ShoppingCartEntity cart, CancellationToken cancellationToken = default)
     {
         var basket = await repository.StoreBasketAsync(userId, cart, cancellationToken);
-        await cache.SetStringAsync(userId, JsonConvert.SerializeObject(basket), cancellationToken);
+        await cache.SetStringAsync(userId, JsonConvert.SerializeObject(basket), _cacheOptions, cancellationToken);
         
         return basket;
     }

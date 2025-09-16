@@ -32,6 +32,8 @@ public sealed class OrderEntity : Aggregate<Guid>
 
     #endregion
 
+    #region Factories
+
     public static OrderEntity Create(Guid id, Customer customer, OrderNo orderNo, Address shippingAddress, string performedBy)
     {
         var order = new OrderEntity
@@ -50,6 +52,10 @@ public sealed class OrderEntity : Aggregate<Guid>
         return order;
     }
 
+    #endregion
+
+    #region Methods
+
     public void UpdateShippingAddress(Address shippingAddress)
     {
         ShippingAddress = shippingAddress;
@@ -67,7 +73,7 @@ public sealed class OrderEntity : Aggregate<Guid>
     public void AddOrderItem(Product product, int quantity)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quantity);
-        
+
         var orderItemId = Guid.NewGuid();
         var orderItem = OrderItemEntity.Create(orderItemId, Id, product, quantity, CreatedBy!);
         _orderItems.Add(orderItem);
@@ -81,4 +87,6 @@ public sealed class OrderEntity : Aggregate<Guid>
             _orderItems.Remove(orderItem);
         }
     }
+
+    #endregion
 }

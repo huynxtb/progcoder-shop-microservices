@@ -7,7 +7,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Basket.Domain.Abstractions;
 
-public abstract class Entity<T> : IEntityId<T>, IAuditable
+public abstract class EntityId<T> : IEntityId<T>
 {
     #region Fields, Properties and Indexers
 
@@ -15,14 +15,7 @@ public abstract class Entity<T> : IEntityId<T>, IAuditable
     [BsonRepresentation(BsonType.String)]
     public T Id { get; set; } = default!;
 
-    public DateTimeOffset CreatedOnUtc { get; set; }
-
-    public string? CreatedBy { get; set; }
-
-    public DateTimeOffset? LastModifiedOnUtc { get; set; }
-
-    public string? LastModifiedBy { get; set; }
-
     #endregion
 
 }
+

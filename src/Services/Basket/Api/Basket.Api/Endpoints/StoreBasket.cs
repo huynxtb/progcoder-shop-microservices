@@ -16,7 +16,7 @@ public sealed class StoreBasket : ICarterModule
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost(ApiRoutes.Basket.StoreBasket, HandleCreateBasketAsync)
+        app.MapPost(ApiRoutes.Basket.StoreBasket, HandleStoreBasketAsync)
             .WithTags(ApiRoutes.Basket.Tags)
             .WithName(nameof(StoreBasket))
             .Produces<Guid>(StatusCodes.Status200OK)
@@ -30,7 +30,7 @@ public sealed class StoreBasket : ICarterModule
 
     #region Methods
 
-    private async Task<Guid> HandleCreateBasketAsync(
+    private async Task<Guid> HandleStoreBasketAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
         [FromBody] StoreShoppingCartDto dto)

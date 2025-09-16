@@ -53,14 +53,7 @@ public sealed class ProductEntity : Entity<Guid>
 
     #endregion
 
-    #region Ctors
-
-    [JsonConstructor]
-    private ProductEntity() { }
-
-    #endregion
-
-    #region Methods
+    #region Factories
 
     public static ProductEntity Create(Guid id,
         string name,
@@ -94,6 +87,10 @@ public sealed class ProductEntity : Entity<Guid>
 
         return product;
     }
+
+    #endregion
+
+    #region Methods
 
     public void Update(string name,
         string sku,

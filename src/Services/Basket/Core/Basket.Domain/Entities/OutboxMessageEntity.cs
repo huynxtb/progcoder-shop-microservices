@@ -1,10 +1,10 @@
 ﻿#region using
 
-using Inventory.Domain.Abstractions;
+using Basket.Domain.Abstractions;
 
 #endregion
 
-namespace Inventory.Domain.Entities;
+namespace Basket.Domain.Entities;
 
 public sealed class OutboxMessageEntity : EntityId<Guid>
 {

@@ -8,13 +8,9 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Basket.Domain.Entities;
 
-public sealed class ShoppingCartEntity : IEntityId<Guid>
+public sealed class ShoppingCartEntity : EntityId<Guid>
 {
     #region Fields, Properties and Indexers
-
-    [BsonId]
-    [BsonRepresentation(BsonType.String)]
-    public Guid Id { get; set; }
 
     public string UserId { get; set; } = default!;
 
@@ -26,8 +22,6 @@ public sealed class ShoppingCartEntity : IEntityId<Guid>
 
     #region Ctors
 
-    public ShoppingCartEntity() { }
-
     private ShoppingCartEntity(string userId)
     {
         Id = Guid.NewGuid();
@@ -36,7 +30,7 @@ public sealed class ShoppingCartEntity : IEntityId<Guid>
 
     #endregion
 
-    #region Factory
+    #region Factories
 
     public static ShoppingCartEntity Create(string userId) => new(userId);
 

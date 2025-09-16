@@ -28,13 +28,7 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
 
     #endregion
 
-    #region Ctors
-
-    private InventoryItemEntity() { }
-
-    #endregion
-
-    #region Methods
+    #region Factories
 
     public static InventoryItemEntity Create(
         Guid id,
@@ -57,14 +51,18 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
             LastModifiedBy = performedBy,
             Location = Location.Of(location)
         };
-        entity.AddDomainEvent(new StockChangedDomainEvent(id, 
-            productId, 
-            quantity, 
-            quantity, 
-            InventoryChangeType.Init, 
+        entity.AddDomainEvent(new StockChangedDomainEvent(id,
+            productId,
+            quantity,
+            quantity,
+            InventoryChangeType.Init,
             InventorySource.ManualAdjustment.GetDescription()));
         return entity;
     }
+
+    #endregion
+
+    #region Methods
 
     public void Increase(
         int amount,
