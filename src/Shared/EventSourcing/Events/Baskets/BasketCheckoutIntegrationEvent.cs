@@ -8,8 +8,6 @@ public sealed record BasketCheckoutIntegrationEvent : IntegrationEvent
 
     public string UserId { get; init; } = default!;
 
-    public string PerformedBy { get; init; } = default!;
-
     public BasketCheckoutCustomer Customer { get; init; } = default!;
 
     public BasketCheckoutAddress ShippingAddress { get; init; } = default!;

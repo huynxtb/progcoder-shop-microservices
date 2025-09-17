@@ -18,11 +18,17 @@ public static class DatabaseExtentions
     {
         var db = app.Services.GetRequiredService<IMongoDatabase>();
         var sc = db.GetCollection<ShoppingCartEntity>(MongoCollection.ShoppingCart);
-        
+        var om = db.GetCollection<OutboxMessageEntity>(MongoCollection.OutboxMessage);
+
         await sc.Indexes.CreateOneAsync(new CreateIndexModel<ShoppingCartEntity>(
             Builders<ShoppingCartEntity>.IndexKeys
                 .Ascending(x => x.UserId),
             new CreateIndexOptions { Unique = true }));
+
+        await om.Indexes.CreateOneAsync(new CreateIndexModel<OutboxMessageEntity>(
+            Builders<OutboxMessageEntity>.IndexKeys
+                .Ascending(x => x.OccurredOnUtc),
+            new CreateIndexOptions { Unique = false }));
     }
 
     #endregion

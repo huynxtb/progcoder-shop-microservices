@@ -6,5 +6,7 @@ public sealed class MongoCollection
 
     public const string ShoppingCart = "shopping_cart";
 
+    public const string OutboxMessage = "outbox_message";
+
     #endregion
 }

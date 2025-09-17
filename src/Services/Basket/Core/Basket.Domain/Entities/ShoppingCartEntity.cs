@@ -8,7 +8,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Basket.Domain.Entities;
 
-public sealed class ShoppingCartEntity : EntityId<Guid>
+public sealed class ShoppingCartEntity : Aggregate<Guid>
 {
     #region Fields, Properties and Indexers
 
@@ -36,7 +36,7 @@ public sealed class ShoppingCartEntity : EntityId<Guid>
 
     #endregion
 
-    #region Item Operations
+    #region Operations
 
     public ShoppingCartItemEntity AddOrIncreaseItem(
         Guid productId,

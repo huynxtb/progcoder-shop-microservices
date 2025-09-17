@@ -12,7 +12,7 @@ public interface IBasketRepository
 
     Task<ShoppingCartEntity> GetBasketAsync(string userId, CancellationToken cancellationToken = default);
 
-    Task<ShoppingCartEntity> StoreBasketAsync(string userId, ShoppingCartEntity cart, CancellationToken cancellationToken = default);
+    Task<bool> StoreBasketAsync(string userId, ShoppingCartEntity cart, CancellationToken cancellationToken = default);
 
     Task<bool> DeleteBasketAsync(string userId, CancellationToken cancellationToken = default);
 

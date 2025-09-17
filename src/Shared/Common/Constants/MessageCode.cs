@@ -12,6 +12,14 @@ public sealed class MessageCode
 
     public const string Max255Characters = "MAX_255_CHARACTERS";
 
+    public const string Max500Characters = "MAX_500_CHARACTERS";
+
+    public const string Max100Characters = "MAX_100_CHARACTERS";
+
+    public const string Max50Characters = "MAX_50_CHARACTERS";
+
+    public const string Max20Characters = "MAX_20_CHARACTERS";
+
     public const string Min5Characters = "MIN_5_CHARACTERS";
 
     public const string CreateSuccess = "CREATE_SUCCESS";

@@ -39,7 +39,7 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
 
     #region Methods
 
-    public void Process(DateTimeOffset processedOnUtc, string? error = null)
+    public void Processed(DateTimeOffset processedOnUtc, string? error = null)
     {
         ProcessedOnUtc = processedOnUtc;
         Error = error;

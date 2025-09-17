@@ -31,7 +31,7 @@ public sealed class BasketRepository : IBasketRepository
     public async Task<bool> DeleteBasketAsync(string userId, CancellationToken cancellationToken = default)
     {
         var result = await _collection.DeleteOneAsync(x => x.UserId == userId, cancellationToken);
-        return result.IsAcknowledged && result.DeletedCount > 0;
+        return result.IsAcknowledged;
     }
 
     public async Task<ShoppingCartEntity> GetBasketAsync(string userId, CancellationToken cancellationToken = default)
@@ -43,26 +43,15 @@ public sealed class BasketRepository : IBasketRepository
         return basket ?? ShoppingCartEntity.Create(userId);
     }
 
-    public async Task<ShoppingCartEntity> StoreBasketAsync(string userId, ShoppingCartEntity cart, CancellationToken cancellationToken = default)
+    public async Task<bool> StoreBasketAsync(string userId, ShoppingCartEntity cart, CancellationToken cancellationToken = default)
     {
-        var basket = await GetBasketAsync(userId, cancellationToken);
-        if (basket == null)
-        {
-            basket = ShoppingCartEntity.Create(userId);
-        }
-        basket.Clear();
-        foreach (var item in cart.Items)
-        {
-            basket.AddOrIncreaseItem(item.ProductId, item.ProductName, item.ProductImage, item.Price, item.Quantity);
-        }
-
         var result = await _collection.ReplaceOneAsync(
             x => x.UserId == userId,
-            basket,
+            cart,
             new ReplaceOptions { IsUpsert = true },
             cancellationToken);
 
-        return basket;
+        return result.IsAcknowledged;
     }
 
     #endregion

@@ -52,8 +52,9 @@ public class StoreBasketCommandHandler(IBasketRepository repository, ICatalogGrp
     public async Task<Guid> Handle(StoreBasketCommand command, CancellationToken cancellationToken)
     {
         var dto = command.Dto;
-        var basket = await repository.GetBasketAsync(command.UserId, cancellationToken) 
-                     ?? ShoppingCartEntity.Create(command.UserId);
+
+        var basket = await repository.GetBasketAsync(command.UserId, cancellationToken);
+
         var products = await catalogGrpc.GetProductsAsync(
             ids: dto.Items.Select(x => x.ProductId.ToString()).ToArray(),
             cancellationToken: cancellationToken);

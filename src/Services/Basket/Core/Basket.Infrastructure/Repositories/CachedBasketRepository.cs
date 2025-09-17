@@ -46,12 +46,12 @@ public sealed class CachedBasketRepository(IBasketRepository repository, IDistri
         return basket;
     }
 
-    public async Task<ShoppingCartEntity> StoreBasketAsync(string userId, ShoppingCartEntity cart, CancellationToken cancellationToken = default)
+    public async Task<bool> StoreBasketAsync(string userId, ShoppingCartEntity cart, CancellationToken cancellationToken = default)
     {
-        var basket = await repository.StoreBasketAsync(userId, cart, cancellationToken);
-        await cache.SetStringAsync(userId, JsonConvert.SerializeObject(basket), _cacheOptions, cancellationToken);
+        await repository.StoreBasketAsync(userId, cart, cancellationToken);
+        await cache.SetStringAsync(userId, JsonConvert.SerializeObject(cart), _cacheOptions, cancellationToken);
         
-        return basket;
+        return true;
     }
 
     #endregion
