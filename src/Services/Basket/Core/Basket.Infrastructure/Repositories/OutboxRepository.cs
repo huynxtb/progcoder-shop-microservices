@@ -28,7 +28,7 @@ public class OutboxRepository : IOutboxRepository
 
     #region Implementations
 
-    public async Task<bool> AddMessageAsync(OutboxMessageEntity message, CancellationToken cancellationToken = default)
+    public async Task<bool> RaiseMessageAsync(OutboxMessageEntity message, CancellationToken cancellationToken = default)
     {
         var result = await _collection.ReplaceOneAsync(
             x => x.Id == message.Id,

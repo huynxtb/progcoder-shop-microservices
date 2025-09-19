@@ -2,11 +2,10 @@
 
 using Basket.Application.Dtos.Baskets;
 using Basket.Application.Repositories;
-using Basket.Domain.Entities;
 using EventSourcing.Events.Baskets;
 using MediatR;
-using Newtonsoft.Json;
 using BuildingBlocks.Validators;
+using Basket.Domain.Events;
 
 #endregion
 
@@ -114,7 +113,7 @@ public sealed class BasketCheckoutCommandValidator : AbstractValidator<BasketChe
     #endregion
 }
 
-public sealed class BasketCheckoutCommandHandler(IBasketRepository basketRepo, IOutboxRepository outboxRepo) : ICommandHandler<BasketCheckoutCommand, Unit>
+public sealed class BasketCheckoutCommandHandler(IBasketRepository basketRepo, IOutboxRepository outboxRepo, IMediator mediator) : ICommandHandler<BasketCheckoutCommand, Unit>
 {
     #region Implementations
 
@@ -157,13 +156,23 @@ public sealed class BasketCheckoutCommandHandler(IBasketRepository basketRepo, I
             }).ToList()
         };
 
-        var outboxMessage = OutboxMessageEntity.Create(
-            id: Guid.NewGuid(),
-            eventType: message.EventType!,
-            content: JsonConvert.SerializeObject(message),
-            occurredOnUtc: DateTimeOffset.Now);
+        
+        var customer = new BasketCheckoutCustomerDomainEvent(
+            Guid.Parse(command.UserId), 
+            dto.Customer.Name, 
+            dto.Customer.Email, 
+            dto.Customer.PhoneNumber);
+        var shippingAddress = new BasketCheckoutAddressDomainEvent(
+            dto.ShippingAddress.Name, 
+            dto.ShippingAddress.EmailAddress, 
+            dto.ShippingAddress.AddressLine, 
+            dto.ShippingAddress.Country, 
+            dto.ShippingAddress.State, 
+            dto.ShippingAddress.ZipCode);
 
-        await outboxRepo.AddMessageAsync(outboxMessage, cancellationToken);
+        var @event = new BasketCheckoutDomainEvent(basket, customer, shippingAddress);
+
+        await mediator.Publish(@event, cancellationToken);
         await basketRepo.DeleteBasketAsync(command.UserId, cancellationToken);
 
         return Unit.Value;

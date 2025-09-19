@@ -10,7 +10,7 @@ public interface IOutboxRepository
 {
     #region Methods
 
-    Task<bool> AddMessageAsync(OutboxMessageEntity message, CancellationToken cancellationToken = default);
+    Task<bool> RaiseMessageAsync(OutboxMessageEntity message, CancellationToken cancellationToken = default);
 
     Task<List<OutboxMessageEntity>> GetMessagesAsync(OutboxMessageEntity message, int batchSize, CancellationToken cancellationToken = default);
 
