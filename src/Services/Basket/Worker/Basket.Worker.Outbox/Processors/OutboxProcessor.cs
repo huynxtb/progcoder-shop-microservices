@@ -1,151 +1,166 @@
-﻿//#region using
+﻿#region using
 
-//using Basket.Worker.Outbox.Structs;
-//using Common.Configurations;
-//using Dapper;
-//using Inventory.Domain.Entities;
-//using MassTransit;
-//using MySql.Data.MySqlClient;
-//using System.Collections.Concurrent;
-//using System.Text.Json;
+using Common.Configurations;
+using Basket.Domain.Entities;
+using Basket.Worker.Outbox.Structs;
+using MassTransit;
+using System.Collections.Concurrent;
+using System.Text.Json;
+using Basket.Application.Repositories;
+using MongoDB.Driver;
 
-//#endregion
+#endregion
 
-//namespace Basket.Worker.Outbox.Processors;
+namespace Basket.Worker.Outbox.Processors;
 
-//internal sealed class OutboxProcessor
-//{
-//    #region Fields, Properties and Indexers
+internal sealed class OutboxProcessor
+{
+    #region Fields, Properties and Indexers
 
-//    private const int BatchSize = 1000;
+    private readonly int _batchSize;
 
-//    private static readonly ConcurrentDictionary<string, Type> TypeCache = new();
+    private static readonly ConcurrentDictionary<string, Type> TypeCache = new();
 
-//    private readonly IConfiguration _cfg;
+    private readonly IOutboxRepository _outboxRepo;
 
-//    private readonly IPublishEndpoint _publish;
+    private readonly IPublishEndpoint _publish;
 
-//    private readonly ILogger<OutboxProcessor> _logger;
+    private readonly ILogger<OutboxProcessor> _logger;
 
-//    #endregion
+    #endregion
 
-//    #region Ctors
+    #region Ctors
 
-//    public OutboxProcessor(
-//        IConfiguration cfg,
-//        IPublishEndpoint publish,
-//        ILogger<OutboxProcessor> logger)
-//    {
-//        _cfg = cfg;
-//        _publish = publish;
-//        _logger = logger;
-//    }
+    public OutboxProcessor(
+        IOutboxRepository outboxRepo,
+        IConfiguration cfg,
+        IPublishEndpoint publish,
+        ILogger<OutboxProcessor> logger)
+    {
+        _batchSize = cfg.GetValue<int>($"{WorkerCfg.Outbox.Section}:{WorkerCfg.Outbox.BatchSize}", 1000);
+        _outboxRepo = outboxRepo;
+        _publish = publish;
+        _logger = logger;
+    }
 
-//    #endregion
+    #endregion
 
-//    #region Methods
+    #region Methods
 
-//    public async Task<int> ExecuteAsync(CancellationToken cancellationToken = default)
-//    {
-//        _logger.LogDebug("Starting outbox message retrieval");
-//        await using var connection = new MySqlConnection(_cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.Database}"]);
-//        await connection.OpenAsync(cancellationToken);
-//        await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
+    public async Task<int> ExecuteAsync(CancellationToken cancellationToken = default)
+    {
+        _logger.LogDebug("Starting outbox message retrieval");
 
-//        var messages = (await connection.QueryAsync<OutboxMessageEntity>(
-//            """
-//                SELECT id AS Id, 
-//                       event_type AS EventType, 
-//                       content AS Content
-//                FROM outbox_messages
-//                WHERE processed_on_utc IS NULL
-//                ORDER BY occurred_on_utc ASC 
-//                LIMIT @BatchSize
-//                FOR UPDATE SKIP LOCKED
-//            """,
-//            new { BatchSize },
-//            transaction: transaction)).AsList();
+        // Process both new messages and retry messages
+        var newMessages = await _outboxRepo.GetAndClaimMessagesAsync(_batchSize, cancellationToken);
+        var retryMessages = await _outboxRepo.GetAndClaimRetryMessagesAsync(_batchSize, cancellationToken);
 
-//        _logger.LogInformation("Retrieved {Count} messages from outbox", messages.Count);
+        var allMessages = newMessages.Concat(retryMessages).ToList();
+        _logger.LogInformation("Retrieved {NewCount} new messages and {RetryCount} retry messages from outbox", 
+            newMessages.Count, retryMessages.Count);
 
-//        var updateQueue = new ConcurrentQueue<OutboxUpdate>();
+        if (allMessages.Count == 0) return 0;
 
-//        var publishTasks = messages
-//            .Select(message => PublishMessage(message, updateQueue, _publish, _logger, cancellationToken))
-//            .ToList();
+        var updateQueue = new ConcurrentQueue<OutboxUpdate>();
 
-//        await Task.WhenAll(publishTasks);
+        var publishTasks = allMessages
+            .Select(message => ProcessMessageAsync(message, updateQueue, _publish, _logger, cancellationToken))
+            .ToList();
 
-//        if (!updateQueue.IsEmpty)
-//        {
-//            _logger.LogDebug("Updating processed messages in database");
-//            var updateSql =
-//                """
-//                    UPDATE outbox_messages
-//                    SET processed_on_utc = CASE 
-//                        {0}
-//                    END,
-//                    error = CASE 
-//                        {1}
-//                    END
-//                    WHERE id IN ({2})
-//                """;
+        await Task.WhenAll(publishTasks);
 
-//            var updates = updateQueue.ToList();
-//            var whenThenProcessed = string.Join(" ", updates.Select((_, i) => $"WHEN id = @Id{i} THEN @ProcessedOn{i}"));
-//            var whenThenError = string.Join(" ", updates.Select((_, i) => $"WHEN id = @Id{i} THEN @Error{i}"));
-//            var ids = string.Join(",", updates.Select((_, i) => $"@Id{i}"));
+        if (!updateQueue.IsEmpty)
+        {
+            _logger.LogDebug("Updating processed messages in database");
+            
+            // Convert OutboxUpdate to OutboxMessageEntity for bulk update
+            var messagesToUpdate = updateQueue.Select(update => 
+            {
+                var message = allMessages.First(m => m.Id == update.Id);
+                message.CompleteProcessing(update.ProcessedOnUtc, update.LastErrorMessage);
+                return message;
+            }).ToList();
 
-//            var parameters = new DynamicParameters();
+            await _outboxRepo.UpdateMessagesAsync(messagesToUpdate, cancellationToken);
+            _logger.LogDebug("Database update for processed messages complete");
+        }
+        else
+        {
+            // If no messages were successfully processed, release the claims
+            _logger.LogWarning("No messages were successfully processed, releasing claims");
+            await _outboxRepo.ReleaseClaimsAsync(allMessages, cancellationToken);
+        }
 
-//            for (int i = 0; i < updates.Count; i++)
-//            {
-//                parameters.Add($"Id{i}", updates[i].Id);
-//                parameters.Add($"ProcessedOn{i}", updates[i].ProcessedOnUtc);
-//                parameters.Add($"Error{i}", updates[i].Error);
-//            }
+        _logger.LogInformation("Processed {Count} messages from outbox", allMessages.Count);
 
-//            var formattedSql = string.Format(updateSql, whenThenProcessed, whenThenError, ids);
+        return allMessages.Count;
+    }
 
-//            await connection.ExecuteAsync(formattedSql, parameters, transaction: transaction);
-//            _logger.LogDebug("Database update for processed messages complete");
-//        }
+    private static async Task ProcessMessageAsync(
+        OutboxMessageEntity message,
+        ConcurrentQueue<OutboxUpdate> updateQueue,
+        IPublishEndpoint publish,
+        ILogger<OutboxProcessor> logger,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            logger.LogInformation("Publishing outbox message {Id} of type {EventType} (attempt {AttemptCount}/{MaxAttempts})", 
+                message.Id, message.EventType, message.AttemptCount, message.MaxAttempts);
+            
+            var messageType = GetOrAddMessageType(message.EventType!);
+            var deserializedMessage = JsonSerializer.Deserialize(message.Content!, messageType)!;
 
-//        await transaction.CommitAsync(cancellationToken);
-//        _logger.LogInformation("Processed {Count} messages from outbox", messages.Count);
+            await publish.Publish(deserializedMessage, cancellationToken);
 
-//        return messages.Count;
-//    }
+            // Success - mark as processed
+            updateQueue.Enqueue(new OutboxUpdate(
+                message.Id, 
+                DateTimeOffset.UtcNow, 
+                null, 
+                message.AttemptCount, 
+                null));
+            
+            logger.LogInformation("Successfully published outbox message {Id}", message.Id);
+        }
+        catch (Exception ex)
+        {
+            var currentTime = DateTimeOffset.UtcNow;
+            message.RecordFailedAttempt(ex.ToString(), currentTime);
+            
+            if (message.IsPermanentlyFailed())
+            {
+                // Permanently failed - mark as processed with error
+                updateQueue.Enqueue(new OutboxUpdate(
+                    message.Id, 
+                    currentTime, 
+                    message.LastErrorMessage, 
+                    message.AttemptCount, 
+                    null));
+                
+                logger.LogError(ex, "Permanently failed to publish outbox message {Id} after {AttemptCount} attempts", 
+                    message.Id, message.AttemptCount);
+            }
+            else
+            {
+                // Schedule for retry
+                updateQueue.Enqueue(new OutboxUpdate(
+                    message.Id, 
+                    currentTime, 
+                    message.LastErrorMessage, 
+                    message.AttemptCount, 
+                    message.NextAttemptOnUtc));
+                
+                logger.LogWarning(ex, "Failed to publish outbox message {Id} (attempt {AttemptCount}/{MaxAttempts}), will retry at {NextAttemptOnUtc}", 
+                    message.Id, message.AttemptCount, message.MaxAttempts, message.NextAttemptOnUtc);
+            }
+        }
+    }
 
-//    private static async Task PublishMessage(
-//        OutboxMessageEntity message,
-//        ConcurrentQueue<OutboxUpdate> updateQueue,
-//        IPublishEndpoint publish,
-//        ILogger<OutboxProcessor> logger,
-//        CancellationToken cancellationToken)
-//    {
-//        try
-//        {
-//            logger.LogInformation("Publishing outbox message {Id} of type {EventType}", message.Id, message.EventType);
-//            var messageType = GetOrAddMessageType(message.EventType!);
-//            var deserializedMessage = JsonSerializer.Deserialize(message.Content!, messageType)!;
+    private static Type GetOrAddMessageType(string typename)
+    {
+        return TypeCache.GetOrAdd(typename, name => Type.GetType(name)!);
+    }
 
-//            await publish.Publish(deserializedMessage, cancellationToken);
-
-//            updateQueue.Enqueue(new OutboxUpdate { Id = message.Id, ProcessedOnUtc = DateTime.UtcNow });
-//            logger.LogInformation("Successfully published outbox message {Id}", message.Id);
-//        }
-//        catch (Exception ex)
-//        {
-//            updateQueue.Enqueue(new OutboxUpdate { Id = message.Id, ProcessedOnUtc = DateTime.UtcNow, Error = ex.ToString() });
-//            logger.LogError(ex, "Error publishing outbox message {Id}", message.Id);
-//        }
-//    }
-
-//    private static Type GetOrAddMessageType(string typename)
-//    {
-//        return TypeCache.GetOrAdd(typename, name => Type.GetType(name)!);
-//    }
-
-//    #endregion
-//}
+    #endregion
+}

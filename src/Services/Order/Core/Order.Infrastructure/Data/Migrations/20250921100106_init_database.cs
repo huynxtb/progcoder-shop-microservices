@@ -17,16 +17,16 @@ namespace Order.Infrastructure.Data.Migrations
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     status = table.Column<int>(type: "int", nullable: false),
-                    total_price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     customer_email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    customer_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     customer_name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     customer_phone_number = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    order_no = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    order_no = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     shipping_address_line = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     shipping_country = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     shipping_email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    shipping_first_name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    shipping_last_name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    shipping_name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     shipping_state = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     shipping_zip_code = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     created_on_utc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
@@ -48,7 +48,11 @@ namespace Order.Infrastructure.Data.Migrations
                     content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     occurred_on_utc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     processed_on_utc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    error = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    last_error_message = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    claimed_on_utc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    attempt_count = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    max_attempts = table.Column<int>(type: "int", nullable: false, defaultValue: 3),
+                    next_attempt_on_utc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -62,6 +66,7 @@ namespace Order.Infrastructure.Data.Migrations
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     order_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     quantity = table.Column<int>(type: "int", nullable: false),
+                    LineTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     product_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     product_image_url = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     product_name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
@@ -88,9 +93,19 @@ namespace Order.Infrastructure.Data.Migrations
                 column: "order_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_outbox_messages_claimed_on_utc",
+                table: "outbox_messages",
+                column: "claimed_on_utc");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_outbox_messages_event_type",
                 table: "outbox_messages",
                 column: "event_type");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_outbox_messages_next_attempt_on_utc_processed_on_utc_attempt_count",
+                table: "outbox_messages",
+                columns: new[] { "next_attempt_on_utc", "processed_on_utc", "attempt_count" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_outbox_messages_occurred_on_utc",
@@ -101,6 +116,16 @@ namespace Order.Infrastructure.Data.Migrations
                 name: "IX_outbox_messages_processed_on_utc",
                 table: "outbox_messages",
                 column: "processed_on_utc");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_outbox_messages_processed_on_utc_attempt_count_max_attempts",
+                table: "outbox_messages",
+                columns: new[] { "processed_on_utc", "attempt_count", "max_attempts" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_outbox_messages_processed_on_utc_claimed_on_utc",
+                table: "outbox_messages",
+                columns: new[] { "processed_on_utc", "claimed_on_utc" });
         }
 
         /// <inheritdoc />

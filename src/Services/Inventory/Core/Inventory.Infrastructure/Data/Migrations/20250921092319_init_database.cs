@@ -84,7 +84,11 @@ namespace Inventory.Infrastructure.Data.Migrations
                     content = table.Column<string>(type: "longtext", nullable: false),
                     occurred_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: false),
                     processed_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
-                    error = table.Column<string>(type: "longtext", nullable: true)
+                    last_error_message = table.Column<string>(type: "longtext", nullable: true),
+                    claimed_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
+                    attempt_count = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    max_attempts = table.Column<int>(type: "int", nullable: false, defaultValue: 3),
+                    next_attempt_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -108,9 +112,19 @@ namespace Inventory.Infrastructure.Data.Migrations
                 columns: new[] { "status", "expires_at" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_outbox_messages_claimed_on_utc",
+                table: "outbox_messages",
+                column: "claimed_on_utc");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_outbox_messages_event_type",
                 table: "outbox_messages",
                 column: "event_type");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_outbox_messages_next_attempt_on_utc_processed_on_utc_attempt~",
+                table: "outbox_messages",
+                columns: new[] { "next_attempt_on_utc", "processed_on_utc", "attempt_count" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_outbox_messages_occurred_on_utc",
@@ -121,6 +135,16 @@ namespace Inventory.Infrastructure.Data.Migrations
                 name: "IX_outbox_messages_processed_on_utc",
                 table: "outbox_messages",
                 column: "processed_on_utc");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_outbox_messages_processed_on_utc_attempt_count_max_attempts",
+                table: "outbox_messages",
+                columns: new[] { "processed_on_utc", "attempt_count", "max_attempts" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_outbox_messages_processed_on_utc_claimed_on_utc",
+                table: "outbox_messages",
+                columns: new[] { "processed_on_utc", "claimed_on_utc" });
         }
 
         /// <inheritdoc />

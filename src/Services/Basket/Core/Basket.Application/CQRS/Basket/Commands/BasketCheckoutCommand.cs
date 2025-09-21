@@ -2,7 +2,6 @@
 
 using Basket.Application.Dtos.Baskets;
 using Basket.Application.Repositories;
-using EventSourcing.Events.Baskets;
 using MediatR;
 using BuildingBlocks.Validators;
 using Basket.Domain.Events;
@@ -113,7 +112,7 @@ public sealed class BasketCheckoutCommandValidator : AbstractValidator<BasketChe
     #endregion
 }
 
-public sealed class BasketCheckoutCommandHandler(IBasketRepository basketRepo, IOutboxRepository outboxRepo, IMediator mediator) : ICommandHandler<BasketCheckoutCommand, Unit>
+public sealed class BasketCheckoutCommandHandler(IBasketRepository basketRepo, IMediator mediator) : ICommandHandler<BasketCheckoutCommand, Unit>
 {
     #region Implementations
 
@@ -123,58 +122,27 @@ public sealed class BasketCheckoutCommandHandler(IBasketRepository basketRepo, I
 
         var basket = await basketRepo.GetBasketAsync(command.UserId, cancellationToken);
 
-        if (basket.Items == null || basket.Items.Count == 0)
-        {
-            throw new ClientValidationException(MessageCode.BadRequest);
-        }
-
-        var message = new BasketCheckoutIntegrationEvent
-        {
-            BasketId = basket.Id,
-            UserId = command.UserId,
-            TotalPrice = basket.TotalPrice,
-            Customer = new BasketCheckoutCustomer()
-            {
-                Id = Guid.Parse(command.UserId),
-                Email = dto.Customer.Email,
-                Name = dto.Customer.Name,
-                PhoneNumber = dto.Customer.PhoneNumber
-            },
-            ShippingAddress = new BasketCheckoutAddress()
-            {
-                AddressLine = dto.ShippingAddress.AddressLine,
-                Country = dto.ShippingAddress.Country,
-                EmailAddress = dto.ShippingAddress.EmailAddress,
-                Name = dto.ShippingAddress.Name,
-                State = dto.ShippingAddress.State,
-                ZipCode = dto.ShippingAddress.ZipCode
-            },
-            Items = basket.Items.Select(item => new BasketCheckoutItem
-            {
-                ProductId = item.ProductId,
-                Quantity = item.Quantity
-            }).ToList()
-        };
-
+        if (basket.Items == null || basket.Items.Count == 0) throw new ClientValidationException(MessageCode.BadRequest);
         
+        await basketRepo.DeleteBasketAsync(command.UserId, cancellationToken);
+
         var customer = new BasketCheckoutCustomerDomainEvent(
-            Guid.Parse(command.UserId), 
-            dto.Customer.Name, 
-            dto.Customer.Email, 
+            Guid.Parse(command.UserId),
+            dto.Customer.Name,
+            dto.Customer.Email,
             dto.Customer.PhoneNumber);
         var shippingAddress = new BasketCheckoutAddressDomainEvent(
-            dto.ShippingAddress.Name, 
-            dto.ShippingAddress.EmailAddress, 
-            dto.ShippingAddress.AddressLine, 
-            dto.ShippingAddress.Country, 
-            dto.ShippingAddress.State, 
+            dto.ShippingAddress.Name,
+            dto.ShippingAddress.EmailAddress,
+            dto.ShippingAddress.AddressLine,
+            dto.ShippingAddress.Country,
+            dto.ShippingAddress.State,
             dto.ShippingAddress.ZipCode);
 
         var @event = new BasketCheckoutDomainEvent(basket, customer, shippingAddress);
 
         await mediator.Publish(@event, cancellationToken);
-        await basketRepo.DeleteBasketAsync(command.UserId, cancellationToken);
-
+        
         return Unit.Value;
     }
 

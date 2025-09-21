@@ -46,7 +46,7 @@ public sealed class BasketCheckoutDomainEventHandler(
             content: JsonConvert.SerializeObject(message),
             occurredOnUtc: DateTimeOffset.Now);
 
-        await outboxRepo.RaiseMessageAsync(outboxMessage, cancellationToken);
+        await outboxRepo.AddMessageAsync(outboxMessage, cancellationToken);
     }
 
     #endregion

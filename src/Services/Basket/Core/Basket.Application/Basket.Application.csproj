@@ -19,6 +19,8 @@
 
   <ItemGroup>
     <Folder Include="CQRS\Basket\EventHandlers\Domain\" />
+    <Folder Include="CQRS\Outbox\Commands\" />
+    <Folder Include="CQRS\Outbox\Queries\" />
   </ItemGroup>
 
 </Project>

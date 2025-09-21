@@ -2,11 +2,20 @@
 
 public sealed class WorkerCfg
 {
-    #region Constants
+    public class Outbox
+    {
+        #region Constants
 
-    public const string Section = "WorkerSettings";
+        public const string Section = "WorkerSettings:Outbox";
 
-    public const string BatchSize = "BatchSize";
+        public const string BatchSize = "BatchSize";
 
-    #endregion
+        public const string ProcessorFrequency = "ProcessorFrequency";
+
+        public const string MaxParallelism = "MaxParallelism";
+
+        #endregion
+
+    }
+
 }

@@ -2,9 +2,8 @@
 
 using Order.Application;
 using Order.Infrastructure;
-using Order.Worker;
-using Order.Worker.BackgroundServices;
-
+using Order.Worker.Outbox;
+using Order.Worker.Outbox.BackgroundServices;
 
 #endregion
 

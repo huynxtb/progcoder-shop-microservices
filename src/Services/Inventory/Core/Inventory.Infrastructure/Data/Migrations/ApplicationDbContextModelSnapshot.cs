@@ -207,19 +207,39 @@ namespace Inventory.Infrastructure.Data.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("id");
 
+                    b.Property<int>("AttemptCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("attempt_count");
+
+                    b.Property<DateTimeOffset?>("ClaimedOnUtc")
+                        .HasColumnType("datetime")
+                        .HasColumnName("claimed_on_utc");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("content");
 
-                    b.Property<string>("Error")
-                        .HasColumnType("longtext")
-                        .HasColumnName("error");
-
                     b.Property<string>("EventType")
                         .IsRequired()
                         .HasColumnType("varchar(255)")
                         .HasColumnName("event_type");
+
+                    b.Property<string>("LastErrorMessage")
+                        .HasColumnType("longtext")
+                        .HasColumnName("last_error_message");
+
+                    b.Property<int>("MaxAttempts")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(3)
+                        .HasColumnName("max_attempts");
+
+                    b.Property<DateTimeOffset?>("NextAttemptOnUtc")
+                        .HasColumnType("datetime")
+                        .HasColumnName("next_attempt_on_utc");
 
                     b.Property<DateTimeOffset>("OccurredOnUtc")
                         .HasColumnType("datetime")
@@ -231,11 +251,19 @@ namespace Inventory.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClaimedOnUtc");
+
                     b.HasIndex("EventType");
 
                     b.HasIndex("OccurredOnUtc");
 
                     b.HasIndex("ProcessedOnUtc");
+
+                    b.HasIndex("ProcessedOnUtc", "ClaimedOnUtc");
+
+                    b.HasIndex("NextAttemptOnUtc", "ProcessedOnUtc", "AttemptCount");
+
+                    b.HasIndex("ProcessedOnUtc", "AttemptCount", "MaxAttempts");
 
                     b.ToTable("outbox_messages", (string)null);
                 });

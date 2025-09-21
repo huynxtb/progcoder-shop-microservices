@@ -2,6 +2,12 @@
 
 public sealed class Constants
 {
+    #region Fields, Properties and Indexers
+
+    public const int MaxAttempts = 3;
+
+    #endregion
+
     #region Bucket
 
     public static class Bucket
@@ -17,7 +23,7 @@ public sealed class Constants
     {
         public const string Catalog = "catalog";
 
-        public const string Notification = "catalog";
+        public const string Notification = "notification";
 
         public const string Inventory = "inventory";
     }

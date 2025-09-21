@@ -1,13 +1,13 @@
 ﻿#region using
 
 using BuildingBlocks.Logging;
-using EventSourcing.MassTransit;
-using Order.Worker.Outbox.Processors;
 using System.Reflection;
+using EventSourcing.MassTransit;
+using Basket.Worker.Outbox.Processors;
 
 #endregion
 
-namespace Order.Worker.Outbox;
+namespace Basket.Worker.Outbox;
 
 public static class DependencyInjection
 {
