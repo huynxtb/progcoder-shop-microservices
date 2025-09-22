@@ -35,8 +35,8 @@ public sealed class BasketCheckoutDomainEventHandler(
         {
             BasketId = @event.Basket.Id,
             TotalPrice = @event.Basket.TotalPrice,
-            Customer = @event.Adapt<BasketCheckoutCustomerIntegrationEvent>(),
-            ShippingAddress = @event.Adapt<BasketCheckoutAddressIntegrationEvent>(),
+            Customer = @event.Customer.Adapt<BasketCheckoutCustomerIntegrationEvent>(),
+            ShippingAddress = @event.ShippingAddress.Adapt<BasketCheckoutAddressIntegrationEvent>(),
             Items = @event.Basket.Items.Adapt<List<BasketCheckoutItemIntegrationEvent>>()
         };
 

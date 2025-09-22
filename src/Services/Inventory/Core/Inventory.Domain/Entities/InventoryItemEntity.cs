@@ -16,15 +16,15 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public Product Product { get; private set; } = default!;
+    public Product Product { get; set; } = default!;
 
-    public int Quantity { get; private set; }
+    public int Quantity { get; set; }
 
-    public int Reserved { get; private set; }
+    public int Reserved { get; set; }
 
     public int Available => Quantity - Reserved;
 
-    public Location Location { get; private set; } = default!;
+    public Location Location { get; set; } = default!;
 
     #endregion
 

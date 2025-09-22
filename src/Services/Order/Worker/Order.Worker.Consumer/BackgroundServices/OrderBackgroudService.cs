@@ -1,8 +1,8 @@
-namespace Catalog.Worker.Consumer.BackgroundServices;
+namespace Order.Worker.Consumer.BackgroundServices;
 
-public class CatalogBackgroudService(ILogger<CatalogBackgroudService> logger) : BackgroundService
+public sealed class OrderBackgroudService(ILogger<OrderBackgroudService> logger) : BackgroundService
 {
-    #region using
+    #region Methods
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

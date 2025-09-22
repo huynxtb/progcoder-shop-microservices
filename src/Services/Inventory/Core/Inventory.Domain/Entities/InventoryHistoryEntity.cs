@@ -10,15 +10,15 @@ public sealed class InventoryHistoryEntity : EntityId<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public Guid InventoryItemId { get; private set; }
+    public Guid InventoryItemId { get; set; }
 
-    public DateTimeOffset ChangedAt { get; private set; }
+    public DateTimeOffset ChangedAt { get; set; }
 
-    public int ChangeAmount { get; private set; }
+    public int ChangeAmount { get; set; }
 
-    public int QuantityAfterChange { get; private set; }
+    public int QuantityAfterChange { get; set; }
 
-    public string Source { get; private set; } = default!;
+    public string Source { get; set; } = default!;
 
     #endregion
 

@@ -79,17 +79,16 @@ internal class OutboxBackgroundService : BackgroundService
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            var iterationCount = Interlocked.Increment(ref _totalIterations);
-            _logger.LogDebug("Starting outbox processing iteration {IterationCount}", iterationCount);
-
             int processedMessages = await outboxProcessor.ExecuteAsync(cancellationToken);
             var totalProcessedMessages = Interlocked.Add(ref _totalProcessedMessage, processedMessages);
 
-            _logger.LogDebug(
-                "Completed outbox processing iteration {IterationCount}. Processed {ProcessedMessages} messages. Total processed: {TotalProcessedMessages}", 
-                iterationCount, 
-                processedMessages, 
-                totalProcessedMessages);
+            // Only log if there were messages processed or every 100 iterations
+            var iterationCount = Interlocked.Increment(ref _totalIterations);
+            if (processedMessages > 0 || iterationCount % 100 == 0)
+            {
+                _logger.LogInformation("Iteration {IterationCount}: Processed {ProcessedMessages} messages. Total: {TotalProcessedMessages}", 
+                    iterationCount, processedMessages, totalProcessedMessages);
+            }
 
             await Task.Delay(TimeSpan.FromSeconds(_processorFrequency), cancellationToken);
         }

@@ -33,8 +33,6 @@ public sealed class Worker(
 
             foreach (var doc in dueDiliveries)
             {
-                logger.LogInformation("Processing DeliveryId={DeliveryId}, Status={Status}, Attempts={Attempts}",
-                        doc.Id, doc.Status, doc.AttemptCount);
                 try
                 {
                     if (doc.Payload == null || doc.Payload.To == null)
@@ -47,7 +45,6 @@ public sealed class Worker(
 
                     doc.UpdateStatus(DeliveryStatus.Sending, Actor.Worker("notification").ToString());
                     await delivCommandRepo.UpsertAsync(doc, stoppingToken);
-                    logger.LogInformation("DeliveryId={DeliveryId} marked as Sending", doc.Id);
 
                     var ctx = new NotificationContext
                     {
@@ -66,7 +63,6 @@ public sealed class Worker(
                     if (result.IsSuccess)
                     {
                         doc.UpdateStatus(DeliveryStatus.Sent, Actor.Worker("notification").ToString());
-                        logger.LogInformation("DeliveryId={DeliveryId} sent successfully", doc.Id);
                     }
                     else
                     {

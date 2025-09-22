@@ -14,17 +14,17 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public Product Product { get; private set; } = default!;
+    public Product Product { get; set; } = default!;
 
-    public Guid ReferenceId { get; private set; }
+    public Guid ReferenceId { get; set; }
 
-    public long Quantity { get; private set; }
+    public long Quantity { get; set; }
 
-    public DateTimeOffset? ExpiresAt { get; private set; }
+    public DateTimeOffset? ExpiresAt { get; set; }
 
-    public ReservationStatus Status { get; private set; }
+    public ReservationStatus Status { get; set; }
 
-    public Location Location { get; private set; } = default!;
+    public Location Location { get; set; } = default!;
 
     #endregion
 

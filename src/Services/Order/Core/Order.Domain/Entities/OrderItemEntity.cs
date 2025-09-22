@@ -12,11 +12,11 @@ public sealed class OrderItemEntity : Entity<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public Guid OrderId { get; private set; } = default!;
+    public Guid OrderId { get; set; } = default!;
 
-    public Product Product { get; private set; } = default!;
+    public Product Product { get; set; } = default!;
 
-    public int Quantity { get; private set; } = default!;
+    public int Quantity { get; set; } = default!;
 
     public decimal LineTotal
     {

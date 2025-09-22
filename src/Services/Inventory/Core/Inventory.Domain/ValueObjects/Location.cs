@@ -4,7 +4,7 @@ public sealed class Location
 {
     #region Fields, Properties and Indexers
 
-    public string? Address { get; private set; }
+    public string? Address { get; set; }
 
     #endregion
 

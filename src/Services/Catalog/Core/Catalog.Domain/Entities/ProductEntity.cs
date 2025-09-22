@@ -16,40 +16,40 @@ public sealed class ProductEntity : Entity<Guid>
     #region Fields, Properties and Indexers
 
     [JsonInclude]
-    public string? Name { get; private set; }
+    public string? Name { get; set; }
 
     [JsonInclude]
-    public string? Sku { get; private set; }
+    public string? Sku { get; set; }
 
     [JsonInclude]
-    public string? ShortDescription { get; private set; }
+    public string? ShortDescription { get; set; }
 
     [JsonInclude]
-    public string? LongDescription { get; private set; }
+    public string? LongDescription { get; set; }
 
     [JsonInclude]
-    public string? Slug { get; private set; }
+    public string? Slug { get; set; }
 
     [JsonInclude]
-    public decimal Price { get; private set; }
+    public decimal Price { get; set; }
 
     [JsonInclude]
-    public decimal? SalesPrice { get; private set; }
+    public decimal? SalesPrice { get; set; }
 
     [JsonInclude]
-    public List<Guid>? CategoryIds { get; private set; }
+    public List<Guid>? CategoryIds { get; set; }
 
     [JsonInclude]
-    public List<ProductImageEntity>? Images { get; private set; }
+    public List<ProductImageEntity>? Images { get; set; }
 
     [JsonInclude]
-    public string? Thumbnail { get; private set; }
+    public string? Thumbnail { get; set; }
 
     [JsonInclude]
-    public bool Published { get; private set; }
+    public bool Published { get; set; }
 
     [JsonInclude]
-    public ProductStatus Status { get; private set; }
+    public ProductStatus Status { get; set; }
 
     #endregion
 

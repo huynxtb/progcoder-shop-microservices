@@ -16,13 +16,15 @@ public sealed class OrderEntity : Aggregate<Guid>
 
     public IReadOnlyList<OrderItemEntity> OrderItems => _orderItems.AsReadOnly();
 
-    public Customer Customer { get; private set; } = default!;
+    public Customer Customer { get; set; } = default!;
 
-    public OrderNo OrderNo { get; private set; } = default!;
+    public OrderNo OrderNo { get; set; } = default!;
 
-    public Address ShippingAddress { get; private set; } = default!;
+    public Address ShippingAddress { get; set; } = default!;
 
-    public OrderStatus Status { get; private set; } = OrderStatus.Pending;
+    //public Address BillingAddress { get; set; } = default!;
+
+    public OrderStatus Status { get; set; } = OrderStatus.Pending;
 
     public decimal TotalPrice
     {

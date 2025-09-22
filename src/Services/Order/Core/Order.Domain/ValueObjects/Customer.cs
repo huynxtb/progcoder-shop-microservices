@@ -4,13 +4,13 @@ public record Customer
 {
     #region Fields, Properties and Indexers
 
-    public Guid? Id { get; private set; }
+    public Guid? Id { get; set; }
 
-    public string PhoneNumber { get; private set; } = default!;
+    public string PhoneNumber { get; set; } = default!;
 
-    public string Name { get; private set; } = default!;
+    public string Name { get; set; } = default!;
 
-    public string Email { get; private set; } = default!;
+    public string Email { get; set; } = default!;
 
     #endregion
 

@@ -15,6 +15,8 @@ namespace Catalog.Worker.Consumer.EventHandlers.Integrations;
 public sealed class StockChangedEventHandler(IMediator sender, ILogger<StockChangedEventHandler> logger)
     : IConsumer<StockChangedIntegrationEvent>
 {
+    #region Methods
+
     public async Task Consume(ConsumeContext<StockChangedIntegrationEvent> context)
     {
         logger.LogInformation("Integration Event handled: {IntegrationEvent}", context.Message.GetType().Name);
@@ -30,4 +32,6 @@ public sealed class StockChangedEventHandler(IMediator sender, ILogger<StockChan
             await sender.Send(new ChangeProductStatusCommand(message.ProductId, ProductStatus.OutOfStock, Actor.Worker(Constants.Worker.Catalog)));
         }
     }
+
+    #endregion
 }

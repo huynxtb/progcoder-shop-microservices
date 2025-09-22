@@ -159,4 +159,6 @@ public sealed class MessageCode
     public const string ProductIsRequired = "PRODUCT_IS_REQUIRED";
 
     public const string OrderIdIsRequired = "ORDER_ID_IS_REQUIRED";
+
+    public const string BasketIsRequired = "BASKET_IS_REQUIRED";
 }

@@ -1,7 +1,7 @@
 ﻿#region using
 
-using Common.Constants;
 using Order.Domain.Abstractions;
+using Common.Constants;
 
 #endregion
 
@@ -49,11 +49,7 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
 
     #region Factories
 
-    public static OutboxMessageEntity Create(
-        Guid id,
-        string eventType,
-        string content,
-        DateTimeOffset occurredOnUtc)
+    public static OutboxMessageEntity Create(Guid id, string eventType, string content, DateTimeOffset occurredOnUtc)
     {
         return new OutboxMessageEntity(id, eventType, content, occurredOnUtc);
     }
@@ -62,10 +58,10 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
 
     #region Methods
 
-    public void CompleteProcessing(DateTimeOffset processedOnUtc)
+    public void CompleteProcessing(DateTimeOffset processedOnUtc, string? lastErrorMessage = null)
     {
         ProcessedOnUtc = processedOnUtc;
-        LastErrorMessage = null;
+        LastErrorMessage = lastErrorMessage;
         ClaimedOnUtc = null;
         NextAttemptOnUtc = null;
     }
@@ -75,11 +71,7 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
         ClaimedOnUtc = claimedOnUtc;
     }
 
-    public void SetRetryProperties(
-        int attemptCount,
-        int maxAttempts,
-        DateTimeOffset? nextAttemptOnUtc,
-        string? lastErrorMessage)
+    public void SetRetryProperties(int attemptCount, int maxAttempts, DateTimeOffset? nextAttemptOnUtc, string? lastErrorMessage)
     {
         AttemptCount = attemptCount;
         MaxAttempts = maxAttempts;
@@ -87,7 +79,7 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
         LastErrorMessage = lastErrorMessage;
     }
 
-    public void RecordFailedAttempt(string errorMessage, DateTimeOffset now)
+    public void RecordFailedAttempt(string errorMessage, DateTimeOffset currentTime)
     {
         IncreaseAttemptCount();
 
@@ -104,14 +96,14 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
             var jitter = TimeSpan.FromMilliseconds(Random.Shared.Next(0, 1000));
             var delay = TimeSpan.FromTicks(Math.Min(baseDelay.Ticks, maxDelay.Ticks)) + jitter;
 
-            NextAttemptOnUtc = now + delay;
+            NextAttemptOnUtc = currentTime + delay;
             LastErrorMessage = errorMessage;
         }
     }
 
     public void IncreaseAttemptCount()
     {
-        AttemptCount += 1;
+        AttemptCount++;
     }
 
     public bool CanRetry(DateTimeOffset currentTime)

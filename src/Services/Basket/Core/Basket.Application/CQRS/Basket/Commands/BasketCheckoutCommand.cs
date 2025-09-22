@@ -10,7 +10,7 @@ using Basket.Domain.Events;
 
 namespace Basket.Application.CQRS.Basket.Commands;
 
-public sealed record BasketCheckoutCommand(string UserId, BasketCheckoutDto Dto) : ICommand<Unit>;
+public sealed record BasketCheckoutCommand(string UserId, BasketCheckoutDto Dto) : ICommand<Guid>;
 
 public sealed class BasketCheckoutCommandValidator : AbstractValidator<BasketCheckoutCommand>
 {
@@ -112,17 +112,17 @@ public sealed class BasketCheckoutCommandValidator : AbstractValidator<BasketChe
     #endregion
 }
 
-public sealed class BasketCheckoutCommandHandler(IBasketRepository basketRepo, IMediator mediator) : ICommandHandler<BasketCheckoutCommand, Unit>
+public sealed class BasketCheckoutCommandHandler(IBasketRepository basketRepo, IMediator mediator) : ICommandHandler<BasketCheckoutCommand, Guid>
 {
     #region Implementations
 
-    public async Task<Unit> Handle(BasketCheckoutCommand command, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(BasketCheckoutCommand command, CancellationToken cancellationToken)
     {
         var dto = command.Dto;
 
         var basket = await basketRepo.GetBasketAsync(command.UserId, cancellationToken);
 
-        if (basket.Items == null || basket.Items.Count == 0) throw new ClientValidationException(MessageCode.BadRequest);
+        if (basket.Items == null || basket.Items.Count == 0) throw new ClientValidationException(MessageCode.BasketIsRequired);
         
         await basketRepo.DeleteBasketAsync(command.UserId, cancellationToken);
 
@@ -143,7 +143,7 @@ public sealed class BasketCheckoutCommandHandler(IBasketRepository basketRepo, I
 
         await mediator.Publish(@event, cancellationToken);
         
-        return Unit.Value;
+        return basket.Id;
     }
 
     #endregion

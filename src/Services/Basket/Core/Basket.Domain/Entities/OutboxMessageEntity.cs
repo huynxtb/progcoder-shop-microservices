@@ -11,23 +11,23 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public string? EventType { get; private set; }
+    public string? EventType { get; set; }
 
-    public string? Content { get; private set; }
+    public string? Content { get; set; }
 
-    public DateTimeOffset OccurredOnUtc { get; private set; }
+    public DateTimeOffset OccurredOnUtc { get; set; }
 
-    public DateTimeOffset? ProcessedOnUtc { get; private set; }
+    public DateTimeOffset? ProcessedOnUtc { get; set; }
 
-    public string? LastErrorMessage { get; private set; }
+    public string? LastErrorMessage { get; set; }
 
-    public DateTimeOffset? ClaimedOnUtc { get; private set; }
+    public DateTimeOffset? ClaimedOnUtc { get; set; }
 
-    public int AttemptCount { get; private set; }
+    public int AttemptCount { get; set; }
 
-    public int MaxAttempts { get; private set; }
+    public int MaxAttempts { get; set; }
 
-    public DateTimeOffset? NextAttemptOnUtc { get; private set; }
+    public DateTimeOffset? NextAttemptOnUtc { get; set; }
 
     #endregion
 

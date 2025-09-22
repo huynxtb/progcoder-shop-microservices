@@ -4,13 +4,13 @@ public record Product
 {
     #region Fields, Properties and Indexers
 
-    public Guid Id { get; private set; } = default!;
+    public Guid Id { get; set; } = default!;
 
-    public string Name { get; private set; } = default!;
+    public string Name { get; set; } = default!;
 
-    public string ImageUrl { get; private set; } = default!;
+    public string ImageUrl { get; set; } = default!;
 
-    public decimal Price { get; private set; } = default!;
+    public decimal Price { get; set; } = default!;
 
     #endregion
 

@@ -53,7 +53,6 @@ internal sealed class OutboxProcessor
 
     public async Task<int> ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        _logger.LogDebug("Starting outbox message retrieval");
 
         var claimTimeout = TimeSpan.FromMinutes(5);
 
@@ -69,8 +68,11 @@ internal sealed class OutboxProcessor
         var retryMessagesProcessed = await ProcessMessagesAsync(retryMessages, MessageType.Retry, cancellationToken);
 
         var totalProcessed = newMessagesProcessed + retryMessagesProcessed;
-        _logger.LogInformation("Processed {TotalCount} messages from outbox ({NewCount} new, {RetryCount} retry)", 
-            totalProcessed, newMessagesProcessed, retryMessagesProcessed);
+        if (totalProcessed > 0)
+        {
+            _logger.LogInformation("Processed {TotalCount} messages from outbox ({NewCount} new, {RetryCount} retry)", 
+                totalProcessed, newMessagesProcessed, retryMessagesProcessed);
+        }
 
         return totalProcessed;
     }
@@ -79,7 +81,6 @@ internal sealed class OutboxProcessor
     {
         if (messages.Count == 0) return 0;
 
-        _logger.LogInformation("Retrieved {Count} {MessageType} messages from outbox", messages.Count, messageType.GetDescription());
 
         var updateQueue = new ConcurrentQueue<OutboxUpdate>();
 
@@ -91,9 +92,7 @@ internal sealed class OutboxProcessor
 
         if (!updateQueue.IsEmpty)
         {
-            _logger.LogDebug("Updating processed {MessageType} messages in database", messageType.GetDescription());
             await _databaseProvider.UpdateProcessedMessagesAsync(_connectionString, updateQueue, cancellationToken);
-            _logger.LogDebug("Database update for {MessageType} messages complete", messageType.GetDescription());
         }
         else
         {
@@ -114,18 +113,23 @@ internal sealed class OutboxProcessor
     {
         try
         {
-            logger.LogInformation("Publishing outbox message {Id} of type {EventType} (attempt {AttemptCount}/{MaxAttempts})", 
-                message.Id, message.EventType, message.AttemptCount + 1, message.MaxAttempts);
             
             var eventType = GetOrAddMessageType(message.EventType!);
             var deserializedMessage = JsonSerializer.Deserialize(message.Content!, eventType)!;
 
+            logger.LogInformation("Publishing message {Id} of type {EventType} (attempt {AttemptCount}/{MaxAttempts})", 
+                message.Id, message.EventType, message.AttemptCount + 1, message.MaxAttempts);
+            
             await publish.Publish(deserializedMessage, cancellationToken);
+            
+            // Increment attempt count for successful publish
+            message.IncreaseAttemptCount();
+            
+            logger.LogInformation("Successfully published message {Id} of type {EventType} (attempt {AttemptCount})", 
+                message.Id, message.EventType, message.AttemptCount);
 
             // Success - mark as processed
-            updateQueue.Enqueue(new OutboxUpdate(message.Id, DateTime.UtcNow, null, 0, null));
-            logger.LogInformation("Successfully published outbox message {Id} (attempt {AttemptCount})", 
-                message.Id, message.AttemptCount + 1);
+            updateQueue.Enqueue(new OutboxUpdate(message.Id, DateTime.UtcNow, null, message.AttemptCount, null));
         }
         catch (Exception ex)
         {
