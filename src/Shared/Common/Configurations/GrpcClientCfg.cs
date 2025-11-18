@@ -14,4 +14,17 @@ public sealed class GrpcClientCfg
 
         #endregion
     }
+
+    public static class Discount
+    {
+        #region Constants
+
+        public const string Section = "GrpcClients:Discount";
+
+        public const string Url = "Url";
+
+        public const string ApiKey = "ApiKey";
+
+        #endregion
+    }
 }

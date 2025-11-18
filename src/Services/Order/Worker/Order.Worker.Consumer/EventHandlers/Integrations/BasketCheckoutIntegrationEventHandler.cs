@@ -1,7 +1,6 @@
 ﻿#region using
 
 using BuildingBlocks.Abstractions.ValueObjects;
-using Common.Constants;
 using EventSourcing.Events.Baskets;
 using Mapster;
 using MassTransit;
@@ -25,23 +24,14 @@ public sealed class BasketCheckoutIntegrationEventHandler(IMediator sender, ILog
         var message = context.Message;
         var dto = new CreateOrUpdateOrderDto
         {
-            BasketId = message.BasketId,
             Customer = message.Customer.Adapt<CustomerDto>(),
             ShippingAddress = message.ShippingAddress.Adapt<AddressDto>(),
-            Items = message.Items.Adapt<List<CreateOrderItemDto>>(),
-            TotalPrice = message.TotalPrice
+            OrderItems = message.Items.Adapt<List<CreateOrderItemDto>>()
         };
-        var command = new CreateOrderCommand(
-            );
+        
+        var command = new CreateOrderCommand(dto, Actor.User(dto.Customer.Id.ToString()!));
 
-        if (message.Amount > 0)
-        {
-            await sender.Send(new ChangeProductStatusCommand(message.ProductId, ProductStatus.InStock, Actor.Worker(Constants.Worker.Catalog)));
-        }
-        else
-        {
-            await sender.Send(new ChangeProductStatusCommand(message.ProductId, ProductStatus.OutOfStock, Actor.Worker(Constants.Worker.Catalog)));
-        }
+        await sender.Send(command);
     }
 
     #endregion

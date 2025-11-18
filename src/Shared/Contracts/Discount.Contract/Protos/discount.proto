@@ -1,0 +1,24 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Discount.Grpc";
+
+package discount;
+
+// ==== Definition ====
+service DiscountGrpc {
+	rpc ApplyCoupon (ApplyCouponRequest) returns (ApplyCouponResponse);
+}
+
+// ==== Messages ====
+
+message ApplyCouponRequest {
+	string code = 1;
+	double amount = 2;
+}
+
+message ApplyCouponResponse {
+  double original_amount = 1;
+  double discount_amount = 2;
+  double final_amount = 3;
+  string coupon_code = 4;
+}

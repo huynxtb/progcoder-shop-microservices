@@ -161,4 +161,19 @@ public sealed class MessageCode
     public const string OrderIdIsRequired = "ORDER_ID_IS_REQUIRED";
 
     public const string BasketIsRequired = "BASKET_IS_REQUIRED";
+
+    public const string CouponCodeIsRequired = "COUPON_CODE_IS_REQUIRED";
+
+    public const string DescriptionIsRequired = "DESCRIPTION_IS_REQUIRED";
+
+    public const string ValidFromIsRequired = "VALID_FROM_IS_REQUIRED";
+
+    public const string ValidToIsRequired = "VALID_TO_IS_REQUIRED";
+
+    public const string ValidToInvalid = "VALID_TO_INVALID";
+
+    public const string CouponCodeIsExists = "COUPON_CODE_IS_EXISTS";
+
+    public const string CouponCodeIsNotExistsOrExpired = "COUPON_CODE_IS_NOT_EXISTS_OR_EXPIRED";
+
 }

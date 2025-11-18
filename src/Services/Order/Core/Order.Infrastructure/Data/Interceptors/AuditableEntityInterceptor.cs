@@ -38,11 +38,15 @@ public sealed class AuditableEntityInterceptor : SaveChangesInterceptor
 
         foreach (var entry in context.ChangeTracker.Entries<IAuditable>())
         {
-            if (entry.State == EntityState.Added
-                || entry.State == EntityState.Modified
-                || entry.HasChangedOwnedEntities())
+            if (entry.State == EntityState.Added)
             {
+                // For new entities, set both created and modified timestamps
                 entry.Entity.CreatedOnUtc = DateTimeOffset.UtcNow;
+                entry.Entity.LastModifiedOnUtc = DateTimeOffset.UtcNow;
+            }
+            else if (entry.State == EntityState.Modified || entry.HasChangedOwnedEntities())
+            {
+                // For existing entities, only update the modified timestamp
                 entry.Entity.LastModifiedOnUtc = DateTimeOffset.UtcNow;
             }
         }

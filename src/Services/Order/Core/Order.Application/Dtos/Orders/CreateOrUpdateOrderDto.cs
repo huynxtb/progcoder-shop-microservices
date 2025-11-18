@@ -1,8 +1,10 @@
 ﻿namespace Order.Application.Dtos.Orders;
 
-public class CreateOrUpdateOrderDto
+public sealed class CreateOrUpdateOrderDto
 {
     #region Fields, Properties and Indexers
+
+    public Guid? BasketId { get; set; }
 
     public CustomerDto Customer { get; set; } = default!;
 

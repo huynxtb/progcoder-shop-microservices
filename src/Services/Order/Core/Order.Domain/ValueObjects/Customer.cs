@@ -1,6 +1,6 @@
 ﻿namespace Order.Domain.ValueObjects;
 
-public record Customer
+public class Customer
 {
     #region Fields, Properties and Indexers
 

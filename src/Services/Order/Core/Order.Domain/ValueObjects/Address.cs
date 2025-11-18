@@ -1,6 +1,6 @@
 ﻿namespace Order.Domain.ValueObjects;
 
-public record Address
+public class Address
 {
     #region Fields, Properties and Indexers
 

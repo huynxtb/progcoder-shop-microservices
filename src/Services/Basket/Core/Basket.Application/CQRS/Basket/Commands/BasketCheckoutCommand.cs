@@ -5,6 +5,7 @@ using Basket.Application.Repositories;
 using MediatR;
 using BuildingBlocks.Validators;
 using Basket.Domain.Events;
+using Basket.Application.Services;
 
 #endregion
 
@@ -112,19 +113,48 @@ public sealed class BasketCheckoutCommandValidator : AbstractValidator<BasketChe
     #endregion
 }
 
-public sealed class BasketCheckoutCommandHandler(IBasketRepository basketRepo, IMediator mediator) : ICommandHandler<BasketCheckoutCommand, Guid>
+public sealed class BasketCheckoutCommandHandler(
+    IBasketRepository basketRepo, 
+    IMediator mediator, 
+    IDiscountGrpcService discountGrpc,
+    ICatalogGrpcService catalogGrpc) 
+    : ICommandHandler<BasketCheckoutCommand, Guid>
 {
     #region Implementations
 
     public async Task<Guid> Handle(BasketCheckoutCommand command, CancellationToken cancellationToken)
     {
         var dto = command.Dto;
-
+        decimal discount;
         var basket = await basketRepo.GetBasketAsync(command.UserId, cancellationToken);
 
         if (basket.Items == null || basket.Items.Count == 0) throw new ClientValidationException(MessageCode.BasketIsRequired);
-        
-        await basketRepo.DeleteBasketAsync(command.UserId, cancellationToken);
+
+        if (!string.IsNullOrWhiteSpace(dto.CouponCode))
+        {
+            var productIds = basket.Items.Select(x => x.ProductId.ToString()).ToArray();
+            var productsResponse = await catalogGrpc.GetProductsAsync(ids: productIds, cancellationToken: cancellationToken);
+
+            if (productsResponse == null || productsResponse.Items == null || productsResponse.Items.Count == 0)
+            {
+                throw new ClientValidationException(MessageCode.ProductIsNotExists);
+            }
+
+            decimal amount = 0m;
+
+            foreach (var item in basket.Items)
+            {
+                var productInfo = productsResponse.Items.FirstOrDefault(x => x.Id == item.ProductId)
+                    ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, item.ProductId);
+
+                amount += item.Quantity * productInfo.Price;
+            }
+
+            var discountResult = await discountGrpc.ApplyCouponAsync(dto.CouponCode, amount)
+                ?? throw new ClientValidationException(MessageCode.CouponCodeIsNotExistsOrExpired);
+
+            discount = discountResult.DiscountAmount;
+        }
 
         var customer = new BasketCheckoutCustomerDomainEvent(
             Guid.Parse(command.UserId),
@@ -142,7 +172,9 @@ public sealed class BasketCheckoutCommandHandler(IBasketRepository basketRepo, I
         var @event = new BasketCheckoutDomainEvent(basket, customer, shippingAddress);
 
         await mediator.Publish(@event, cancellationToken);
-        
+
+        await basketRepo.DeleteBasketAsync(command.UserId, cancellationToken);
+
         return basket.Id;
     }
 

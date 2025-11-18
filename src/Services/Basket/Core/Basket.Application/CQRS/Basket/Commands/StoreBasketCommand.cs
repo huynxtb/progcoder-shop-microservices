@@ -3,7 +3,6 @@
 using Basket.Application.Dtos.Baskets;
 using Basket.Application.Repositories;
 using Basket.Application.Services;
-using Basket.Domain.Entities;
 
 #endregion
 

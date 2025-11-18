@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Shared\Common\Common.csproj" />
-    <ProjectReference Include="..\..\..\..\Shared\Contracts\Catalog.Contract\Catalog.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\Contracts\Catalog.Contract\Catalog.Contract.csproj" />
     <ProjectReference Include="..\..\Core\Catalog.Application\Catalog.Application.csproj" />
     <ProjectReference Include="..\..\Core\Catalog.Infrastructure\Catalog.Infrastructure.csproj" />
   </ItemGroup>
