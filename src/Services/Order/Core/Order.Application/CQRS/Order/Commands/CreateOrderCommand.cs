@@ -102,7 +102,7 @@ public sealed class CreateOrderCommandValidator : AbstractValidator<CreateOrderC
     #endregion
 }
 
-public sealed class CreateOrderCommandHandler(IApplicationDbContext dbContext, ICatalogGrpcService catalogGrpc) : ICommandHandler<CreateOrderCommand, Guid>
+public sealed class CreateOrderCommandHandler(IApplicationDbContext dbContext, ICatalogGrpcService catalogGrpc, IDiscountGrpcService discountGrpc) : ICommandHandler<CreateOrderCommand, Guid>
 {
     #region Implementations
 
@@ -127,8 +127,8 @@ public sealed class CreateOrderCommandHandler(IApplicationDbContext dbContext, I
             dto.ShippingAddress.ZipCode);
 
         var order = OrderEntity.Create(orderId, customer, orderNo, shippingAddress, command.Actor.ToString());
-
         var productIds = dto.OrderItems.Select(x => x.ProductId.ToString()).ToArray();
+        
         var productsResponse = await catalogGrpc.GetProductsAsync(ids: productIds, cancellationToken: cancellationToken);
 
         if(productsResponse == null || productsResponse.Items == null || productsResponse.Items.Count == 0)
@@ -149,6 +149,32 @@ public sealed class CreateOrderCommandHandler(IApplicationDbContext dbContext, I
 
             order.AddOrderItem(product, item.Quantity);
         }
+
+        decimal discountAmt = 0m;
+        string couponCode = string.Empty;
+
+        if (!string.IsNullOrWhiteSpace(dto.CouponCode))
+        {
+            
+            decimal amount = 0m;
+
+            foreach (var item in dto.OrderItems)
+            {
+                var productInfo = productsResponse.Items.FirstOrDefault(x => x.Id == item.ProductId)
+                    ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, item.ProductId);
+
+                amount += item.Quantity * productInfo.Price;
+            }
+
+            var discountResult = await discountGrpc.ApplyCouponAsync(dto.CouponCode, amount)
+                ?? throw new ClientValidationException(MessageCode.CouponCodeIsNotExistsOrExpired);
+
+            discountAmt = discountResult.DiscountAmount;
+            couponCode = discountResult.CouponCode;
+        }
+
+        var discount = Discount.Of(couponCode, discountAmt);
+        order.ApplyDiscount(discount);
 
         await dbContext.Orders.AddAsync(order, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);

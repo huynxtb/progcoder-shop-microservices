@@ -17,11 +17,12 @@ namespace Order.Infrastructure.Data.Migrations
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     status = table.Column<int>(type: "int", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     customer_email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     customer_id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     customer_name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     customer_phone_number = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    coupon_code = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, defaultValue: ""),
+                    discount_amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false, defaultValue: 0m),
                     order_no = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     shipping_address_line = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     shipping_country = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),

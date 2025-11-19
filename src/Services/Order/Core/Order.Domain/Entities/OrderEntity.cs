@@ -26,9 +26,21 @@ public sealed class OrderEntity : Aggregate<Guid>
 
     public OrderStatus Status { get; set; } = OrderStatus.Pending;
 
+    public Discount Discount { get; set; } = default!;
+
     public decimal TotalPrice
     {
         get => OrderItems.Sum(x => x.LineTotal);
+        private set { }
+    }
+
+    public decimal FinalPrice
+    {
+        get
+        {
+            var discountAmount = Discount?.DiscountAmount ?? 0m;
+            return Math.Max(0, OrderItems.Sum(x => x.LineTotal) - discountAmount);
+        }
         private set { }
     }
 
@@ -88,6 +100,11 @@ public sealed class OrderEntity : Aggregate<Guid>
         {
             _orderItems.Remove(orderItem);
         }
+    }
+
+    public void ApplyDiscount(Discount discount)
+    {
+        Discount = discount;
     }
 
     #endregion

@@ -6,18 +6,18 @@ public sealed record BasketCheckoutIntegrationEvent : IntegrationEvent
 
     public Guid BasketId { get; init; }
 
-    public BasketCheckoutCustomerIntegrationEvent Customer { get; init; } = default!;
+    public CustomerIntegrationEvent Customer { get; init; } = default!;
 
-    public BasketCheckoutAddressIntegrationEvent ShippingAddress { get; init; } = default!;
+    public AddressIntegrationEvent ShippingAddress { get; init; } = default!;
 
-    public IReadOnlyCollection<BasketCheckoutItemIntegrationEvent> Items { get; init; } = Array.Empty<BasketCheckoutItemIntegrationEvent>();
+    public DiscountIntegrationEvent Discount { get; init; } = default!;
 
-    public decimal TotalPrice { get; init; }
+    public IReadOnlyCollection<CartItemIntegrationEvent> Items { get; init; } = Array.Empty<CartItemIntegrationEvent>();
 
     #endregion
 }
 
-public sealed record BasketCheckoutCustomerIntegrationEvent
+public sealed record CustomerIntegrationEvent
 {
     public Guid? Id { get; init; }
 
@@ -28,7 +28,7 @@ public sealed record BasketCheckoutCustomerIntegrationEvent
     public string PhoneNumber { get; init; } = default!;
 }
 
-public sealed record BasketCheckoutAddressIntegrationEvent
+public sealed record AddressIntegrationEvent
 {
     public string Name { get; init; } = default!;
 
@@ -43,9 +43,16 @@ public sealed record BasketCheckoutAddressIntegrationEvent
     public string ZipCode { get; init; } = default!;
 }
 
-public sealed record BasketCheckoutItemIntegrationEvent
+public sealed record CartItemIntegrationEvent
 {
     public Guid ProductId { get; init; }
 
     public int Quantity { get; init; }
+}
+
+public sealed record DiscountIntegrationEvent
+{
+    public string CouponCode { get; init; } = default!;
+
+    public decimal DiscountAmount { get; init; }
 }

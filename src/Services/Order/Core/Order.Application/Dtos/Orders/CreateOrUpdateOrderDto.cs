@@ -12,5 +12,7 @@ public sealed class CreateOrUpdateOrderDto
 
     public List<CreateOrderItemDto> OrderItems { get; set; } = [];
 
+    public string CouponCode { get; set; } = string.Empty;
+
     #endregion
 }

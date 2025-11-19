@@ -78,7 +78,8 @@ if not exist "%infrastructureProject%" (
 
 echo.
 echo -- Ensure dotnet-ef is installed --
-dotnet tool install --global dotnet-ef
+
+dotnet tool install --global dotnet-ef --version 8.0.6
 
 echo.
 echo -- Creating migration "%migrationName%" for %serviceName% service --

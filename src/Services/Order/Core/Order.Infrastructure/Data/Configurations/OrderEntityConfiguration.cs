@@ -110,6 +110,23 @@ public sealed class OrderEntityConfiguration : IEntityTypeConfiguration<OrderEnt
                     .IsRequired();
             });
 
+        // Configure Discount value object
+        builder.ComplexProperty(
+            o => o.Discount, b =>
+            {
+                b.Property(a => a.CouponCode)
+                    .HasColumnName("coupon_code")
+                    .HasDefaultValue("")
+                    .HasMaxLength(100);
+
+                b.Property(a => a.DiscountAmount)
+                    .HasColumnName("discount_amount")
+                    .HasDefaultValue(0);
+            });
+
+        builder.Ignore(x => x.TotalPrice);
+        builder.Ignore(x => x.FinalPrice);
+
         // Configure relationship with OrderItems
         builder.HasMany(o => o.OrderItems)
             .WithOne()

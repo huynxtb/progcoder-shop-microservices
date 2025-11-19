@@ -7,7 +7,7 @@ using Grpc.Core.Interceptors;
 
 #endregion
 
-namespace Catalog.Grpc.Interceptors;
+namespace Discount.Grpc.Interceptors;
 
 public class ApiKeyValidationInterceptor(IConfiguration cfg) : Interceptor
 {

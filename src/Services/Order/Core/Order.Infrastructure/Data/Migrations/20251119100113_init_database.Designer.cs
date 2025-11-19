@@ -13,7 +13,7 @@ using Order.Infrastructure.Data;
 namespace Order.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250921100106_init_database")]
+    [Migration("20251119100113_init_database")]
     partial class init_database
     {
         /// <inheritdoc />
@@ -56,9 +56,6 @@ namespace Order.Infrastructure.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("status");
 
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
                     b.ComplexProperty<Dictionary<string, object>>("Customer", "Order.Domain.Entities.OrderEntity.Customer#Customer", b1 =>
                         {
                             b1.IsRequired();
@@ -84,6 +81,25 @@ namespace Order.Infrastructure.Data.Migrations
                                 .HasMaxLength(50)
                                 .HasColumnType("nvarchar(50)")
                                 .HasColumnName("customer_phone_number");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("Discount", "Order.Domain.Entities.OrderEntity.Discount#Discount", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<string>("CouponCode")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(100)
+                                .HasColumnType("nvarchar(100)")
+                                .HasDefaultValue("")
+                                .HasColumnName("coupon_code");
+
+                            b1.Property<decimal>("DiscountAmount")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("decimal(18,2)")
+                                .HasDefaultValue(0m)
+                                .HasColumnName("discount_amount");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("OrderNo", "Order.Domain.Entities.OrderEntity.OrderNo#OrderNo", b1 =>

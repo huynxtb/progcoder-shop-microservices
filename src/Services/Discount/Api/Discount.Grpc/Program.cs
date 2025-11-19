@@ -3,17 +3,20 @@
 using BuildingBlocks.DistributedTracing;
 using BuildingBlocks.Logging;
 using Discount.Application;
+using Discount.Grpc;
 using Discount.Grpc.Services;
 using Discount.Infrastructure;
 
 #endregion
 
 var builder = WebApplication.CreateBuilder(args);
+var cfg = builder.Configuration;
 
 // Add services to the container.
 builder.Services
     .AddApplicationServices()
-    .AddInfrastructureServices(builder.Configuration);
+    .AddInfrastructureServices(cfg)
+    .AddGrpcServices(cfg);
 
 var app = builder.Build();
 

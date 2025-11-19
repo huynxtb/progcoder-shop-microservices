@@ -2,6 +2,7 @@
 
 using BuildingBlocks.DistributedTracing;
 using BuildingBlocks.Logging;
+using Discount.Grpc.Interceptors;
 
 #endregion
 
@@ -17,6 +18,12 @@ public static class DependencyInjection
     {
         services.AddDistributedTracing(cfg);
         services.AddSerilogLogging(cfg);
+        services
+            .AddGrpc(o =>
+            {
+                o.Interceptors.Add<ApiKeyValidationInterceptor>();
+            })
+            .AddJsonTranscoding();
 
         return services;
     }

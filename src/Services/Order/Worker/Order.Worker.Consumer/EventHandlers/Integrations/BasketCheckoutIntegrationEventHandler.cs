@@ -22,11 +22,13 @@ public sealed class BasketCheckoutIntegrationEventHandler(IMediator sender, ILog
         logger.LogInformation("Integration Event handled: {IntegrationEvent}", context.Message.GetType().Name);
 
         var message = context.Message;
+
         var dto = new CreateOrUpdateOrderDto
         {
             Customer = message.Customer.Adapt<CustomerDto>(),
             ShippingAddress = message.ShippingAddress.Adapt<AddressDto>(),
-            OrderItems = message.Items.Adapt<List<CreateOrderItemDto>>()
+            OrderItems = message.Items.Adapt<List<CreateOrderItemDto>>(),
+            CouponCode = message.Discount.CouponCode
         };
         
         var command = new CreateOrderCommand(dto, Actor.User(dto.Customer.Id.ToString()!));

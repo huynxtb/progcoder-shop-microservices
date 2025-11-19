@@ -26,13 +26,6 @@ public static class DependencyInjection
             .AsImplementedInterfaces()
             .WithScopedLifetime());
 
-        services.Scan(s => s
-            .FromAssemblyOf<InfrastructureMarker>()
-            .AddClasses(c => c.Where(t => t.Name.EndsWith("Repository")))
-            .UsingRegistrationStrategy(Scrutor.RegistrationStrategy.Skip)
-            .AsImplementedInterfaces()
-            .WithSingletonLifetime());
-
         var conn = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.Database}"];
         var dbName = cfg[$"{ConnectionStringsCfg.Section}:{ConnectionStringsCfg.DatabaseName}"];
 
@@ -45,6 +38,21 @@ public static class DependencyInjection
         {
             return sp.GetRequiredService<IMongoClient>().GetDatabase(dbName);
         });
+
+        // Register repositories as scoped (required for Unit of Work pattern)
+        services.Scan(s => s
+            .FromAssemblyOf<InfrastructureMarker>()
+            .AddClasses(c => c.Where(t => t.Name.EndsWith("Repository")))
+            .UsingRegistrationStrategy(Scrutor.RegistrationStrategy.Skip)
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
+
+        // Register UnitOfWork as scoped (must be after repositories)
+        services.AddScoped<Discount.Application.Repositories.IUnitOfWork, Repositories.UnitOfWork>();
+
+        // Register session provider (UnitOfWork implements it)
+        services.AddScoped<Repositories.IMongoSessionProvider>(sp =>
+            (Repositories.IMongoSessionProvider)sp.GetRequiredService<Discount.Application.Repositories.IUnitOfWork>());
 
         return services;
     }
