@@ -18,11 +18,11 @@ public sealed class ApiRoutes
         
         public const string GetAllOrders = $"/{Base}/all";
         
-        public const string GetOrdersByCurrentUser = $"/{Base}/my-orders";
+        public const string GetOrdersByCurrentUser = $"/{Base}/me";
         
         public const string GetOrderById = $"/{Base}/{{orderId}}";
         
-        public const string GetOrderByOrderNo = $"/{Base}/by-order-no/{{orderNo}}";
+        public const string GetOrderByOrderNo = $"/{Base}/order-no/{{orderNo}}";
 
         #endregion
     }

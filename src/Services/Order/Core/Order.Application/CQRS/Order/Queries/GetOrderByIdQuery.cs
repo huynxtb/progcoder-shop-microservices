@@ -1,5 +1,6 @@
 #region using
 
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Order.Application.Data;
 using Order.Application.Dtos.Orders;
@@ -12,7 +13,7 @@ namespace Order.Application.CQRS.Order.Queries;
 
 public sealed record GetOrderByIdQuery(Guid OrderId) : IQuery<GetOrderByIdResult>;
 
-public sealed class GetOrderByIdQueryHandler(IApplicationDbContext dbContext)
+public sealed class GetOrderByIdQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
     : IQueryHandler<GetOrderByIdQuery, GetOrderByIdResult>
 {
     #region Implementations
@@ -24,7 +25,7 @@ public sealed class GetOrderByIdQueryHandler(IApplicationDbContext dbContext)
             .FirstOrDefaultAsync(x => x.Id == query.OrderId, cancellationToken)
             ?? throw new NotFoundException(MessageCode.ResourceNotFound, query.OrderId);
 
-        var orderDto = order.Adapt<OrderDto>();
+        var orderDto = mapper.Map<OrderDto>(order);
         var response = new GetOrderByIdResult(orderDto);
 
         return response;

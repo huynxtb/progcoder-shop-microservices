@@ -1,5 +1,6 @@
 ﻿#region using
 
+using AutoMapper;
 using BuildingBlocks.Pagination.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Order.Application.Data;
@@ -16,7 +17,7 @@ public sealed record GetOrdersQuery(
     GetOrdersFilter Filter,
     PaginationRequest Paging) : IQuery<GetOrdersResult>;
 
-public sealed class GetOrdersQueryHandler(IApplicationDbContext dbContext)
+public sealed class GetOrdersQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
     : IQueryHandler<GetOrdersQuery, GetOrdersResult>
 {
     #region Implementations
@@ -63,11 +64,12 @@ public sealed class GetOrdersQueryHandler(IApplicationDbContext dbContext)
 
         var totalCount = await orderQuery.CountAsync(cancellationToken);
         var orders = await orderQuery
+            .Include(x => x.OrderItems)
             .OrderByDescending(x => x.CreatedOnUtc)
             .WithPaging(paging)
             .ToListAsync(cancellationToken);
 
-        var items = orders.Adapt<List<OrderDto>>();
+        var items = mapper.Map<List<OrderDto>>(orders);
         var response = new GetOrdersResult(items, totalCount, paging);
 
         return response;

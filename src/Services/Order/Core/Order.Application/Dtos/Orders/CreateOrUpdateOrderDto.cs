@@ -1,4 +1,6 @@
-﻿namespace Order.Application.Dtos.Orders;
+﻿using Order.Application.Dtos.ValueObjects;
+
+namespace Order.Application.Dtos.Orders;
 
 public sealed class CreateOrUpdateOrderDto
 {

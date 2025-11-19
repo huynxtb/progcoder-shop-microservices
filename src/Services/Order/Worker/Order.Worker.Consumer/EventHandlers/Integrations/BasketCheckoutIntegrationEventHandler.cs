@@ -7,6 +7,7 @@ using MassTransit;
 using MediatR;
 using Order.Application.CQRS.Order.Commands;
 using Order.Application.Dtos.Orders;
+using Order.Application.Dtos.ValueObjects;
 
 #endregion
 

@@ -27,7 +27,9 @@ public static class DependencyInjection
             config.AddOpenBehavior(typeof(ValidationBehavior<,>));
             config.AddOpenBehavior(typeof(LoggingBehavior<,>));
         });
+
         services.AddFeatureManagement();
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
         return services;
     }

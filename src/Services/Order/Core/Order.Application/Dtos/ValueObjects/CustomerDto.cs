@@ -1,4 +1,4 @@
-﻿namespace Order.Application.Dtos.Orders;
+﻿namespace Order.Application.Dtos.ValueObjects;
 
 public class CustomerDto
 {

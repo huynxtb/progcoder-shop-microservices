@@ -12,7 +12,7 @@ public class OrderDto : EntityDto<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public OrderNoDto OrderNo { get; set; } = default!;
+    public string OrderNo { get; set; } = default!;
 
     public CustomerDto Customer { get; set; } = default!;
 
@@ -20,9 +20,15 @@ public class OrderDto : EntityDto<Guid>
 
     public List<OrderItemDto> OrderItems { get; set; } = new();
 
-    public decimal TotalPrice { get; set; }
+    public DiscountDto Discount { get; set; } = default!;
 
     public OrderStatus Status { get; set; } = default!;
+
+    public string DisplayStatus { get; set; } = default!;
+
+    public decimal TotalPrice { get; set; }
+
+    public decimal FinalPrice { get; set; }
 
     #endregion
 }

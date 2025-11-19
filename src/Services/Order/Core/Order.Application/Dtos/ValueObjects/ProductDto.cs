@@ -4,7 +4,7 @@ using Order.Application.Dtos.Abstractions;
 
 #endregion
 
-namespace Order.Application.Dtos.Orders;
+namespace Order.Application.Dtos.ValueObjects;
 
 public class ProductDto : DtoId<Guid>
 {

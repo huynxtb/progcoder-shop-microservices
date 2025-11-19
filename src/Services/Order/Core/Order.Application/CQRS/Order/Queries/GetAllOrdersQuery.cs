@@ -1,5 +1,6 @@
 #region using
 
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Order.Application.Data;
 using Order.Application.Dtos.Orders;
@@ -13,7 +14,7 @@ namespace Order.Application.CQRS.Order.Queries;
 
 public sealed record GetAllOrdersQuery(GetAllOrdersFilter Filter) : IQuery<GetAllOrdersResult>;
 
-public sealed class GetAllOrdersQueryHandler(IApplicationDbContext dbContext)
+public sealed class GetAllOrdersQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
     : IQueryHandler<GetAllOrdersQuery, GetAllOrdersResult>
 {
     #region Implementations
@@ -63,7 +64,7 @@ public sealed class GetAllOrdersQueryHandler(IApplicationDbContext dbContext)
             .OrderByDescending(x => x.CreatedOnUtc)
             .ToListAsync(cancellationToken);
 
-        var items = orders.Adapt<List<OrderDto>>();
+        var items = mapper.Map<List<OrderDto>>(orders);
         var response = new GetAllOrdersResult(items);
 
         return response;
