@@ -125,7 +125,9 @@ public sealed class BasketCheckoutCommandHandler(
     public async Task<Guid> Handle(BasketCheckoutCommand command, CancellationToken cancellationToken)
     {
         var dto = command.Dto;
-        decimal discount;
+        decimal discountAmt = 0m;
+        string couponCode = string.Empty;
+
         var basket = await basketRepo.GetBasketAsync(command.UserId, cancellationToken);
 
         if (basket.Items == null || basket.Items.Count == 0) throw new ClientValidationException(MessageCode.BasketIsRequired);
@@ -153,23 +155,25 @@ public sealed class BasketCheckoutCommandHandler(
             var discountResult = await discountGrpc.ApplyCouponAsync(dto.CouponCode, amount)
                 ?? throw new ClientValidationException(MessageCode.CouponCodeIsNotExistsOrExpired);
 
-            discount = discountResult.DiscountAmount;
+            discountAmt = discountResult.DiscountAmount;
+            couponCode = discountResult.CouponCode;
         }
 
-        var customer = new BasketCheckoutCustomerDomainEvent(
+        var customerEvent = new CustomerDomainEvent(
             Guid.Parse(command.UserId),
             dto.Customer.Name,
             dto.Customer.Email,
             dto.Customer.PhoneNumber);
-        var shippingAddress = new BasketCheckoutAddressDomainEvent(
+        var shippingAddressEvent = new AddressDomainEvent(
             dto.ShippingAddress.Name,
             dto.ShippingAddress.EmailAddress,
             dto.ShippingAddress.AddressLine,
             dto.ShippingAddress.Country,
             dto.ShippingAddress.State,
             dto.ShippingAddress.ZipCode);
+        var discountEvent = new DiscountDomainEvent(couponCode, discountAmt);
 
-        var @event = new BasketCheckoutDomainEvent(basket, customer, shippingAddress);
+        var @event = new BasketCheckoutDomainEvent(basket, customerEvent, shippingAddressEvent, discountEvent);
 
         await mediator.Publish(@event, cancellationToken);
 

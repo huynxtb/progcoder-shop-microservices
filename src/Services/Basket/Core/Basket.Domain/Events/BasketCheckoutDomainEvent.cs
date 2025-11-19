@@ -9,19 +9,22 @@ namespace Basket.Domain.Events;
 
 public record BasketCheckoutDomainEvent(
     ShoppingCartEntity Basket,
-    BasketCheckoutCustomerDomainEvent Customer,
-    BasketCheckoutAddressDomainEvent ShippingAddress) : INotification;
+    CustomerDomainEvent Customer,
+    AddressDomainEvent ShippingAddress,
+    DiscountDomainEvent Discount) : INotification;
 
-public sealed record BasketCheckoutCustomerDomainEvent(
+public sealed record CustomerDomainEvent(
     Guid? Id, 
     string Name, 
     string Email, 
     string PhoneNumber);
 
-public sealed record BasketCheckoutAddressDomainEvent(
+public sealed record AddressDomainEvent(
     string Name, 
     string EmailAddress, 
     string AddressLine, 
     string Country,
     string State, 
     string ZipCode);
+
+public sealed record DiscountDomainEvent(string CouponCode, decimal DiscountAmount);
