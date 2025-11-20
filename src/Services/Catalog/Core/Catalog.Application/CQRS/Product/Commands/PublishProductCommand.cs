@@ -1,9 +1,9 @@
 ﻿#region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
 using Catalog.Domain.Entities;
-using Common.Models.Reponses;
+using Catalog.Domain.Events;
 using Marten;
+using MediatR;
 
 #endregion
 
@@ -30,18 +30,37 @@ public class PublishProductCommandValidator : AbstractValidator<PublishProductCo
     #endregion
 }
 
-public class PublishProductCommandHandler(IDocumentSession session) : ICommandHandler<PublishProductCommand, Guid>
+public class PublishProductCommandHandler(IDocumentSession session, IMediator mediator) : ICommandHandler<PublishProductCommand, Guid>
 {
     #region Implementations
 
     public async Task<Guid> Handle(PublishProductCommand command, CancellationToken cancellationToken)
     {
-        var entity = await session.LoadAsync<ProductEntity>(command.ProductId)
-            ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, command.ProductId);
+        await session.BeginTransactionAsync(cancellationToken);
+
+        var entity = await session.LoadAsync<ProductEntity>(command.ProductId, cancellationToken)
+                ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, command.ProductId);
 
         entity.Publish(command.Actor.ToString());
         session.Store(entity);
 
+        var @event = new UpsertedProductDomainEvent(
+            entity.Id,
+            entity.Name!,
+            entity.Sku!,
+            entity.Slug!,
+            entity.Price,
+            entity.SalesPrice,
+            entity.CategoryIds?.Select(id => id.ToString()).ToList(),
+            entity.Images?.Select(img => img.PublicURL).Where(url => !string.IsNullOrWhiteSpace(url)).Cast<string>().ToList(),
+            entity.Thumbnail!,
+            entity.Status,
+            entity.CreatedOnUtc,
+            entity.CreatedBy!,
+            entity.LastModifiedOnUtc,
+            entity.LastModifiedBy);
+
+        await mediator.Publish(@event, cancellationToken);
         await session.SaveChangesAsync(cancellationToken);
 
         return entity.Id;

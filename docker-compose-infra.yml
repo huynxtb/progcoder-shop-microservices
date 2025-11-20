@@ -190,12 +190,57 @@ services:
     volumes:
       - ./local-data/elasticsearch:/usr/share/elasticsearch/data
     environment:
-      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD} #UserName: elastic
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
       xpack.security.enabled: true
       discovery.type: single-node
-      ES_JAVA_OPTS: ${ES_JAVA_OPTS}
+      bootstrap.memory_lock: "true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
     networks:
       - prog_coder_network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null -w '%{http_code}' http://localhost:9200 | grep -qE '(200|401|403)' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # Elasticsearch Init - Configure disk watermark settings automatically
+  elasticsearch-init:
+    image: curlimages/curl:latest
+    container_name: elasticsearch-init
+    restart: "no"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - prog_coder_network
+    environment:
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+    command:
+      - sh
+      - -c
+      - |
+        echo "Waiting for Elasticsearch to be ready...";
+        sleep 5;
+        until curl -s -u elastic:$$ELASTIC_PASSWORD http://elasticsearch:9200/_cluster/health | grep -q '"status":"green"\|"status":"yellow"'; do
+          echo "Elasticsearch is not ready yet, waiting...";
+          sleep 2;
+        done;
+        echo "Configuring Elasticsearch disk watermark settings...";
+        RESPONSE=$$(curl -s -w "\n%{http_code}" -u elastic:$$ELASTIC_PASSWORD -X PUT "http://elasticsearch:9200/_cluster/settings" -H "Content-Type: application/json" -d '{"persistent":{"cluster.routing.allocation.disk.watermark.low":"95%","cluster.routing.allocation.disk.watermark.high":"98%","cluster.routing.allocation.disk.watermark.flood_stage":"99%"}}');
+        HTTP_CODE=$$(echo "$$RESPONSE" | tail -n1);
+        if [ "$$HTTP_CODE" -eq 200 ]; then
+          echo "✅ Elasticsearch disk watermark settings configured successfully";
+        else
+          echo "⚠️  Warning: Failed to configure disk watermark settings (HTTP $$HTTP_CODE)";
+          exit 1;
+        fi
 
   # =========================
   # Admin / Ops

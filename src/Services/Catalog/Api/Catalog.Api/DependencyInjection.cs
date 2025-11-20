@@ -4,10 +4,12 @@ using BuildingBlocks.Authentication.Extensions;
 using BuildingBlocks.DistributedTracing;
 using BuildingBlocks.Logging;
 using BuildingBlocks.Swagger.Extensions;
+using Catalog.Api.Mappings;
 using Common.Configurations;
 using Common.Constants;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using System.Reflection;
 
 #endregion
 
@@ -52,6 +54,9 @@ public static class DependencyInjection
         services.AddHttpContextAccessor();
         services.AddAuthenticationAndAuthorization(cfg);
         services.AddSwaggerServices(cfg);
+        
+        // Register all AutoMapper profiles from the current assembly
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
         return services;
     }

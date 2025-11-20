@@ -1,5 +1,6 @@
 #region using
 
+using AutoMapper;
 using Discount.Application.Dtos.Coupons;
 using Discount.Application.Models.Results;
 using Discount.Application.Repositories;
@@ -10,7 +11,7 @@ namespace Discount.Application.CQRS.Coupon.Queries;
 
 public sealed record GetCouponQuery(Guid Id) : IQuery<GetCouponResult>;
 
-public sealed class GetCouponQueryHandler(ICouponRepository repository) : IQueryHandler<GetCouponQuery, GetCouponResult>
+public sealed class GetCouponQueryHandler(ICouponRepository repository, IMapper mapper) : IQueryHandler<GetCouponQuery, GetCouponResult>
 {
     #region Implementations
 
@@ -19,7 +20,7 @@ public sealed class GetCouponQueryHandler(ICouponRepository repository) : IQuery
         var coupon = await repository.GetByIdAsync(query.Id, cancellationToken)
             ?? throw new NotFoundException(MessageCode.ResourceNotFound, query.Id);
 
-        var dto = coupon.Adapt<CouponDto>();
+        var dto = mapper.Map<CouponDto>(coupon);
         
         return new GetCouponResult(dto);
     }

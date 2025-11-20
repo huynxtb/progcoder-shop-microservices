@@ -17,13 +17,30 @@ public sealed class DiscountGrpcService(ISender sender) : DiscountGrpc.DiscountG
     {
         var dto = new ApplyCouponDto()
         {
-            Amount = (decimal)request.Amount,
             Code = request.Code
         };
 
         var result = await sender.Send(new ApplyCouponCommand(dto));
 
         var response = new ApplyCouponResponse
+        {
+            CouponCode = result.CouponCode
+        };
+
+        return response;
+    }
+
+    public override async Task<EvaluateCouponResponse> EvaluateCoupon(EvaluateCouponRequest request, ServerCallContext context)
+    {
+        var dto = new EvaluateCouponDto()
+        {
+            Code = request.Code,
+            Amount = (decimal)request.Amount
+        };
+
+        var result = await sender.Send(new EvaluateCouponCommand(dto));
+
+        var response = new EvaluateCouponResponse
         {
             CouponCode = result.CouponCode,
             DiscountAmount = (double)result.DiscountAmount,

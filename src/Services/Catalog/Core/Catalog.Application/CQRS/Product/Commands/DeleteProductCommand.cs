@@ -1,8 +1,10 @@
 ﻿#region using
 
+using Catalog.Domain.Abstractions;
 using Catalog.Domain.Entities;
-using Marten;
+using Catalog.Domain.Events;
 using Common.Models.Reponses;
+using Marten;
 using MediatR;
 
 #endregion
@@ -25,7 +27,7 @@ public class DeleteProductCommandValidator : AbstractValidator<DeleteProductComm
     #endregion
 }
 
-public class DeleteProductCommandHandler(IDocumentSession session) : ICommandHandler<DeleteProductCommand, Unit>
+public class DeleteProductCommandHandler(IDocumentSession session, IMediator mediator) : ICommandHandler<DeleteProductCommand, Unit>
 {
     #region Implementations
 
@@ -34,7 +36,11 @@ public class DeleteProductCommandHandler(IDocumentSession session) : ICommandHan
         var product = await session.LoadAsync<ProductEntity>(command.ProductId) 
             ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, command.ProductId.ToString());
 
-        session.Delete<ProductEntity>(command.ProductId);
+        session.Delete<ProductEntity>(product.Id);
+
+        var @event = new DeletedUnPublishedProductDomainEvent(product.Id);
+
+        await mediator.Publish(@event, cancellationToken);
         await session.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;

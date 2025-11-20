@@ -7,9 +7,22 @@ package discount;
 // ==== Definition ====
 service DiscountGrpc {
 	rpc ApplyCoupon (ApplyCouponRequest) returns (ApplyCouponResponse);
+	rpc EvaluateCoupon (EvaluateCouponRequest) returns (EvaluateCouponResponse);
 }
 
 // ==== Messages ====
+
+message EvaluateCouponRequest {
+	string code = 1;
+	double amount = 2;
+}
+
+message EvaluateCouponResponse {
+  double original_amount = 1;
+  double discount_amount = 2;
+  double final_amount = 3;
+  string coupon_code = 4;
+}
 
 message ApplyCouponRequest {
 	string code = 1;
@@ -17,8 +30,5 @@ message ApplyCouponRequest {
 }
 
 message ApplyCouponResponse {
-  double original_amount = 1;
-  double discount_amount = 2;
-  double final_amount = 3;
   string coupon_code = 4;
 }

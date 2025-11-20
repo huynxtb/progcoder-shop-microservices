@@ -1,5 +1,6 @@
 #region using
 
+using AutoMapper;
 using Discount.Application.Dtos.Coupons;
 using Discount.Application.Models.Results;
 using Discount.Application.Repositories;
@@ -15,7 +16,7 @@ public sealed record GetCouponsQuery(
     CouponType? Type = null,
     bool? ValidOnly = null) : IQuery<GetCouponsResult>;
 
-public sealed class GetCouponsQueryHandler(ICouponRepository repository) : IQueryHandler<GetCouponsQuery, GetCouponsResult>
+public sealed class GetCouponsQueryHandler(ICouponRepository repository, IMapper mapper) : IQueryHandler<GetCouponsQuery, GetCouponsResult>
 {
     #region Implementations
 
@@ -41,12 +42,7 @@ public sealed class GetCouponsQueryHandler(ICouponRepository repository) : IQuer
         }
 
         var couponList = coupons.ToList();
-        var dtos = couponList.Select(coupon =>
-        {
-            var dto = coupon.Adapt<CouponDto>();
-
-            return dto;
-        });
+        var dtos = mapper.Map<List<CouponDto>>(couponList);
 
         return new GetCouponsResult(dtos, couponList.Count);
     }

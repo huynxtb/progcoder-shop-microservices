@@ -11,7 +11,7 @@ using System.Text.Json.Serialization;
 
 namespace Catalog.Domain.Entities;
 
-public sealed class ProductEntity : Entity<Guid>
+public sealed class ProductEntity : Aggregate<Guid>
 {
     #region Fields, Properties and Indexers
 

@@ -32,6 +32,13 @@ public static class DependencyInjection
             .AsImplementedInterfaces()
             .WithScopedLifetime());
 
+        services.Scan(s => s
+            .FromAssemblyOf<InfrastructureMarker>()
+            .AddClasses(c => c.Where(t => t.Name.EndsWith("Repository")))
+            .UsingRegistrationStrategy(Scrutor.RegistrationStrategy.Skip)
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
+
         services.AddMinio(configureClient => configureClient
                     .WithEndpoint(cfg[$"{MinIoCfg.Section}:{MinIoCfg.Endpoint}"])
                     .WithCredentials(cfg[$"{MinIoCfg.Section}:{MinIoCfg.AccessKey}"], cfg[$"{MinIoCfg.Section}:{MinIoCfg.SecretKey}"])

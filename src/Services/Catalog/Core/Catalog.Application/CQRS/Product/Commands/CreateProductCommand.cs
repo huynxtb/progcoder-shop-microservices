@@ -5,7 +5,7 @@ using Catalog.Application.Dtos.Products;
 using Catalog.Application.Services;
 using Catalog.Domain.Entities;
 using Common.Models.Reponses;
-using Mapster;
+using AutoMapper;
 using Marten;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -54,7 +54,7 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
     #endregion
 }
 
-public class CreateProductCommandHandler(
+public class CreateProductCommandHandler(IMapper mapper,
     IDocumentSession session,
     IMinIOCloudService minIO) : ICommandHandler<CreateProductCommand, Guid>
 {
@@ -63,6 +63,9 @@ public class CreateProductCommandHandler(
     public async Task<Guid> Handle(CreateProductCommand command, CancellationToken cancellationToken)
     {
         var dto = command.Dto;
+        
+        await session.BeginTransactionAsync(cancellationToken);
+
         var categories = await session.Query<CategoryEntity>().ToListAsync(token: cancellationToken);
         ValidateCategory(dto.CategoryIds, categories.ToList());
 
@@ -98,7 +101,7 @@ public class CreateProductCommandHandler(
         if (filesDto != null && filesDto.Any())
         {
             var result = await minIO.UploadFilesAsync(filesDto, Constants.Bucket.Products, true, cancellationToken);
-            entity.AddOrUpdateImages(result.Adapt<List<ProductImageEntity>>());
+            entity.AddOrUpdateImages(mapper.Map<List<ProductImageEntity>>(result));
         }
     }
 

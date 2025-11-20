@@ -23,7 +23,7 @@ public sealed class CatalogGrpcService(ISender sender) : CatalogGrpc.CatalogGrpc
                 Id = result.Product.Id.ToString(),
                 Name = result.Product.Name,
                 Thumbnail = result.Product.Thumbnail,
-                Price = (double)result.Product.Price
+                Price = result.Product.SalesPrice.Value > 0 ? (double)result.Product.SalesPrice : (double)result.Product.Price
             }
         };
         return response;
@@ -44,7 +44,7 @@ public sealed class CatalogGrpcService(ISender sender) : CatalogGrpc.CatalogGrpc
                 Id = p.Id.ToString(),
                 Name = p.Name ?? string.Empty,
                 Thumbnail = p.Thumbnail ?? string.Empty,
-                Price = (double)p.Price
+                Price = p.SalesPrice.Value > 0 ? (double)p.SalesPrice : (double)p.Price
             }));
         }
 

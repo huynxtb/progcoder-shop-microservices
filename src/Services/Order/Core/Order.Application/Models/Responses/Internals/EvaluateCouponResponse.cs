@@ -1,6 +1,6 @@
-﻿namespace Basket.Application.Models.Responses.Externals;
+﻿namespace Order.Application.Models.Responses.Internals;
 
-public class ApplyCouponResponse
+public sealed class EvaluateCouponResponse
 {
     #region Fields, Properties and Indexers
 

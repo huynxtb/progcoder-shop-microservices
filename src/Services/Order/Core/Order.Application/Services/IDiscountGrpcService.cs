@@ -12,5 +12,7 @@ public interface IDiscountGrpcService
 
     Task<ApplyCouponResponse?> ApplyCouponAsync(string code, decimal amount, CancellationToken cancellationToken = default);
 
+    Task<EvaluateCouponResponse?> EvaluateCouponAsync(string code, decimal amount, CancellationToken cancellationToken = default);
+
     #endregion
 }

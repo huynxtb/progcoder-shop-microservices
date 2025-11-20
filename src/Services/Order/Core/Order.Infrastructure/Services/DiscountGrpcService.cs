@@ -22,6 +22,28 @@ public sealed class DiscountGrpcService(DiscountGrpc.DiscountGrpcClient grpcClie
 
             return new Application.Models.Responses.Internals.ApplyCouponResponse()
             {
+                CouponCode = result.CouponCode
+            };
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Failed to apply coupon {CouponCode} from Discount Grpc service", code);
+            return null;
+        }
+    }
+
+    public async Task<Application.Models.Responses.Internals.EvaluateCouponResponse?> EvaluateCouponAsync(string code, decimal amount, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var request = new EvaluateCouponRequest { Amount = (double)amount, Code = code };
+
+            var result = await grpcClient.EvaluateCouponAsync(
+                request,
+                cancellationToken: cancellationToken);
+
+            return new Application.Models.Responses.Internals.EvaluateCouponResponse()
+            {
                 CouponCode = result.CouponCode,
                 DiscountAmount = (decimal)result.DiscountAmount,
                 FinalAmount = (decimal)result.FinalAmount,
@@ -30,7 +52,7 @@ public sealed class DiscountGrpcService(DiscountGrpc.DiscountGrpcClient grpcClie
         }
         catch (Exception ex)
         {
-            logger.LogWarning(ex, "Failed to get coupon {CouponCode} from Discount Grpc service", code);
+            logger.LogWarning(ex, "Failed to evaluate coupon {CouponCode} from Discount Grpc service", code);
             return null;
         }
     }

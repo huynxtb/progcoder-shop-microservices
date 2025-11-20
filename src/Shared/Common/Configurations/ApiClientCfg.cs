@@ -1,6 +1,6 @@
 ﻿namespace Common.Configurations;
 
-public class ApiClientCfg
+public sealed class ApiClientCfg
 {
     public static class Catalog
     {

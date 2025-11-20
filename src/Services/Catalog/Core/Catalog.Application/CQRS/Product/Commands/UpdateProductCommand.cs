@@ -1,11 +1,12 @@
 ﻿#region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
+using AutoMapper;
 using Catalog.Application.Dtos.Products;
 using Catalog.Application.Services;
 using Catalog.Domain.Entities;
-using Common.Models.Reponses;
+using Catalog.Domain.Events;
 using Marten;
+using MediatR;
 
 #endregion
 
@@ -55,14 +56,17 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
     #endregion
 }
 
-public class UpdateProductCommandHandler(
+public class UpdateProductCommandHandler(IMapper mapper,
     IDocumentSession session,
-    IMinIOCloudService minIO) : ICommandHandler<UpdateProductCommand, Guid>
+    IMinIOCloudService minIO,
+    IMediator mediator) : ICommandHandler<UpdateProductCommand, Guid>
 {
     #region Implementations
 
     public async Task<Guid> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
     {
+        await session.BeginTransactionAsync(cancellationToken);
+
         var entity = await session.LoadAsync<ProductEntity>(command.ProductId)
             ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, command.ProductId);
 
@@ -83,6 +87,24 @@ public class UpdateProductCommandHandler(
         await UploadImagesAsync(dto.Files, dto.CurrentImageUrls, entity, cancellationToken);
 
         session.Store(entity);
+
+        var @event = new UpsertedProductDomainEvent(
+            entity.Id,
+            entity.Name!,
+            entity.Sku!,
+            entity.Slug!,
+            entity.Price,
+            entity.SalesPrice,
+            entity.CategoryIds?.Select(id => id.ToString()).ToList(),
+            entity.Images?.Select(img => img.PublicURL).Where(url => !string.IsNullOrWhiteSpace(url)).Cast<string>().ToList(),
+            entity.Thumbnail!,
+            entity.Status,
+            entity.CreatedOnUtc,
+            entity.CreatedBy!,
+            entity.LastModifiedOnUtc,
+            entity.LastModifiedBy);
+
+        await mediator.Publish(@event, cancellationToken);
         await session.SaveChangesAsync(cancellationToken);
 
         return entity.Id;
@@ -102,12 +124,12 @@ public class UpdateProductCommandHandler(
         if (filesDto != null && filesDto.Any())
         {
             var result = await minIO.UploadFilesAsync(filesDto, Constants.Bucket.Products, true, cancellationToken);
-            newImages = result.Adapt<List<ProductImageEntity>>();
+            newImages = mapper.Map<List<ProductImageEntity>>(result);
         }
         entity.AddOrUpdateImages(newImages, currentImageUrls);
     }
 
-    private void ValidateCategory(List<Guid>? inputCategoryIds, List<CategoryEntity> categories)
+    private static void ValidateCategory(List<Guid>? inputCategoryIds, List<CategoryEntity> categories)
     {
         if (inputCategoryIds is { Count: > 0 })
         {

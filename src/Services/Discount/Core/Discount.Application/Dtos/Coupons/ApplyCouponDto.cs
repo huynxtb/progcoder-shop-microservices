@@ -6,8 +6,6 @@ public sealed class ApplyCouponDto
 
     public string Code { get; init; } = string.Empty;
 
-    public decimal Amount { get; init; }
-
     #endregion
 }
 

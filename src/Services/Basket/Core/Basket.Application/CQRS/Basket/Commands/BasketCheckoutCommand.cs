@@ -152,7 +152,7 @@ public sealed class BasketCheckoutCommandHandler(
                 amount += item.Quantity * productInfo.Price;
             }
 
-            var discountResult = await discountGrpc.ApplyCouponAsync(dto.CouponCode, amount)
+            var discountResult = await discountGrpc.EvaluateCouponAsync(dto.CouponCode, amount)
                 ?? throw new ClientValidationException(MessageCode.CouponCodeIsNotExistsOrExpired);
 
             discountAmt = discountResult.DiscountAmount;

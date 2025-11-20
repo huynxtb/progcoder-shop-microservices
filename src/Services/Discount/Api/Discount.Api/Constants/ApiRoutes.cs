@@ -45,7 +45,7 @@ public sealed class ApiRoutes
 
         public const string RejectCoupon = $"/{Base}/{{id}}/reject";
 
-        public const string ApplyCoupon = $"/{Base}/apply";
+        public const string EvaluateCoupon = $"/{Base}/evaluate";
 
         #endregion
     }

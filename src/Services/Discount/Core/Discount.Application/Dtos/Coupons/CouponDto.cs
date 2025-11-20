@@ -28,6 +28,8 @@ public sealed class CouponDto : EntityDto<Guid>
 
     public CouponStatus Status { get; init; }
 
+    public string DisplayStatus { get; set; } = default!;
+
     public DateTime ValidFrom { get; init; }
 
     public DateTime ValidTo { get; init; }

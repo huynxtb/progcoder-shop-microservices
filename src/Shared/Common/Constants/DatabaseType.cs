@@ -12,5 +12,7 @@ public sealed class DatabaseType
 
     public const string MongoDb = "MONGODB";
 
+    public const string Marten = "MARTEN";
+
     #endregion
 }

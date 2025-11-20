@@ -4,23 +4,14 @@ public sealed class ApplyCouponResult
 {
     #region Fields, Properties and Indexers
 
-    public decimal OriginalAmount { get; init; }
-
-    public decimal DiscountAmount { get; init; }
-
-    public decimal FinalAmount { get; init; }
-
     public string CouponCode { get; init; } = string.Empty;
 
     #endregion
 
     #region Ctors
 
-    public ApplyCouponResult(decimal originalAmount, decimal discountAmount, string couponCode)
+    public ApplyCouponResult(string couponCode)
     {
-        OriginalAmount = originalAmount;
-        DiscountAmount = discountAmount;
-        FinalAmount = originalAmount - discountAmount;
         CouponCode = couponCode;
     }
 

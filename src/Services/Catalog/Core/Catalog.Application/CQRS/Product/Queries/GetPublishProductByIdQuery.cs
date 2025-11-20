@@ -1,5 +1,6 @@
 ﻿#region using
 
+using AutoMapper;
 using Catalog.Application.Models.Results;
 using Catalog.Domain.Entities;
 using Marten;
@@ -10,7 +11,7 @@ namespace Catalog.Application.CQRS.Product.Queries;
 
 public sealed record GetPublishProductByIdQuery(Guid ProductId) : IQuery<GetPublishProductByIdResult>;
 
-public sealed class GetPublishProductByIdQueryHandler(IDocumentSession session)
+public sealed class GetPublishProductByIdQueryHandler(IDocumentSession session, IMapper mapper)
     : IQueryHandler<GetPublishProductByIdQuery, GetPublishProductByIdResult>
 {
     #region Implementations
@@ -22,7 +23,7 @@ public sealed class GetPublishProductByIdQueryHandler(IDocumentSession session)
             .SingleOrDefaultAsync(cancellationToken)
             ?? throw new NotFoundException(MessageCode.ResourceNotFound, query.ProductId);
 
-        var reponse = result.Adapt<GetPublishProductByIdResult>();
+        var reponse = mapper.Map<GetPublishProductByIdResult>(result);
 
         return reponse;
     }

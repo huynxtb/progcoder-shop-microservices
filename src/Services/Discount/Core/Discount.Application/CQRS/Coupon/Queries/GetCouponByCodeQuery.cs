@@ -1,5 +1,6 @@
 #region using
 
+using AutoMapper;
 using Discount.Application.Dtos.Coupons;
 using Discount.Application.Models.Results;
 using Discount.Application.Repositories;
@@ -18,13 +19,13 @@ public sealed class GetCouponByCodeQueryValidator : AbstractValidator<GetCouponB
     {
         RuleFor(x => x.Code)
             .NotEmpty()
-            .WithMessage(MessageCode.BadRequest);
+            .WithMessage(MessageCode.CouponCodeIsRequired);
     }
 
     #endregion
 }
 
-public sealed class GetCouponByCodeQueryHandler(ICouponRepository repository) : IQueryHandler<GetCouponByCodeQuery, GetCouponResult>
+public sealed class GetCouponByCodeQueryHandler(ICouponRepository repository, IMapper mapper) : IQueryHandler<GetCouponByCodeQuery, GetCouponResult>
 {
     #region Implementations
 
@@ -33,7 +34,7 @@ public sealed class GetCouponByCodeQueryHandler(ICouponRepository repository) : 
         var coupon = await repository.GetByCodeAsync(query.Code, cancellationToken)
             ?? throw new NotFoundException(MessageCode.ResourceNotFound, query.Code);
 
-        var dto = coupon.Adapt<CouponDto>();
+        var dto = mapper.Map<CouponDto>(coupon);
 
         return new GetCouponResult(dto);
     }

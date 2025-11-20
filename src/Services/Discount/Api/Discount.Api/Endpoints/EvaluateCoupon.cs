@@ -10,15 +10,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Discount.Api.Endpoints;
 
-public sealed class ApplyCoupon : ICarterModule
+public sealed class EvaluateCoupon : ICarterModule
 {
     #region Implementations
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost(ApiRoutes.Coupon.ApplyCoupon, HandleApplyCouponAsync)
+        app.MapPost(ApiRoutes.Coupon.EvaluateCoupon, HandleEvaluateCouponAsync)
             .WithTags(ApiRoutes.Coupon.Tags)
-            .WithName(nameof(ApplyCoupon))
+            .WithName(nameof(EvaluateCoupon))
             .Produces<ApplyCouponResult>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
@@ -30,11 +30,11 @@ public sealed class ApplyCoupon : ICarterModule
 
     #region Methods
 
-    private async Task<ApplyCouponResult> HandleApplyCouponAsync(
+    private async Task<EvaluateCouponResult> HandleEvaluateCouponAsync(
         ISender sender,
-        [FromBody] ApplyCouponDto dto)
+        [FromBody] EvaluateCouponDto dto)
     {
-        var command = new ApplyCouponCommand(dto);
+        var command = new EvaluateCouponCommand(dto);
         return await sender.Send(command);
     }
 

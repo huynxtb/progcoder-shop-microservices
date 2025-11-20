@@ -11,7 +11,7 @@ using Catalog.Application.Dtos.Products;
 using Common.Constants;
 using Common.Models;
 using Common.Models.Reponses;
-using Mapster;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 #endregion
@@ -42,6 +42,7 @@ public sealed class UpdateProduct : ICarterModule
 
     private async Task<Guid> HandleUpdateProductAsync(
         ISender sender,
+        IMapper mapper,
         IHttpContextAccessor httpContext,
         [FromRoute] Guid productId,
         [FromForm] UpdateProductRequest req)
@@ -52,7 +53,7 @@ public sealed class UpdateProduct : ICarterModule
             req.FormFiles = httpContext.HttpContext.Request.Form.Files.ToList();
         }
 
-        var dto = req.Adapt<UpdateProductDto>();
+        var dto = mapper.Map<UpdateProductDto>(req);
         dto.Files ??= new();
 
         foreach (var file in req.FormFiles!)

@@ -163,14 +163,17 @@ public sealed class CreateOrderCommandHandler(IApplicationDbContext dbContext, I
                 var productInfo = productsResponse.Items.FirstOrDefault(x => x.Id == item.ProductId)
                     ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, item.ProductId);
 
-                amount += item.Quantity * productInfo.Price;
+                amount += (item.Quantity * productInfo.Price);
             }
 
-            var discountResult = await discountGrpc.ApplyCouponAsync(dto.CouponCode, amount)
+            var discountResult = await discountGrpc.EvaluateCouponAsync(dto.CouponCode, amount)
                 ?? throw new ClientValidationException(MessageCode.CouponCodeIsNotExistsOrExpired);
 
             discountAmt = discountResult.DiscountAmount;
             couponCode = discountResult.CouponCode;
+
+            // TO-DO: Handle exception and revert coupon usage
+            await discountGrpc.ApplyCouponAsync(dto.CouponCode, amount);
         }
 
         var discount = Discount.Of(couponCode, discountAmt);

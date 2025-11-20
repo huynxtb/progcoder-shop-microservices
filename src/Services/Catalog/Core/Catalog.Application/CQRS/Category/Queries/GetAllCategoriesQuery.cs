@@ -1,5 +1,6 @@
 ﻿#region using
 
+using AutoMapper;
 using Catalog.Application.Dtos.Categories;
 using Catalog.Application.Models.Filters;
 using Catalog.Application.Models.Results;
@@ -13,7 +14,7 @@ namespace Catalog.Application.CQRS.Category.Queries;
 
 public sealed record GetAllCategoriesQuery(GetAllCategoriesFilter Filter) : IQuery<GetAllCategoriesResult>;
 
-public sealed class GetAllCategoriesQueryHandler(IDocumentSession session)
+public sealed class GetAllCategoriesQueryHandler(IDocumentSession session, IMapper mapper)
     : IQueryHandler<GetAllCategoriesQuery, GetAllCategoriesResult>
 {
     #region Implementations
@@ -26,7 +27,7 @@ public sealed class GetAllCategoriesQueryHandler(IDocumentSession session)
             .OrderByDescending(x => x.CreatedOnUtc)
             .ToListAsync(token: cancellationToken);
 
-        var response = new GetAllCategoriesResult(result.Adapt<List<CategoryDto>>());
+        var response = new GetAllCategoriesResult(mapper.Map<List<CategoryDto>>(result));
 
         return response;
     }

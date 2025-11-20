@@ -24,10 +24,6 @@ public sealed class ApplyCouponCommandValidator : AbstractValidator<ApplyCouponC
                 RuleFor(x => x.Dto.Code)
                     .NotEmpty()
                     .WithMessage(MessageCode.BadRequest);
-
-                RuleFor(x => x.Dto.Amount)
-                    .GreaterThan(0)
-                    .WithMessage(MessageCode.PriceIsRequired);
             });
     }
 
@@ -48,9 +44,9 @@ public sealed class ApplyCouponCommandHandler(ICouponRepository repository) : IC
         if (!coupon.CanBeUsed())
             throw new ClientValidationException(MessageCode.CouponCodeIsNotExistsOrExpired, dto.Code);
 
-        var discountAmount = coupon.CalculateDiscount(dto.Amount);
+        coupon.Apply();
 
-        return new ApplyCouponResult(dto.Amount, discountAmount, dto.Code);
+        return new ApplyCouponResult(dto.Code);
     }
 
     #endregion

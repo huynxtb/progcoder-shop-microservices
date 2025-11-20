@@ -7,7 +7,7 @@ using Catalog.Api.Constants;
 using Catalog.Api.Models;
 using Catalog.Application.CQRS.Product.Commands;
 using Catalog.Application.Dtos.Products;
-using Mapster;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Common.Constants;
 using Common.Models;
@@ -42,6 +42,7 @@ public sealed class CreateProduct : ICarterModule
 
     private async Task<Guid> HandleCreateProductAsync(
         ISender sender,
+        IMapper mapper,
         IHttpContextAccessor httpContext,
         [FromForm] CreateProductRequest req)
     {
@@ -51,7 +52,7 @@ public sealed class CreateProduct : ICarterModule
             req.FormFiles = httpContext.HttpContext.Request.Form.Files.ToList();
         }
 
-        var dto = req.Adapt<CreateProductDto>();
+        var dto = mapper.Map<CreateProductDto>(req);
         dto.Files ??= new();
 
         foreach (var file in req.FormFiles!)

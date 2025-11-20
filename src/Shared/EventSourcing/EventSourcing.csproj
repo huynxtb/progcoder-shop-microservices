@@ -16,8 +16,4 @@
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Events\Product\" />
-  </ItemGroup>
-
 </Project>

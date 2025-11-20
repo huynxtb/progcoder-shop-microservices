@@ -1,6 +1,7 @@
 ﻿#region using
 
 using Catalog.Application.Dtos.Abstractions;
+using Catalog.Domain.Enums;
 
 #endregion
 
@@ -29,6 +30,10 @@ public class ProductInfoDto : DtoId<Guid>
     public bool Published { get; set; }
 
     public bool IsAvaiable { get; set; }
+
+    public ProductStatus Status { get; set; }
+
+    public string DisplayStatus { get; set; } = default!;
 
     #endregion
 }

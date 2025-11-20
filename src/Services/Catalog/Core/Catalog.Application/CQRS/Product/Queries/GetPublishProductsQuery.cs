@@ -1,5 +1,6 @@
 ﻿#region using
 
+using AutoMapper;
 using Catalog.Application.Dtos.Products;
 using Catalog.Application.Models.Filters;
 using Catalog.Application.Models.Results;
@@ -15,7 +16,7 @@ public sealed record GetPublishProductsQuery(
     GetPublishProductsFilter Filter,
     PaginationRequest Paging) : IQuery<GetPublishProductsResult>;
 
-public sealed class GetPublishProductsQueryHandler(IDocumentSession session)
+public sealed class GetPublishProductsQueryHandler(IDocumentSession session, IMapper mapper)
     : IQueryHandler<GetPublishProductsQuery, GetPublishProductsResult>
 {
     #region Implementations
@@ -38,7 +39,7 @@ public sealed class GetPublishProductsQueryHandler(IDocumentSession session)
             .ToPagedListAsync(paging.PageNumber, paging.PageSize, cancellationToken);
 
         var products = result.ToList();
-        var items = products.Adapt<List<PublishProductDto>>();
+        var items = mapper.Map<List<PublishProductDto>>(products);
         var reponse = new GetPublishProductsResult(items, totalCount, paging);
 
         return reponse;

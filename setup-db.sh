@@ -3,7 +3,7 @@
 echo "Creating Database and Infrastructure..."
 
 # Run Docker Compose
-docker-compose -f docker-compose-db-infra.yaml up -d
+docker-compose -f docker-compose-infra.yml up -d
 
 if [ $? -ne 0 ]; then
   echo "❌ Failed to run Docker Compose."
