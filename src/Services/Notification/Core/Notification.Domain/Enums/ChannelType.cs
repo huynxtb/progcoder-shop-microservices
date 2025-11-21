@@ -3,7 +3,6 @@
 public enum ChannelType
 {
     Email = 1,
-    WhatsApp = 2,
-    Telegram = 3,
-    InApp = 4
+    InApp = 2,
+    Discord = 3
 }

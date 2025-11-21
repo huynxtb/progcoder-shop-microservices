@@ -4,6 +4,7 @@ using BuildingBlocks.Abstractions.ValueObjects;
 using Catalog.Domain.Entities;
 using Marten;
 using Marten.Schema;
+using Polly;
 
 #endregion
 
@@ -12,6 +13,29 @@ public sealed class InitialCategoryData : IInitialData
     #region Implementations
 
     public async Task Populate(IDocumentStore store, CancellationToken cancellation)
+    {
+        var retryPolicy = Polly.Policy
+            .Handle<Exception>()
+            .WaitAndRetryAsync(5, i => TimeSpan.FromSeconds(5 * i));
+
+        var circuitBreakerPolicy = Polly.Policy
+            .Handle<Exception>()
+            .CircuitBreakerAsync(2, TimeSpan.FromSeconds(30));
+
+        var result = await retryPolicy
+            .WrapAsync(circuitBreakerPolicy)
+            .ExecuteAsync(async (ct) =>
+            {
+                await SeedDataAsync(store, ct);
+                return true;
+            }, cancellation);
+    }
+
+    #endregion
+
+    #region Methods
+
+    private async Task SeedDataAsync(IDocumentStore store, CancellationToken cancellation)
     {
         await using var session = store.LightweightSession();
 

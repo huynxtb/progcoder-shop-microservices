@@ -123,7 +123,7 @@ public class UpdateProductCommandHandler(IMapper mapper,
         var newImages = new List<ProductImageEntity>();
         if (filesDto != null && filesDto.Any())
         {
-            var result = await minIO.UploadFilesAsync(filesDto, Constants.Bucket.Products, true, cancellationToken);
+            var result = await minIO.UploadFilesAsync(filesDto, AppConstants.Bucket.Products, true, cancellationToken);
             newImages = mapper.Map<List<ProductImageEntity>>(result);
         }
         entity.AddOrUpdateImages(newImages, currentImageUrls);

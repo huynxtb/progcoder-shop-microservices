@@ -7,18 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Scrutor" Version="6.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Shared\BuildingBlocks\BuildingBlocks.csproj" />
-    <ProjectReference Include="..\..\..\Shared\Common\Common.csproj" />
-    <ProjectReference Include="..\..\..\Shared\EventSourcing\EventSourcing.csproj" />
-    <ProjectReference Include="..\Domain\Notification.Domain.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\BuildingBlocks\BuildingBlocks.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\Common\Common.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\EventSourcing\EventSourcing.csproj" />
+    <ProjectReference Include="..\Notification.Domain\Notification.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Services\INotificationStartegyService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\Responses\Externals\" />
   </ItemGroup>
 
 </Project>

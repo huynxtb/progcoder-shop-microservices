@@ -7,13 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Shared\Common\Common.csproj" />
-    <ProjectReference Include="..\Application\Notification.Application.csproj" />
+    <PackageReference Include="Scrutor" Version="6.1.0" />
+    <PackageReference Include="MongoDB.Driver" Version="3.4.2" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scrutor" Version="6.1.0" />
-    <PackageReference Include="MongoDB.Driver" Version="3.4.2" />
+    <ProjectReference Include="..\..\..\..\Shared\Common\Common.csproj" />
+    <ProjectReference Include="..\Notification.Application\Notification.Application.csproj" />
   </ItemGroup>
 
 </Project>

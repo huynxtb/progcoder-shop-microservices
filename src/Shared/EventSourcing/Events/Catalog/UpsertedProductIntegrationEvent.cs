@@ -24,6 +24,8 @@ public sealed record class UpsertedProductIntegrationEvent : IntegrationEvent
 
     public int Status { get; set; }
 
+    public bool Published { get; set; }
+
     public DateTimeOffset CreatedOnUtc { get; set; }
 
     public string? CreatedBy { get; set; }

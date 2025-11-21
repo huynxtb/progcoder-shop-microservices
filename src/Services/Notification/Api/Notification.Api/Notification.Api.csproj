@@ -18,9 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Shared\Common\Common.csproj" />
-    <ProjectReference Include="..\Application\Notification.Application.csproj" />
-    <ProjectReference Include="..\Infrastructure\Notification.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\Common\Common.csproj" />
+    <ProjectReference Include="..\..\Core\Notification.Application\Notification.Application.csproj" />
+    <ProjectReference Include="..\..\Core\Notification.Infrastructure\Notification.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

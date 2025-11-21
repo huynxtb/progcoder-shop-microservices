@@ -100,12 +100,12 @@ public class CreateProductCommandHandler(IMapper mapper,
     {
         if (filesDto != null && filesDto.Any())
         {
-            var result = await minIO.UploadFilesAsync(filesDto, Constants.Bucket.Products, true, cancellationToken);
+            var result = await minIO.UploadFilesAsync(filesDto, AppConstants.Bucket.Products, true, cancellationToken);
             entity.AddOrUpdateImages(mapper.Map<List<ProductImageEntity>>(result));
         }
     }
 
-    private void ValidateCategory(List<Guid>? inputCategoryIds, List<CategoryEntity> categories)
+    private static void ValidateCategory(List<Guid>? inputCategoryIds, List<CategoryEntity> categories)
     {
         if (inputCategoryIds is { Count: > 0 })
         {

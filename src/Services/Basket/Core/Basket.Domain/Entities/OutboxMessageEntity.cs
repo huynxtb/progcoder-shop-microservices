@@ -41,7 +41,7 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
         EventType = eventType;
         Content = content;
         OccurredOnUtc = occurredOnUtc;
-        MaxAttempts = Constants.MaxAttempts;
+        MaxAttempts = AppConstants.MaxAttempts;
         AttemptCount = 0;
     }
 

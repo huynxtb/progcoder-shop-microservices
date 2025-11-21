@@ -8,7 +8,7 @@ using Notification.Infrastructure.Constants;
 
 #endregion
 
-namespace Notification.Infrastructure.Data.Repositories;
+namespace Notification.Infrastructure.Repositories;
 
 public sealed class DeliveryRepository : ICommandDeliveryRepository, IQueryDeliveryRepository
 {
@@ -74,6 +74,13 @@ public sealed class DeliveryRepository : ICommandDeliveryRepository, IQueryDeliv
             options: new ReplaceOptions { IsUpsert = true },
             cancellationToken: cancellationToken
         );
+    }
+
+    public async Task<DeliveryEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var filter = Builders<DeliveryEntity>.Filter.Eq(x => x.Id, id);
+
+        return await _collection.Find(filter).SingleOrDefaultAsync(cancellationToken);
     }
 
     public async Task<DeliveryEntity> GetByEventIdAsync(string eventId, CancellationToken cancellationToken = default)

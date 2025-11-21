@@ -26,28 +26,20 @@ public static class DatabaseExtentions
         {
             TemplateEntity.Create(
                 id: Guid.Parse("c63f5f8d-daba-409f-88f9-fc3a9eb3e7e1"),
-                key: TemplateKey.UserRegistered,
-                channel: Domain.Enums.ChannelType.Email,
-                subject: "Welcome to ProG Coder",
-                isHtml: true,
-                body: "<p>Hello <strong>{{DisplayName}}</strong>,</p> <p>thank you for signing up. We’re glad to have you!</p> <p>Best regards,</p> <p>ProG Coder</p>",
-                performedBy: Actor.System("notification-service").ToString()),
+                key: TemplateKey.ProductUpserted,
+                channel: Domain.Enums.ChannelType.InApp,
+                subject: "Product Updated",
+                isHtml: false,
+                body: "The product {{PRODUCT_NAME}} has {{STATUS}} by {{PERFORM_BY}}",
+                performedBy: Actor.System(AppConstants.Service.Notification).ToString()),
             TemplateEntity.Create(
                 id: Guid.Parse("c63f5f8d-daba-409f-88f9-fc3a9eb3e7e2"),
-                key: TemplateKey.UserRegistered,
-                channel: Domain.Enums.ChannelType.WhatsApp,
-                subject: "Welcome to ProG Coder",
+                key: TemplateKey.ProductUpserted,
+                channel: Domain.Enums.ChannelType.Discord,
+                subject: "Product Updated",
                 isHtml: false,
-                body: "Hello {{DisplayName}}, thank you for signing up. We’re glad to have you!",
-                performedBy: Actor.System("notification-service").ToString()),
-            TemplateEntity.Create(
-                id: Guid.Parse("c63f5f8d-daba-409f-88f9-fc3a9eb3e7e3"),
-                key: TemplateKey.UserRegistered,
-                channel: Domain.Enums.ChannelType.InApp,
-                subject: "Welcome to ProG Coder",
-                isHtml: false,
-                body: "Hello {{DisplayName}}, thank you for signing up",
-                performedBy: Actor.System("notification-service").ToString())
+                body: "The product {{PRODUCT_NAME}} has {{STATUS}} by {{PERFORM_BY}}",
+                performedBy: Actor.System(AppConstants.Service.Notification).ToString()),
         };
 
         foreach (var template in docs)

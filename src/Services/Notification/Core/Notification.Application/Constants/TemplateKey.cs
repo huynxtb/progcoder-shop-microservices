@@ -4,9 +4,9 @@ public sealed class TemplateKey
 {
     #region Constants
 
-    public const string UserRegistered = "UserRegistered";
+    public const string OrderPaid = "ORDER_PAID";
 
-    public const string OrderPaid = "OrderPaid";
+    public const string ProductUpserted = "PRODUCT_UPSERTED";
 
     #endregion
 }

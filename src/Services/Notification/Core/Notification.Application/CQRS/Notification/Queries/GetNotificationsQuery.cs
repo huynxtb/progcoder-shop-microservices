@@ -11,7 +11,9 @@ namespace Notification.Application.CQRS.Notification.Queries;
 
 public sealed record GetNotificationsQuery(Actor Actor, PaginationRequest Paging) : IQuery<GetNotificationsReponse>;
 
-public sealed class GetNotificationsQueryHandler(IQueryNotificationRepository queryRepo)
+public sealed class GetNotificationsQueryHandler(
+    IQueryNotificationRepository queryRepo,
+    IMapper mapper)
     : IQueryHandler<GetNotificationsQuery, GetNotificationsReponse>
 {
     #region Implementations
@@ -19,7 +21,7 @@ public sealed class GetNotificationsQueryHandler(IQueryNotificationRepository qu
     public async Task<GetNotificationsReponse> Handle(GetNotificationsQuery query, CancellationToken cancellationToken)
     {
         var result = await queryRepo.GetNotificationsAsync(Guid.Parse(query.Actor.ToString()), cancellationToken);
-        var items = result.Adapt<List<NotificationDto>>();
+        var items = mapper.Map<List<NotificationDto>>(result);
         var reponse = new GetNotificationsReponse(items);
         return reponse;
     }

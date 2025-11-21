@@ -11,7 +11,7 @@ using System.Text;
 
 #endregion
 
-namespace Notification.Infrastructure.Services;
+namespace Notification.Infrastructure.Services.Strategies;
 
 public sealed class EmailStartegyService : INotificationStartegyService
 {

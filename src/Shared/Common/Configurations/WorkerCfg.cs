@@ -18,4 +18,16 @@ public sealed class WorkerCfg
 
     }
 
+    public class Proccessor
+    {
+        #region Constants
+
+        public const string Section = "WorkerSettings:Proccessor";
+
+        public const string BatchSize = "BatchSize";
+
+        #endregion
+
+    }
+    
 }

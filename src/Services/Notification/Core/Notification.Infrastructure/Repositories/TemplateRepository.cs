@@ -8,7 +8,7 @@ using Notification.Infrastructure.Constants;
 
 #endregion
 
-namespace Notification.Infrastructure.Data.Repositories;
+namespace Notification.Infrastructure.Repositories;
 
 public sealed class TemplateRepository : IQueryTemplateRepository
 {

@@ -176,4 +176,16 @@ public sealed class MessageCode
 
     public const string CouponCodeIsNotExistsOrExpired = "COUPON_CODE_IS_NOT_EXISTS_OR_EXPIRED";
 
+    public const string EventIdIsRequired = "EVENT_ID_IS_REQUIRED";
+
+    public const string TemplateKeyIsRequired = "TEMPLATE_KEY_IS_REQUIRED";
+
+    public const string ToRecipientsIsRequired = "TO_RECIPIENTS_IS_REQUIRED";
+
+    public const string AtLeastOneRecipientIsRequired = "AT_LEAST_ONE_RECIPIENT_IS_REQUIRED";
+
+    public const string MaxAttemptsMustBeGreaterThanZero = "MAX_ATTEMPTS_MUST_BE_GREATER_THAN_ZERO";
+
+    public const string TemplateNotFound = "TEMPLATE_NOT_FOUND";
+
 }

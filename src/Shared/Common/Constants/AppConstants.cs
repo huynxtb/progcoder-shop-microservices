@@ -1,6 +1,6 @@
 ﻿namespace Common.Constants;
 
-public sealed class Constants
+public sealed class AppConstants
 {
     #region Fields, Properties and Indexers
 
@@ -17,9 +17,9 @@ public sealed class Constants
 
     #endregion
 
-    #region Worker
+    #region Service
 
-    public static class Worker
+    public static class Service
     {
         public const string Catalog = "catalog";
 

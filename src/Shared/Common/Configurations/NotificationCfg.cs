@@ -1,6 +1,6 @@
 ﻿namespace Common.Configurations;
 
-public class NotificationCfg
+public static class NotificationCfg
 {
     public static class EmailSettings
     {
@@ -40,6 +40,27 @@ public class NotificationCfg
         public const string AccessToken = "AccessToken";
 
         public const string AppSecret = "AppSecret";
+
+        #endregion
+    }
+
+    public static class DiscordSettings
+    {
+        #region Constants
+
+        public const string Section = "NotificationChanelConfig:DiscordSettings";
+
+        public const string BaseUrl = "BaseUrl";
+
+        public const string WebhookId = "WebhookId";
+
+        public const string WebhookToken = "WebhookToken";
+
+        public const string BotName = "BotName";
+
+        public const string AvatarUrl = "AvatarUrl";
+
+        public const string Url = "Url";
 
         #endregion
     }

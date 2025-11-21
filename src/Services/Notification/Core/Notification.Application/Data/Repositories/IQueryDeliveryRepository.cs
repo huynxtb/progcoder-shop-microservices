@@ -12,6 +12,8 @@ public interface IQueryDeliveryRepository
 
     Task<IReadOnlyList<DeliveryEntity>> GetDueAsync(DateTimeOffset now, int batchSize, CancellationToken cancellationToken = default);
 
+    Task<DeliveryEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+
     Task<DeliveryEntity> GetByEventIdAsync(string eventId, CancellationToken cancellationToken = default);
 
     #endregion

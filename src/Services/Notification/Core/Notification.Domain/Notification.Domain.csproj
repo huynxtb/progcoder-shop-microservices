@@ -13,12 +13,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Shared\Common\Common.csproj" />
+    <Folder Include="Events\" />
+    <Folder Include="ValueObjects\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Events\" />
-    <Folder Include="ValueObjects\" />
+    <ProjectReference Include="..\..\..\..\Shared\Common\Common.csproj" />
   </ItemGroup>
 
 </Project>

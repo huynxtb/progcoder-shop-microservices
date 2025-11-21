@@ -1,16 +1,18 @@
 #region using
 
+using Notification.Application;
 using Notification.Infrastructure;
-using Notification.Worker;
+using Notification.Worker.Processor;
 
 #endregion
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddWorkerServices(builder.Configuration);
-builder.Services.AddHostedService<Worker>();
+builder.Services
+    .AddApplicationServices()
+    .AddInfrastructureServices(builder.Configuration)
+    .AddWorkerServices(builder.Configuration)
+    .AddHostedService<Worker>();
 
 var host = builder.Build();
-
 host.Run();

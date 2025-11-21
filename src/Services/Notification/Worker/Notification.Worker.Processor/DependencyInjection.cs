@@ -6,7 +6,7 @@ using System.Reflection;
 
 #endregion
 
-namespace Notification.Worker;
+namespace Notification.Worker.Processor;
 
 public static class DependencyInjection
 {
