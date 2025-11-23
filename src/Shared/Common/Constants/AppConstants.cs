@@ -26,6 +26,8 @@ public sealed class AppConstants
         public const string Notification = "notification";
 
         public const string Inventory = "inventory";
+
+        public const string Report = "report";
     }
 
     #endregion
