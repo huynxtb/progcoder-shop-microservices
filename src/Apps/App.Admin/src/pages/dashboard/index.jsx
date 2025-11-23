@@ -10,12 +10,14 @@ import RecentActivity from "@/components/partials/widget/recent-activity";
 import MostSales from "../../components/partials/widget/most-sales";
 import RadarChart from "../../components/partials/widget/chart/radar-chart";
 import HomeBredCurbs from "./HomeBredCurbs";
+import { useTranslation } from "react-i18next";
 
 const Dashboard = () => {
+  const { t } = useTranslation();
   const [filterMap, setFilterMap] = useState("usa");
   return (
     <div>
-      <HomeBredCurbs title="Dashboard" />
+      <HomeBredCurbs title={t("dashboard.title")} />
       <div className="grid grid-cols-12 gap-5 mb-5">
         <div className="2xl:col-span-3 lg:col-span-4 col-span-12">
           <ImageBlock1 />
@@ -37,23 +39,23 @@ const Dashboard = () => {
           </Card>
         </div>
         <div className="lg:col-span-4 col-span-12">
-          <Card title="Overview" headerSlot={<SelectMonth />}>
+          <Card title={t("dashboard.overview")} headerSlot={<SelectMonth />}>
             <RadialsChart />
           </Card>
         </div>
         <div className="lg:col-span-8 col-span-12">
-          <Card title="All Company" headerSlot={<SelectMonth />} noBorder>
+          <Card title={t("dashboard.allCompany")} headerSlot={<SelectMonth />} noBorder>
             <CompanyTable />
           </Card>
         </div>
         <div className="lg:col-span-4 col-span-12">
-          <Card title="Recent Activity" headerSlot={<SelectMonth />}>
+          <Card title={t("dashboard.recentActivity")} headerSlot={<SelectMonth />}>
             <RecentActivity />
           </Card>
         </div>
         <div className="lg:col-span-8 col-span-12">
           <Card
-            title="Most Sales"
+            title={t("dashboard.mostSales")}
             headerSlot={
               <div className="border border-slate-200 dark:border-slate-700 dark:bg-slate-900 rounded-sm p-1 flex items-center">
                 <span
@@ -66,7 +68,7 @@ const Dashboard = () => {
                 `}
                   onClick={() => setFilterMap("global")}
                 >
-                  Global
+                  {t("dashboard.global")}
                 </span>
                 <span
                   className={` flex-1 text-sm font-normal px-3 py-1 rounded transition-all duration-150 cursor-pointer
@@ -78,7 +80,7 @@ const Dashboard = () => {
               `}
                   onClick={() => setFilterMap("usa")}
                 >
-                  USA
+                  {t("dashboard.usa")}
                 </span>
               </div>
             }
@@ -87,12 +89,12 @@ const Dashboard = () => {
           </Card>
         </div>
         <div className="lg:col-span-4 col-span-12">
-          <Card title="Overview" headerSlot={<SelectMonth />}>
+          <Card title={t("dashboard.overview")} headerSlot={<SelectMonth />}>
             <RadarChart />
             <div className="bg-slate-50 dark:bg-slate-900 rounded-sm p-4 mt-8 flex justify-between flex-wrap">
               <div className="space-y-1">
                 <h4 className="text-slate-600 dark:text-slate-200 text-xs font-normal">
-                  Invested amount
+                  {t("dashboard.investedAmount")}
                 </h4>
                 <div className="text-sm font-medium text-slate-900 dark:text-white">
                   $8264.35
@@ -104,7 +106,7 @@ const Dashboard = () => {
 
               <div className="space-y-1">
                 <h4 className="text-slate-600 dark:text-slate-200 text-xs font-normal">
-                  Invested amount
+                  {t("dashboard.investedAmount")}
                 </h4>
                 <div className="text-sm font-medium text-slate-900 dark:text-white">
                   $8264.35
@@ -113,7 +115,7 @@ const Dashboard = () => {
 
               <div className="space-y-1">
                 <h4 className="text-slate-600 dark:text-slate-200 text-xs font-normal">
-                  Invested amount
+                  {t("dashboard.investedAmount")}
                 </h4>
                 <div className="text-sm font-medium text-slate-900 dark:text-white">
                   $8264.35

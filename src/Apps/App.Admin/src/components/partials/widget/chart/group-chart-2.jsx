@@ -215,6 +215,14 @@ const statistics = [
     icon: "heroicons:shopping-cart",
   },
   {
+    name: shapeLine1,
+    title: "Totel users",
+    count: "100",
+    bg: "bg-[#A5F9FD] dark:bg-slate-900/50",
+    text: "text-primary-500",
+    icon: "heroicons:user-group",
+  },
+  {
     name: shapeLine2,
     title: "Products sold",
     count: "564",
@@ -255,15 +263,6 @@ const GroupChart2 = () => {
                   {item.count}
                 </div>
               </div>
-            </div>
-            <div className="ltr:ml-auto rtl:mr-auto max-w-[124px]">
-              <Chart
-                options={item.name.options}
-                series={item.name.series}
-                type="area"
-                height="41"
-                width="124"
-              />
             </div>
           </Card>
         </div>

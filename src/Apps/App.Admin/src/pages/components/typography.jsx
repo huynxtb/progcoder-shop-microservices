@@ -468,7 +468,7 @@ const typography = () => {
                 Accusamus laudantium omnis fugit ducimus nulla libero temporibus
                 corrupti non voluptatem harum?
                 <span className="text-sm text-slate-400 block mt-3">
-                  Dashcode Admin Template
+                  progcoder Admin Template
                 </span>
               </blockquote>
               <blockquote className="border-primary-500 text-right text-slate-900 dark:text-slate-300">
@@ -476,7 +476,7 @@ const typography = () => {
                 Accusamus laudantium omnis fugit ducimus nulla libero temporibus
                 corrupti non voluptatem harum?
                 <span className="text-sm text-slate-400 block mt-3">
-                  Dashcode Admin Template
+                  progcoder Admin Template
                 </span>
               </blockquote>
               <blockquote className="border-success-500 text-center text-slate-900 dark:text-slate-300">
@@ -484,7 +484,7 @@ const typography = () => {
                 Accusamus laudantium omnis fugit ducimus nulla libero temporibus
                 corrupti non voluptatem harum?
                 <span className="text-sm text-slate-400 block mt-3">
-                  Dashcode Admin Template
+                  progcoder Admin Template
                 </span>
               </blockquote>
             </div>

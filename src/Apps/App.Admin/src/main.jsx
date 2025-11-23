@@ -10,11 +10,16 @@ import { Provider } from "react-redux";
 import store from "./store";
 import "react-toastify/dist/ReactToastify.css";
 import "./server";
+import "./i18n/config";
+import { KeycloakProvider } from "./contexts/KeycloakContext";
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <>
     <BrowserRouter>
       <Provider store={store}>
-        <App />
+        <KeycloakProvider>
+          <App />
+        </KeycloakProvider>
       </Provider>
     </BrowserRouter>
   </>

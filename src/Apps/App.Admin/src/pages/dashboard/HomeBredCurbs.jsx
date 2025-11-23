@@ -4,8 +4,10 @@ import React, { useState } from "react";
 import { DateRangePicker, Calendar } from "react-date-range";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
+import { useTranslation } from "react-i18next";
 
 const HomeBredCurbs = ({ title }) => {
+  const { t } = useTranslation();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectionRange, setSelectionRange] = useState({
     startDate: new Date(),
@@ -34,7 +36,7 @@ const HomeBredCurbs = ({ title }) => {
         <Popover>
           <PopoverButton className="flex items-center gap-1.5 text-sm/relaxed text-slate-900 bg-white dark:bg-slate-800 dark:text-white px-7 py-2.5 w-full rounded focus:outline-none">
             <Icon icon="heroicons-outline:calendar" />
-            <span>Weekly</span>
+            <span>{t("common.weekly", "Weekly")}</span>
           </PopoverButton>
           <PopoverPanel
             transition
@@ -50,7 +52,7 @@ const HomeBredCurbs = ({ title }) => {
         <Popover>
           <PopoverButton className="flex items-center gap-1.5 text-sm/relaxed text-slate-900 bg-white dark:bg-slate-800 dark:text-white px-7 py-2.5 w-full rounded focus:outline-none">
             <Icon icon="heroicons-outline:filter" />
-            <span>Select Date</span>
+            <span>{t("common.selectDate", "Select Date")}</span>
           </PopoverButton>
           <PopoverPanel
             transition

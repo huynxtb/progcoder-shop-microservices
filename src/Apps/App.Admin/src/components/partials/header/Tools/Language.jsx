@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import {
   Listbox,
   ListboxButton,
@@ -6,20 +6,37 @@ import {
   ListboxOptions,
   Transition,
 } from "@headlessui/react";
+import { useTranslation } from "react-i18next";
 
 import Usa from "@/assets/images/flags/usa.png";
 import Gn from "@/assets/images/flags/gn.png";
-const months = [
-  { name: "En", image: Usa },
-  { name: "Gn", image: Gn },
+
+const languages = [
+  { code: "en", name: "English", image: Usa },
+  { code: "vi", name: "Tiếng Việt", image: Gn },
 ];
 
 const Language = () => {
-  const [selected, setSelected] = useState(months[0]);
+  const { i18n } = useTranslation();
+  const [selected, setSelected] = useState(
+    languages.find((lang) => lang.code === i18n.language) || languages[0]
+  );
+
+  useEffect(() => {
+    const currentLang = languages.find((lang) => lang.code === i18n.language);
+    if (currentLang) {
+      setSelected(currentLang);
+    }
+  }, [i18n.language]);
+
+  const handleChange = (lang) => {
+    setSelected(lang);
+    i18n.changeLanguage(lang.code);
+  };
 
   return (
     <div>
-      <Listbox value={selected} onChange={setSelected}>
+      <Listbox value={selected} onChange={handleChange}>
         <div className="relative z-22">
           <ListboxButton className="relative w-full flex items-center cursor-pointer space-x-[6px] rtl:space-x-reverse">
             <span className="inline-block md:h-6 md:w-6 w-4 h-4 rounded-full">
@@ -30,7 +47,7 @@ const Language = () => {
               />
             </span>
             <span className="text-sm md:block hidden font-medium text-slate-600 dark:text-slate-300">
-              {selected.name}
+              {selected.code.toUpperCase()}
             </span>
           </ListboxButton>
           <Transition
@@ -40,7 +57,7 @@ const Language = () => {
             leaveTo="opacity-0"
           >
             <ListboxOptions className="absolute min-w-[100px] ltr:right-0 rtl:left-0 md:top-[50px] top-[38px] w-auto max-h-60 overflow-auto border border-slate-200 dark:border-slate-700 rounded-sm bg-white dark:bg-slate-800 mt-1 ">
-              {months.map((item, i) => (
+              {languages.map((item, i) => (
                 <ListboxOption
                   key={i}
                   value={item}

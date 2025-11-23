@@ -13,7 +13,9 @@ export default defineConfig({
       },
     ],
   },
-
+  server: {
+    port: 3002
+  },
   plugins: [
     rollupReplace({
       preventAssignment: true,

@@ -1,10 +1,11 @@
 import React from "react";
-import { topMenu } from "@/constant/data";
+import useMenuTranslation from "@/hooks/useMenuTranslation";
 import Icon from "@/components/ui/Icon";
 import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 
 const HorizentalMenu = () => {
+  const { topMenu } = useMenuTranslation();
   return (
     <div className="main-menu">
       <ul>

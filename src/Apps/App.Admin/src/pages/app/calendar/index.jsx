@@ -147,7 +147,7 @@ const CalendarPage = () => {
     return <div>Error... {error.message}</div>;
   }
   return (
-    <div className="dashcode-calender">
+    <div className="progcoder-calender">
       <div className="grid grid-cols-12 gap-4">
         <Card className="lg:col-span-3 col-span-12">
           <Button

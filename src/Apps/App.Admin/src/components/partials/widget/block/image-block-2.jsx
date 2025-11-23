@@ -13,7 +13,7 @@ const ImageBlock2 = () => {
           <span className="block font-normal">Good evening,</span>
           <span className="block">Mr. Dianne Russell</span>
         </h4>
-        <p className="text-sm text-white font-normal">Welcome to Dashcode</p>
+        <p className="text-sm text-white font-normal">Welcome to progcoder</p>
       </div>
     </div>
   );

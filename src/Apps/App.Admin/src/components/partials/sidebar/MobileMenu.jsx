@@ -50,7 +50,7 @@ const MobileMenu = ({ className = "custom-class" }) => {
             </div>
             <div>
               <h1 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
-                DashCode
+                progcoder
               </h1>
             </div>
           </div>

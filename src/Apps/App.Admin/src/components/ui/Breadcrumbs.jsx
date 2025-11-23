@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, NavLink } from "react-router-dom";
-import { menuItems } from "@/constant/data";
+import useMenuTranslation from "@/hooks/useMenuTranslation";
 import Icon from "@/components/ui/Icon";
 
 const Breadcrumbs = () => {
   const location = useLocation();
   const locationName = location.pathname.replace("/", "");
+  const { menuItems } = useMenuTranslation();
 
   const [isHide, setIsHide] = useState(null);
   const [groupTitle, setGroupTitle] = useState("");
@@ -25,7 +26,7 @@ const Breadcrumbs = () => {
       setIsHide(currentChild?.isHide || false);
       setGroupTitle(currentChild?.title);
     }
-  }, [location, locationName]);
+  }, [location, locationName, menuItems]);
 
   return (
     <>

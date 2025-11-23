@@ -63,7 +63,7 @@ const BasicWidget = () => {
         >
           <div className="max-w-[180px]">
             <h4 className="text-xl font-medium text-white mb-2">
-              Upgrade your Dashcode
+              Upgrade your progcoder
             </h4>
             <p className="text-sm text-white text-opacity-80">
               Pro plan for better results
@@ -82,7 +82,7 @@ const BasicWidget = () => {
         >
           <div className="max-w-[180px]">
             <div className="text-xl font-medium text-slate-900 mb-2">
-              Upgrade your Dashcode
+              Upgrade your progcoder
             </div>
             <p className="text-sm text-slate-800">
               Pro plan for better results
@@ -101,7 +101,7 @@ const BasicWidget = () => {
         >
           <div className="max-w-[180px]">
             <div className="text-xl font-medium text-slate-900 mb-2">
-              Upgrade your Dashcode
+              Upgrade your progcoder
             </div>
             <p className="text-sm text-slate-800">
               Pro plan for better results
@@ -124,7 +124,7 @@ const BasicWidget = () => {
               <span className="block">Mr. Dianne Russell</span>
             </h4>
             <p className="text-sm text-white font-normal">
-              Welcome to Dashcode
+              Welcome to progcoder
             </p>
           </div>
         </div>
@@ -142,7 +142,7 @@ const BasicWidget = () => {
                 <span className="block">Mr. Dianne Russell</span>
               </div>
               <p className="text-sm text-slate-900 font-normal">
-                Welcome to Dashcode
+                Welcome to progcoder
               </p>
             </div>
           </div>
@@ -164,7 +164,7 @@ const BasicWidget = () => {
                 <span className="block">Mr. Dianne Russell</span>
               </div>
               <p className="text-sm text-wgite text-white dark:text-slate-800 font-normal">
-                Welcome to Dashcode
+                Welcome to progcoder
               </p>
             </div>
           </div>

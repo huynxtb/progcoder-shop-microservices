@@ -1,12 +1,13 @@
 import React, { useRef, useEffect, useState } from "react";
 import SidebarLogo from "./Logo";
 import Navmenu from "./Navmenu";
-import { menuItems } from "@/constant/data";
+import useMenuTranslation from "@/hooks/useMenuTranslation";
 import SimpleBar from "simplebar-react";
 import useSidebar from "@/hooks/useSidebar";
 import useSemiDark from "@/hooks/useSemiDark";
 import useSkin from "@/hooks/useSkin";
 import svgRabitImage from "@/assets/images/svg/rabit.svg";
+import { useTranslation } from "react-i18next";
 
 const Sidebar = () => {
   const scrollableNodeRef = useRef();
@@ -25,6 +26,8 @@ const Sidebar = () => {
 
   const [collapsed, setMenuCollapsed] = useSidebar();
   const [menuHover, setMenuHover] = useState(false);
+  const { menuItems } = useMenuTranslation();
+  const { t } = useTranslation();
 
   // semi dark option
   const [isSemiDark] = useSemiDark();
@@ -70,14 +73,14 @@ const Sidebar = () => {
                 className="mx-auto relative -mt-[73px]"
               />
               <div className="max-w-[160px] mx-auto mt-6">
-                <div className="widget-title">Unlimited Access</div>
+                <div className="widget-title">{t("sidebar.unlimitedAccess")}</div>
                 <div className="text-xs font-light">
-                  Upgrade your system to business plan
+                  {t("sidebar.upgradeSystem")}
                 </div>
               </div>
               <div className="mt-6">
                 <button className="btn bg-white hover:bg-opacity-80 text-slate-900 btn-sm w-full block">
-                  Upgrade
+                  {t("sidebar.upgrade")}
                 </button>
               </div>
             </div>

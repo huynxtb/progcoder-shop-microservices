@@ -1041,14 +1041,14 @@ button {
   &.fromGroup2 .input-group-control {
     @apply border-danger-500 focus:ring-danger-500/90 focus:ring-1;
   }
-  .dashcode-app & .select__control {
+  .progcoder-app & .select__control {
     @apply border-danger-500;
   }
-  .dashcode-app & .select__control .select__indicator svg {
+  .progcoder-app & .select__control .select__indicator svg {
     @apply text-danger-500;
   }
 
-  .dashcode-app & .react-select__control .select__indicator svg {
+  .progcoder-app & .react-select__control .select__indicator svg {
     @apply text-danger-500;
   }
 }
@@ -1285,26 +1285,26 @@ button {
   & .date-range-custom2 .container-class:after {
     content: url("https://api.iconify.design/heroicons-outline/filter.svg?color=white&width=18&height=18");
   }
-  &.dashcode-app .react-calendar {
+  &.progcoder-app .react-calendar {
     @apply bg-slate-800;
   }
-  &.dashcode-app .react-calendar__navigation__label {
+  &.progcoder-app .react-calendar__navigation__label {
     @apply text-slate-300;
   }
-  &.dashcode-app .react-calendar__month-view__weekdays__weekday {
+  &.progcoder-app .react-calendar__month-view__weekdays__weekday {
     @apply text-slate-300;
   }
-  &.dashcode-app .react-calendar__tile {
+  &.progcoder-app .react-calendar__tile {
     @apply text-slate-400;
   }
-  &.dashcode-app
+  &.progcoder-app
     .react-calendar__tile.react-calendar__month-view__days__day--weekend {
     @apply text-danger-500;
   }
-  &.dashcode-app .react-calendar__tile:enabled:hover {
+  &.progcoder-app .react-calendar__tile:enabled:hover {
     @apply bg-slate-700;
   }
-  & .dashcode-app .react-calendar__tile:enabled:focus {
+  & .progcoder-app .react-calendar__tile:enabled:focus {
     @apply bg-slate-700;
   }
   & .fc-col-header-cell .fc-scrollgrid-sync-inner {
@@ -1347,7 +1347,7 @@ button {
   & .fc-theme-standard .fc-scrollgrid {
     border-color: #334155 !important;
   }
-  .dashcode-calender & {
+  .progcoder-calender & {
     @apply bg-[#222] border-none text-white text-center px-2 font-medium text-sm;
   }
 }
@@ -1663,7 +1663,7 @@ button {
   &.inputGroup:focus-within .input-group-text {
     @apply ring-danger-500;
   }
-  .dashcode-app &.react-select .select__control {
+  .progcoder-app &.react-select .select__control {
     border-color: none !important;
   }
 }
@@ -1700,7 +1700,7 @@ button {
     @apply ltr:border-l-0 rtl:border-r-0 ltr:border-r rtl:border-l ltr:pr-3 rtl:pl-3 ltr:pl-0 rtl:pr-0;
   }
 }
-.dashcode-app {
+.progcoder-app {
   & .react-select.is-invalid .select__control {
     border-color: none !important;
   }
@@ -2194,51 +2194,51 @@ button {
   }
 }
 .react-select {
-  .dashcode-app &.is-invalid .select__control {
+  .progcoder-app &.is-invalid .select__control {
     border-color: none !important;
   }
 }
 .select__control {
-  .dashcode-app .react-select.is-invalid & {
+  .progcoder-app .react-select.is-invalid & {
     border-color: none !important;
   }
-  .dashcode-app & {
+  .progcoder-app & {
     @apply border-slate-200;
   }
-  .dashcode-app .has-error & {
+  .progcoder-app .has-error & {
     @apply border-danger-500;
   }
-  .dashcode-app & .select__input {
+  .progcoder-app & .select__input {
     @apply text-slate-500;
   }
-  .dashcode-app &.select__control--is-disabled {
+  .progcoder-app &.select__control--is-disabled {
     @apply cursor-not-allowed;
   }
-  .dashcode-app &.select__control--is-disabled .select__indicator-separator {
+  .progcoder-app &.select__control--is-disabled .select__indicator-separator {
     @apply bg-slate-50 text-slate-800 placeholder:text-slate-800/60;
   }
-  .dashcode-app &.select__control--is-focused {
+  .progcoder-app &.select__control--is-focused {
     box-shadow: none;
     @apply border-slate-600;
   }
-  .dashcode-app &.react-select__control--is-focused {
+  .progcoder-app &.react-select__control--is-focused {
     box-shadow: none;
     @apply border-slate-600;
   }
-  .dashcode-app & .select__indicator svg {
+  .progcoder-app & .select__indicator svg {
     cursor: pointer;
     @apply text-slate-600;
   }
-  .dashcode-app & .select__indicator-separator {
+  .progcoder-app & .select__indicator-separator {
     display: none;
   }
-  .dashcode-app & .select__single-value {
+  .progcoder-app & .select__single-value {
     @apply text-slate-600   text-sm;
   }
-  .dashcode-app & .select__placeholder {
+  .progcoder-app & .select__placeholder {
     @apply text-slate-400;
   }
-  .dashcode-app .has-error & .select__indicator svg {
+  .progcoder-app .has-error & .select__indicator svg {
     @apply text-danger-500;
   }
   .select-borderless & {
@@ -2283,11 +2283,11 @@ button {
   }
 }
 .select__input {
-  .dashcode-app .select__control & {
+  .progcoder-app .select__control & {
     @apply text-slate-500;
   }
 
-  .dashcode-app .react-select__control & {
+  .progcoder-app .react-select__control & {
     @apply text-slate-500;
   }
   .dark .select__control & {
@@ -2295,118 +2295,118 @@ button {
   }
 }
 .react-select__control {
-  .dashcode-app & .select__input {
+  .progcoder-app & .select__input {
     @apply text-slate-500;
   }
 
-  .dashcode-app &.select__control--is-disabled {
+  .progcoder-app &.select__control--is-disabled {
     @apply cursor-not-allowed;
   }
 
-  .dashcode-app &.select__control--is-disabled .select__indicator-separator {
+  .progcoder-app &.select__control--is-disabled .select__indicator-separator {
     @apply bg-slate-50 text-slate-800 placeholder:text-slate-800/60;
   }
 
-  .dashcode-app &.select__control--is-focused {
+  .progcoder-app &.select__control--is-focused {
     box-shadow: none;
     @apply border-slate-600;
   }
 
-  .dashcode-app &.react-select__control--is-focused {
+  .progcoder-app &.react-select__control--is-focused {
     box-shadow: none;
     @apply border-slate-600;
   }
 
-  .dashcode-app & .select__indicator svg {
+  .progcoder-app & .select__indicator svg {
     cursor: pointer;
     @apply text-slate-600;
   }
 
-  .dashcode-app & .select__indicator-separator {
+  .progcoder-app & .select__indicator-separator {
     display: none;
   }
 
-  .dashcode-app & .select__single-value {
+  .progcoder-app & .select__single-value {
     @apply text-slate-600   text-sm;
   }
 
-  .dashcode-app & .select__placeholder {
+  .progcoder-app & .select__placeholder {
     @apply text-slate-400;
   }
 
-  .dashcode-app .has-error & .select__indicator svg {
+  .progcoder-app .has-error & .select__indicator svg {
     @apply text-danger-500;
   }
 }
 .select__control--is-disabled {
-  .dashcode-app &.select__control {
+  .progcoder-app &.select__control {
     @apply cursor-not-allowed;
   }
 
-  .dashcode-app &.react-select__control {
+  .progcoder-app &.react-select__control {
     @apply cursor-not-allowed;
   }
-  .dashcode-app &.select__control .select__indicator-separator {
+  .progcoder-app &.select__control .select__indicator-separator {
     @apply bg-slate-50 text-slate-800 placeholder:text-slate-800/60;
   }
 
-  .dashcode-app &.react-select__control .select__indicator-separator {
+  .progcoder-app &.react-select__control .select__indicator-separator {
     @apply bg-slate-50 text-slate-800 placeholder:text-slate-800/60;
   }
 }
 .select__indicator-separator {
-  .dashcode-app .select__control.select__control--is-disabled & {
+  .progcoder-app .select__control.select__control--is-disabled & {
     @apply bg-slate-50 text-slate-800 placeholder:text-slate-800/60;
   }
 
-  .dashcode-app .react-select__control.select__control--is-disabled & {
+  .progcoder-app .react-select__control.select__control--is-disabled & {
     @apply bg-slate-50 text-slate-800 placeholder:text-slate-800/60;
   }
-  .dashcode-app .select__control & {
+  .progcoder-app .select__control & {
     display: none;
   }
 
-  .dashcode-app .react-select__control & {
+  .progcoder-app .react-select__control & {
     display: none;
   }
 }
 .select__control--is-focused {
-  .dashcode-app &.select__control {
+  .progcoder-app &.select__control {
     box-shadow: none;
     @apply border-slate-600;
   }
 
-  .dashcode-app &.react-select__control {
+  .progcoder-app &.react-select__control {
     box-shadow: none;
     @apply border-slate-600;
   }
 }
 .react-select__control--is-focused {
-  .dashcode-app &.select__control {
+  .progcoder-app &.select__control {
     box-shadow: none;
     @apply border-slate-600;
   }
 
-  .dashcode-app &.react-select__control {
+  .progcoder-app &.react-select__control {
     box-shadow: none;
     @apply border-slate-600;
   }
 }
 .select__indicator {
-  .dashcode-app .select__control & svg {
+  .progcoder-app .select__control & svg {
     cursor: pointer;
     @apply text-slate-600;
   }
 
-  .dashcode-app .react-select__control & svg {
+  .progcoder-app .react-select__control & svg {
     cursor: pointer;
     @apply text-slate-600;
   }
-  .dashcode-app .has-error .select__control & svg {
+  .progcoder-app .has-error .select__control & svg {
     @apply text-danger-500;
   }
 
-  .dashcode-app .has-error .react-select__control & svg {
+  .progcoder-app .has-error .react-select__control & svg {
     @apply text-danger-500;
   }
   .dark .select__control & svg {
@@ -2417,11 +2417,11 @@ button {
   }
 }
 .select__single-value {
-  .dashcode-app .select__control & {
+  .progcoder-app .select__control & {
     @apply text-slate-600   text-sm;
   }
 
-  .dashcode-app .react-select__control & {
+  .progcoder-app .react-select__control & {
     @apply text-slate-600   text-sm;
   }
 
@@ -2430,11 +2430,11 @@ button {
   }
 }
 .select__placeholder {
-  .dashcode-app .select__control & {
+  .progcoder-app .select__control & {
     @apply text-slate-400;
   }
 
-  .dashcode-app .react-select__control & {
+  .progcoder-app .react-select__control & {
     @apply text-slate-400;
   }
   .dark .select__control & {
@@ -2442,83 +2442,83 @@ button {
   }
 }
 .select__menu {
-  .dashcode-app & .select__menu-list .select__option {
+  .progcoder-app & .select__menu-list .select__option {
     cursor: pointer;
   }
 
-  .dashcode-app & .select__menu-list .react-select__option {
+  .progcoder-app & .select__menu-list .react-select__option {
     cursor: pointer;
   }
 
-  .dashcode-app & .react-select__menu-list .select__option {
+  .progcoder-app & .react-select__menu-list .select__option {
     cursor: pointer;
   }
 
-  .dashcode-app & .react-select__menu-list .react-select__option {
+  .progcoder-app & .react-select__menu-list .react-select__option {
     cursor: pointer;
   }
-  .dashcode-app
+  .progcoder-app
     &
     .select__menu-list
     .select__option.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     &
     .select__menu-list
     .react-select__option.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     &
     .react-select__menu-list
     .select__option.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     &
     .react-select__menu-list
     .react-select__option.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
-  .dashcode-app
+  .progcoder-app
     &
     .select__menu-list
     .select__option.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app
+  .progcoder-app
     &
     .select__menu-list
     .react-select__option.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app
+  .progcoder-app
     &
     .react-select__menu-list
     .select__option.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app
+  .progcoder-app
     &
     .react-select__menu-list
     .react-select__option.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
-  .dashcode-app & .select__menu-list .select__group .select__group-heading {
+  .progcoder-app & .select__menu-list .select__group .select__group-heading {
     margin-bottom: 0.5rem;
     @apply text-slate-900 capitalize;
     font-weight: bolder;
     font-size: inherit;
   }
 
-  .dashcode-app
+  .progcoder-app
     &
     .react-select__menu-list
     .select__group
@@ -2569,77 +2569,77 @@ button {
   }
 }
 .select__menu-list {
-  .dashcode-app .select__menu & .select__option {
+  .progcoder-app .select__menu & .select__option {
     cursor: pointer;
   }
 
-  .dashcode-app .select__menu & .react-select__option {
+  .progcoder-app .select__menu & .react-select__option {
     cursor: pointer;
   }
 
-  .dashcode-app .react-select__menu & .select__option {
+  .progcoder-app .react-select__menu & .select__option {
     cursor: pointer;
   }
 
-  .dashcode-app .react-select__menu & .react-select__option {
+  .progcoder-app .react-select__menu & .react-select__option {
     cursor: pointer;
   }
-  .dashcode-app .select__menu & .select__option.select__option--is-focused {
+  .progcoder-app .select__menu & .select__option.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     .select__menu
     &
     .react-select__option.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     &
     .select__option.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     &
     .react-select__option.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
-  .dashcode-app .select__menu & .select__option.select__option--is-selected {
+  .progcoder-app .select__menu & .select__option.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app
+  .progcoder-app
     .select__menu
     &
     .react-select__option.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     &
     .select__option.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     &
     .react-select__option.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
-  .dashcode-app .select__menu & .select__group .select__group-heading {
+  .progcoder-app .select__menu & .select__group .select__group-heading {
     margin-bottom: 0.5rem;
     @apply text-slate-900 capitalize;
     font-weight: bolder;
     font-size: inherit;
   }
 
-  .dashcode-app .react-select__menu & .select__group .select__group-heading {
+  .progcoder-app .react-select__menu & .select__group .select__group-heading {
     margin-bottom: 0.5rem;
     @apply text-slate-900 capitalize;
     font-weight: bolder;
@@ -2680,64 +2680,64 @@ button {
   }
 }
 .select__option {
-  .dashcode-app .select__menu .select__menu-list & {
+  .progcoder-app .select__menu .select__menu-list & {
     cursor: pointer;
   }
 
-  .dashcode-app .select__menu .react-select__menu-list & {
+  .progcoder-app .select__menu .react-select__menu-list & {
     cursor: pointer;
   }
 
-  .dashcode-app .react-select__menu .select__menu-list & {
+  .progcoder-app .react-select__menu .select__menu-list & {
     cursor: pointer;
   }
 
-  .dashcode-app .react-select__menu .react-select__menu-list & {
+  .progcoder-app .react-select__menu .react-select__menu-list & {
     cursor: pointer;
   }
-  .dashcode-app .select__menu .select__menu-list &.select__option--is-focused {
+  .progcoder-app .select__menu .select__menu-list &.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     .select__menu
     .react-select__menu-list
     &.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     .select__menu-list
     &.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     .react-select__menu-list
     &.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
-  .dashcode-app .select__menu .select__menu-list &.select__option--is-selected {
+  .progcoder-app .select__menu .select__menu-list &.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app
+  .progcoder-app
     .select__menu
     .react-select__menu-list
     &.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     .select__menu-list
     &.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     .react-select__menu-list
     &.select__option--is-selected {
@@ -2781,66 +2781,66 @@ button {
   }
 }
 .react-select__option {
-  .dashcode-app .select__menu .select__menu-list & {
+  .progcoder-app .select__menu .select__menu-list & {
     cursor: pointer;
   }
 
-  .dashcode-app .select__menu .react-select__menu-list & {
+  .progcoder-app .select__menu .react-select__menu-list & {
     cursor: pointer;
   }
 
-  .dashcode-app .react-select__menu .select__menu-list & {
+  .progcoder-app .react-select__menu .select__menu-list & {
     cursor: pointer;
   }
 
-  .dashcode-app .react-select__menu .react-select__menu-list & {
+  .progcoder-app .react-select__menu .react-select__menu-list & {
     cursor: pointer;
   }
 
-  .dashcode-app .select__menu .select__menu-list &.select__option--is-focused {
+  .progcoder-app .select__menu .select__menu-list &.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     .select__menu
     .react-select__menu-list
     &.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     .select__menu-list
     &.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     .react-select__menu-list
     &.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app .select__menu .select__menu-list &.select__option--is-selected {
+  .progcoder-app .select__menu .select__menu-list &.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app
+  .progcoder-app
     .select__menu
     .react-select__menu-list
     &.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     .select__menu-list
     &.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     .react-select__menu-list
     &.select__option--is-selected {
@@ -2886,80 +2886,80 @@ button {
   }
 }
 .react-select__menu-list {
-  .dashcode-app .select__menu & .select__option {
+  .progcoder-app .select__menu & .select__option {
     cursor: pointer;
   }
 
-  .dashcode-app .select__menu & .react-select__option {
+  .progcoder-app .select__menu & .react-select__option {
     cursor: pointer;
   }
 
-  .dashcode-app .react-select__menu & .select__option {
+  .progcoder-app .react-select__menu & .select__option {
     cursor: pointer;
   }
 
-  .dashcode-app .react-select__menu & .react-select__option {
+  .progcoder-app .react-select__menu & .react-select__option {
     cursor: pointer;
   }
 
-  .dashcode-app .select__menu & .select__option.select__option--is-focused {
+  .progcoder-app .select__menu & .select__option.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     .select__menu
     &
     .react-select__option.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     &
     .select__option.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     &
     .react-select__option.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app .select__menu & .select__option.select__option--is-selected {
+  .progcoder-app .select__menu & .select__option.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app
+  .progcoder-app
     .select__menu
     &
     .react-select__option.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     &
     .select__option.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     &
     .react-select__option.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app .select__menu & .select__group .select__group-heading {
+  .progcoder-app .select__menu & .select__group .select__group-heading {
     margin-bottom: 0.5rem;
     @apply text-slate-900 capitalize;
     font-weight: bolder;
     font-size: inherit;
   }
 
-  .dashcode-app .react-select__menu & .select__group .select__group-heading {
+  .progcoder-app .react-select__menu & .select__group .select__group-heading {
     margin-bottom: 0.5rem;
     @apply text-slate-900 capitalize;
     font-weight: bolder;
@@ -3002,86 +3002,86 @@ button {
   }
 }
 .react-select__menu {
-  .dashcode-app & .select__menu-list .select__option {
+  .progcoder-app & .select__menu-list .select__option {
     cursor: pointer;
   }
 
-  .dashcode-app & .select__menu-list .react-select__option {
+  .progcoder-app & .select__menu-list .react-select__option {
     cursor: pointer;
   }
 
-  .dashcode-app & .react-select__menu-list .select__option {
+  .progcoder-app & .react-select__menu-list .select__option {
     cursor: pointer;
   }
 
-  .dashcode-app & .react-select__menu-list .react-select__option {
+  .progcoder-app & .react-select__menu-list .react-select__option {
     cursor: pointer;
   }
 
-  .dashcode-app
+  .progcoder-app
     &
     .select__menu-list
     .select__option.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     &
     .select__menu-list
     .react-select__option.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     &
     .react-select__menu-list
     .select__option.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     &
     .react-select__menu-list
     .react-select__option.select__option--is-focused {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     &
     .select__menu-list
     .select__option.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app
+  .progcoder-app
     &
     .select__menu-list
     .react-select__option.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app
+  .progcoder-app
     &
     .react-select__menu-list
     .select__option.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app
+  .progcoder-app
     &
     .react-select__menu-list
     .react-select__option.select__option--is-selected {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app & .select__menu-list .select__group .select__group-heading {
+  .progcoder-app & .select__menu-list .select__group .select__group-heading {
     margin-bottom: 0.5rem;
     @apply text-slate-900 capitalize;
     font-weight: bolder;
     font-size: inherit;
   }
 
-  .dashcode-app
+  .progcoder-app
     &
     .react-select__menu-list
     .select__group
@@ -3131,35 +3131,35 @@ button {
   }
 }
 .select__option--is-focused {
-  .dashcode-app .select__menu .select__menu-list &.select__option {
+  .progcoder-app .select__menu .select__menu-list &.select__option {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app .select__menu .select__menu-list &.react-select__option {
+  .progcoder-app .select__menu .select__menu-list &.react-select__option {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app .select__menu .react-select__menu-list &.select__option {
+  .progcoder-app .select__menu .react-select__menu-list &.select__option {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app .select__menu .react-select__menu-list &.react-select__option {
+  .progcoder-app .select__menu .react-select__menu-list &.react-select__option {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app .react-select__menu .select__menu-list &.select__option {
+  .progcoder-app .react-select__menu .select__menu-list &.select__option {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app .react-select__menu .select__menu-list &.react-select__option {
+  .progcoder-app .react-select__menu .select__menu-list &.react-select__option {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app .react-select__menu .react-select__menu-list &.select__option {
+  .progcoder-app .react-select__menu .react-select__menu-list &.select__option {
     @apply bg-secondary-500/30 text-slate-900;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     .react-select__menu-list
     &.react-select__option {
@@ -3198,35 +3198,35 @@ button {
   }
 }
 .select__option--is-selected {
-  .dashcode-app .select__menu .select__menu-list &.select__option {
+  .progcoder-app .select__menu .select__menu-list &.select__option {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app .select__menu .select__menu-list &.react-select__option {
+  .progcoder-app .select__menu .select__menu-list &.react-select__option {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app .select__menu .react-select__menu-list &.select__option {
+  .progcoder-app .select__menu .react-select__menu-list &.select__option {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app .select__menu .react-select__menu-list &.react-select__option {
+  .progcoder-app .select__menu .react-select__menu-list &.react-select__option {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app .react-select__menu .select__menu-list &.select__option {
+  .progcoder-app .react-select__menu .select__menu-list &.select__option {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app .react-select__menu .select__menu-list &.react-select__option {
+  .progcoder-app .react-select__menu .select__menu-list &.react-select__option {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app .react-select__menu .react-select__menu-list &.select__option {
+  .progcoder-app .react-select__menu .react-select__menu-list &.select__option {
     @apply bg-secondary-900 text-slate-200;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     .react-select__menu-list
     &.react-select__option {
@@ -3265,14 +3265,14 @@ button {
   }
 }
 .select__group {
-  .dashcode-app .select__menu .select__menu-list & .select__group-heading {
+  .progcoder-app .select__menu .select__menu-list & .select__group-heading {
     margin-bottom: 0.5rem;
     @apply text-slate-900 capitalize;
     font-weight: bolder;
     font-size: inherit;
   }
 
-  .dashcode-app
+  .progcoder-app
     .select__menu
     .react-select__menu-list
     &
@@ -3283,7 +3283,7 @@ button {
     font-size: inherit;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     .select__menu-list
     &
@@ -3294,7 +3294,7 @@ button {
     font-size: inherit;
   }
 
-  .dashcode-app
+  .progcoder-app
     .react-select__menu
     .react-select__menu-list
     &
@@ -3306,28 +3306,28 @@ button {
   }
 }
 .select__group-heading {
-  .dashcode-app .select__menu .select__menu-list .select__group & {
+  .progcoder-app .select__menu .select__menu-list .select__group & {
     margin-bottom: 0.5rem;
     @apply text-slate-900 capitalize;
     font-weight: bolder;
     font-size: inherit;
   }
 
-  .dashcode-app .select__menu .react-select__menu-list .select__group & {
+  .progcoder-app .select__menu .react-select__menu-list .select__group & {
     margin-bottom: 0.5rem;
     @apply text-slate-900 capitalize;
     font-weight: bolder;
     font-size: inherit;
   }
 
-  .dashcode-app .react-select__menu .select__menu-list .select__group & {
+  .progcoder-app .react-select__menu .select__menu-list .select__group & {
     margin-bottom: 0.5rem;
     @apply text-slate-900 capitalize;
     font-weight: bolder;
     font-size: inherit;
   }
 
-  .dashcode-app .react-select__menu .react-select__menu-list .select__group & {
+  .progcoder-app .react-select__menu .react-select__menu-list .select__group & {
     margin-bottom: 0.5rem;
     @apply text-slate-900 capitalize;
     font-weight: bolder;
@@ -3335,30 +3335,30 @@ button {
   }
 }
 .select__multi-value {
-  .dashcode-app & {
+  .progcoder-app & {
     @apply text-white bg-slate-900;
     border-radius: 3px;
     margin: 0 0.7rem 0 0;
   }
-  .dashcode-app & .select__multi-value__label {
+  .progcoder-app & .select__multi-value__label {
     @apply text-white;
     font-size: 0.85rem;
     border-radius: 10px;
     padding: 0.26rem 0.6rem;
   }
-  .dashcode-app & .select__multi-value__remove {
+  .progcoder-app & .select__multi-value__remove {
     padding-left: 0;
     padding-right: 0.5rem;
   }
-  .dashcode-app & .select__multi-value__remove:hover {
+  .progcoder-app & .select__multi-value__remove:hover {
     background-color: inherit;
     color: inherit;
   }
-  .dashcode-app & .select__multi-value__remove svg {
+  .progcoder-app & .select__multi-value__remove svg {
     height: 0.85rem;
     width: 0.85rem;
   }
-  .dashcode-app & .select__multi-value__remove svg:hover {
+  .progcoder-app & .select__multi-value__remove svg:hover {
     cursor: pointer;
   }
   .dark .select__control & {
@@ -3369,47 +3369,47 @@ button {
   }
 }
 .react-select__multi-value {
-  .dashcode-app & {
+  .progcoder-app & {
     @apply text-white bg-slate-900;
     border-radius: 3px;
     margin: 0 0.7rem 0 0;
   }
 
-  .dashcode-app & .select__multi-value__label {
+  .progcoder-app & .select__multi-value__label {
     @apply text-white;
     font-size: 0.85rem;
     border-radius: 10px;
     padding: 0.26rem 0.6rem;
   }
 
-  .dashcode-app & .select__multi-value__remove {
+  .progcoder-app & .select__multi-value__remove {
     padding-left: 0;
     padding-right: 0.5rem;
   }
 
-  .dashcode-app & .select__multi-value__remove:hover {
+  .progcoder-app & .select__multi-value__remove:hover {
     background-color: inherit;
     color: inherit;
   }
 
-  .dashcode-app & .select__multi-value__remove svg {
+  .progcoder-app & .select__multi-value__remove svg {
     height: 0.85rem;
     width: 0.85rem;
   }
 
-  .dashcode-app & .select__multi-value__remove svg:hover {
+  .progcoder-app & .select__multi-value__remove svg:hover {
     cursor: pointer;
   }
 }
 .select__multi-value__label {
-  .dashcode-app .select__multi-value & {
+  .progcoder-app .select__multi-value & {
     @apply text-white;
     font-size: 0.85rem;
     border-radius: 10px;
     padding: 0.26rem 0.6rem;
   }
 
-  .dashcode-app .react-select__multi-value & {
+  .progcoder-app .react-select__multi-value & {
     @apply text-white;
     font-size: 0.85rem;
     border-radius: 10px;
@@ -3420,38 +3420,38 @@ button {
   }
 }
 .select__multi-value__remove {
-  .dashcode-app .select__multi-value & {
+  .progcoder-app .select__multi-value & {
     padding-left: 0;
     padding-right: 0.5rem;
   }
 
-  .dashcode-app .react-select__multi-value & {
+  .progcoder-app .react-select__multi-value & {
     padding-left: 0;
     padding-right: 0.5rem;
   }
-  .dashcode-app .select__multi-value &:hover {
+  .progcoder-app .select__multi-value &:hover {
     background-color: inherit;
     color: inherit;
   }
 
-  .dashcode-app .react-select__multi-value &:hover {
+  .progcoder-app .react-select__multi-value &:hover {
     background-color: inherit;
     color: inherit;
   }
-  .dashcode-app .select__multi-value & svg {
+  .progcoder-app .select__multi-value & svg {
     height: 0.85rem;
     width: 0.85rem;
   }
 
-  .dashcode-app .react-select__multi-value & svg {
+  .progcoder-app .react-select__multi-value & svg {
     height: 0.85rem;
     width: 0.85rem;
   }
-  .dashcode-app .select__multi-value & svg:hover {
+  .progcoder-app .select__multi-value & svg:hover {
     cursor: pointer;
   }
 
-  .dashcode-app .react-select__multi-value & svg:hover {
+  .progcoder-app .react-select__multi-value & svg:hover {
     cursor: pointer;
   }
   .dark .select__control & svg {
@@ -4282,15 +4282,15 @@ button {
   }
 }
 .ql-editor {
-  .dashcode-app & {
+  .progcoder-app & {
     min-height: 120px;
   }
-  .dashcode-app & {
+  .progcoder-app & {
     @apply border-slate-200 dark:border-slate-700 border rounded-sm text-base;
   }
 }
 .ql-toolbar {
-  .dashcode-app &.ql-snow {
+  .progcoder-app &.ql-snow {
     @apply border-none p-0 mb-2;
   }
   .dark &.ql-snow .ql-picker.ql-expanded .ql-picker-label {
@@ -4329,10 +4329,10 @@ button {
   }
 }
 .ql-snow {
-  .dashcode-app &.ql-toolbar {
+  .progcoder-app &.ql-toolbar {
     @apply border-none p-0 mb-2;
   }
-  .dashcode-app &.ql-container {
+  .progcoder-app &.ql-container {
     @apply bg-[#FBFBFB] dark:bg-slate-900 border-none text-base;
   }
   .dark & .ql-stroke {
@@ -4377,7 +4377,7 @@ button {
   }
 }
 .ql-container {
-  .dashcode-app &.ql-snow {
+  .progcoder-app &.ql-snow {
     @apply bg-[#FBFBFB] dark:bg-slate-900 border-none text-base;
   }
 }
@@ -4683,132 +4683,132 @@ button {
   @apply w-full! bg-white dark:bg-slate-800! border-none!;
 }
 .react-calendar {
-  .dashcode-app & {
+  .progcoder-app & {
     @apply w-full! bg-white border-none!;
   }
-  .dashcode-app.dark & {
+  .progcoder-app.dark & {
     @apply bg-slate-800;
   }
 }
 .react-calendar__navigation__prev2-button {
-  .dashcode-app & {
+  .progcoder-app & {
     @apply hidden;
   }
 }
 .react-calendar__navigation__next2-button {
-  .dashcode-app & {
+  .progcoder-app & {
     @apply hidden;
   }
 }
 .react-calendar__navigation__label {
-  .dashcode-app & {
+  .progcoder-app & {
     @apply text-slate-900  text-2xl;
   }
-  .dashcode-app.dark & {
+  .progcoder-app.dark & {
     @apply text-slate-300;
   }
 }
 .react-calendar__navigation {
-  .dashcode-app & button:enabled:hover {
+  .progcoder-app & button:enabled:hover {
     @apply bg-transparent;
   }
 
-  .dashcode-app & button:enabled:focus {
+  .progcoder-app & button:enabled:focus {
     @apply bg-transparent;
   }
-  .dashcode-app & {
+  .progcoder-app & {
     @apply mb-2;
   }
 }
 .react-calendar__navigation__arrow {
-  .dashcode-app & {
+  .progcoder-app & {
     @apply text-4xl;
   }
 }
 .react-calendar__month-view__weekdays__weekday {
-  .dashcode-app & {
+  .progcoder-app & {
     @apply text-sm font-normal text-slate-600  capitalize p-0 mb-2;
   }
-  .dashcode-app & abbr {
+  .progcoder-app & abbr {
     @apply no-underline;
   }
-  .dashcode-app & .react-calendar__tile {
+  .progcoder-app & .react-calendar__tile {
     @apply text-slate-600;
   }
-  .dashcode-app
+  .progcoder-app
     &
     .react-calendar__tile.react-calendar__month-view__days__day--weekend {
     @apply text-danger-500;
   }
-  .dashcode-app.dark & {
+  .progcoder-app.dark & {
     @apply text-slate-300;
   }
 }
 .react-calendar__tile {
-  .dashcode-app .react-calendar__month-view__weekdays__weekday & {
+  .progcoder-app .react-calendar__month-view__weekdays__weekday & {
     @apply text-slate-600;
   }
-  .dashcode-app
+  .progcoder-app
     .react-calendar__month-view__weekdays__weekday
     &.react-calendar__month-view__days__day--weekend {
     @apply text-danger-500;
   }
-  .dashcode-app & {
+  .progcoder-app & {
     @apply text-sm font-normal  capitalize w-8 h-8 flex flex-col  items-center  justify-center  rounded-sm;
   }
-  .dashcode-app.dark & {
+  .progcoder-app.dark & {
     @apply text-slate-400;
   }
-  .dashcode-app.dark &.react-calendar__month-view__days__day--weekend {
+  .progcoder-app.dark &.react-calendar__month-view__days__day--weekend {
     @apply text-danger-500;
   }
-  .dashcode-app.dark &:enabled:hover {
+  .progcoder-app.dark &:enabled:hover {
     @apply bg-slate-700;
   }
 
-  .dashcode-app.dark &:enabled:focus {
+  .progcoder-app.dark &:enabled:focus {
     @apply bg-slate-700;
   }
 }
 .react-calendar__month-view__days__day--weekend {
-  .dashcode-app
+  .progcoder-app
     .react-calendar__month-view__weekdays__weekday
     &.react-calendar__tile {
     @apply text-danger-500;
   }
-  .dashcode-app.dark &.react-calendar__tile {
+  .progcoder-app.dark &.react-calendar__tile {
     @apply text-danger-500;
   }
 }
 .react-calendar__tile--active {
-  .dashcode-app & {
+  .progcoder-app & {
     @apply bg-slate-900 text-white;
   }
 }
 .fc-toolbar-chunk {
-  .dashcode-app & button {
+  .progcoder-app & button {
     height: 50px;
   }
-  .dashcode-app & button.fc-prev-button:after {
+  .progcoder-app & button.fc-prev-button:after {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
   }
-  .dashcode-app & button.fc-next-button:after {
+  .progcoder-app & button.fc-next-button:after {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
   }
   @media (max-width: 981px) {
-    .dashcode-app & {
+    .progcoder-app & {
       @apply space-y-4;
     }
   }
 }
 .fc-prev-button {
-  .dashcode-app .fc-toolbar-chunk &button:after {
+  .progcoder-app .fc-toolbar-chunk &button:after {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -4816,7 +4816,7 @@ button {
   }
 }
 .fc-next-button {
-  .dashcode-app .fc-toolbar-chunk &button:after {
+  .progcoder-app .fc-toolbar-chunk &button:after {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -4824,7 +4824,7 @@ button {
   }
 }
 .fc-button {
-  .dashcode-app & {
+  .progcoder-app & {
     font-size: 14px !important;
     line-height: 14px !important;
     height: auto !important;
@@ -4833,66 +4833,66 @@ button {
     padding: 12px 20px 12px 20px !important;
   }
   @media (max-width: 981px) {
-    .dashcode-app .fc & {
+    .progcoder-app .fc & {
       padding: 0.4em 0.65em !important;
     }
   }
 }
 .fc {
-  .dashcode-app & .fc-button-primary {
+  .progcoder-app & .fc-button-primary {
     background: transparent !important;
     @apply text-slate-900 dark:text-white border-slate-100;
   }
-  .dashcode-app & .fc-button-primary:not(:disabled):active {
+  .progcoder-app & .fc-button-primary:not(:disabled):active {
     background: #111112 !important;
     color: #fff !important;
   }
 
-  .dashcode-app & .fc-button-primary:not(:disabled).fc-button-active {
+  .progcoder-app & .fc-button-primary:not(:disabled).fc-button-active {
     background: #111112 !important;
     color: #fff !important;
   }
 
-  .dashcode-app & .fc-button-primary:hover {
+  .progcoder-app & .fc-button-primary:hover {
     background: #111112 !important;
     color: #fff !important;
   }
-  .dashcode-app & .fc-button-primary:disabled {
+  .progcoder-app & .fc-button-primary:disabled {
     background: #a0aec0 !important;
     border-color: #a0aec0 !important;
     @apply cursor-not-allowed;
   }
-  .dashcode-app & .fc-daygrid-day.fc-day-today {
+  .progcoder-app & .fc-daygrid-day.fc-day-today {
     background: rgba(95, 99, 242, 0.04) !important;
   }
-  .dashcode-app & .fc-button-primary:focus {
+  .progcoder-app & .fc-button-primary:focus {
     box-shadow: none !important;
   }
-  .dashcode-app & .fc-toolbar-title {
+  .progcoder-app & .fc-toolbar-title {
     @apply text-lg font-normal text-slate-600 dark:text-slate-300;
   }
   @media (max-width: 981px) {
-    .dashcode-app & .fc-toolbar {
+    .progcoder-app & .fc-toolbar {
       display: block !important;
     }
-    .dashcode-app & .fc-toolbar {
+    .progcoder-app & .fc-toolbar {
       @apply space-y-4;
     }
-    .dashcode-app & .fc-button {
+    .progcoder-app & .fc-button {
       padding: 0.4em 0.65em !important;
     }
   }
-  .dashcode-app & .fc-timegrid-axis-cushion {
+  .progcoder-app & .fc-timegrid-axis-cushion {
     @apply dark:text-slate-300;
   }
 
-  .dashcode-app & .fc-timegrid-slot-label-cushion {
+  .progcoder-app & .fc-timegrid-slot-label-cushion {
     @apply dark:text-slate-300;
   }
-  .dashcode-app & .fc-list-event:hover td {
+  .progcoder-app & .fc-list-event:hover td {
     @apply bg-inherit;
   }
-  .dashcode-app & .fc-list-event-dot {
+  .progcoder-app & .fc-list-event-dot {
     @apply hidden;
   }
   .dark & .fc-day-other .fc-daygrid-day-top {
@@ -4924,30 +4924,30 @@ button {
   }
 }
 .fc-button-primary {
-  .dashcode-app .fc & {
+  .progcoder-app .fc & {
     background: transparent !important;
     @apply text-slate-900 dark:text-white border-slate-100;
   }
-  .dashcode-app .fc &:not(:disabled):active {
+  .progcoder-app .fc &:not(:disabled):active {
     background: #111112 !important;
     color: #fff !important;
   }
 
-  .dashcode-app .fc &:not(:disabled).fc-button-active {
+  .progcoder-app .fc &:not(:disabled).fc-button-active {
     background: #111112 !important;
     color: #fff !important;
   }
 
-  .dashcode-app .fc &:hover {
+  .progcoder-app .fc &:hover {
     background: #111112 !important;
     color: #fff !important;
   }
-  .dashcode-app .fc &:disabled {
+  .progcoder-app .fc &:disabled {
     background: #a0aec0 !important;
     border-color: #a0aec0 !important;
     @apply cursor-not-allowed;
   }
-  .dashcode-app .fc &:focus {
+  .progcoder-app .fc &:focus {
     box-shadow: none !important;
   }
   .dark .fc & {
@@ -4970,7 +4970,7 @@ button {
   }
 }
 .fc-button-active {
-  .dashcode-app .fc &.fc-button-primary:not(:disabled) {
+  .progcoder-app .fc &.fc-button-primary:not(:disabled) {
     background: #111112 !important;
     color: #fff !important;
   }
@@ -4980,7 +4980,7 @@ button {
   }
 }
 .fc-daygrid-day {
-  .dashcode-app .fc &.fc-day-today {
+  .progcoder-app .fc &.fc-day-today {
     background: rgba(95, 99, 242, 0.04) !important;
   }
   .dark .fc &.fc-day-today {
@@ -4988,7 +4988,7 @@ button {
   }
 }
 .fc-day-today {
-  .dashcode-app .fc &.fc-daygrid-day {
+  .progcoder-app .fc &.fc-daygrid-day {
     background: rgba(95, 99, 242, 0.04) !important;
   }
   .dark .fc &.fc-daygrid-day {
@@ -4996,14 +4996,14 @@ button {
   }
 }
 .fc-theme-standard {
-  .dashcode-app & .fc-scrollgrid {
+  .progcoder-app & .fc-scrollgrid {
     border-color: #eef1f9 !important;
   }
-  .dashcode-app & td {
+  .progcoder-app & td {
     @apply border-slate-100 dark:border-slate-700;
   }
 
-  .dashcode-app & th {
+  .progcoder-app & th {
     @apply border-slate-100 dark:border-slate-700;
   }
   .dark & td {
@@ -5018,7 +5018,7 @@ button {
   }
 }
 .fc-scrollgrid {
-  .dashcode-app .fc-theme-standard & {
+  .progcoder-app .fc-theme-standard & {
     border-color: #eef1f9 !important;
   }
   .dark .fc-theme-standard & {
@@ -5026,7 +5026,7 @@ button {
   }
 }
 .fc-col-header-cell {
-  .dashcode-app & .fc-scrollgrid-sync-inner {
+  .progcoder-app & .fc-scrollgrid-sync-inner {
     @apply bg-slate-50 dark:bg-slate-700  text-xs text-slate-500 dark:text-slate-300 font-normal py-3;
   }
   .dark & .fc-scrollgrid-sync-inner {
@@ -5034,7 +5034,7 @@ button {
   }
 }
 .fc-scrollgrid-sync-inner {
-  .dashcode-app .fc-col-header-cell & {
+  .progcoder-app .fc-col-header-cell & {
     @apply bg-slate-50 dark:bg-slate-700  text-xs text-slate-500 dark:text-slate-300 font-normal py-3;
   }
   .dark .fc-col-header-cell & {
@@ -5042,7 +5042,7 @@ button {
   }
 }
 .fc-daygrid-day-top {
-  .dashcode-app & {
+  .progcoder-app & {
     @apply text-sm px-3 py-2  text-slate-900 dark:text-white font-normal;
   }
   .dark & {
@@ -5053,37 +5053,37 @@ button {
   }
 }
 .fc-h-event {
-  .dashcode-app & .fc-event-main-frame {
+  .progcoder-app & .fc-event-main-frame {
     @apply justify-center text-center w-max mx-auto;
   }
-  .dashcode-app & .fc-event-main-frame .fc-event-time {
+  .progcoder-app & .fc-event-main-frame .fc-event-time {
     @apply font-normal flex-none;
   }
 }
 .fc-event-main-frame {
-  .dashcode-app .fc-h-event & {
+  .progcoder-app .fc-h-event & {
     @apply justify-center text-center w-max mx-auto;
   }
-  .dashcode-app .fc-h-event & .fc-event-time {
+  .progcoder-app .fc-h-event & .fc-event-time {
     @apply font-normal flex-none;
   }
 }
 .fc-event-time {
-  .dashcode-app .fc-h-event .fc-event-main-frame & {
+  .progcoder-app .fc-h-event .fc-event-main-frame & {
     @apply font-normal flex-none;
   }
-  .dashcode-app & {
+  .progcoder-app & {
     @apply text-sm font-normal;
   }
 }
 .fc-event-title {
-  .dashcode-app & {
+  .progcoder-app & {
     font-size: 14px !important;
     font-weight: 300 !important;
   }
 }
 .fc-toolbar-title {
-  .dashcode-app .fc & {
+  .progcoder-app .fc & {
     @apply text-lg font-normal text-slate-600 dark:text-slate-300;
   }
   .dark .fc & {
@@ -5091,87 +5091,87 @@ button {
   }
 }
 .fc-daygrid-event-dot {
-  .dashcode-app & {
+  .progcoder-app & {
     @apply hidden;
   }
 }
 .fc-button-group {
   @media (max-width: 981px) {
-    .dashcode-app & {
+    .progcoder-app & {
       display: block !important;
     }
   }
 }
 .fc-toolbar {
   @media (max-width: 981px) {
-    .dashcode-app .fc & {
+    .progcoder-app .fc & {
       display: block !important;
     }
-    .dashcode-app .fc & {
+    .progcoder-app .fc & {
       @apply space-y-4;
     }
   }
 }
 .fc-timegrid-axis-cushion {
-  .dashcode-app .fc & {
+  .progcoder-app .fc & {
     @apply dark:text-slate-300;
   }
 }
 .fc-timegrid-slot-label-cushion {
-  .dashcode-app .fc & {
+  .progcoder-app .fc & {
     @apply dark:text-slate-300;
   }
 }
 .fc-list-event {
-  .dashcode-app .fc &:hover td {
+  .progcoder-app .fc &:hover td {
     @apply bg-inherit;
   }
 }
 .fc-list-event-dot {
-  .dashcode-app .fc & {
+  .progcoder-app .fc & {
     @apply hidden;
   }
 }
 .fc-direction-ltr {
-  .dashcode-app & .fc-list-day-text {
+  .progcoder-app & .fc-list-day-text {
     font-size: 16px;
     font-weight: 500;
   }
 
-  .dashcode-app & .fc-list-day-side-text {
+  .progcoder-app & .fc-list-day-side-text {
     font-size: 16px;
     font-weight: 500;
   }
 }
 .fc-list-day-text {
-  .dashcode-app .fc-direction-ltr & {
+  .progcoder-app .fc-direction-ltr & {
     font-size: 16px;
     font-weight: 500;
   }
 
-  .dashcode-app .fc-direction-rtl & {
+  .progcoder-app .fc-direction-rtl & {
     font-size: 16px;
     font-weight: 500;
   }
 }
 .fc-direction-rtl {
-  .dashcode-app & .fc-list-day-side-text {
+  .progcoder-app & .fc-list-day-side-text {
     font-size: 16px;
     font-weight: 500;
   }
 
-  .dashcode-app & .fc-list-day-text {
+  .progcoder-app & .fc-list-day-text {
     font-size: 16px;
     font-weight: 500;
   }
 }
 .fc-list-day-side-text {
-  .dashcode-app .fc-direction-rtl & {
+  .progcoder-app .fc-direction-rtl & {
     font-size: 16px;
     font-weight: 500;
   }
 
-  .dashcode-app .fc-direction-ltr & {
+  .progcoder-app .fc-direction-ltr & {
     font-size: 16px;
     font-weight: 500;
   }
@@ -5181,7 +5181,7 @@ button {
     @apply opacity-70;
   }
 }
-.dashcode-calender {
+.progcoder-calender {
   & .primary {
     @apply bg-[#4669FA] border-none text-white text-center px-2 font-medium text-sm;
   }
@@ -5205,36 +5205,36 @@ button {
   }
 }
 .primary {
-  .dashcode-calender & {
+  .progcoder-calender & {
     @apply bg-[#4669FA] border-none text-white text-center px-2 font-medium text-sm;
   }
 }
 .secondary {
-  .dashcode-calender & {
+  .progcoder-calender & {
     @apply bg-[#A0AEC0] border-none text-white text-center px-2 font-medium text-sm;
   }
 }
 .danger {
-  .dashcode-calender & {
+  .progcoder-calender & {
     @apply bg-[#F1595C] border-none text-white text-center px-2 font-medium text-sm;
   }
 }
 .info {
-  .dashcode-calender & {
+  .progcoder-calender & {
     @apply bg-[#0CE7FA] border-none text-white text-center px-2 font-medium text-sm;
   }
 }
 .warning {
-  .dashcode-calender & {
+  .progcoder-calender & {
     @apply bg-[#FA916B] border-none text-white text-center px-2 font-medium text-sm;
   }
 }
 .success {
-  .dashcode-calender & {
+  .progcoder-calender & {
     @apply bg-[#50C793] border-none text-white text-center px-2 font-medium text-sm;
   }
 }
-.dashcode-app-header {
+.progcoder-app-header {
   @media print {
     @apply hidden;
   }
@@ -5273,7 +5273,7 @@ html,
 body {
   @apply h-full;
 }
-.dashcode-app-wrapper {
+.progcoder-app-wrapper {
   @apply relative;
 }
 .single-sidebar-menu .ReactCollapse--collapse {
@@ -5299,20 +5299,20 @@ html[dir="rtl"] .recharts-wrapper {
 html[dir="rtl"] .recharts-yAxis .recharts-text {
   text-anchor: start;
 }
-.dashcode-app .leaflet-control {
+.progcoder-app .leaflet-control {
   z-index: 0 !important;
 }
-.dashcode-app .leaflet-control-container {
+.progcoder-app .leaflet-control-container {
   z-index: 555 !important;
   position: relative;
 }
-.dashcode-app .recharts-curve.recharts-tooltip-cursor {
+.progcoder-app .recharts-curve.recharts-tooltip-cursor {
   display: none;
 }
-.dashcode-app .recharts-wrapper.bar-chart .recharts-tooltip-cursor {
+.progcoder-app .recharts-wrapper.bar-chart .recharts-tooltip-cursor {
   fill: transparent;
 }
-.dashcode-app .recharts-tooltip-wrapper {
+.progcoder-app .recharts-tooltip-wrapper {
   border: none !important;
 }
 

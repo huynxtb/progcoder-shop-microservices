@@ -123,24 +123,32 @@ import Customers from "./pages/ecommerce/customers";
 import Sellers from "./pages/ecommerce/sellers";
 import AddProduct from "./pages/ecommerce/add-product";
 import InvoiceEPage from "./pages/ecommerce/invoice-ecompage";
+import RootRedirect from "./components/auth/RootRedirect";
 
 function App() {
   return (
     <main className="App  relative">
       <Routes>
-        <Route path="/" element={<AuthLayout />}>
-          <Route path="/" element={<Login />} />
-          <Route path="/login2" element={<Login2 />} />
-          <Route path="/login3" element={<Login3 />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/register2" element={<Register2 />} />
-          <Route path="/register3" element={<Register3 />} />
-          <Route path="/forgot-password" element={<ForgotPass />} />
-          <Route path="/forgot-password2" element={<ForgotPass2 />} />
-          <Route path="/forgot-password3" element={<ForgotPass3 />} />
-          <Route path="/lock-screen" element={<LockScreen />} />
-          <Route path="/lock-screen2" element={<LockScreen2 />} />
-          <Route path="/lock-screen3" element={<LockScreen3 />} />
+        {/* Root route - load ecommerce if authenticated, redirect to login if not */}
+        <Route path="/" element={<Layout />}>
+          <Route index element={<RootRedirect />} />
+        </Route>
+        {/* Login route */}
+        <Route path="/login" element={<AuthLayout />}>
+          <Route index element={<Login />} />
+        </Route>
+        {/* Other auth routes */}
+        <Route path="/auth" element={<AuthLayout />}>
+          <Route path="login3" element={<Login3 />} />
+          <Route path="register" element={<Register />} />
+          <Route path="register2" element={<Register2 />} />
+          <Route path="register3" element={<Register3 />} />
+          <Route path="forgot-password" element={<ForgotPass />} />
+          <Route path="forgot-password2" element={<ForgotPass2 />} />
+          <Route path="forgot-password3" element={<ForgotPass3 />} />
+          <Route path="lock-screen" element={<LockScreen />} />
+          <Route path="lock-screen2" element={<LockScreen2 />} />
+          <Route path="lock-screen3" element={<LockScreen3 />} />
         </Route>
         <Route path="/*" element={<Layout />}>
           <Route path="dashboard" element={<Dashboard />} />

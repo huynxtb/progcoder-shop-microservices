@@ -37,7 +37,7 @@ const ShippingInfo = () => {
                   <p>Phone No:</p>
                 </div>
                 <div className="  md:text-base text-sm text-slate-900 dark:text-slate-300  space-y-1.5 ">
-                  <p>395/B Dashcode Tower, Road 29, Mohakhali DOHS</p>
+                  <p>395/B progcoder Tower, Road 29, Mohakhali DOHS</p>
                   <p>1206</p>
                   <p>Mohakhali</p>
                   <p>Dhaka</p>
@@ -65,7 +65,7 @@ const ShippingInfo = () => {
                   <p>Phone No:</p>
                 </div>
                 <div className="  md:text-base text-sm text-slate-900 dark:text-slate-300  space-y-1.5 ">
-                  <p>395/B Dashcode Tower, Road 29, Mohakhali DOHS</p>
+                  <p>395/B progcoder Tower, Road 29, Mohakhali DOHS</p>
                   <p>1206</p>
                   <p>Mohakhali</p>
                   <p>Dhaka</p>

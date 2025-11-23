@@ -64,7 +64,7 @@ const Navmenu = ({ menus }) => {
         });
       }
     });
-    document.title = `Dashcode  | ${locationName}`;
+    document.title = `progcoder  | ${locationName}`;
 
     setActiveSubmenu(submenuIndex);
     setMultiMenu(multiMenuIndex);

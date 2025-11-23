@@ -21,8 +21,8 @@ createServer({
 
   seeds(server) {
     server.create("user", {
-      email: "dashcode@gmail.com",
-      password: "dashcode",
+      email: "progcoder@gmail.com",
+      password: "progcoder",
     });
     products.forEach((product, i) => {
       server.create("product", {
@@ -60,6 +60,33 @@ createServer({
     ShopServerConfig(this);
     calendarServerConfig(this);
     this.timing = 500;
-    //this.passthrough();
+    
+    // Passthrough all requests to Keycloak server
+    // Get Keycloak URL from environment variable or use default
+    const keycloakUrl = import.meta.env.VITE_KEYCLOAK_URL || 'http://localhost:8080';
+    
+    // Passthrough requests to Keycloak server using full URL pattern
+    // This allows Keycloak authentication requests to bypass Mirage
+    this.passthrough(`${keycloakUrl}/**`);
+    
+    // Also passthrough localhost:8080 as fallback (common Keycloak dev setup)
+    if (keycloakUrl !== 'http://localhost:8080') {
+      this.passthrough('http://localhost:8080/**');
+    }
+    
+    // Additional passthrough for Keycloak-specific paths (in case URL matching doesn't work)
+    this.passthrough((request) => {
+      const url = request.url || request.requestHeaders?.['x-url'] || '';
+      
+      // Check if request is to Keycloak by looking for Keycloak-specific paths
+      if (
+        url.includes('/realms/') ||
+        url.includes('/protocol/openid-connect/')
+      ) {
+        return true;
+      }
+      
+      return false;
+    });
   },
 });

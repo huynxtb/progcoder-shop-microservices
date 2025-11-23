@@ -1,5 +1,5 @@
 import React, { useEffect, Suspense, Fragment, useRef } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import Header from "@/components/partials/header";
 import Sidebar from "@/components/partials/sidebar";
 import Settings from "@/components/partials/settings";
@@ -17,17 +17,38 @@ import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
 import Loading from "@/components/Loading";
 import { motion, AnimatePresence } from "framer-motion";
+import { useKeycloak } from "@/contexts/KeycloakContext";
+
 const Layout = () => {
   const { width, breakpoints } = useWidth();
   const [collapsed] = useSidebar();
   const navigate = useNavigate();
+  const location = useLocation();
   const { isAuth, user } = useSelector((state) => state.auth);
+  const { authenticated, keycloakReady, login } = useKeycloak();
 
   useEffect(() => {
-    if (!isAuth || !user) {
-      navigate("/");
+    // Wait for Keycloak to be ready
+    if (!keycloakReady) {
+      return;
     }
-  }, [isAuth, navigate]);
+
+    // Prioritize Keycloak authentication state - it's the source of truth
+    // Only redirect if Keycloak says user is not authenticated
+    if (!authenticated) {
+      // If not authenticated, redirect to /login
+      // But don't redirect if already on login page or auth pages
+      if (
+        location.pathname !== "/login" &&
+        !location.pathname.startsWith("/login") &&
+        !location.pathname.startsWith("/auth")
+      ) {
+        navigate("/login", { replace: true });
+      }
+    }
+    // If authenticated, allow access regardless of Redux state
+    // Redux state (isAuth, user) is only for UI display, not for access control
+  }, [authenticated, keycloakReady, navigate, location.pathname]);
   const switchHeaderClass = () => {
     if (menuType === "horizontal" || menuHidden) {
       return "ltr:ml-0 rtl:mr-0";
