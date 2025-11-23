@@ -1,11 +1,4 @@
-﻿#region using
-
-
-#region using
-
-using Notification.Application.Dtos.Notifications;
-
-#endregion
+﻿using Notification.Application.Dtos.Notifications;
 
 namespace Notification.Application.Models.Results;
 

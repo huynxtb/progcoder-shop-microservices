@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace Notification.Domain.Models.Externals.Keycloaks;
 
-public sealed class KeycloakAccessTokenResponse
+public sealed class KeycloakAccessToken
 {
     #region Fields, Properties and Indexers
 

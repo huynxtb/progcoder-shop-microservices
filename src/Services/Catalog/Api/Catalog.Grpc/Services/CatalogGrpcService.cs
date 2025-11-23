@@ -51,5 +51,16 @@ public sealed class CatalogGrpcService(ISender sender) : CatalogGrpc.CatalogGrpc
         return response;
     }
 
+    public override async Task<GetCountProductResponse> GetCountProduct(GetCountProductRequest request, ServerCallContext context)
+    {
+        var query = new GetCountProductQuery();
+        var result = await sender.Send(query);
+        var response = new GetCountProductResponse
+        {
+            Count = result.Count
+        };
+        return response;
+    }
+
     #endregion
 }

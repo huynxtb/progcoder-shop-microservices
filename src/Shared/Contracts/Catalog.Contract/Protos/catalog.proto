@@ -8,6 +8,7 @@ package catalog;
 service CatalogGrpc {
 	rpc GetProducts (GetProductsRequest) returns (GetProductsResponse);
 	rpc GetProductById (GetProductByIdRequest) returns (GetProductByIdResponse);
+	rpc GetCountProduct (GetCountProductRequest) returns (GetCountProductResponse);
 }
 
 // ==== Messages ====
@@ -34,4 +35,12 @@ message GetProductByIdRequest {
 
 message GetProductByIdResponse {
   Product product = 1;
+}
+
+message GetCountProductRequest {
+
+}
+
+message GetCountProductResponse {
+  int32 count = 1;
 }

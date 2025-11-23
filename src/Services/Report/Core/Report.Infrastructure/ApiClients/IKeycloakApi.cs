@@ -1,11 +1,11 @@
 ﻿#region using
 
-using Notification.Domain.Models.Externals.Keycloaks;
 using Refit;
+using Report.Domain.Models.Externals.Keycloaks;
 
 #endregion
 
-namespace Notification.Infrastructure.ApiClients;
+namespace Report.Infrastructure.ApiClients;
 
 public interface IKeycloakApi
 {
@@ -18,14 +18,19 @@ public interface IKeycloakApi
         [Body(BodySerializationMethod.UrlEncoded)] Dictionary<string, string> form);
 
     [Get("/admin/realms/{realm}/users")]
-    Task<List<KeycloakUser>> GetUsersAsync(
+    Task<List<KeycloakUserResponse>> GetUsersAsync(
         [AliasAs("realm")] string realm,
         [Header("Authorization")] string bearerToken);
 
     [Get("/admin/realms/{realm}/roles/{role}/users")]
-    Task<List<KeycloakUser>> GetUsersByRoleAsync(
+    Task<List<KeycloakUserResponse>> GetUsersByRoleAsync(
         [AliasAs("realm")] string realm,
         [AliasAs("role")] string role,
+        [Header("Authorization")] string bearerToken);
+
+    [Get("/admin/realms/{realm}/users/count")]
+    Task<List<KeycloakUserResponse>> GetCountUsersAsync(
+        [AliasAs("realm")] string realm,
         [Header("Authorization")] string bearerToken);
 
     #endregion

@@ -48,7 +48,7 @@ public sealed class KeycloakService(
 
     #region Methods
 
-    private async Task<KeycloakAccessTokenResponse> GetAccessTokenAsync(CancellationToken cancellationToken)
+    private async Task<KeycloakAccessToken> GetAccessTokenAsync(CancellationToken cancellationToken)
     {
         var realm = cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.Realm}"]!;
         var clientId = cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.ClientId}"]!;

@@ -17,7 +17,7 @@ public sealed class NotificationMappingProfile : Profile
     public NotificationMappingProfile()
     {
         CreateMap<NotificationEntity, NotificationDto>();
-        CreateMap<KeycloakUserResponse, KeycloakUserDto>();
+        CreateMap<KeycloakUser, KeycloakUserDto>();
         CreateMap<KeycloakAccessTokenResponse, KeycloakAccessTokenDto>();
     }
 
