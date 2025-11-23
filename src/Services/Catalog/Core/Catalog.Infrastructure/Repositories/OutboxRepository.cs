@@ -98,18 +98,15 @@ public class OutboxRepository(IDocumentSession session, ILogger<OutboxRepository
         try
         {
             // Query for retry messages
-            // Note: Marten doesn't support null-coalescing in OrderBy, so we fetch a larger batch,
-            // sort in memory to handle null NextAttemptOnUtc properly, then take the batch size
             var allRetryMessages = await session.Query<OutboxMessageEntity>()
                 .Where(x => x.ProcessedOnUtc == null 
                     && x.AttemptCount < x.MaxAttempts
                     && (x.NextAttemptOnUtc == null || x.NextAttemptOnUtc <= now)
                     && (x.ClaimedOnUtc == null || x.ClaimedOnUtc < expiredTime))
-                .OrderBy(x => x.OccurredOnUtc) // Initial ordering for database query
-                .Take(batchSize * 2) // Fetch more to ensure correct sorting after in-memory sort
+                .OrderBy(x => x.OccurredOnUtc)
+                .Take(batchSize * 2)
                 .ToListAsync(cancellationToken);
             
-            // Sort in memory to handle null NextAttemptOnUtc properly (use OccurredOnUtc as fallback)
             var retryMessages = allRetryMessages
                 .OrderBy(x => x.NextAttemptOnUtc ?? x.OccurredOnUtc)
                 .ThenBy(x => x.OccurredOnUtc)
@@ -138,7 +135,6 @@ public class OutboxRepository(IDocumentSession session, ILogger<OutboxRepository
         catch (Exception ex)
         {
             logger.LogError(ex, "Error occurred while claiming retry outbox messages");
-            // Transaction will be rolled back automatically
             throw;
         }
     }

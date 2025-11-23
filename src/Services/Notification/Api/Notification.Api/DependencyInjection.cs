@@ -1,12 +1,13 @@
 ﻿#region using
 
+using BuildingBlocks.Authentication.Extensions;
 using BuildingBlocks.DistributedTracing;
 using BuildingBlocks.Logging;
 using BuildingBlocks.Swagger.Extensions;
-using HealthChecks.UI.Client;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Common.Configurations;
 using Common.Constants;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 #endregion
 

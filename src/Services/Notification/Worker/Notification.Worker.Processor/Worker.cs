@@ -12,7 +12,7 @@ using MediatR;
 namespace Notification.Worker.Processor;
 
 public sealed class Worker(
-    ISender sender,
+    IServiceScopeFactory serviceScopeFactory,
     IConfiguration cfg,
     ILogger<Worker> logger) : BackgroundService
 {
@@ -24,6 +24,9 @@ public sealed class Worker(
     {
         while (!stoppingToken.IsCancellationRequested)
         {
+            using var scope = serviceScopeFactory.CreateScope();
+            var sender = scope.ServiceProvider.GetRequiredService<ISender>();
+
             var now = DateTimeOffset.UtcNow;
             var batchSize = cfg.GetValue<int>($"{WorkerCfg.Proccessor.Section}:{WorkerCfg.Proccessor.BatchSize}", 100);
             var dueDiliveries = await sender.Send(new GetDueDeliveriesQuery(now, batchSize), stoppingToken);

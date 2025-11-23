@@ -8,8 +8,6 @@ public sealed class TemplateKeyMap
 
     public const string ProductName = "PRODUCT_NAME";
 
-    public const string Status = "STATUS";
-
     public const string PerformBy = "PERFORM_BY";
 
     #endregion

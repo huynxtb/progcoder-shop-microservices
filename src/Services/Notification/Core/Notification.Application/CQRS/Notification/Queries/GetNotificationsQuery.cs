@@ -20,7 +20,8 @@ public sealed class GetNotificationsQueryHandler(
 
     public async Task<GetNotificationsReponse> Handle(GetNotificationsQuery query, CancellationToken cancellationToken)
     {
-        var result = await queryRepo.GetNotificationsAsync(Guid.Parse(query.Actor.ToString()), cancellationToken);
+        var userId = Guid.Parse(query.Actor.ToString());
+        var result = await queryRepo.GetNotificationsAsync(userId, cancellationToken);
         var items = mapper.Map<List<NotificationDto>>(result);
         var reponse = new GetNotificationsReponse(items);
         return reponse;

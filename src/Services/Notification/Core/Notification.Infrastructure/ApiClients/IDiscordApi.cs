@@ -14,7 +14,7 @@ public interface IDiscordApi
     [Post("/api/webhooks/{webhookId}/{webhookToken}")]
     Task<ApiResponse<object>> SendMessageAsync(
         [AliasAs("webhookId")] string webhookId,
-        [AliasAs("webhookId")] string webhookToken,
+        [AliasAs("webhookToken")] string webhookToken,
         [Body] DiscordWebhookPayload payload);
 
     #endregion

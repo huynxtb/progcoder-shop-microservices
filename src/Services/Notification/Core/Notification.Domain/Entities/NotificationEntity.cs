@@ -1,5 +1,7 @@
 ﻿#region using
 
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using Notification.Domain.Abstractions;
 using Notification.Domain.Enums;
 using Common.Constants;
@@ -13,6 +15,7 @@ public sealed class NotificationEntity : Entity<Guid>
 {
     #region Fields, Properties and Indexers
 
+    [BsonRepresentation(BsonType.String)]
     public Guid? UserId { get; private set; }
 
     public string? Title { get; private set; }
@@ -22,12 +25,6 @@ public sealed class NotificationEntity : Entity<Guid>
     public bool IsRead { get; private set; }
 
     public DateTimeOffset? ReadAt { get; private set; }
-
-    #endregion
-
-    #region Ctors
-
-    private NotificationEntity() { }
 
     #endregion
 

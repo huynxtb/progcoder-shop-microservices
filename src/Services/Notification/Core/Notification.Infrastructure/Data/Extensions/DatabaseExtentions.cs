@@ -30,7 +30,7 @@ public static class DatabaseExtentions
                 channel: Domain.Enums.ChannelType.InApp,
                 subject: "Product Updated",
                 isHtml: false,
-                body: "The product {{PRODUCT_NAME}} has {{STATUS}} by {{PERFORM_BY}}",
+                body: "The product {{PRODUCT_NAME}} has updated by {{PERFORM_BY}}",
                 performedBy: Actor.System(AppConstants.Service.Notification).ToString()),
             TemplateEntity.Create(
                 id: Guid.Parse("c63f5f8d-daba-409f-88f9-fc3a9eb3e7e2"),
@@ -38,7 +38,7 @@ public static class DatabaseExtentions
                 channel: Domain.Enums.ChannelType.Discord,
                 subject: "Product Updated",
                 isHtml: false,
-                body: "The product {{PRODUCT_NAME}} has {{STATUS}} by {{PERFORM_BY}}",
+                body: "The product {{PRODUCT_NAME}} has updated by {{PERFORM_BY}}",
                 performedBy: Actor.System(AppConstants.Service.Notification).ToString()),
         };
 

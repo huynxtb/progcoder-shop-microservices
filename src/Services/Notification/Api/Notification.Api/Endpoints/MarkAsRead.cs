@@ -5,6 +5,7 @@ using Notification.Api.Constants;
 using Notification.Application.CQRS.Notification.Commands;
 using Common.Models.Reponses;
 using BuildingBlocks.Abstractions.ValueObjects;
+using BuildingBlocks.Authentication.Extensions;
 
 #endregion
 

@@ -68,7 +68,7 @@ internal class OutboxBackgroundService : BackgroundService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while processing outbox messages");
+            _logger.LogError("An error occurred while processing outbox messages {MESSAGE}", ex.Message);
         }
     }
 

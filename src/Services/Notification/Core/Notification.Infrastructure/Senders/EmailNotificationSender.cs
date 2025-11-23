@@ -2,18 +2,18 @@
 
 using Microsoft.Extensions.Configuration;
 using Notification.Application.Models;
-using Notification.Application.Services;
 using Notification.Domain.Enums;
 using Common.Configurations;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using Notification.Application.Strategy;
 
 #endregion
 
-namespace Notification.Infrastructure.Services.Strategies;
+namespace Notification.Infrastructure.Senders;
 
-public sealed class EmailStartegyService : INotificationStartegyService
+public sealed class EmailNotificationSender : INotificationSender
 {
     #region Fields, Properties and Indexers
 
@@ -39,7 +39,7 @@ public sealed class EmailStartegyService : INotificationStartegyService
 
     #region Ctors
 
-    public EmailStartegyService(IConfiguration cfg)
+    public EmailNotificationSender(IConfiguration cfg)
     {
         _smtpServer = cfg.GetValue<string>($"{NotificationCfg.EmailSettings.Section}:{NotificationCfg.EmailSettings.SmtpServer}")!;
         _smtpPort = cfg.GetValue($"{NotificationCfg.EmailSettings.Section}:{NotificationCfg.EmailSettings.SmtpPort}", 587);

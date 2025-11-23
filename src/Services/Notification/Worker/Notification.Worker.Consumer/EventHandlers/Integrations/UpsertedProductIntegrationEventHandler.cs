@@ -26,13 +26,9 @@ public sealed class UpsertedProductIntegrationEventHandler(
         logger.LogInformation("Integration Event handled: {IntegrationEvent}", context.Message.GetType().Name);
 
         var integrationEvent = context.Message;
-        var status = integrationEvent.Published
-            ? "Published"
-            : "UnPublished";
         var templateData = new Dictionary<string, object>
         {
             { TemplateKeyMap.ProductName, integrationEvent.Name },
-            { TemplateKeyMap.Status, status },
             { TemplateKeyMap.PerformBy, integrationEvent.LastModifiedBy! }
         };
 
@@ -41,7 +37,7 @@ public sealed class UpsertedProductIntegrationEventHandler(
             EventId = integrationEvent.Id,
             TemplateKey = TemplateKey.ProductUpserted,
             ChannelType = ChannelType.Discord,
-            To = ["discord"],
+            To = [],
             TemplateData = templateData,
             Priority = DeliveryPriority.Medium,
             MaxAttempts = AppConstants.MaxAttempts

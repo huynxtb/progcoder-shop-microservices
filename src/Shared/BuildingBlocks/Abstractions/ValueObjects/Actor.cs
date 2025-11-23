@@ -2,7 +2,7 @@
 
 public enum ActorKind { User, System, Job, Worker }
 
-public readonly record struct Actor(ActorKind Kind, string? Value = null)
+public readonly record struct Actor(ActorKind Kind, string Value)
 {
     #region Methods
 
@@ -22,9 +22,7 @@ public readonly record struct Actor(ActorKind Kind, string? Value = null)
     {
         if (Kind == ActorKind.User) return Value!;
 
-        return Value is null
-           ? $"{Kind.ToString().ToLowerInvariant()}"
-           : $"{Kind.ToString().ToLowerInvariant()}:{Value}";
+        return $"{Kind.ToString().ToLowerInvariant()}:{Value}";
     }
 
     #endregion

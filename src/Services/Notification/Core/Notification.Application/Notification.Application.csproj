@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Services\INotificationStartegyService.cs" />
+    <None Include="Strategy\INotificationSender.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,18 +2,18 @@
 
 using Microsoft.Extensions.Configuration;
 using Notification.Application.Models;
-using Notification.Application.Services;
 using Notification.Domain.Enums;
 using Notification.Domain.Models.Externals.Discord;
 using Notification.Infrastructure.ApiClients;
 using Common.Configurations;
 using Refit;
+using Notification.Application.Strategy;
 
 #endregion
 
-namespace Notification.Infrastructure.Services.Strategies;
+namespace Notification.Infrastructure.Senders;
 
-public sealed class DiscordStartegyService : INotificationStartegyService
+public sealed class DiscordNotificationSender : INotificationSender
 {
     #region Fields, Properties and Indexers
 
@@ -35,7 +35,7 @@ public sealed class DiscordStartegyService : INotificationStartegyService
 
     #region Ctors
 
-    public DiscordStartegyService(
+    public DiscordNotificationSender(
         IConfiguration cfg,
         IDiscordApi discordApi)
     {

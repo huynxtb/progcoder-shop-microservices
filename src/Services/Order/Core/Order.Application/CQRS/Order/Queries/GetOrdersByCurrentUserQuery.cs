@@ -31,19 +31,8 @@ public sealed class GetOrdersByCurrentUserQueryHandler(IApplicationDbContext dbC
         var paging = query.Paging;
         var actor = query.Actor;
 
-        // Extract user ID from actor
-        if (actor.Kind != ActorKind.User || string.IsNullOrEmpty(actor.Key))
-        {
-            throw new UnauthorizedAccessException("User context is required");
-        }
-
-        if (!Guid.TryParse(actor.Key, out var currentUserId))
-        {
-            throw new UnauthorizedAccessException("Invalid user context");
-        }
-
         var orderQuery = dbContext.Orders
-            .Where(x => x.Customer.Id == currentUserId);
+            .Where(x => x.Customer.Id == Guid.Parse(actor.ToString()));
 
         // Apply filters
         if (!filter.SearchText.IsNullOrWhiteSpace())

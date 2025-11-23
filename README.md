@@ -23,4 +23,8 @@ Discount 5004
 Payment 5007
 Search 5008
 Report 5009
-JobScheduler 5010
+
+
+FE: 
+   - App.Store: 3001
+   - App.Admin: 3002

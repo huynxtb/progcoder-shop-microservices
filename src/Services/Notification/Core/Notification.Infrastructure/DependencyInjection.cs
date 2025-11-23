@@ -6,8 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using Notification.Application.Providers;
-using Notification.Application.Resolvers;
 using Notification.Application.Services;
+using Notification.Application.Strategy;
 using Notification.Infrastructure.ApiClients;
 using Notification.Infrastructure.Data.Extensions;
 using Notification.Infrastructure.Providers;
@@ -29,10 +29,10 @@ public static class DependencyInjection
     {
         services.Scan(s => s
             .FromAssemblyOf<InfrastructureMarker>()
-            .AddClasses(c => c.Where(t => t.Name.EndsWith("StartegyService")))
+            .AddClasses(c => c.Where(t => t.Name.EndsWith("NotificationSender")))
             .UsingRegistrationStrategy(Scrutor.RegistrationStrategy.Skip)
             .AsImplementedInterfaces()
-            .WithSingletonLifetime());
+            .WithTransientLifetime());
 
         services.Scan(s => s
             .FromAssemblyOf<InfrastructureMarker>()
@@ -65,7 +65,7 @@ public static class DependencyInjection
         }
 
         services.AddSingleton<ITemplateProvider, TemplateProvider>();
-        services.AddSingleton<INotificationChannelResolver, NotificationChannelResolver>();
+        services.AddScoped<INotificationSenderResolver, NotificationChannelResolver>();
 
         services.AddRefitClient<IKeycloakApi>()
                 .ConfigureHttpClient(c =>

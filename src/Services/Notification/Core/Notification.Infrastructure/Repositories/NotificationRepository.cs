@@ -32,7 +32,7 @@ public sealed class NotificationRepository : ICommandNotificationRepository, IQu
     {
         var filterBuilder = Builders<NotificationEntity>.Filter;
         var finalFilter = filterBuilder.And(
-            filterBuilder.Eq(x => x.UserId, userId),
+            filterBuilder.Eq(x => x.UserId, (Guid?)userId),
             filterBuilder.Eq(x => x.IsRead, false)
         );
         var sort = Builders<NotificationEntity>.Sort
@@ -47,7 +47,7 @@ public sealed class NotificationRepository : ICommandNotificationRepository, IQu
     {
         var filterBuilder = Builders<NotificationEntity>.Filter;
         var filter = filterBuilder.And(
-            filterBuilder.Eq(x => x.UserId, userId),
+            filterBuilder.Eq(x => x.UserId, (Guid?)userId),
             filterBuilder.Eq(x => x.Id, id)
         );
 

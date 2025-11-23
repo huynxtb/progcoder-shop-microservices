@@ -25,11 +25,11 @@ public sealed class StockChangedEventHandler(IMediator sender, ILogger<StockChan
 
         if (message.Amount > 0)
         {
-            await sender.Send(new ChangeProductStatusCommand(message.ProductId, ProductStatus.InStock, Actor.Worker(AppConstants.Worker.Catalog)));
+            await sender.Send(new ChangeProductStatusCommand(message.ProductId, ProductStatus.InStock, Actor.Worker(AppConstants.Service.Catalog)));
         }
         else
         {
-            await sender.Send(new ChangeProductStatusCommand(message.ProductId, ProductStatus.OutOfStock, Actor.Worker(AppConstants.Worker.Catalog)));
+            await sender.Send(new ChangeProductStatusCommand(message.ProductId, ProductStatus.OutOfStock, Actor.Worker(AppConstants.Service.Catalog)));
         }
     }
 

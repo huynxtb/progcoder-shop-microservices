@@ -2,11 +2,11 @@
 
 using Notification.Application.Data.Repositories;
 using Notification.Application.Models;
-using Notification.Application.Resolvers;
 using Notification.Domain.Enums;
 using BuildingBlocks.Abstractions.ValueObjects;
 using Common.Constants;
 using Microsoft.Extensions.Logging;
+using Notification.Application.Strategy;
 
 #endregion
 
@@ -31,7 +31,7 @@ public sealed class ProcessDeliveryCommandValidator : AbstractValidator<ProcessD
 public sealed class ProcessDeliveryCommandHandler(
     IQueryDeliveryRepository deliveryQueryRepo,
     ICommandDeliveryRepository deliveryCommandRepo,
-    INotificationChannelResolver resolver,
+    INotificationSenderResolver resolver,
     ILogger<ProcessDeliveryCommandHandler> logger)
     : ICommandHandler<ProcessDeliveryCommand, bool>
 {

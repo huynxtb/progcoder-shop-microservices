@@ -5,9 +5,9 @@ using Notification.Domain.Enums;
 
 #endregion
 
-namespace Notification.Application.Services;
+namespace Notification.Application.Strategy;
 
-public interface INotificationStartegyService
+public interface INotificationSender
 {
     #region Fields, Properties and Indexers
     

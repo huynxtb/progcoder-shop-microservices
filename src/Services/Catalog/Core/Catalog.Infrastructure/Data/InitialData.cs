@@ -26,8 +26,15 @@ public sealed class InitialCategoryData : IInitialData
             .WrapAsync(circuitBreakerPolicy)
             .ExecuteAsync(async (ct) =>
             {
-                await SeedDataAsync(store, ct);
-                return true;
+                try
+                {
+                    await SeedDataAsync(store, ct);
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
             }, cancellation);
     }
 
