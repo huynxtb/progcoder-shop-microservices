@@ -1,7 +1,15 @@
+#region using
+
 using App.Job;
 
+#endregion
+
 var builder = Host.CreateApplicationBuilder(args);
-builder.Services.AddHostedService<Worker>();
+
+builder.Services.AddWorkerServices(builder.Configuration);
 
 var host = builder.Build();
-host.Run();
+
+await host.Services.RegisterJobsAsync();
+
+await host.RunAsync();

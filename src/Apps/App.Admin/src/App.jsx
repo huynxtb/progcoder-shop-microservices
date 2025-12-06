@@ -111,6 +111,13 @@ const CalenderPage = lazy(() => import("./pages/app/calendar"));
 
 const EcommercePage = lazy(() => import("./pages/ecommerce"));
 
+// New admin pages
+const CreateProduct = lazy(() => import("./pages/ecommerce/create-product"));
+const InventoryPage = lazy(() => import("./pages/inventory"));
+const CategoryPage = lazy(() => import("./pages/category"));
+const CouponPage = lazy(() => import("./pages/coupon"));
+const CreateCoupon = lazy(() => import("./pages/coupon/create-coupon"));
+
 import Loading from "@/components/Loading";
 import { ProductDetails } from "./pages/ecommerce/productDetails";
 import Cart from "./pages/ecommerce/cart";
@@ -151,7 +158,7 @@ function App() {
           <Route path="lock-screen3" element={<LockScreen3 />} />
         </Route>
         <Route path="/*" element={<Layout />}>
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="dashboard" element={<Ecommerce />} />
           <Route path="ecommerce" element={<Ecommerce />} />
           <Route path="crm" element={<CrmPage />} />
           <Route path="project" element={<ProjectPage />} />
@@ -221,6 +228,11 @@ function App() {
 
           <Route path="products" element={<EcommercePage />} />
           <Route path="products/:id" element={<ProductDetails />} />
+          <Route path="create-product" element={<CreateProduct />} />
+          <Route path="inventories" element={<InventoryPage />} />
+          <Route path="categories" element={<CategoryPage />} />
+          <Route path="coupons" element={<CouponPage />} />
+          <Route path="create-coupon" element={<CreateCoupon />} />
           <Route path="cart" element={<Cart />} />
           <Route path="wishlist" element={<Wishlist />} />
           <Route path="orders" element={<Orders />} />

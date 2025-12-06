@@ -1,6 +1,5 @@
 #region using
 
-using AutoMapper;
 using Notification.Application.Dtos.Keycloaks;
 using Notification.Application.Dtos.Notifications;
 using Notification.Domain.Entities;
@@ -18,7 +17,7 @@ public sealed class NotificationMappingProfile : Profile
     {
         CreateMap<NotificationEntity, NotificationDto>();
         CreateMap<KeycloakUser, KeycloakUserDto>();
-        CreateMap<KeycloakAccessTokenResponse, KeycloakAccessTokenDto>();
+        CreateMap<KeycloakAccessToken, KeycloakAccessTokenDto>();
     }
 
     #endregion

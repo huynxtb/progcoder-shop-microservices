@@ -28,3 +28,7 @@ Report 5009
 FE: 
    - App.Store: 3001
    - App.Admin: 3002
+
+App.Job
+
+dotnet ef migrations add "Init_Database" --output-dir Data\Migrations

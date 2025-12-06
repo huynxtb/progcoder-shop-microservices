@@ -106,6 +106,21 @@ const menuTitleMap = {
   "Level 1.2": "level12",
   "Level 2.1": "level21",
   "Level 2.2": "level22",
+  // External links
+  "Grafana": "grafana",
+  "Prometheus": "prometheus",
+  "Keycloak": "keycloak",
+  "MailHog": "mailhog",
+  "RabbitMQ": "rabbitmq",
+  "Github": "github",
+  // New menu items
+  "Coupons": "couponsMenu",
+  "Quản lý sản phẩm": "manageProducts",
+  "Tạo sản phẩm": "createProduct",
+  "Quản lý kho": "manageInventory",
+  "Quản lý danh mục": "manageCategories",
+  "Quản lý mã giảm giá": "manageCoupons",
+  "Tạo mã giảm giá": "createCoupon",
 };
 
 const useMenuTranslation = () => {

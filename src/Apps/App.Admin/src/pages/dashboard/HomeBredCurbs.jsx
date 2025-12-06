@@ -32,37 +32,6 @@ const HomeBredCurbs = ({ title }) => {
       <h4 className="font-medium lg:text-2xl text-xl capitalize text-slate-900 inline-block ltr:pr-4 rtl:pl-4">
         {title}
       </h4>
-      <div className="flex sm:space-x-4 space-x-2 sm:justify-end items-center rtl:space-x-reverse">
-        <Popover>
-          <PopoverButton className="flex items-center gap-1.5 text-sm/relaxed text-slate-900 bg-white dark:bg-slate-800 dark:text-white px-7 py-2.5 w-full rounded focus:outline-none">
-            <Icon icon="heroicons-outline:calendar" />
-            <span>{t("common.weekly", "Weekly")}</span>
-          </PopoverButton>
-          <PopoverPanel
-            transition
-            anchor="bottom"
-            className="bg-white dark:bg-slate-800 shadow-lg rounded-lg px-3 mt-3"
-          >
-            <DateRangePicker
-              ranges={[selectionRange]}
-              onChange={handleSelect}
-            />
-          </PopoverPanel>
-        </Popover>
-        <Popover>
-          <PopoverButton className="flex items-center gap-1.5 text-sm/relaxed text-slate-900 bg-white dark:bg-slate-800 dark:text-white px-7 py-2.5 w-full rounded focus:outline-none">
-            <Icon icon="heroicons-outline:filter" />
-            <span>{t("common.selectDate", "Select Date")}</span>
-          </PopoverButton>
-          <PopoverPanel
-            transition
-            anchor="bottom"
-            className="bg-white dark:bg-slate-800  shadow-lg rounded-lg px-3 mt-3"
-          >
-            <Calendar date={selectedDate} onChange={singleSelect} />
-          </PopoverPanel>
-        </Popover>
-      </div>
     </div>
   );
 };

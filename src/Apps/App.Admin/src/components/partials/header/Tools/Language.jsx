@@ -10,10 +10,11 @@ import { useTranslation } from "react-i18next";
 
 import Usa from "@/assets/images/flags/usa.png";
 import Gn from "@/assets/images/flags/gn.png";
+import Vi from "@/assets/images/flags/vi.png";
 
 const languages = [
   { code: "en", name: "English", image: Usa },
-  { code: "vi", name: "Tiếng Việt", image: Gn },
+  { code: "vi", name: "Tiếng Việt", image: Vi },
 ];
 
 const Language = () => {

@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Card from "@/components/ui/Card";
 import Icon from "@/components/ui/Icon";
 import Tooltip from "@/components/ui/Tooltip";
 import Textinput from "@/components/ui/Textinput";
+import Modal from "@/components/ui/Modal";
 import {
   useTable,
   useRowSelect,
@@ -13,139 +13,73 @@ import {
   usePagination,
 } from "react-table";
 
-// Sample order data
-const orderData = [
+// Sample category data
+const categoryData = [
   {
     id: 1,
-    orderNumber: "ORD-2024-001",
-    customer: {
-      name: "Nguyễn Văn A",
-      email: "nguyenvana@email.com",
-      avatar: null,
-    },
-    date: "2024-06-15T10:30:00",
-    items: 3,
-    total: 2500000,
-    paymentMethod: "COD",
-    status: "pending",
+    name: "Điện thoại",
+    slug: "dien-thoai",
+    description: "Điện thoại thông minh các loại",
+    productCount: 156,
+    status: "active",
   },
   {
     id: 2,
-    orderNumber: "ORD-2024-002",
-    customer: {
-      name: "Trần Thị B",
-      email: "tranthib@email.com",
-      avatar: null,
-    },
-    date: "2024-06-15T09:15:00",
-    items: 1,
-    total: 15000000,
-    paymentMethod: "Bank Transfer",
-    status: "processing",
+    name: "Laptop",
+    slug: "laptop",
+    description: "Máy tính xách tay",
+    productCount: 89,
+    status: "active",
   },
   {
     id: 3,
-    orderNumber: "ORD-2024-003",
-    customer: {
-      name: "Lê Văn C",
-      email: "levanc@email.com",
-      avatar: null,
-    },
-    date: "2024-06-14T16:45:00",
-    items: 5,
-    total: 4500000,
-    paymentMethod: "VNPay",
-    status: "shipped",
+    name: "Tablet",
+    slug: "tablet",
+    description: "Máy tính bảng",
+    productCount: 45,
+    status: "active",
   },
   {
     id: 4,
-    orderNumber: "ORD-2024-004",
-    customer: {
-      name: "Phạm Thị D",
-      email: "phamthid@email.com",
-      avatar: null,
-    },
-    date: "2024-06-14T14:20:00",
-    items: 2,
-    total: 890000,
-    paymentMethod: "Momo",
-    status: "delivered",
+    name: "Phụ kiện",
+    slug: "phu-kien",
+    description: "Phụ kiện điện tử",
+    productCount: 320,
+    status: "active",
   },
   {
     id: 5,
-    orderNumber: "ORD-2024-005",
-    customer: {
-      name: "Hoàng Văn E",
-      email: "hoangvane@email.com",
-      avatar: null,
-    },
-    date: "2024-06-13T11:00:00",
-    items: 1,
-    total: 32000000,
-    paymentMethod: "Credit Card",
-    status: "delivered",
+    name: "Đồng hồ thông minh",
+    slug: "dong-ho-thong-minh",
+    description: "Smartwatch các loại",
+    productCount: 67,
+    status: "active",
   },
   {
     id: 6,
-    orderNumber: "ORD-2024-006",
-    customer: {
-      name: "Đỗ Thị F",
-      email: "dothif@email.com",
-      avatar: null,
-    },
-    date: "2024-06-12T08:30:00",
-    items: 4,
-    total: 1200000,
-    paymentMethod: "COD",
-    status: "cancelled",
+    name: "Tai nghe",
+    slug: "tai-nghe",
+    description: "Tai nghe không dây và có dây",
+    productCount: 112,
+    status: "active",
   },
   {
     id: 7,
-    orderNumber: "ORD-2024-007",
-    customer: {
-      name: "Vũ Văn G",
-      email: "vuvang@email.com",
-      avatar: null,
-    },
-    date: "2024-06-11T15:45:00",
-    items: 2,
-    total: 5600000,
-    paymentMethod: "ZaloPay",
-    status: "refunded",
+    name: "Màn hình",
+    slug: "man-hinh",
+    description: "Màn hình máy tính",
+    productCount: 34,
+    status: "inactive",
   },
   {
     id: 8,
-    orderNumber: "ORD-2024-008",
-    customer: {
-      name: "Bùi Thị H",
-      email: "buithih@email.com",
-      avatar: null,
-    },
-    date: "2024-06-10T10:00:00",
-    items: 3,
-    total: 7800000,
-    paymentMethod: "Bank Transfer",
-    status: "delivered",
+    name: "Bàn phím & Chuột",
+    slug: "ban-phim-chuot",
+    description: "Thiết bị ngoại vi",
+    productCount: 78,
+    status: "active",
   },
 ];
-
-const formatCurrency = (value) => {
-  return new Intl.NumberFormat("vi-VN", {
-    style: "currency",
-    currency: "VND",
-  }).format(value);
-};
-
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("vi-VN", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
 
 const GlobalFilter = ({ filter, setFilter, t }) => {
   const [value, setValue] = useState(filter);
@@ -157,124 +91,91 @@ const GlobalFilter = ({ filter, setFilter, t }) => {
     <Textinput
       value={value || ""}
       onChange={onChange}
-      placeholder={t("orders.search")}
+      placeholder={t("category.search")}
     />
   );
 };
 
-const Orders = () => {
+const CategoryPage = () => {
   const { t } = useTranslation();
+  const [showModal, setShowModal] = useState(false);
 
   const COLUMNS = useMemo(() => [
     {
-      Header: t("orders.orderNumber"),
-      accessor: "orderNumber",
-      Cell: (row) => (
-        <Link
-          to={`/order-details`}
-          className="font-medium text-primary-500 hover:text-primary-600"
-        >
-          {row?.cell?.value}
-        </Link>
-      ),
+      Header: t("category.id"),
+      accessor: "id",
+      Cell: (row) => <span className="font-medium">#{row?.cell?.value}</span>,
     },
     {
-      Header: t("orders.customer"),
-      accessor: "customer",
-      Cell: (row) => {
-        const customer = row?.cell?.value;
-        return (
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-600 flex items-center justify-center">
-              <span className="text-sm font-medium text-slate-600 dark:text-slate-200">
-                {customer?.name?.charAt(0)}
-              </span>
-            </div>
-            <div>
-              <p className="font-medium text-slate-800 dark:text-slate-200">
-                {customer?.name}
-              </p>
-              <p className="text-xs text-slate-500">{customer?.email}</p>
-            </div>
-          </div>
-        );
-      },
-    },
-    {
-      Header: t("orders.orderDate"),
-      accessor: "date",
-      Cell: (row) => (
-        <span className="text-slate-600 dark:text-slate-300">
-          {formatDate(row?.cell?.value)}
-        </span>
-      ),
-    },
-    {
-      Header: t("orders.items"),
-      accessor: "items",
-      Cell: (row) => (
-        <span className="bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">
-          {row?.cell?.value}
-        </span>
-      ),
-    },
-    {
-      Header: t("orders.total"),
-      accessor: "total",
+      Header: t("category.name"),
+      accessor: "name",
       Cell: (row) => (
         <span className="font-semibold text-slate-800 dark:text-slate-200">
-          {formatCurrency(row?.cell?.value)}
-        </span>
-      ),
-    },
-    {
-      Header: t("orders.paymentMethod"),
-      accessor: "paymentMethod",
-      Cell: (row) => (
-        <span className="text-slate-600 dark:text-slate-300">
           {row?.cell?.value}
         </span>
       ),
     },
     {
-      Header: t("orders.status"),
+      Header: t("category.slug"),
+      accessor: "slug",
+      Cell: (row) => (
+        <span className="font-mono text-sm text-slate-500 dark:text-slate-400">
+          {row?.cell?.value}
+        </span>
+      ),
+    },
+    {
+      Header: t("category.description"),
+      accessor: "description",
+      Cell: (row) => (
+        <span className="text-slate-600 dark:text-slate-300 truncate max-w-[200px] block">
+          {row?.cell?.value}
+        </span>
+      ),
+    },
+    {
+      Header: t("category.productCount"),
+      accessor: "productCount",
+      Cell: (row) => (
+        <span className="bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded font-medium">
+          {row?.cell?.value}
+        </span>
+      ),
+    },
+    {
+      Header: t("category.status"),
       accessor: "status",
       Cell: (row) => {
         const status = row?.cell?.value;
-        const statusConfig = {
-          pending: { label: t("orders.pending"), class: "text-warning-500 bg-warning-500/30" },
-          processing: { label: t("orders.processing"), class: "text-info-500 bg-info-500/30" },
-          shipped: { label: t("orders.shipped"), class: "text-primary-500 bg-primary-500/30" },
-          delivered: { label: t("orders.delivered"), class: "text-success-500 bg-success-500/30" },
-          cancelled: { label: t("orders.cancelled"), class: "text-danger-500 bg-danger-500/30" },
-          refunded: { label: t("orders.refunded"), class: "text-slate-500 bg-slate-500/30" },
-        };
-        const config = statusConfig[status] || statusConfig.pending;
         return (
           <span className="block w-full">
             <span
-              className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] ${config.class}`}
+              className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] ${
+                status === "active"
+                  ? "text-success-500 bg-success-500/30"
+                  : "text-danger-500 bg-danger-500/30"
+              }`}
             >
-              {config.label}
+              {status === "active" ? t("category.active") : t("category.inactive")}
             </span>
           </span>
         );
       },
     },
     {
-      Header: t("orders.actions"),
+      Header: t("category.actions"),
       accessor: "action",
       Cell: () => {
         return (
           <div className="flex space-x-3 rtl:space-x-reverse">
             <Tooltip content={t("common.view")} placement="top" arrow animation="shift-away">
-              <Link to="/order-details" className="action-btn">
-                <Icon icon="heroicons:eye" />
-              </Link>
-            </Tooltip>
-            <Tooltip content={t("common.print")} placement="top" arrow animation="shift-away">
               <button className="action-btn" type="button">
-                <Icon icon="heroicons:printer" />
+                <Icon icon="heroicons:eye" />
+              </button>
+            </Tooltip>
+            <Tooltip content={t("common.edit")} placement="top" arrow animation="shift-away">
+              <button className="action-btn" type="button">
+                <Icon icon="heroicons:pencil-square" />
               </button>
             </Tooltip>
             <Tooltip
@@ -294,18 +195,12 @@ const Orders = () => {
     },
   ], [t]);
 
-  const data = useMemo(() => orderData, []);
-  const [statusFilter, setStatusFilter] = useState("all");
-
-  const filteredData = useMemo(() => {
-    if (statusFilter === "all") return data;
-    return data.filter((order) => order.status === statusFilter);
-  }, [data, statusFilter]);
+  const data = useMemo(() => categoryData, []);
 
   const tableInstance = useTable(
     {
       columns: COLUMNS,
-      data: filteredData,
+      data,
     },
     useGlobalFilter,
     useSortBy,
@@ -333,66 +228,19 @@ const Orders = () => {
 
   const { globalFilter, pageIndex, pageSize } = state;
 
-  // Status counts
-  const statusCounts = useMemo(() => {
-    return {
-      all: data.length,
-      pending: data.filter((o) => o.status === "pending").length,
-      processing: data.filter((o) => o.status === "processing").length,
-      shipped: data.filter((o) => o.status === "shipped").length,
-      delivered: data.filter((o) => o.status === "delivered").length,
-      cancelled: data.filter((o) => o.status === "cancelled").length,
-    };
-  }, [data]);
-
   return (
-    <div className="space-y-5">
-      {/* Status Filter Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        {[
-          { key: "all", label: t("orders.all"), icon: "heroicons:inbox", color: "bg-slate-500" },
-          { key: "pending", label: t("orders.pending"), icon: "heroicons:clock", color: "bg-warning-500" },
-          { key: "processing", label: t("orders.processing"), icon: "heroicons:cog-6-tooth", color: "bg-info-500" },
-          { key: "shipped", label: t("orders.shipped"), icon: "heroicons:truck", color: "bg-primary-500" },
-          { key: "delivered", label: t("orders.delivered"), icon: "heroicons:check-circle", color: "bg-success-500" },
-          { key: "cancelled", label: t("orders.cancelled"), icon: "heroicons:x-circle", color: "bg-danger-500" },
-        ].map((item) => (
-          <button
-            key={item.key}
-            onClick={() => setStatusFilter(item.key)}
-            className={`p-4 rounded-lg border-2 transition-all ${
-              statusFilter === item.key
-                ? "border-primary-500 bg-primary-500/10"
-                : "border-slate-200 dark:border-slate-700 hover:border-slate-300"
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <div className={`w-10 h-10 rounded-lg ${item.color} flex items-center justify-center`}>
-                <Icon icon={item.icon} className="text-white text-xl" />
-              </div>
-              <span className="text-2xl font-bold text-slate-800 dark:text-slate-200">
-                {statusCounts[item.key]}
-              </span>
-            </div>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 text-left">
-              {item.label}
-            </p>
-          </button>
-        ))}
-      </div>
-
+    <>
       <Card>
         <div className="md:flex justify-between items-center mb-6">
-          <h4 className="card-title">{t("orders.title")}</h4>
-          <div className="md:flex md:space-x-4 md:space-y-0 space-y-2 mt-4 md:mt-0">
+          <h4 className="card-title">{t("category.title")}</h4>
+          <div className="md:flex md:space-x-4 md:space-y-0 space-y-2">
             <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} t={t} />
-            <button className="btn btn-outline-dark btn-sm">
-              <Icon icon="heroicons:funnel" className="mr-1" />
-              {t("orders.filter")}
-            </button>
-            <button className="btn btn-outline-dark btn-sm">
-              <Icon icon="heroicons:arrow-down-tray" className="mr-1" />
-              {t("orders.exportExcel")}
+            <button
+              className="btn btn-dark btn-sm"
+              onClick={() => setShowModal(true)}
+            >
+              <Icon icon="heroicons:plus" className="mr-1" />
+              {t("category.addCategory")}
             </button>
           </div>
         </div>
@@ -539,8 +387,47 @@ const Orders = () => {
           </ul>
         </div>
       </Card>
-    </div>
+
+      {/* Add Category Modal */}
+      <Modal
+        title={t("category.addNewCategory")}
+        activeModal={showModal}
+        onClose={() => setShowModal(false)}
+      >
+        <div className="space-y-4">
+          <Textinput
+            label={t("category.name")}
+            type="text"
+            placeholder={t("category.namePlaceholder")}
+          />
+          <Textinput
+            label={t("category.slug")}
+            type="text"
+            placeholder={t("category.slugPlaceholder")}
+          />
+          <div>
+            <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
+              {t("category.description")}
+            </label>
+            <textarea
+              className="form-control"
+              rows={3}
+              placeholder={t("category.descriptionPlaceholder")}
+            />
+          </div>
+          <div className="flex justify-end space-x-3">
+            <button
+              className="btn btn-outline-dark"
+              onClick={() => setShowModal(false)}
+            >
+              {t("common.cancel")}
+            </button>
+            <button className="btn btn-dark">{t("category.saveCategory")}</button>
+          </div>
+        </div>
+      </Modal>
+    </>
   );
 };
 
-export default Orders;
+export default CategoryPage;

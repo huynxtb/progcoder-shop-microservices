@@ -14,7 +14,7 @@ echo.
 echo ==== Select a service ====
 echo  1. Inventory
 echo  2. Order
-echo  3. Exit
+echo  0. Exit
 echo.
 set /p userChoice=Enter your choice (1-3): 
 
@@ -30,12 +30,12 @@ if "%userChoice%"=="1" (
     set apiProject=Order.Api
     set serviceDir=src\Services\Order\Core
     goto process_migration
-) else if "%userChoice%"=="3" (
+) else if "%userChoice%"=="0" (
     echo Exiting...
     goto end
 ) else (
     echo.
-    echo [ERROR] Invalid choice "%userChoice%". Please select 1, 2, or 3.
+    echo [ERROR] Invalid choice "%userChoice%". Please select 1, 2, or 0.
     echo.
     pause
     goto main
