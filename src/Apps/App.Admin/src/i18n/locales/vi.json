@@ -451,12 +451,18 @@
     "descriptionPlaceholder": "Nhập mô tả danh mục",
     "productCount": "Số sản phẩm",
     "status": "Trạng thái",
+    "parentName": "Danh mục cha",
+    "noParent": "Không có",
     "actions": "Thao tác",
     "active": "Hoạt động",
     "inactive": "Tạm dừng",
     "saveCategory": "Lưu danh mục",
     "editCategory": "Chỉnh sửa danh mục",
-    "updateCategory": "Cập nhật danh mục"
+    "updateCategory": "Cập nhật danh mục",
+    "createSuccess": "Tạo danh mục thành công",
+    "updateSuccess": "Cập nhật danh mục thành công",
+    "deleteSuccess": "Xóa danh mục thành công",
+    "noCategories": "Không tìm thấy danh mục"
   },
   "coupon": {
     "title": "Quản lý mã giảm giá",

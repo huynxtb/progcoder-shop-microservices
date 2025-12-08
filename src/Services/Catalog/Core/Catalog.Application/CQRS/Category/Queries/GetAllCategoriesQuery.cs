@@ -27,7 +27,20 @@ public sealed class GetAllCategoriesQueryHandler(IDocumentSession session, IMapp
             .OrderByDescending(x => x.CreatedOnUtc)
             .ToListAsync(token: cancellationToken);
 
-        var response = new GetAllCategoriesResult(mapper.Map<List<CategoryDto>>(result));
+        var categories = mapper.Map<List<CategoryDto>>(result);
+
+        foreach (var item in categories)
+        {
+            if (!item.ParentId.HasValue) continue;
+
+            var parrent = categories.FirstOrDefault(x => x.Id == item.ParentId.Value);
+
+            if (parrent == null) continue;
+
+            item.ParentName = parrent.Name;
+        }
+
+        var response = new GetAllCategoriesResult(categories);
 
         return response;
     }

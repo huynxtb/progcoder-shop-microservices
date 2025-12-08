@@ -1,10 +1,14 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import Card from "@/components/ui/Card";
 import Icon from "@/components/ui/Icon";
 import Tooltip from "@/components/ui/Tooltip";
 import Textinput from "@/components/ui/Textinput";
 import Modal from "@/components/ui/Modal";
+import LoaderCircle from "@/components/Loader-circle";
+import { api } from "@/api";
+import { API_ENDPOINTS } from "@/api/endpoints";
 import {
   useTable,
   useRowSelect,
@@ -12,74 +16,6 @@ import {
   useGlobalFilter,
   usePagination,
 } from "react-table";
-
-// Sample category data
-const categoryData = [
-  {
-    id: 1,
-    name: "Điện thoại",
-    slug: "dien-thoai",
-    description: "Điện thoại thông minh các loại",
-    productCount: 156,
-    status: "active",
-  },
-  {
-    id: 2,
-    name: "Laptop",
-    slug: "laptop",
-    description: "Máy tính xách tay",
-    productCount: 89,
-    status: "active",
-  },
-  {
-    id: 3,
-    name: "Tablet",
-    slug: "tablet",
-    description: "Máy tính bảng",
-    productCount: 45,
-    status: "active",
-  },
-  {
-    id: 4,
-    name: "Phụ kiện",
-    slug: "phu-kien",
-    description: "Phụ kiện điện tử",
-    productCount: 320,
-    status: "active",
-  },
-  {
-    id: 5,
-    name: "Đồng hồ thông minh",
-    slug: "dong-ho-thong-minh",
-    description: "Smartwatch các loại",
-    productCount: 67,
-    status: "active",
-  },
-  {
-    id: 6,
-    name: "Tai nghe",
-    slug: "tai-nghe",
-    description: "Tai nghe không dây và có dây",
-    productCount: 112,
-    status: "active",
-  },
-  {
-    id: 7,
-    name: "Màn hình",
-    slug: "man-hinh",
-    description: "Màn hình máy tính",
-    productCount: 34,
-    status: "inactive",
-  },
-  {
-    id: 8,
-    name: "Bàn phím & Chuột",
-    slug: "ban-phim-chuot",
-    description: "Thiết bị ngoại vi",
-    productCount: 78,
-    status: "active",
-  },
-];
 
 const GlobalFilter = ({ filter, setFilter, t }) => {
   const [value, setValue] = useState(filter);
@@ -103,6 +39,10 @@ const CategoryPage = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [editingCategory, setEditingCategory] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [editFormData, setEditFormData] = useState({
     name: "",
     slug: "",
@@ -113,6 +53,34 @@ const CategoryPage = () => {
     slug: "",
     description: "",
   });
+
+  // Fetch categories from API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get(API_ENDPOINTS.CATALOG.GET_CATEGORIES);
+        
+        // Map API response to component format
+        const mappedCategories = response.data.result.items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          slug: item.slug || "",
+          description: item.description || "",
+          parentName: item.parentName || null,
+        }));
+        
+        setCategories(mappedCategories);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+        setCategories([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleEditClick = (category) => {
     setEditingCategory(category);
@@ -132,18 +100,82 @@ const CategoryPage = () => {
     setAddFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSaveEdit = () => {
-    // Here you would save the edited category
-    console.log("Saving edited category:", editingCategory?.id, editFormData);
-    setShowEditModal(false);
-    setEditingCategory(null);
+  const handleSaveEdit = async () => {
+    if (!editingCategory?.id) return;
+
+    try {
+      setSaving(true);
+      const response = await api.put(
+        API_ENDPOINTS.CATALOG.UPDATE_CATEGORY(editingCategory.id),
+        {
+          name: editFormData.name,
+          slug: editFormData.slug,
+          description: editFormData.description,
+        }
+      );
+
+      if (response && response.status >= 200 && response.status < 300) {
+        toast.success(t("category.updateSuccess") || "Category updated successfully", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+
+        // Refresh categories list
+        const refreshResponse = await api.get(API_ENDPOINTS.CATALOG.GET_CATEGORIES);
+        const mappedCategories = refreshResponse.data.result.items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          slug: item.slug || "",
+          description: item.description || "",
+          parentName: item.parentName || null,
+        }));
+        setCategories(mappedCategories);
+
+        setShowEditModal(false);
+        setEditingCategory(null);
+        setEditFormData({ name: "", slug: "", description: "" });
+      }
+    } catch (error) {
+      console.error("Failed to update category:", error);
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const handleSaveAdd = () => {
-    // Here you would save the new category
-    console.log("Saving new category:", addFormData);
-    setShowAddModal(false);
-    setAddFormData({ name: "", slug: "", description: "" });
+  const handleSaveAdd = async () => {
+    try {
+      setSaving(true);
+      const response = await api.post(API_ENDPOINTS.CATALOG.CREATE_CATEGORY, {
+        name: addFormData.name,
+        slug: addFormData.slug,
+        description: addFormData.description,
+      });
+
+      if (response && response.status >= 200 && response.status < 300) {
+        toast.success(t("category.createSuccess") || "Category created successfully", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+
+        // Refresh categories list
+        const refreshResponse = await api.get(API_ENDPOINTS.CATALOG.GET_CATEGORIES);
+        const mappedCategories = refreshResponse.data.result.items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          slug: item.slug || "",
+          description: item.description || "",
+          parentName: item.parentName || null,
+        }));
+        setCategories(mappedCategories);
+
+        setShowAddModal(false);
+        setAddFormData({ name: "", slug: "", description: "" });
+      }
+    } catch (error) {
+      console.error("Failed to create category:", error);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleDeleteClick = (category) => {
@@ -151,18 +183,35 @@ const CategoryPage = () => {
     setDeleteModalOpen(true);
   };
 
-  const confirmDelete = () => {
-    console.log("Deleting category:", itemToDelete?.id);
-    setDeleteModalOpen(false);
-    setItemToDelete(null);
+  const confirmDelete = async () => {
+    if (!itemToDelete?.id) return;
+
+    try {
+      setDeleting(true);
+      const response = await api.delete(API_ENDPOINTS.CATALOG.DELETE_CATEGORY(itemToDelete.id));
+
+      if (response && response.status >= 200 && response.status < 300) {
+        toast.success(t("category.deleteSuccess") || "Category deleted successfully", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+
+        // Remove the deleted category from the list
+        setCategories((prevCategories) =>
+          prevCategories.filter((category) => category.id !== itemToDelete.id)
+        );
+
+        setDeleteModalOpen(false);
+        setItemToDelete(null);
+      }
+    } catch (error) {
+      console.error("Failed to delete category:", error);
+    } finally {
+      setDeleting(false);
+    }
   };
 
   const COLUMNS = useMemo(() => [
-    {
-      Header: t("category.id"),
-      accessor: "id",
-      Cell: (row) => <span className="font-medium">#{row?.cell?.value}</span>,
-    },
     {
       Header: t("category.name"),
       accessor: "name",
@@ -191,30 +240,17 @@ const CategoryPage = () => {
       ),
     },
     {
-      Header: t("category.productCount"),
-      accessor: "productCount",
-      Cell: (row) => (
-        <span className="bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded font-medium">
-          {row?.cell?.value}
-        </span>
-      ),
-    },
-    {
-      Header: t("category.status"),
-      accessor: "status",
+      Header: t("category.parentName"),
+      accessor: "parentName",
       Cell: (row) => {
-        const status = row?.cell?.value;
-        return (
-          <span className="block w-full">
-            <span
-              className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] ${
-                status === "active"
-                  ? "text-success-500 bg-success-500/30"
-                  : "text-danger-500 bg-danger-500/30"
-              }`}
-            >
-              {status === "active" ? t("category.active") : t("category.inactive")}
-            </span>
+        const parentName = row?.cell?.value;
+        return parentName ? (
+          <span className="bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded text-sm">
+            {parentName}
+          </span>
+        ) : (
+          <span className="text-slate-400 dark:text-slate-500 text-sm italic">
+            {t("category.noParent") || "—"}
           </span>
         );
       },
@@ -261,7 +297,7 @@ const CategoryPage = () => {
     },
   ], [t]);
 
-  const data = useMemo(() => categoryData, []);
+  const data = useMemo(() => categories, [categories]);
 
   const tableInstance = useTable(
     {
@@ -352,27 +388,44 @@ const CategoryPage = () => {
                   className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700!"
                   {...getTableBodyProps()}
                 >
-                  {page.map((row) => {
-                    prepareRow(row);
-                    const { key: rowKey, ...restRowProps } = row.getRowProps();
-                    return (
-                      <tr key={rowKey} {...restRowProps}>
-                        {row.cells.map((cell) => {
-                          const { key: cellKey, ...restCellProps } =
-                            cell.getCellProps();
-                          return (
-                            <td
-                              key={cellKey}
-                              {...restCellProps}
-                              className="table-td"
-                            >
-                              {cell.render("Cell")}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    );
-                  })}
+                  {loading ? (
+                    <tr>
+                      <td colSpan={headerGroups[0]?.headers?.length || 5} className="table-td text-center py-8">
+                        <div className="flex flex-col items-center justify-center">
+                          <Icon icon="heroicons:arrow-path" className="animate-spin text-2xl text-slate-400 mb-2" />
+                          <span className="text-slate-500 dark:text-slate-400">{t("common.loading") || "Loading..."}</span>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : page.length === 0 ? (
+                    <tr>
+                      <td colSpan={headerGroups[0]?.headers?.length || 5} className="table-td text-center py-8">
+                        <span className="text-slate-500 dark:text-slate-400">{t("category.noCategories") || "No categories found"}</span>
+                      </td>
+                    </tr>
+                  ) : (
+                    page.map((row) => {
+                      prepareRow(row);
+                      const { key: rowKey, ...restRowProps } = row.getRowProps();
+                      return (
+                        <tr key={rowKey} {...restRowProps}>
+                          {row.cells.map((cell) => {
+                            const { key: cellKey, ...restCellProps } =
+                              cell.getCellProps();
+                            return (
+                              <td
+                                key={cellKey}
+                                {...restCellProps}
+                                className="table-td"
+                              >
+                                {cell.render("Cell")}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      );
+                    })
+                  )}
                 </tbody>
               </table>
             </div>
@@ -497,9 +550,19 @@ const CategoryPage = () => {
             <button
               className="btn btn-dark inline-flex items-center"
               onClick={handleSaveAdd}
+              disabled={saving}
             >
-              <Icon icon="heroicons:check" className="ltr:mr-2 rtl:ml-2" />
-              {t("category.saveCategory")}
+              {saving ? (
+                <>
+                  <Icon icon="heroicons:arrow-path" className="ltr:mr-2 rtl:ml-2 animate-spin" />
+                  {t("common.loading")}
+                </>
+              ) : (
+                <>
+                  <Icon icon="heroicons:check" className="ltr:mr-2 rtl:ml-2" />
+                  {t("category.saveCategory")}
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -554,9 +617,19 @@ const CategoryPage = () => {
             <button
               className="btn btn-dark inline-flex items-center"
               onClick={handleSaveEdit}
+              disabled={saving}
             >
-              <Icon icon="heroicons:check" className="ltr:mr-2 rtl:ml-2" />
-              {t("category.updateCategory")}
+              {saving ? (
+                <>
+                  <Icon icon="heroicons:arrow-path" className="ltr:mr-2 rtl:ml-2 animate-spin" />
+                  {t("common.loading")}
+                </>
+              ) : (
+                <>
+                  <Icon icon="heroicons:check" className="ltr:mr-2 rtl:ml-2" />
+                  {t("category.updateCategory")}
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -596,9 +669,19 @@ const CategoryPage = () => {
             <button
               className="btn btn-danger inline-flex items-center"
               onClick={confirmDelete}
+              disabled={deleting}
             >
-              <Icon icon="heroicons:trash" className="ltr:mr-2 rtl:ml-2" />
-              {t("common.delete")}
+              {deleting ? (
+                <>
+                  <Icon icon="heroicons:arrow-path" className="ltr:mr-2 rtl:ml-2 animate-spin" />
+                  {t("common.loading")}
+                </>
+              ) : (
+                <>
+                  <Icon icon="heroicons:trash" className="ltr:mr-2 rtl:ml-2" />
+                  {t("common.delete")}
+                </>
+              )}
             </button>
           </div>
         </div>

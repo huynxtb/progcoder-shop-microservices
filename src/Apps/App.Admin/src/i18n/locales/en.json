@@ -451,12 +451,18 @@
     "descriptionPlaceholder": "Enter category description",
     "productCount": "Products",
     "status": "Status",
+    "parentName": "Parent Category",
+    "noParent": "No parent",
     "actions": "Actions",
     "active": "Active",
     "inactive": "Inactive",
     "saveCategory": "Save Category",
     "editCategory": "Edit Category",
-    "updateCategory": "Update Category"
+    "updateCategory": "Update Category",
+    "createSuccess": "Category created successfully",
+    "updateSuccess": "Category updated successfully",
+    "deleteSuccess": "Category deleted successfully",
+    "noCategories": "No categories found"
   },
   "coupon": {
     "title": "Coupon Management",

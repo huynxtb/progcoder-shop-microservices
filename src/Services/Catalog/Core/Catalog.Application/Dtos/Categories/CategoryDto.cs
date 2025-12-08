@@ -18,5 +18,7 @@ public class CategoryDto : DtoId<Guid>
 
     public Guid? ParentId { get; set; }
 
+    public string? ParentName { get; set; }
+
     #endregion
 }
