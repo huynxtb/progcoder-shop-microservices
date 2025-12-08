@@ -18,7 +18,7 @@ public sealed class DeleteBasket : ICarterModule
         app.MapDelete(ApiRoutes.Basket.DeleteBasket, HandleDeleteBasketAsync)
             .WithTags(ApiRoutes.Basket.Tags)
             .WithName(nameof(DeleteBasket))
-            .Produces<Unit>(StatusCodes.Status200OK)
+            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -29,13 +29,16 @@ public sealed class DeleteBasket : ICarterModule
 
     #region Methods
 
-    private async Task<Unit> HandleDeleteBasketAsync(
+    private async Task<ApiCreatedResponse<Guid>> HandleDeleteBasketAsync(
         ISender sender,
         IHttpContextAccessor httpContext)
     {
         var currentUser = httpContext.GetCurrentUser();
         var command = new DeleteBasketCommand(currentUser.Id);
-        return await sender.Send(command);
+
+        await sender.Send(command);
+
+        return new ApiCreatedResponse<Guid>(Guid.Parse(currentUser.Id));
     }
 
     #endregion

@@ -21,7 +21,7 @@ public sealed class CreateInventoryItem : ICarterModule
         app.MapPost(ApiRoutes.InventoryItem.Create, HandleCreateInventoryItemAsync)
             .WithTags(ApiRoutes.InventoryItem.Tags)
             .WithName(nameof(CreateInventoryItem))
-            .Produces<Guid>(StatusCodes.Status200OK)
+            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
@@ -31,14 +31,17 @@ public sealed class CreateInventoryItem : ICarterModule
 
     #region Methods
 
-    private async Task<Guid> HandleCreateInventoryItemAsync(
+    private async Task<ApiCreatedResponse<Guid>> HandleCreateInventoryItemAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
         [FromBody] CreateInventoryItemDto dto)
     {
         var currentUser = httpContext.GetCurrentUser();
         var command = new CreateInventoryItemCommand(dto, Actor.User(currentUser.Email));
-        return await sender.Send(command);
+
+        var result = await sender.Send(command);
+
+        return new ApiCreatedResponse<Guid>(result);
     }
 
     #endregion

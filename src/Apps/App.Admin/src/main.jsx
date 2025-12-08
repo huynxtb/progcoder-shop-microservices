@@ -8,8 +8,6 @@ import { BrowserRouter } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { Provider } from "react-redux";
 import store from "./store";
-import "react-toastify/dist/ReactToastify.css";
-import "./server";
 import "./i18n/config";
 import { KeycloakProvider } from "./contexts/KeycloakContext";
 

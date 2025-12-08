@@ -1,4 +1,4 @@
-﻿#region using
+#region using
 
 using AutoMapper;
 using Catalog.Application.Dtos.Products;
@@ -59,7 +59,8 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
 public class UpdateProductCommandHandler(IMapper mapper,
     IDocumentSession session,
     IMinIOCloudService minIO,
-    IMediator mediator) : ICommandHandler<UpdateProductCommand, Guid>
+    IMediator mediator,
+    ISender sender) : ICommandHandler<UpdateProductCommand, Guid>
 {
     #region Implementations
 
@@ -71,8 +72,9 @@ public class UpdateProductCommandHandler(IMapper mapper,
             ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, command.ProductId);
 
         var dto = command.Dto;
-        var categories = await session.Query<CategoryEntity>().ToListAsync(token: cancellationToken);
-        ValidateCategory(dto.CategoryIds, categories.ToList());
+
+        await ValidateCategoryAsync(dto.CategoryIds, cancellationToken);
+        await ValidateBrandAsync(dto.BrandId, cancellationToken);
 
         entity.Update(name: dto.Name!,
             sku: dto.Sku!,
@@ -80,11 +82,26 @@ public class UpdateProductCommandHandler(IMapper mapper,
             shortDescription: dto.ShortDescription!,
             longDescription: dto.LongDescription!,
             price: dto.Price,
-            salesPrice: dto.SalesPrice,
+            salePrice: dto.SalePrice,
             categoryIds: dto.CategoryIds?.Distinct().ToList(),
+            brandId: dto.BrandId,
             performedBy: command.Actor.ToString());
 
-        await UploadImagesAsync(dto.Files, dto.CurrentImageUrls, entity, cancellationToken);
+        await UploadImagesAsync(dto.UploadImages, dto.CurrentImageUrls, entity, cancellationToken);
+        await UploadThumbnailAsync(dto.UploadThumbnail, entity, cancellationToken);
+
+        entity.UpdateColors(dto.Colors?.Distinct().ToList(), command.Actor.ToString());
+        entity.UpdateSizes(dto.Sizes?.Distinct().ToList(), command.Actor.ToString());
+        entity.UpdateTags(dto.Tags?.Distinct().ToList(), command.Actor.ToString());
+        entity.UpdateSEO(dto.SEOTitle, dto.SEODescription, command.Actor.ToString());
+        entity.UpdateFeatured(dto.Featured, command.Actor.ToString());
+        entity.UpdateBarcode(dto.Barcode, command.Actor.ToString());
+        entity.UpdateUnitAndWeight(dto.Unit, dto.Weight, command.Actor.ToString());
+
+        if (entity.Published)
+        {
+            entity.Publish(command.Actor.ToString());
+        }
 
         session.Store(entity);
 
@@ -94,10 +111,10 @@ public class UpdateProductCommandHandler(IMapper mapper,
             entity.Sku!,
             entity.Slug!,
             entity.Price,
-            entity.SalesPrice,
+            entity.SalePrice,
             entity.CategoryIds?.Select(id => id.ToString()).ToList(),
             entity.Images?.Select(img => img.PublicURL).Where(url => !string.IsNullOrWhiteSpace(url)).Cast<string>().ToList(),
-            entity.Thumbnail!,
+            entity.Thumbnail?.PublicURL!,
             entity.Status,
             entity.CreatedOnUtc,
             entity.CreatedBy!,
@@ -106,6 +123,15 @@ public class UpdateProductCommandHandler(IMapper mapper,
 
         await mediator.Publish(@event, cancellationToken);
         await session.SaveChangesAsync(cancellationToken);
+
+        if (entity.Published)
+        {
+            await sender.Send(new PublishProductCommand(entity.Id, command.Actor), cancellationToken);
+        }
+        else
+        {
+            await sender.Send(new UnpublishProductCommand(entity.Id, command.Actor), cancellationToken);
+        }
 
         return entity.Id;
     }
@@ -129,16 +155,40 @@ public class UpdateProductCommandHandler(IMapper mapper,
         entity.AddOrUpdateImages(newImages, currentImageUrls);
     }
 
-    private static void ValidateCategory(List<Guid>? inputCategoryIds, List<CategoryEntity> categories)
+    private async Task UploadThumbnailAsync(UploadFileBytes? image, ProductEntity entity, CancellationToken cancellationToken)
+    {
+        if (image == null) return;
+
+        var result = await minIO.UploadFilesAsync([image], AppConstants.Bucket.Products, true, cancellationToken);
+        var thumbnail = result.FirstOrDefault();
+        entity.AddOrUpdateThumbnail(mapper.Map<ProductImageEntity>(thumbnail));
+    }
+
+    private async Task ValidateCategoryAsync(List<Guid>? inputCategoryIds, CancellationToken cancellationToken = default)
     {
         if (inputCategoryIds is { Count: > 0 })
         {
+            var categories = await session.Query<CategoryEntity>().ToListAsync(token: cancellationToken);
+
             var existingIds = categories.Select(c => c.Id).ToHashSet();
             var invalidIds = inputCategoryIds.Where(id => !existingIds.Contains(id)).ToList();
 
             if (invalidIds.Any())
             {
                 throw new ClientValidationException(MessageCode.CategoryIsNotExists, string.Join(", ", invalidIds));
+            }
+        }
+    }
+
+    private async Task ValidateBrandAsync(Guid? brandId, CancellationToken cancellationToken = default)
+    {
+        if (brandId.HasValue)
+        {
+            var brands = await session.Query<BrandEntity>().ToListAsync(token: cancellationToken);
+            var existingIds = brands.Select(b => b.Id).ToHashSet();
+            if (!existingIds.Contains(brandId.Value))
+            {
+                throw new ClientValidationException(MessageCode.BrandIsNotExists, brandId);
             }
         }
     }

@@ -5,6 +5,8 @@ import Card from "@/components/ui/Card";
 import Icon from "@/components/ui/Icon";
 import Tooltip from "@/components/ui/Tooltip";
 import Textinput from "@/components/ui/Textinput";
+import Modal from "@/components/ui/Modal";
+import { formatCurrency } from "@/utils/format";
 import {
   useTable,
   useRowSelect,
@@ -129,13 +131,6 @@ const orderData = [
   },
 ];
 
-const formatCurrency = (value) => {
-  return new Intl.NumberFormat("vi-VN", {
-    style: "currency",
-    currency: "VND",
-  }).format(value);
-};
-
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleDateString("vi-VN", {
@@ -164,19 +159,35 @@ const GlobalFilter = ({ filter, setFilter, t }) => {
 
 const Orders = () => {
   const { t } = useTranslation();
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+
+  const handleDeleteClick = (order) => {
+    setItemToDelete(order);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    console.log("Deleting order:", itemToDelete?.id);
+    setDeleteModalOpen(false);
+    setItemToDelete(null);
+  };
 
   const COLUMNS = useMemo(() => [
     {
       Header: t("orders.orderNumber"),
       accessor: "orderNumber",
-      Cell: (row) => (
-        <Link
-          to={`/order-details`}
-          className="font-medium text-primary-500 hover:text-primary-600"
-        >
-          {row?.cell?.value}
-        </Link>
-      ),
+      Cell: (row) => {
+        const order = row?.row?.original;
+        return (
+          <Link
+            to={`/order-details/${order?.id}`}
+            className="font-medium text-primary-500 hover:text-primary-600"
+          >
+            {row?.cell?.value}
+          </Link>
+        );
+      },
     },
     {
       Header: t("orders.customer"),
@@ -264,11 +275,12 @@ const Orders = () => {
     {
       Header: t("orders.actions"),
       accessor: "action",
-      Cell: () => {
+      Cell: (row) => {
+        const order = row?.row?.original;
         return (
           <div className="flex space-x-3 rtl:space-x-reverse">
             <Tooltip content={t("common.view")} placement="top" arrow animation="shift-away">
-              <Link to="/order-details" className="action-btn">
+              <Link to={`/order-details/${order?.id}`} className="action-btn">
                 <Icon icon="heroicons:eye" />
               </Link>
             </Tooltip>
@@ -284,7 +296,11 @@ const Orders = () => {
               animation="shift-away"
               theme="danger"
             >
-              <button className="action-btn" type="button">
+              <button
+                className="action-btn"
+                type="button"
+                onClick={() => handleDeleteClick(order)}
+              >
                 <Icon icon="heroicons:trash" />
               </button>
             </Tooltip>
@@ -346,200 +362,244 @@ const Orders = () => {
   }, [data]);
 
   return (
-    <div className="space-y-5">
-      {/* Status Filter Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        {[
-          { key: "all", label: t("orders.all"), icon: "heroicons:inbox", color: "bg-slate-500" },
-          { key: "pending", label: t("orders.pending"), icon: "heroicons:clock", color: "bg-warning-500" },
-          { key: "processing", label: t("orders.processing"), icon: "heroicons:cog-6-tooth", color: "bg-info-500" },
-          { key: "shipped", label: t("orders.shipped"), icon: "heroicons:truck", color: "bg-primary-500" },
-          { key: "delivered", label: t("orders.delivered"), icon: "heroicons:check-circle", color: "bg-success-500" },
-          { key: "cancelled", label: t("orders.cancelled"), icon: "heroicons:x-circle", color: "bg-danger-500" },
-        ].map((item) => (
-          <button
-            key={item.key}
-            onClick={() => setStatusFilter(item.key)}
-            className={`p-4 rounded-lg border-2 transition-all ${
-              statusFilter === item.key
-                ? "border-primary-500 bg-primary-500/10"
-                : "border-slate-200 dark:border-slate-700 hover:border-slate-300"
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <div className={`w-10 h-10 rounded-lg ${item.color} flex items-center justify-center`}>
-                <Icon icon={item.icon} className="text-white text-xl" />
-              </div>
-              <span className="text-2xl font-bold text-slate-800 dark:text-slate-200">
-                {statusCounts[item.key]}
-              </span>
-            </div>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 text-left">
-              {item.label}
-            </p>
-          </button>
-        ))}
-      </div>
-
-      <Card>
-        <div className="md:flex justify-between items-center mb-6">
-          <h4 className="card-title">{t("orders.title")}</h4>
-          <div className="md:flex md:space-x-4 md:space-y-0 space-y-2 mt-4 md:mt-0">
-            <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} t={t} />
-            <button className="btn btn-outline-dark btn-sm">
-              <Icon icon="heroicons:funnel" className="mr-1" />
-              {t("orders.filter")}
-            </button>
-            <button className="btn btn-outline-dark btn-sm">
-              <Icon icon="heroicons:arrow-down-tray" className="mr-1" />
-              {t("orders.exportExcel")}
-            </button>
-          </div>
-        </div>
-        <div className="overflow-x-auto -mx-6">
-          <div className="inline-block min-w-full align-middle">
-            <div className="overflow-hidden">
-              <table
-                className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700!"
-                {...getTableProps()}
-              >
-                <thead className="bg-slate-200 dark:bg-slate-700">
-                  {headerGroups.map((headerGroup) => {
-                    const { key: headerKey, ...restHeaderProps } =
-                      headerGroup.getHeaderGroupProps();
-                    return (
-                      <tr key={headerKey} {...restHeaderProps}>
-                        {headerGroup.headers.map((column) => {
-                          const { key: columnKey, ...restColumnProps } =
-                            column.getHeaderProps(column.getSortByToggleProps());
-                          return (
-                            <th
-                              key={columnKey}
-                              {...restColumnProps}
-                              scope="col"
-                              className="table-th"
-                            >
-                              {column.render("Header")}
-                              <span>
-                                {column.isSorted
-                                  ? column.isSortedDesc
-                                    ? " 🔽"
-                                    : " 🔼"
-                                  : ""}
-                              </span>
-                            </th>
-                          );
-                        })}
-                      </tr>
-                    );
-                  })}
-                </thead>
-                <tbody
-                  className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700!"
-                  {...getTableBodyProps()}
-                >
-                  {page.map((row) => {
-                    prepareRow(row);
-                    const { key: rowKey, ...restRowProps } = row.getRowProps();
-                    return (
-                      <tr key={rowKey} {...restRowProps}>
-                        {row.cells.map((cell) => {
-                          const { key: cellKey, ...restCellProps } =
-                            cell.getCellProps();
-                          return (
-                            <td
-                              key={cellKey}
-                              {...restCellProps}
-                              className="table-td"
-                            >
-                              {cell.render("Cell")}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div className="md:flex md:space-y-0 space-y-5 justify-between mt-6 items-center">
-          <div className="flex items-center space-x-3 rtl:space-x-reverse">
-            <select
-              className="form-control py-2 w-max"
-              value={pageSize}
-              onChange={(e) => setPageSize(Number(e.target.value))}
+    <>
+      <div className="space-y-5">
+        {/* Status Filter Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {[
+            { key: "all", label: t("orders.all"), icon: "heroicons:inbox", color: "bg-slate-500" },
+            { key: "pending", label: t("orders.pending"), icon: "heroicons:clock", color: "bg-warning-500" },
+            { key: "processing", label: t("orders.processing"), icon: "heroicons:cog-6-tooth", color: "bg-info-500" },
+            { key: "shipped", label: t("orders.shipped"), icon: "heroicons:truck", color: "bg-primary-500" },
+            { key: "delivered", label: t("orders.delivered"), icon: "heroicons:check-circle", color: "bg-success-500" },
+            { key: "cancelled", label: t("orders.cancelled"), icon: "heroicons:x-circle", color: "bg-danger-500" },
+          ].map((item) => (
+            <button
+              key={item.key}
+              onClick={() => setStatusFilter(item.key)}
+              className={`p-4 rounded-lg border-2 transition-all ${
+                statusFilter === item.key
+                  ? "border-primary-500 bg-primary-500/10"
+                  : "border-slate-200 dark:border-slate-700 hover:border-slate-300"
+              }`}
             >
-              {[10, 25, 50].map((size) => (
-                <option key={size} value={size}>
-                  {t("common.show")} {size}
-                </option>
-              ))}
-            </select>
-            <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
-              {t("common.page")}{" "}
-              <span>
-                {pageIndex + 1} {t("common.of")} {pageOptions.length}
-              </span>
-            </span>
+              <div className="flex items-center justify-between">
+                <div className={`w-10 h-10 rounded-lg ${item.color} flex items-center justify-center`}>
+                  <Icon icon={item.icon} className="text-white text-xl" />
+                </div>
+                <span className="text-2xl font-bold text-slate-800 dark:text-slate-200">
+                  {statusCounts[item.key]}
+                </span>
+              </div>
+              <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 text-left">
+                {item.label}
+              </p>
+            </button>
+          ))}
+        </div>
+
+        <Card>
+          <div className="md:flex justify-between items-center mb-6">
+            <h4 className="card-title">{t("orders.title")}</h4>
+            <div className="md:flex md:space-x-4 md:space-y-0 space-y-2 mt-4 md:mt-0">
+              <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} t={t} />
+              <button className="btn btn-outline-dark btn-sm inline-flex items-center">
+                <Icon icon="heroicons:funnel" className="ltr:mr-2 rtl:ml-2" />
+                {t("orders.filter")}
+              </button>
+              <button className="btn btn-outline-dark btn-sm inline-flex items-center">
+                <Icon icon="heroicons:arrow-down-tray" className="ltr:mr-2 rtl:ml-2" />
+                {t("orders.exportExcel")}
+              </button>
+            </div>
           </div>
-          <ul className="flex items-center space-x-3 rtl:space-x-reverse">
-            <li className="text-xl leading-4 text-slate-900 dark:text-white rtl:rotate-180">
-              <button
-                className={`${!canPreviousPage ? "opacity-50 cursor-not-allowed" : ""}`}
-                onClick={() => gotoPage(0)}
-                disabled={!canPreviousPage}
-              >
-                <Icon icon="heroicons:chevron-double-left-solid" />
-              </button>
-            </li>
-            <li className="text-sm leading-4 text-slate-900 dark:text-white rtl:rotate-180">
-              <button
-                className={`${!canPreviousPage ? "opacity-50 cursor-not-allowed" : ""}`}
-                onClick={() => previousPage()}
-                disabled={!canPreviousPage}
-              >
-                {t("common.previous")}
-              </button>
-            </li>
-            {pageOptions.map((pageNum, pageIdx) => (
-              <li key={pageIdx}>
-                <button
-                  aria-current="page"
-                  className={`${
-                    pageIdx === pageIndex
-                      ? "bg-slate-900 dark:bg-slate-600 dark:text-slate-200 text-white font-medium"
-                      : "bg-slate-100 dark:bg-slate-700 dark:text-slate-400 text-slate-900 font-normal"
-                  } text-sm rounded leading-[16px] flex h-6 w-6 items-center justify-center transition-all duration-150`}
-                  onClick={() => gotoPage(pageIdx)}
+          <div className="overflow-x-auto -mx-6">
+            <div className="inline-block min-w-full align-middle">
+              <div className="overflow-hidden">
+                <table
+                  className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700!"
+                  {...getTableProps()}
                 >
-                  {pageNum + 1}
+                  <thead className="bg-slate-200 dark:bg-slate-700">
+                    {headerGroups.map((headerGroup) => {
+                      const { key: headerKey, ...restHeaderProps } =
+                        headerGroup.getHeaderGroupProps();
+                      return (
+                        <tr key={headerKey} {...restHeaderProps}>
+                          {headerGroup.headers.map((column) => {
+                            const { key: columnKey, ...restColumnProps } =
+                              column.getHeaderProps(column.getSortByToggleProps());
+                            return (
+                              <th
+                                key={columnKey}
+                                {...restColumnProps}
+                                scope="col"
+                                className="table-th"
+                              >
+                                {column.render("Header")}
+                                <span>
+                                  {column.isSorted
+                                    ? column.isSortedDesc
+                                      ? " 🔽"
+                                      : " 🔼"
+                                    : ""}
+                                </span>
+                              </th>
+                            );
+                          })}
+                        </tr>
+                      );
+                    })}
+                  </thead>
+                  <tbody
+                    className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700!"
+                    {...getTableBodyProps()}
+                  >
+                    {page.map((row) => {
+                      prepareRow(row);
+                      const { key: rowKey, ...restRowProps } = row.getRowProps();
+                      return (
+                        <tr key={rowKey} {...restRowProps}>
+                          {row.cells.map((cell) => {
+                            const { key: cellKey, ...restCellProps } =
+                              cell.getCellProps();
+                            return (
+                              <td
+                                key={cellKey}
+                                {...restCellProps}
+                                className="table-td"
+                              >
+                                {cell.render("Cell")}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div className="md:flex md:space-y-0 space-y-5 justify-between mt-6 items-center">
+            <div className="flex items-center space-x-3 rtl:space-x-reverse">
+              <select
+                className="form-control py-2 w-max"
+                value={pageSize}
+                onChange={(e) => setPageSize(Number(e.target.value))}
+              >
+                {[10, 25, 50].map((size) => (
+                  <option key={size} value={size}>
+                    {t("common.show")} {size}
+                  </option>
+                ))}
+              </select>
+              <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                {t("common.page")}{" "}
+                <span>
+                  {pageIndex + 1} {t("common.of")} {pageOptions.length}
+                </span>
+              </span>
+            </div>
+            <ul className="flex items-center space-x-3 rtl:space-x-reverse">
+              <li className="text-xl leading-4 text-slate-900 dark:text-white rtl:rotate-180">
+                <button
+                  className={`${!canPreviousPage ? "opacity-50 cursor-not-allowed" : ""}`}
+                  onClick={() => gotoPage(0)}
+                  disabled={!canPreviousPage}
+                >
+                  <Icon icon="heroicons:chevron-double-left-solid" />
                 </button>
               </li>
-            ))}
-            <li className="text-sm leading-4 text-slate-900 dark:text-white rtl:rotate-180">
-              <button
-                className={`${!canNextPage ? "opacity-50 cursor-not-allowed" : ""}`}
-                onClick={() => nextPage()}
-                disabled={!canNextPage}
-              >
-                {t("common.next")}
-              </button>
-            </li>
-            <li className="text-xl leading-4 text-slate-900 dark:text-white rtl:rotate-180">
-              <button
-                onClick={() => gotoPage(pageCount - 1)}
-                disabled={!canNextPage}
-                className={`${!canNextPage ? "opacity-50 cursor-not-allowed" : ""}`}
-              >
-                <Icon icon="heroicons:chevron-double-right-solid" />
-              </button>
-            </li>
-          </ul>
+              <li className="text-sm leading-4 text-slate-900 dark:text-white rtl:rotate-180">
+                <button
+                  className={`${!canPreviousPage ? "opacity-50 cursor-not-allowed" : ""}`}
+                  onClick={() => previousPage()}
+                  disabled={!canPreviousPage}
+                >
+                  {t("common.previous")}
+                </button>
+              </li>
+              {pageOptions.map((pageNum, pageIdx) => (
+                <li key={pageIdx}>
+                  <button
+                    aria-current="page"
+                    className={`${
+                      pageIdx === pageIndex
+                        ? "bg-slate-900 dark:bg-slate-600 dark:text-slate-200 text-white font-medium"
+                        : "bg-slate-100 dark:bg-slate-700 dark:text-slate-400 text-slate-900 font-normal"
+                    } text-sm rounded leading-[16px] flex h-6 w-6 items-center justify-center transition-all duration-150`}
+                    onClick={() => gotoPage(pageIdx)}
+                  >
+                    {pageNum + 1}
+                  </button>
+                </li>
+              ))}
+              <li className="text-sm leading-4 text-slate-900 dark:text-white rtl:rotate-180">
+                <button
+                  className={`${!canNextPage ? "opacity-50 cursor-not-allowed" : ""}`}
+                  onClick={() => nextPage()}
+                  disabled={!canNextPage}
+                >
+                  {t("common.next")}
+                </button>
+              </li>
+              <li className="text-xl leading-4 text-slate-900 dark:text-white rtl:rotate-180">
+                <button
+                  onClick={() => gotoPage(pageCount - 1)}
+                  disabled={!canNextPage}
+                  className={`${!canNextPage ? "opacity-50 cursor-not-allowed" : ""}`}
+                >
+                  <Icon icon="heroicons:chevron-double-right-solid" />
+                </button>
+              </li>
+            </ul>
+          </div>
+        </Card>
+      </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        title={t("common.deleteConfirmTitle")}
+        activeModal={deleteModalOpen}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setItemToDelete(null);
+        }}
+      >
+        <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-danger-500/20 flex items-center justify-center">
+            <Icon icon="heroicons:exclamation-triangle" className="text-danger-500 text-3xl" />
+          </div>
+          <p className="text-slate-600 dark:text-slate-300 mb-2">
+            {t("common.deleteOrderMessage")}
+          </p>
+          {itemToDelete && (
+            <p className="font-semibold text-slate-800 dark:text-slate-200 mb-6">
+              "{itemToDelete.orderNumber}"
+            </p>
+          )}
+          <div className="flex justify-center space-x-3">
+            <button
+              className="btn btn-outline-dark inline-flex items-center"
+              onClick={() => {
+                setDeleteModalOpen(false);
+                setItemToDelete(null);
+              }}
+            >
+              {t("common.cancel")}
+            </button>
+            <button
+              className="btn btn-danger inline-flex items-center"
+              onClick={confirmDelete}
+            >
+              <Icon icon="heroicons:trash" className="ltr:mr-2 rtl:ml-2" />
+              {t("common.delete")}
+            </button>
+          </div>
         </div>
-      </Card>
-    </div>
+      </Modal>
+    </>
   );
 };
 

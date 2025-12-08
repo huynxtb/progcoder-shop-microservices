@@ -231,15 +231,15 @@ const CreateCoupon = () => {
         </Card>
 
         <div className="flex flex-col space-y-3">
-          <button type="button" className="btn btn-dark w-full">
-            <Icon icon="heroicons:check" className="mr-1" />
+          <button type="button" className="btn btn-dark w-full inline-flex items-center justify-center">
+            <Icon icon="heroicons:check" className="ltr:mr-2 rtl:ml-2" />
             {t("createCoupon.createCoupon")}
           </button>
           <Link
             to="/coupons"
-            className="btn btn-outline-dark w-full text-center"
+            className="btn btn-outline-dark w-full inline-flex items-center justify-center"
           >
-            <Icon icon="heroicons:arrow-left" className="mr-1" />
+            <Icon icon="heroicons:arrow-left" className="ltr:mr-2 rtl:ml-2" />
             {t("createCoupon.back")}
           </Link>
         </div>

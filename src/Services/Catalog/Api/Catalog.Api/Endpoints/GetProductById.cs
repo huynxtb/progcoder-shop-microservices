@@ -1,4 +1,4 @@
-﻿#region using
+#region using
 
 using Catalog.Api.Constants;
 using Catalog.Application.CQRS.Product.Queries;
@@ -19,7 +19,7 @@ public sealed class GetProductById : ICarterModule
         app.MapGet(ApiRoutes.Product.GetProductById, HandleGetProductByIdAsync)
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(GetProductById))
-            .Produces<GetProductByIdResult>(StatusCodes.Status200OK)
+            .Produces<ApiGetResponse<GetProductByIdResult>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -30,13 +30,14 @@ public sealed class GetProductById : ICarterModule
 
     #region Methods
 
-    private async Task<GetProductByIdResult> HandleGetProductByIdAsync(
+    private async Task<ApiGetResponse<GetProductByIdResult>> HandleGetProductByIdAsync(
         ISender sender,
         [FromRoute] Guid productId)
     {
         var query = new GetProductByIdQuery(productId);
+        var result = await sender.Send(query);
 
-        return await sender.Send(query);
+        return new ApiGetResponse<GetProductByIdResult>(result);
     }
 
     #endregion

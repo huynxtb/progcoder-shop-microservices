@@ -24,6 +24,7 @@ const Textinput = ({
   description,
   hasicon,
   onChange,
+  onBlur,
   options,
   onFocus,
   defaultValue,
@@ -52,11 +53,12 @@ const Textinput = ({
         </label>
       )}
       <div className={`relative ${horizontal ? "flex-1" : ""}`}>
-        {name && !isMask && (
+        {!isMask && (
           <input
             type={type === "password" && open === true ? "text" : type}
-            {...register(name)}
+            {...(register && name ? register(name) : {})}
             {...rest}
+            name={name}
             className={`${
               error ? " has-error" : " "
             } form-control py-2 ${className}  `}
@@ -65,25 +67,16 @@ const Textinput = ({
             defaultValue={defaultValue}
             disabled={disabled}
             id={id}
+            value={value}
             onChange={onChange}
+            onBlur={onBlur}
           />
         )}
-        {!name && !isMask && (
-          <input
-            type={type === "password" && open === true ? "text" : type}
-            className={`form-control py-2 ${className}`}
-            placeholder={placeholder}
-            readOnly={readonly}
-            disabled={disabled}
-            defaultValue={defaultValue}
-            onChange={onChange}
-            id={id}
-          />
-        )}
-        {name && isMask && (
+        {isMask && (
           <Cleave
-            {...register(name)}
+            {...(register && name ? register(name) : {})}
             {...rest}
+            name={name}
             placeholder={placeholder}
             options={options}
             className={`${
@@ -93,21 +86,9 @@ const Textinput = ({
             id={id}
             readOnly={readonly}
             disabled={disabled}
+            value={value}
             onChange={onChange}
-          />
-        )}
-        {!name && isMask && (
-          <Cleave
-            placeholder={placeholder}
-            options={options}
-            className={`${
-              error ? " has-error" : " "
-            } form-control py-2 ${className}  `}
-            onFocus={onFocus}
-            id={id}
-            readOnly={readonly}
-            disabled={disabled}
-            onChange={onChange}
+            onBlur={onBlur}
           />
         )}
         {/* icon */}

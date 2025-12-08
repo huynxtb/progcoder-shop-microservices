@@ -1,4 +1,4 @@
-﻿#region using
+#region using
 
 using BuildingBlocks.Pagination;
 using Catalog.Api.Constants;
@@ -20,7 +20,7 @@ public sealed class GetPublishProducts : ICarterModule
         app.MapGet(ApiRoutes.Product.GetPublishProducts, HandleGetPublishProductsAsync)
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(GetPublishProducts))
-            .Produces<ResultSharedResponse<GetPublishProductsResult>>(StatusCodes.Status200OK)
+            .Produces<ApiGetResponse<GetPublishProductsResult>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound);
     }
@@ -29,14 +29,15 @@ public sealed class GetPublishProducts : ICarterModule
 
     #region Methods
 
-    private async Task<GetPublishProductsResult> HandleGetPublishProductsAsync(
+    private async Task<ApiGetResponse<GetPublishProductsResult>> HandleGetPublishProductsAsync(
         ISender sender,
         [AsParameters] GetPublishProductsFilter req,
         [AsParameters] PaginationRequest paging)
     {
         var query = new GetPublishProductsQuery(req, paging);
+        var result = await sender.Send(query);
 
-        return await sender.Send(query);
+        return new ApiGetResponse<GetPublishProductsResult>(result);
     }
 
     #endregion

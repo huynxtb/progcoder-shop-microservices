@@ -1,4 +1,4 @@
-﻿
+
 #region using
 
 using BuildingBlocks.Exceptions;
@@ -11,8 +11,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Common.Constants;
 using Common.Models;
-using Common.Models.Reponses;
-using BuildingBlocks.Abstractions.ValueObjects;
 using BuildingBlocks.Authentication.Extensions;
 
 #endregion
@@ -29,7 +27,7 @@ public sealed class CreateProduct : ICarterModule
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(CreateProduct))
             .WithMultipartForm<CreateProductRequest>()
-            .Produces<Guid>(StatusCodes.Status200OK)
+            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .DisableAntiforgery()
@@ -40,37 +38,55 @@ public sealed class CreateProduct : ICarterModule
 
     #region Methods
 
-    private async Task<Guid> HandleCreateProductAsync(
+    private async Task<ApiCreatedResponse<Guid>> HandleCreateProductAsync(
         ISender sender,
         IMapper mapper,
         IHttpContextAccessor httpContext,
         [FromForm] CreateProductRequest req)
     {
         if (req == null) throw new ClientValidationException(MessageCode.BadRequest);
-        if ((req.FormFiles == null || req.FormFiles.Count == 0) && httpContext.HttpContext != null)
+        if ((req.ImageFiles == null || req.ImageFiles.Count == 0) && httpContext.HttpContext != null)
         {
-            req.FormFiles = httpContext.HttpContext.Request.Form.Files.ToList();
+            req.ImageFiles = httpContext.HttpContext.Request.Form.Files.ToList();
         }
 
         var dto = mapper.Map<CreateProductDto>(req);
-        dto.Files ??= new();
 
-        foreach (var file in req.FormFiles!)
+        if (req.ImageFiles != null && req.ImageFiles.Count > 0)
+        {
+            dto.UploadImages ??= new();
+            foreach (var file in req.ImageFiles!)
+            {
+                using var ms = new MemoryStream();
+                await file.CopyToAsync(ms);
+                dto.UploadImages.Add(new UploadFileBytes
+                {
+                    FileName = file.FileName,
+                    Bytes = ms.ToArray(),
+                    ContentType = file.ContentType
+                });
+            }
+        }
+
+        if (req.ThumbnailFile != null && req.ThumbnailFile.Length > 0)
         {
             using var ms = new MemoryStream();
-            await file.CopyToAsync(ms);
-            dto.Files.Add(new UploadFileBytes
+            await req.ThumbnailFile.CopyToAsync(ms);
+
+            dto.UploadThumbnail = new UploadFileBytes
             {
-                FileName = file.FileName,
+                FileName = req.ThumbnailFile.FileName,
                 Bytes = ms.ToArray(),
-                ContentType = file.ContentType
-            });
+                ContentType = req.ThumbnailFile.ContentType
+            };
         }
 
         var currentUser = httpContext.GetCurrentUser();
         var command = new CreateProductCommand(dto, Actor.User(currentUser.Id));
 
-        return await sender.Send(command);
+        var result = await sender.Send(command);
+
+        return new ApiCreatedResponse<Guid>(result);
     }
 
     #endregion

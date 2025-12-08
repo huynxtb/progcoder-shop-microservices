@@ -1,4 +1,4 @@
-﻿#region using
+#region using
 
 using BuildingBlocks.Abstractions.ValueObjects;
 using BuildingBlocks.Authentication.Extensions;
@@ -20,7 +20,7 @@ public sealed class PublishProduct : ICarterModule
         app.MapPost(ApiRoutes.Product.Publish, HandlePublishProductAsync)
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(PublishProduct))
-            .Produces<Guid>(StatusCodes.Status200OK)
+            .Produces<ApiUpdatedResponse<Guid>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -31,14 +31,16 @@ public sealed class PublishProduct : ICarterModule
 
     #region Methods
 
-    private async Task<Guid> HandlePublishProductAsync(
+    private async Task<ApiUpdatedResponse<Guid>> HandlePublishProductAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
         [FromRoute] Guid productId)
     {
         var currentUser = httpContext.GetCurrentUser();
         var command = new PublishProductCommand(productId, Actor.User(currentUser.Email));
-        return await sender.Send(command);
+        var result = await sender.Send(command);
+
+        return new ApiUpdatedResponse<Guid>(result);
     }
 
     #endregion

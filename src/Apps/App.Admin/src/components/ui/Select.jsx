@@ -19,6 +19,7 @@ const Select = ({
   msgTooltip,
   description,
   onChange,
+  onBlur,
   options,
   defaultValue,
 
@@ -43,72 +44,40 @@ const Select = ({
         </label>
       )}
       <div className={`relative ${horizontal ? "flex-1" : ""}`}>
-        {name && (
-          <select
-            onChange={onChange}
-            {...register(name)}
-            {...rest}
-            className={`${
-              error ? " has-error" : " "
-            } form-control py-2  appearance-none ${className}  `}
-            placeholder={placeholder}
-            readOnly={readonly}
-            disabled={disabled}
-            id={id}
-            value={value}
-            size={size}
-            defaultValue={defaultValue}
-          >
-            <option value="" disabled>
-              {placeholder}
-            </option>
-            {options.map((option, i) => (
-              <Fragment key={i}>
-                {option.value && option.label ? (
-                  <option key={i} value={option.value}>
-                    {option.label}
-                  </option>
-                ) : (
-                  <option key={i} value={option}>
-                    {option}
-                  </option>
-                )}
-              </Fragment>
-            ))}
-          </select>
-        )}
-        {!name && (
-          <select
-            onChange={onChange}
-            className={`${
-              error ? " has-error" : " "
-            } form-control py-2 appearance-none ${className}  `}
-            placeholder={placeholder}
-            readOnly={readonly}
-            disabled={disabled}
-            id={id}
-            value={value}
-            size={size}
-            defaultValue={defaultValue}
-          >
-            <option value="" disabled>
-              {placeholder}
-            </option>
-            {options.map((option, i) => (
-              <Fragment key={i}>
-                {option.value && option.label ? (
-                  <option key={i} value={option.value}>
-                    {option.label}
-                  </option>
-                ) : (
-                  <option key={i} value={option}>
-                    {option}
-                  </option>
-                )}
-              </Fragment>
-            ))}
-          </select>
-        )}
+        <select
+          onChange={onChange}
+          onBlur={onBlur}
+          {...(register && name ? register(name) : {})}
+          {...rest}
+          name={name}
+          className={`${
+            error ? " has-error" : " "
+          } form-control py-2 appearance-none ${className}  `}
+          placeholder={placeholder}
+          readOnly={readonly}
+          disabled={disabled}
+          id={id}
+          value={value}
+          size={size}
+          defaultValue={defaultValue}
+        >
+          <option value="" disabled>
+            {placeholder}
+          </option>
+          {options.map((option, i) => (
+            <Fragment key={i}>
+              {option.value && option.label ? (
+                <option key={i} value={option.value}>
+                  {option.label}
+                </option>
+              ) : (
+                <option key={i} value={option}>
+                  {option}
+                </option>
+              )}
+            </Fragment>
+          ))}
+        </select>
 
         {/* icon */}
         <div className="flex text-xl absolute ltr:right-[14px] rtl:left-[14px] top-1/2 -translate-y-1/2  space-x-1 rtl:space-x-reverse">

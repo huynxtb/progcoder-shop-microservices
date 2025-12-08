@@ -38,7 +38,7 @@ public sealed class UpsertedProductDomainEventHandler(
             Sku = @event.Sku,
             Slug = @event.Slug,
             Price = @event.Price,
-            SalesPrice = @event.SalesPrice,
+            SalePrice = @event.SalePrice,
             Categories = @event.Categories,
             Images = @event.Images,
             Thumbnail = @event.Thumbnail,

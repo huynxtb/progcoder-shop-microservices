@@ -16,11 +16,13 @@ public sealed class CatalogApiMappingProfile : Profile
     {
         // CreateProductRequest -> CreateProductDto
         CreateMap<CreateProductRequest, CreateProductDto>()
-            .ForMember(dest => dest.Files, opt => opt.Ignore()); // Files are handled separately
+            .ForMember(dest => dest.UploadImages, opt => opt.Ignore())
+            .ForMember(dest => dest.UploadThumbnail, opt => opt.Ignore()); // Files are handled separately
 
         // UpdateProductRequest -> UpdateProductDto
         CreateMap<UpdateProductRequest, UpdateProductDto>()
-            .ForMember(dest => dest.Files, opt => opt.Ignore()); // Files are handled separately
+            .ForMember(dest => dest.UploadImages, opt => opt.Ignore())
+            .ForMember(dest => dest.UploadThumbnail, opt => opt.Ignore()); // Files are handled separately
     }
 
     #endregion

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import Badge from "@/components/ui/Badge";
 import Icon from "@/components/ui/Icon";
 import Button from "@/components/ui/Button";
@@ -22,167 +22,252 @@ import insta from "@/assets/images/e-commerce/productDetails/insta.svg";
 import linkedin from "@/assets/images/e-commerce/productDetails/linkedin.svg";
 
 import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import ThumbSliderCom from "@/components/partials/ecommerce/thumb-slider";
-import { useGetProductQuery } from "@/store/api/shop/shopApiSlice";
 import { addToCart, updateQuantity } from "@/store/api/shop/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Alert from "@/components/ui/Alert";
 import LoaderCircle from "@/components/Loader-circle";
+import { api } from "@/api";
+import { API_ENDPOINTS } from "@/api/endpoints";
+import { formatCurrency, calculateDiscount, formatDate } from "@/utils/format";
+import { toast } from "react-toastify";
 
 export const ProductDetails = () => {
-  const colors = [
-    { code: "Black" },
-    { code: "Pink" },
-    { code: "Orange" },
-    { code: "Red" },
-    { code: "Yellow" },
-  ];
-  const sizes = [{ code: "S" }, { code: "M" }, { code: "L" }, { code: "XL" }];
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  const lists = [
-    {
-      id: 1,
-    },
-    {
-      id: 2,
-    },
-    {
-      id: 3,
-    },
-    {
-      id: 4,
-    },
-    {
-      id: 5,
-    },
-    {
-      id: 6,
-    },
-  ];
-  const lists1 = [
-    {
-      id: 1,
-      text: "Brand : Easy",
-    },
-    {
-      id: 2,
-      text: "Material : Cotton",
-    },
-    {
-      id: 3,
-      text: "Material : Cotton",
-    },
-    {
-      id: 4,
-      text: "Pattern : Solid Color",
-    },
-    {
-      id: 5,
-      text: "Collar : Square Neck",
-    },
-    {
-      id: 6,
-      text: "Color : As given picture",
-    },
-    {
-      id: 7,
-      text: "Sleeve Length : Long Sleeve",
-    },
-  ];
-  const lists2 = [
-    {
-      id: 1,
-      text: "Plate Type : Slim",
-    },
-    {
-      id: 2,
-      text: "Sales Channel Type : E-commerce Only Sells Online",
-    },
-    {
-      id: 3,
-      text: "Material Composition : 100% Cotton",
-    },
-    {
-      id: 4,
-      text: "Size : M,L,XL",
-    },
-    {
-      id: 5,
-      text: 'M- long: 29", body: 40"',
-    },
-    {
-      id: 6,
-      text: 'L- long: 30 ", body: 42"',
-    },
-    {
-      id: 7,
-      text: 'XL- long: 31", body: 44"',
-    },
-  ];
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [color, setColor] = useState("");
+  const [size, setSize] = useState("");
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const buttons = [
     {
-      title: "Description",
+      title: t("productDetails.description"),
     },
     {
-      title: "Additional Information",
+      title: t("productDetails.additionalInformation"),
     },
   ];
 
-  const dispatch = useDispatch();
-
-  const [color, setColor] = useState("Black");
-  const [size, setSize] = useState("S");
-  let { id } = useParams();
-  const {
-    data: getProduct,
-    isLoading,
-    isError,
-    error,
-  } = useGetProductQuery(id);
-  const product = getProduct?.product;
-  const cartItems = useSelector((state) => state.cart.items);
-  const handleAddToCart = () => {
-    dispatch(
-      addToCart({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        img: product.img,
-      })
-    );
+  // Helper function to map API displayStatus to status code
+  const mapDisplayStatus = (displayStatus) => {
+    if (!displayStatus) return "active";
+    if (displayStatus === "Out of Stock") return "out_of_stock";
+    if (displayStatus === "Hidden" || displayStatus === "hidden") return "hidden";
+    return "active";
   };
-  const isValidID = product && product.id === id;
 
-  if (isLoading) {
+  // Get status config for displayStatus badge
+  const getStatusConfig = (displayStatus) => {
+    const status = mapDisplayStatus(displayStatus);
+    const statusConfig = {
+      active: { 
+        label: t("products.active"), 
+        class: "bg-success-500 text-white" 
+      },
+      out_of_stock: { 
+        label: t("products.outOfStock"), 
+        class: "bg-danger-500 text-white" 
+      },
+      hidden: { 
+        label: t("products.hidden"), 
+        class: "bg-slate-500 text-white" 
+      },
+    };
+    return statusConfig[status] || statusConfig.active;
+  };
+
+  // Fetch product data from API
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!id) return;
+      
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await api.get(API_ENDPOINTS.CATALOG.GET_PRODUCT_DETAIL(id));
+        
+        if (response.data && response.data.result && response.data.result.product) {
+          const productData = response.data.result.product;
+          
+          // Set initial color and size from API data
+          if (productData.colors && productData.colors.length > 0) {
+            setColor(productData.colors[0].trim());
+          }
+          if (productData.sizes && productData.sizes.length > 0) {
+            setSize(productData.sizes[0].trim());
+          }
+          
+          setProduct(productData);
+        } else {
+          setError(t("productDetails.productNotFound"));
+        }
+      } catch (err) {
+        console.error("Failed to fetch product:", err);
+        setError(err.response?.data?.message || err.message || t("productDetails.failedToLoad"));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id, t]);
+
+  // Handle toggle publish/unpublish
+  const handleTogglePublish = async () => {
+    if (!product || isUpdating) return;
+
+    try {
+      setIsUpdating(true);
+      const isCurrentlyPublished = product.published;
+      const endpoint = isCurrentlyPublished 
+        ? API_ENDPOINTS.CATALOG.UNPUBLISH_PRODUCT(id)
+        : API_ENDPOINTS.CATALOG.PUBLISH_PRODUCT(id);
+      
+      const response = await api.post(endpoint);
+
+      if (response && response.status >= 200 && response.status < 300) {
+        setProduct((prev) => ({
+          ...prev,
+          published: !isCurrentlyPublished,
+        }));
+        toast.success(
+          !isCurrentlyPublished 
+            ? t("productDetails.publishSuccess") 
+            : t("productDetails.unpublishSuccess"),
+          {
+            position: "top-right",
+            autoClose: 5000,
+          }
+        );
+      }
+    } catch (err) {
+      console.error("Failed to update publish status:", err);
+      toast.error(t("productDetails.updateError"), {
+        position: "top-right",
+        autoClose: 5000,
+      });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  if (loading) {
     return <LoaderCircle />;
   }
-  if (isError || error) {
+
+  if (error) {
     return (
-      <Alert className="alert-danger " icon="heroicons:information-circle">
-        Error: {error.message}
+      <Alert className="alert-danger" icon="heroicons:information-circle">
+        {t("productDetails.error")}: {error}
       </Alert>
     );
   }
-  if (!isValidID) {
+
+  if (!product) {
     return (
       <div>
-        <Alert className="alert-danger " icon="heroicons:information-circle">
-          Your id <strong>{id}</strong> is not Matching
+        <Alert className="alert-danger" icon="heroicons:information-circle">
+          {t("productDetails.productNotFound")}
         </Alert>
       </div>
     );
   }
 
+  // Prepare colors and sizes from API data
+  const colors = product.colors && product.colors.length > 0 
+    ? product.colors.map(c => ({ code: c.trim() }))
+    : [{ code: t("productDetails.notAvailable") }];
+  
+  const sizes = product.sizes && product.sizes.length > 0
+    ? product.sizes.map(s => ({ code: s.trim() }))
+    : [{ code: t("productDetails.notAvailable") }];
+
+  // Prepare images for slider (thumbnail + images array)
+  // Map to URLs for ThumbSliderCom
+  const productImages = [];
+  if (product.thumbnail?.publicURL) {
+    productImages.push(product.thumbnail.publicURL);
+  }
+  if (product.images && Array.isArray(product.images)) {
+    product.images.forEach(img => {
+      if (img.publicURL) {
+        productImages.push(img.publicURL);
+      }
+    });
+  }
+
   return (
     <div className="w-full bg-white dark:bg-slate-800 p-6 rounded-lg">
+      {/* Header with Publish/Unpublish Button */}
+      <div className="flex justify-between items-start mb-5">
+        <div></div>
+        <div className="flex justify-end">
+          <Button
+            onClick={handleTogglePublish}
+            disabled={isUpdating}
+            className={`${
+              product.published
+                ? "bg-danger-500 hover:bg-danger-600"
+                : "bg-success-500 hover:bg-success-600"
+            } text-white`}
+          >
+            {isUpdating ? (
+              <>
+                <Icon icon="heroicons:arrow-path" className="animate-spin mr-2" />
+                {t("productDetails.updating")}
+              </>
+            ) : product.published ? (
+              <>
+                <Icon icon="heroicons:x-mark" className="mr-2" />
+                {t("productDetails.unpublish")}
+              </>
+            ) : (
+              <>
+                <Icon icon="heroicons:check" className="mr-2" />
+                {t("productDetails.publish")}
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
       <div className="pb-5">
         <div className="grid grid-cols-12  md:space-x-6 md:space-y-0 space-y-4 sm:space-y-4  rtl:space-x-reverse ">
           <div className=" col-span-12 md:col-span-5 lg:col-span-4 space-y-4 ">
-            <ThumbSliderCom product={product} />
+            <ThumbSliderCom product={{ ...product, images: productImages }} />
           </div>
           <div className="col-span-12 md:col-span-7 lg:col-span-8 space-y-2 ">
             <div className="space-y-2">
+              <div className="flex items-center gap-2 flex-wrap">
+                {product.featured && (
+                  <Badge className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-medium">
+                    {t("productDetails.featured")}
+                  </Badge>
+                )}
+                <Badge 
+                  className={
+                    product.published 
+                      ? "bg-success-500 text-white" 
+                      : "bg-slate-500 text-white"
+                  }
+                >
+                  {product.published ? t("productDetails.published") : t("productDetails.unpublished")}
+                </Badge>
+                {product.displayStatus && (() => {
+                  const statusConfig = getStatusConfig(product.displayStatus);
+                  return (
+                    <Badge className={statusConfig.class}>
+                      {statusConfig.label}
+                    </Badge>
+                  );
+                })()}
+              </div>
               <h1 className="text-slate-900 dark:text-slate-300 text-xl lg:text-2xl font-medium ">
                 {product?.name}
               </h1>
@@ -193,34 +278,39 @@ export const ProductDetails = () => {
                 <Icon icon="ph:star-fill" className="text-yellow-400" />
                 <Icon icon="ph:star-fill" className="text-slate-300/80" />
                 <span className="ltr:pl-2 rtl:pr-2 text-slate-500 dark:text-slate-400">
-                  (789 reviews)
+                  {t("productDetails.reviews", { count: 789 })}
                 </span>
               </p>
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
                 <p className="font-normal text-sm lg:text-base text-slate-500 dark:text-slate-400 ">
-                  Brand:
+                  {t("productDetails.sku")}:
                 </p>
                 <p className="font-medium text-sm lg:text-base text-slate-900 dark:text-slate-300 ">
-                  {product.brand}
+                  {product.sku || t("productDetails.notAvailable")}
                 </p>
               </div>
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
                 <p className="font-normal text-sm lg:text-base text-slate-500 dark:text-slate-400 ">
-                  Available:
+                  {t("productDetails.brand")}:
                 </p>
                 <p className="font-medium text-sm lg:text-base text-slate-900 dark:text-slate-300 ">
-                  In Stock
+                  {product.brandName || t("productDetails.notAvailable")}
                 </p>
               </div>
-              <p className="font-normal text-sm lg:text-base text-slate-500 dark:text-slate-400">
-                {product?.desc}
-              </p>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                <p className="font-normal text-sm lg:text-base text-slate-500 dark:text-slate-400 ">
+                  {t("productDetails.available")}:
+                </p>
+                <p className="font-medium text-sm lg:text-base text-slate-900 dark:text-slate-300 ">
+                  {product.isAvaiable ? t("productDetails.inStock") : product.displayStatus || t("productDetails.outOfStock")}
+                </p>
+              </div>
             </div>
             <div className="pb-1">
               <div className="mb-4">
                 <div className="pb-2 flex items-center space-x-2 rtl:space-x-reverse mb-3">
                   <p className="font-normal text-sm lg:text-base text-slate-500 dark:text-slate-400 ">
-                    Color:
+                    {t("productDetails.color")}:
                   </p>
                   <p className="font-medium text-sm lg:text-base text-slate-900 dark:text-slate-300 ">
                     {color}
@@ -253,7 +343,7 @@ export const ProductDetails = () => {
               <div>
                 <div className="pb-2 flex items-center space-x-2 rtl:space-x-reverse mb-3">
                   <p className="font-normal text-sm lg:text-base text-slate-500 dark:text-slate-400 ">
-                    Size:
+                    {t("productDetails.size")}:
                   </p>
                   <p className="font-medium text-base text-slate-900 dark:text-slate-300 ">
                     {size}
@@ -295,109 +385,43 @@ export const ProductDetails = () => {
                     <tbody className="bg-white  dark:bg-slate-800 ">
                       <tr className="space-x-6 rtl:space-x-reverse">
                         <td className="table-td py-2 pl-0 rtl:pr-0 font-normal text-sm lg:text-base text-slate-500 dark:text-slate-400  ">
-                          Price:
+                          {t("productDetails.price")}:
                         </td>
                         <td className="table-td py-2 space-x-2 rtl:space-x-reverse">
-                          <span className="text-slate-900 dark:text-slate-300 font-semibold	text-base lg:text-xl">
-                            ${product?.price}
-                          </span>
-                          <del className="text-slate-500 dark:text-slate-400 font-semibold text-base lg:text-xl ">
-                            {product.oldPrice}
-                          </del>
-                          <Badge className=" font-normal text-[10px] bg-danger-600 text-white ">
-                            <span>40%</span>
-                          </Badge>
+                          {product.salePrice ? (
+                            <>
+                              <span className="text-slate-900 dark:text-slate-300 font-semibold	text-base lg:text-xl">
+                                {formatCurrency(product.salePrice)}
+                              </span>
+                              <del className="text-slate-500 dark:text-slate-400 font-semibold text-base lg:text-xl ">
+                                {formatCurrency(product.price)}
+                              </del>
+                              {calculateDiscount(product.price, product.salePrice) > 0 && (
+                                <Badge className=" font-normal text-[10px] bg-danger-600 text-white ">
+                                  <span>{calculateDiscount(product.price, product.salePrice)}%</span>
+                                </Badge>
+                              )}
+                            </>
+                          ) : (
+                            <span className="text-slate-900 dark:text-slate-300 font-semibold	text-base lg:text-xl">
+                              {formatCurrency(product.price)}
+                            </span>
+                          )}
                         </td>
                       </tr>
-                      <tr className="space-x-1 rtl:space-x-reverse">
-                        <td className="table-td py-2 pl-0 rtl:pr-0 font-normal text-sm lg:text-base text-slate-500 dark:text-slate-400  ">
-                          Quantity:
-                        </td>
-                        <td className="table-td py-2 ">
-                          <CounterButton product={product} />
-                        </td>
-                      </tr>
-                      <tr className="space-x-1 rtl:space-x-reverse">
-                        <td className="table-td py-2 pl-0 rtl:pr-0 font-normal text-sm lg:text-base text-slate-500 dark:text-slate-400  ">
-                          Total Price:
-                        </td>
-                        <td className="table-td py-2 text-slate-900 dark:text-slate-300 font-semibold	text-base lg:text-xl ">
-                          $336
-                        </td>
-                      </tr>
+                      
                     </tbody>
                   </table>
                 </div>
               </div>
             </div>
 
-            <div className="flex space-x-4 rtl:space-x-reverse pb-5">
-              <Button
-                onClick={handleAddToCart}
-                disabled={cartItems.some((cartItem) => cartItem.id === id)}
-                text="Add to Cart"
-                icon="heroicons:shopping-bag"
-                className="btn-outline-dark w-[180px] btn-sm bg-slate-900 dark:bg-slate-800  font-medium hover:bg-white text-white hover:text-slate-900 dark:hover:text-white  dark:hover:bg-slate-700! flex items-center"
-                iconClass=" text-sm leading-none"
-              />
-              <Button
-                text="Buy Now"
-                className="btn-outline-dark w-[180px] btn-sm bg-slate-900 dark:bg-slate-800  font-medium hover:bg-white text-white hover:text-slate-900 dark:hover:text-white  dark:hover:bg-slate-700! flex items-center"
-                iconClass=" text-sm leading-none"
-              />
-              <Button
-                icon="octicon:heart-16"
-                className="btn-outline-dark w-[40px] border dark:border-slate-600 dark:hover:border-slate-600 btn-sm  font-medium hover:bg-slate-900 hover:text-white dark:hover:text-white  dark:hover:bg-slate-700 flex items-center"
-                iconClass=" text-sm leading-none"
-              />
-              <Button
-                icon="eva:repeat-fill"
-                className="btn-outline-dark w-[40px] border dark:border-slate-600 dark:hover:border-slate-600 btn-sm  font-medium hover:bg-slate-900 hover:text-white dark:hover:text-white  dark:hover:bg-slate-700 flex items-center"
-                iconClass=" text-sm leading-none"
-              />
-            </div>
-            <div className="flex space-x-3 rtl:space-x-reverse ">
-              <p className="font-normal text-sm lg:text-base text-slate-500 dark:text-slate-400">
-                Share to:
-              </p>
-              <div className="flex items-center space-x-3 rtl:space-x-reverse">
-                <button
-                  type="button"
-                  className="border p-2 dark:border-slate-600 rounded-sm h-8 w-8 flex justify-center items-center"
-                >
-                  <img className="w-full h-full" src={gmail} alt="" />
-                </button>
-                <button
-                  type="button"
-                  className="border p-2 dark:border-slate-600 rounded-sm h-8 w-8 flex justify-center items-center"
-                >
-                  <img className="w-full h-full" src={facebook} alt="" />
-                </button>
-                <button
-                  type="button"
-                  className="border p-2 dark:border-slate-600 rounded-sm h-8 w-8 flex justify-center items-center"
-                >
-                  <img className="w-full h-full" src={twitter} alt="" />
-                </button>
-                <button
-                  type="button"
-                  className="border p-2 dark:border-slate-600 rounded-sm h-8 w-8 flex justify-center items-center"
-                >
-                  <img className="w-full h-full" src={insta} alt="" />
-                </button>
-                <button
-                  type="button"
-                  className="border p-2 dark:border-slate-600 rounded-sm h-8 w-8 flex justify-center items-center"
-                >
-                  <img className="w-full h-full" src={linkedin} alt="" />
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </div>
 
       <div className="space-y-5">
+        {/* Description and Additional Information */}
         <div className="border border-slate-200 dark:border-slate-700 rounded-sm">
           <Card>
             <TabGroup>
@@ -428,81 +452,146 @@ export const ProductDetails = () => {
               <TabPanels>
                 <TabPanel>
                   <div className="text-slate-600 dark:text-slate-400 text-sm lg:text-base font-normal">
-                    <p>
-                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-                      sed diam nonumy eirmod tempor invidunt ut labore et dolore
-                      magna. Lorem ipsum dolor sit amet, consetetur sadipscing
-                      elitr, sed diam nonumy eirmod tempor invidunt ut labore et
-                      dolore magna. Lorem ipsum dolor sit amet, consetetur
-                      sadipscing elitr, sed diam nonumy eirmod tempor invidunt
-                      ut labore et dolore magna.
-                    </p>
-                    <ul className="space-y-3 p-6 lg:ml-28 ml-14 rounded-md bg-slate-white dark:bg-slate-800">
-                      {lists.map((item, i) => (
-                        <li
-                          key={i}
-                          className="text-sm lg:text-base text-slate-600 dark:text-slate-400 flex space-x-2 items-center rtl:space-x-reverse"
-                        >
-                          <span className="h-[10px] w-[10px] bg-slate-900 dark:bg-slate-400 rounded-full inline-block"></span>
-                          <span>Lorem ipsum dolor sit amet.</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <p className="text-slate-600 dark:text-slate-400 text-sm lg:text-base font-normal">
-                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-                      sed diam nonumy eirmod tempor invidunt ut labore et dolore
-                      magna. Lorem ipsum dolor sit amet, consetetur sadipscing
-                      elitr, sed diam nonumy eirmod tempor invidunt ut labore et
-                      dolore magna. Lorem ipsum dolor sit amet, consetetur
-                      sadipscing elitr, sed diam nonumy eirmod tempor invidunt
-                      ut labore et dolore magna.
-                    </p>
+                    {product.shortDescription && (
+                      <p className="mb-4">{product.shortDescription}</p>
+                    )}
+                    {product.longDescription && (
+                      <div>
+                        <p className="mb-4">{product.longDescription}</p>
+                      </div>
+                    )}
+                    {product.tags && product.tags.length > 0 && (
+                      <div className="mt-4">
+                        <p className="font-medium mb-2">{t("productDetails.tags")}:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {product.tags.map((tag, i) => (
+                            <Badge key={i} className="bg-primary-500/10 text-primary-500">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </TabPanel>
                 <TabPanel>
                   <div className="text-slate-600 dark:text-slate-400 text-sm font-normal">
-                    <div className="flex justify-between items-start pb-4">
-                      <ul className="space-y-3 rounded-md bg-slate-white dark:bg-slate-800 ">
-                        {lists1.map((item, i) => (
-                          <li
-                            key={i}
-                            className="text-sm lg:text-base text-slate-600 dark:text-slate-400 flex space-x-2 items-center rtl:space-x-reverse"
-                          >
-                            <span className="h-[10px] w-[10px] bg-slate-900 dark:bg-slate-400 rounded-full inline-block"></span>
-                            <span>{item.text}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      <ul className="space-y-3 rounded-md bg-slate-white dark:bg-slate-800">
-                        {lists2.map((item, i) => (
-                          <li
-                            key={i}
-                            className="text-sm lg:text-base text-slate-600 dark:text-slate-400 flex space-x-2 items-center rtl:space-x-reverse"
-                          >
-                            <span className="h-[10px] w-[10px] bg-slate-900 dark:bg-slate-400 rounded-full inline-block"></span>
-                            <span>{item.text}</span>
-                          </li>
-                        ))}
-                      </ul>
+                    <div className="space-y-3">
+                      {product.sku && (
+                        <div className="flex space-x-2 items-center rtl:space-x-reverse">
+                          <span className="h-[10px] w-[10px] bg-slate-900 dark:bg-slate-400 rounded-full inline-block"></span>
+                          <span>{t("productDetails.sku")}: {product.sku}</span>
+                        </div>
+                      )}
+                      {product.brandName && (
+                        <div className="flex space-x-2 items-center rtl:space-x-reverse">
+                          <span className="h-[10px] w-[10px] bg-slate-900 dark:bg-slate-400 rounded-full inline-block"></span>
+                          <span>{t("productDetails.brand")}: {product.brandName}</span>
+                        </div>
+                      )}
+                      {product.categoryNames && product.categoryNames.length > 0 && (
+                        <div className="flex space-x-2 items-center rtl:space-x-reverse">
+                          <span className="h-[10px] w-[10px] bg-slate-900 dark:bg-slate-400 rounded-full inline-block"></span>
+                          <span>{t("productDetails.category")}: {product.categoryNames.join(", ")}</span>
+                        </div>
+                      )}
+                      {product.unit && (
+                        <div className="flex space-x-2 items-center rtl:space-x-reverse">
+                          <span className="h-[10px] w-[10px] bg-slate-900 dark:bg-slate-400 rounded-full inline-block"></span>
+                          <span>{t("productDetails.unit")}: {product.unit}</span>
+                        </div>
+                      )}
+                      {product.weight && (
+                        <div className="flex space-x-2 items-center rtl:space-x-reverse">
+                          <span className="h-[10px] w-[10px] bg-slate-900 dark:bg-slate-400 rounded-full inline-block"></span>
+                          <span>{t("productDetails.weight")}: {product.weight} {t("productDetails.kg")}</span>
+                        </div>
+                      )}
+                      {product.colors && product.colors.length > 0 && (
+                        <div className="flex space-x-2 items-center rtl:space-x-reverse">
+                          <span className="h-[10px] w-[10px] bg-slate-900 dark:bg-slate-400 rounded-full inline-block"></span>
+                          <span>{t("productDetails.colors")}: {product.colors.join(", ")}</span>
+                        </div>
+                      )}
+                      {product.sizes && product.sizes.length > 0 && (
+                        <div className="flex space-x-2 items-center rtl:space-x-reverse">
+                          <span className="h-[10px] w-[10px] bg-slate-900 dark:bg-slate-400 rounded-full inline-block"></span>
+                          <span>{t("productDetails.sizes")}: {product.sizes.join(", ")}</span>
+                        </div>
+                      )}
+                      {product.seoTitle && (
+                        <div className="flex space-x-2 items-center rtl:space-x-reverse">
+                          <span className="h-[10px] w-[10px] bg-slate-900 dark:bg-slate-400 rounded-full inline-block"></span>
+                          <span>{t("productDetails.seoTitle")}: {product.seoTitle}</span>
+                        </div>
+                      )}
+                      {product.seoDescription && (
+                        <div className="flex space-x-2 items-center rtl:space-x-reverse">
+                          <span className="h-[10px] w-[10px] bg-slate-900 dark:bg-slate-400 rounded-full inline-block"></span>
+                          <span>{t("productDetails.seoDescription")}: {product.seoDescription}</span>
+                        </div>
+                      )}
                     </div>
-                    <p className="text-slate-600 dark:text-slate-400 text-sm lg:text-base font-normal">
-                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-                      sed diam nonumy eirmod tempor invidunt ut labore et dolore
-                      magna. Lorem ipsum dolor sit amet, consetetur sadipscing
-                      elitr, sed diam nonumy eirmod tempor invidunt ut labore et
-                      dolore magna. Lorem ipsum dolor sit amet, consetetur
-                      sadipscing elitr, sed diam nonumy eirmod tempor invidunt
-                      ut labore et dolore magna.
-                    </p>
                   </div>
                 </TabPanel>
               </TabPanels>
             </TabGroup>
           </Card>
         </div>
+
+        {/* Metadata Section */}
+        <div className="border border-slate-200 dark:border-slate-700 rounded-sm p-6">
+          <h6 className="text-slate-900 dark:text-slate-300 pb-4 text-lg lg:text-xl font-medium">
+            {t("productDetails.metadata")}
+          </h6>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {product.createdBy && (
+              <div>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">
+                  {t("productDetails.createdBy")}:
+                </p>
+                <p className="text-sm text-slate-900 dark:text-slate-300 font-medium">
+                  {product.createdBy}
+                </p>
+              </div>
+            )}
+            {product.createdOnUtc && (
+              <div>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">
+                  {t("productDetails.createdOn")}:
+                </p>
+                <p className="text-sm text-slate-900 dark:text-slate-300 font-medium">
+                  {formatDate(product.createdOnUtc)}
+                </p>
+              </div>
+            )}
+            {product.lastModifiedBy && (
+              <div>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">
+                  {t("productDetails.lastModifiedBy")}:
+                </p>
+                <p className="text-sm text-slate-900 dark:text-slate-300 font-medium">
+                  {product.lastModifiedBy}
+                </p>
+              </div>
+            )}
+            {product.lastModifiedOnUtc && (
+              <div>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">
+                  {t("productDetails.lastModifiedOn")}:
+                </p>
+                <p className="text-sm text-slate-900 dark:text-slate-300 font-medium">
+                  {formatDate(product.lastModifiedOnUtc)}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Reviews and Ratings */}
         <div className="border border-slate-200 dark:border-slate-700 rounded-sm p-6">
           <h6 className="text-slate-900 dark:text-slate-300 pb-6 text-lg lg:text-xl">
-            Reviews & Ratings
+            {t("productDetails.reviewsAndRatings")}
           </h6>
           <div className="space-y-12">
             <div className="bg-secondary-100 dark:bg-slate-700 p-6 rounded-sm grid grid-cols-12 	">
@@ -524,75 +613,13 @@ export const ProductDetails = () => {
                     <Icon icon="ph:star-fill" className="text-slate-300/80" />
                   </div>
                   <div className=" text-slate-500 dark:text-slate-400">
-                    (789 reviews)
-                  </div>
-                </div>
-              </div>
-              <div className="col-span-12 md:col-span-6 flex justify-center md:justify-end items-center order-1 md:order-2">
-                <button
-                  type="button"
-                  className="bg-yellow-500 text-white rounded-sm px-6 py-3 text-sm lg:text-base"
-                >
-                  Rate this product
-                </button>
-              </div>
-            </div>
-            <div className="flex space-x-3 rtl:space-x-reverse ">
-              <div className=" h-14 w-14 rounded-full object-cover bg-white ring-1 overflow-hidden flex-none">
-                <img
-                  className="h-full w-full object-contain"
-                  src={blackJumper}
-                />
-              </div>
-              <div>
-                {" "}
-                <div>
-                  <p className="text-slate-900  dark:text-slate-300 font-medium text-sm lg:text-base pb-1">
-                    Devied Beakhum
-                  </p>
-                  <p className="text-slate-500 dark:text-slate-400 font-normal text-xs  pb-1">
-                    08-03-2023
-                  </p>
-                  <p className="flex items-center text-slate-900 dark:text-slate-300  font-normal text-sm lg:text-base space-x-1.5 rtl:space-x-reverse pb-3">
-                    <Icon icon="ph:star-fill" className="text-yellow-400" />
-                    <Icon icon="ph:star-fill" className="text-yellow-400" />
-                    <Icon icon="ph:star-fill" className="text-yellow-400" />
-                    <Icon icon="ph:star-fill" className="text-yellow-400" />
-                    <Icon icon="ph:star-fill" className="text-yellow-400" />
-                  </p>
-                  <p className="pb-4 text-sm  lg:text-base text-slate-500 dark:text-slate-400">
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                    diam nonumy eirmod tempor invidunt ut labore et dolore
-                    magna. Lori ipsum dolor sit amet, consetetur sadipscing
-                    elitr, sed diam nonumy eirmod tempor invidunt.
-                  </p>
-                  <div className="flex space-x-2 rtl:space-x-reverse pb-3">
-                    <p className="font-normal text-sm lg:text-base text-slate-500 dark:text-slate-400">
-                      Info:
-                    </p>
-                    <p className="font-medium text-sm lg:text-base text-[#10B26C] ">
-                      Verified Purchase
-                    </p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-12 ">
-                  <div className="col-span-12 flex justify-end space-x-4 rtl:space-x-reverse">
-                    <p className="flex items-center space-x-2 rtl:space-x-reverse ">
-                      <span className="cursor-pointer ">
-                        <Icon icon="heroicons:hand-thumb-up" />
-                      </span>
-                      <span>02</span>
-                    </p>
-                    <p className="flex items-center space-x-2 rtl:space-x-reverse ">
-                      <span className="cursor-pointer ">
-                        <Icon icon="carbon:reply" />
-                      </span>
-                      <span>00</span>
-                    </p>
+                    {t("productDetails.reviews", { count: 789 })}
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* Review Item */}
             <div className="flex space-x-3 rtl:space-x-reverse ">
               <div className=" h-14 w-14 rounded-full object-cover bg-white ring-1 overflow-hidden flex-none">
                 <img
@@ -624,10 +651,10 @@ export const ProductDetails = () => {
                   </p>
                   <div className="flex space-x-2 rtl:space-x-reverse pb-3">
                     <p className="font-normal text-sm lg:text-base text-slate-500 dark:text-slate-400">
-                      Info:
+                      {t("productDetails.info")}:
                     </p>
                     <p className="font-medium text-sm lg:text-base text-[#10B26C] ">
-                      Verified Purchase
+                      {t("productDetails.verifiedPurchase")}
                     </p>
                   </div>
                 </div>
@@ -653,12 +680,6 @@ export const ProductDetails = () => {
                         />
                       </div>
                     </div>
-                    <div className=" max-h-[400px] max-w-[346px] rounded-sm  bg-slate-100 overflow-hidden p-1">
-                      <img
-                        className="h-full w-full object-contain"
-                        src={three}
-                      />
-                    </div>
                   </div>
                   <div className="col-span-12 flex justify-end space-x-4 rtl:space-x-reverse">
                     <p className="flex items-center space-x-2 rtl:space-x-reverse ">
@@ -677,8 +698,10 @@ export const ProductDetails = () => {
                 </div>
               </div>
             </div>
+
           </div>
         </div>
+
       </div>
     </div>
   );

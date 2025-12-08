@@ -1,7 +1,9 @@
-﻿namespace Common.Constants;
+namespace Common.Constants;
 
 public sealed class MessageCode
 {
+    #region Fields, Properties and Indexers
+
     public const string BadRequest = "BAD_REQUEST";
 
     public const string DecisionFlowIllegal = "DECISION_FLOW_ILLEGAL";
@@ -188,4 +190,21 @@ public sealed class MessageCode
 
     public const string TemplateNotFound = "TEMPLATE_NOT_FOUND";
 
+    public const string ThumbnailIsRequired = "THUMBNAIL_IS_REQUIRED";
+
+    public const string BrandIsNotExists = "BRAND_IS_NOT_EXISTS";
+
+    public const string BrandIdIsRequired = "BRAND_ID_IS_REQUIRED";
+
+    public const string BrandNameIsRequired = "BRAND_NAME_IS_REQUIRED";
+
+    public const string CategoryIdIsRequired = "CATEGORY_ID_IS_REQUIRED";
+
+    public const string CategoryNameIsRequired = "CATEGORY_NAME_IS_REQUIRED";
+
+    public const string CategoryHasChildren = "CATEGORY_HAS_CHILDREN";
+
+    public const string CategoryCannotBeItsOwnParent = "CATEGORY_CANNOT_BE_ITS_OWN_PARENT";
+
+    #endregion
 }

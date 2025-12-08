@@ -19,7 +19,7 @@ public sealed class DeleteProduct : ICarterModule
         app.MapDelete(ApiRoutes.Product.Delete, HandleDeleteProductAsync)
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(DeleteProduct))
-            .Produces<Unit>(StatusCodes.Status200OK)
+            .Produces<ApiDeletedResponse<Guid>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -30,12 +30,15 @@ public sealed class DeleteProduct : ICarterModule
 
     #region Methods
 
-    private async Task<Unit> HandleDeleteProductAsync(
+    private async Task<ApiDeletedResponse<Guid>> HandleDeleteProductAsync(
         ISender sender,
         [FromRoute] Guid productId)
     {
         var command = new DeleteProductCommand(productId);
-        return await sender.Send(command);
+        
+        await sender.Send(command);
+
+        return new ApiDeletedResponse<Guid>(productId);
     }
 
     #endregion

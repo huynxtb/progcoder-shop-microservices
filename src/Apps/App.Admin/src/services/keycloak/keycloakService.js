@@ -18,6 +18,61 @@ if (import.meta.env.DEV) {
   });
 }
 
+// ==================== Cookie Helper Functions ====================
+
+/**
+ * Set a cookie
+ * @param {string} name - Cookie name
+ * @param {string} value - Cookie value
+ * @param {number} days - Expiration in days (default: 1 day)
+ */
+const setCookie = (name, value, days = 1) => {
+  const date = new Date();
+  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+  const expires = `expires=${date.toUTCString()}`;
+  
+  // Set secure flag only in production (HTTPS)
+  const secure = window.location.protocol === 'https:' ? '; Secure' : '';
+  
+  document.cookie = `${name}=${value}; ${expires}; path=/; SameSite=Lax${secure}`;
+  
+  if (import.meta.env.DEV) {
+    console.log(`Cookie set: ${name}`);
+  }
+};
+
+/**
+ * Delete a cookie
+ * @param {string} name - Cookie name
+ */
+const deleteCookie = (name) => {
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  
+  if (import.meta.env.DEV) {
+    console.log(`Cookie deleted: ${name}`);
+  }
+};
+
+/**
+ * Set access token cookie
+ * @param {string} token - Access token value
+ */
+const setAccessTokenCookie = (token) => {
+  if (token) {
+    // Set cookie to expire in 1 day (token refresh will update it)
+    setCookie('access_token', token, 1);
+  }
+};
+
+/**
+ * Delete access token cookie
+ */
+const deleteAccessTokenCookie = () => {
+  deleteCookie('access_token');
+};
+
+// ==================== Keycloak Instance ====================
+
 // Initialize Keycloak instance
 let keycloakInstance = null;
 
@@ -36,6 +91,58 @@ export const initKeycloak = (initOptions = {}) => {
     realm: keycloakConfig.realm,
     clientId: keycloakConfig.clientId,
   });
+
+  // Set up event callbacks
+  keycloakInstance.onAuthSuccess = () => {
+    if (import.meta.env.DEV) {
+      console.log('Keycloak: Authentication successful');
+    }
+    // Set access token cookie on successful authentication
+    if (keycloakInstance.token) {
+      setAccessTokenCookie(keycloakInstance.token);
+    }
+  };
+
+  keycloakInstance.onAuthRefreshSuccess = () => {
+    if (import.meta.env.DEV) {
+      console.log('Keycloak: Token refresh successful');
+    }
+    // Update access token cookie after refresh
+    if (keycloakInstance.token) {
+      setAccessTokenCookie(keycloakInstance.token);
+    }
+  };
+
+  keycloakInstance.onAuthLogout = () => {
+    if (import.meta.env.DEV) {
+      console.log('Keycloak: User logged out');
+    }
+    // Delete access token cookie on logout
+    deleteAccessTokenCookie();
+  };
+
+  keycloakInstance.onTokenExpired = () => {
+    if (import.meta.env.DEV) {
+      console.log('Keycloak: Token expired, attempting refresh...');
+    }
+    // Try to refresh the token
+    keycloakInstance.updateToken(30).then((refreshed) => {
+      if (refreshed) {
+        if (import.meta.env.DEV) {
+          console.log('Keycloak: Token refreshed successfully');
+        }
+        setAccessTokenCookie(keycloakInstance.token);
+      }
+    }).catch(() => {
+      console.warn('Keycloak: Failed to refresh token, user may need to re-login');
+      deleteAccessTokenCookie();
+    });
+  };
+
+  keycloakInstance.onAuthError = (error) => {
+    console.error('Keycloak: Authentication error', error);
+    deleteAccessTokenCookie();
+  };
 
   const defaultInitOptions = {
     onLoad: 'check-sso',
@@ -56,7 +163,19 @@ export const initKeycloak = (initOptions = {}) => {
     });
   }
 
-  return keycloakInstance.init(finalInitOptions);
+  return keycloakInstance.init(finalInitOptions).then((authenticated) => {
+    if (authenticated && keycloakInstance.token) {
+      // Set access token cookie if already authenticated (e.g., SSO)
+      setAccessTokenCookie(keycloakInstance.token);
+      if (import.meta.env.DEV) {
+        console.log('Keycloak: User is authenticated via SSO');
+      }
+    } else {
+      // Make sure cookie is cleared if not authenticated
+      deleteAccessTokenCookie();
+    }
+    return authenticated;
+  });
 };
 
 /**
@@ -103,6 +222,10 @@ export const login = (options = {}) => {
  */
 export const logout = (options = {}) => {
   const keycloak = getKeycloak();
+  
+  // Delete access token cookie before logout
+  deleteAccessTokenCookie();
+  
   keycloak.logout({
     redirectUri: window.location.origin,
     ...options,
@@ -220,7 +343,13 @@ export const getUserInfo = () => {
  */
 export const updateToken = (minValidity = 5) => {
   const keycloak = getKeycloak();
-  return keycloak.updateToken(minValidity);
+  return keycloak.updateToken(minValidity).then((refreshed) => {
+    if (refreshed && keycloak.token) {
+      // Update access token cookie after successful refresh
+      setAccessTokenCookie(keycloak.token);
+    }
+    return refreshed;
+  });
 };
 
 /**
@@ -241,4 +370,3 @@ export const loadUserProfile = () => {
   const keycloak = getKeycloak();
   return keycloak.loadUserProfile();
 };
-

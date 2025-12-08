@@ -1,10 +1,15 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import Card from "@/components/ui/Card";
 import Icon from "@/components/ui/Icon";
 import Tooltip from "@/components/ui/Tooltip";
 import Textinput from "@/components/ui/Textinput";
+import Modal from "@/components/ui/Modal";
+import { api } from "@/api";
+import { API_ENDPOINTS } from "@/api/endpoints";
+import { formatCurrency } from "@/utils/format";
 import {
   useTable,
   useRowSelect,
@@ -13,125 +18,11 @@ import {
   usePagination,
 } from "react-table";
 
-// Sample product data
-const productData = [
-  {
-    id: 1,
-    name: "iPhone 15 Pro Max 256GB",
-    sku: "IPH-15-PM-256",
-    category: "Điện thoại",
-    price: 34990000,
-    salePrice: 32990000,
-    stock: 45,
-    image: "https://placehold.co/60x60/e2e8f0/475569?text=IP15",
-    status: "active",
-  },
-  {
-    id: 2,
-    name: "Samsung Galaxy S24 Ultra",
-    sku: "SAM-S24-U-512",
-    category: "Điện thoại",
-    price: 33990000,
-    salePrice: null,
-    stock: 28,
-    image: "https://placehold.co/60x60/e2e8f0/475569?text=S24",
-    status: "active",
-  },
-  {
-    id: 3,
-    name: "MacBook Pro 14 M3 Pro",
-    sku: "MAC-PRO-14-M3",
-    category: "Laptop",
-    price: 52990000,
-    salePrice: 49990000,
-    stock: 0,
-    image: "https://placehold.co/60x60/e2e8f0/475569?text=MBP",
-    status: "out_of_stock",
-  },
-  {
-    id: 4,
-    name: "iPad Air 5 64GB WiFi",
-    sku: "IPAD-AIR-5-64",
-    category: "Tablet",
-    price: 15990000,
-    salePrice: null,
-    stock: 67,
-    image: "https://placehold.co/60x60/e2e8f0/475569?text=iPad",
-    status: "active",
-  },
-  {
-    id: 5,
-    name: "AirPods Pro 2 USB-C",
-    sku: "APP-2-USB-C",
-    category: "Phụ kiện",
-    price: 6790000,
-    salePrice: 5990000,
-    stock: 120,
-    image: "https://placehold.co/60x60/e2e8f0/475569?text=APP",
-    status: "active",
-  },
-  {
-    id: 6,
-    name: "Sony WH-1000XM5",
-    sku: "SONY-XM5-BLK",
-    category: "Phụ kiện",
-    price: 8490000,
-    salePrice: null,
-    stock: 15,
-    image: "https://placehold.co/60x60/e2e8f0/475569?text=Sony",
-    status: "active",
-  },
-  {
-    id: 7,
-    name: "Dell XPS 15 i7-13700H",
-    sku: "DELL-XPS-15-I7",
-    category: "Laptop",
-    price: 45990000,
-    salePrice: null,
-    stock: 8,
-    image: "https://placehold.co/60x60/e2e8f0/475569?text=Dell",
-    status: "draft",
-  },
-  {
-    id: 8,
-    name: "Logitech MX Master 3S",
-    sku: "LOG-MX-3S",
-    category: "Phụ kiện",
-    price: 2790000,
-    salePrice: 2490000,
-    stock: 0,
-    image: "https://placehold.co/60x60/e2e8f0/475569?text=Logi",
-    status: "out_of_stock",
-  },
-  {
-    id: 9,
-    name: "Apple Watch Series 9",
-    sku: "AW-S9-45-GPS",
-    category: "Đồng hồ",
-    price: 11990000,
-    salePrice: null,
-    stock: 34,
-    image: "https://placehold.co/60x60/e2e8f0/475569?text=AW9",
-    status: "hidden",
-  },
-  {
-    id: 10,
-    name: "Samsung Galaxy Tab S9+",
-    sku: "SAM-TAB-S9P",
-    category: "Tablet",
-    price: 24990000,
-    salePrice: 22990000,
-    stock: 12,
-    image: "https://placehold.co/60x60/e2e8f0/475569?text=TabS9",
-    status: "active",
-  },
-];
-
-const formatCurrency = (value) => {
-  return new Intl.NumberFormat("vi-VN", {
-    style: "currency",
-    currency: "VND",
-  }).format(value);
+// Helper function to map API status to component status
+const mapStatus = (displayStatus) => {
+  if (displayStatus === "Out of Stock") return "out_of_stock";
+  if (displayStatus === "Hidden" || displayStatus === "hidden") return "hidden";
+  return "active";
 };
 
 const GlobalFilter = ({ filter, setFilter, t }) => {
@@ -151,6 +42,59 @@ const GlobalFilter = ({ filter, setFilter, t }) => {
 
 const Ecommerce = () => {
   const { t } = useTranslation();
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch products from API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get(API_ENDPOINTS.CATALOG.GET_ALL_PRODUCTS);
+        
+        // Map API response to component format
+        const mappedProducts = response.data.result.items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          sku: item.sku,
+          categories: item.categoryNames && item.categoryNames.length > 0 ? item.categoryNames.join(", ") : "",
+          brand: item.brandName,
+          price: item.price,
+          salePrice: item.salePrice || null,
+          published: item.published,
+          featured: item.featured,
+          image: item.thumbnail?.publicURL || "https://placehold.co/60x60/e2e8f0/475569?text=No+Img",
+          status: mapStatus(item.displayStatus),
+        }));
+        
+        setProducts(mappedProducts);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+        toast.error(t("products.fetchError") || "Failed to load products", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [t]);
+
+  const handleDeleteClick = (product) => {
+    setItemToDelete(product);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    console.log("Deleting product:", itemToDelete?.id);
+    setDeleteModalOpen(false);
+    setItemToDelete(null);
+  };
 
   const COLUMNS = useMemo(() => [
     {
@@ -181,8 +125,17 @@ const Ecommerce = () => {
       },
     },
     {
+      Header: t("products.brand"),
+      accessor: "brand",
+      Cell: (row) => (
+        <span className="bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded text-sm">
+          {row?.cell?.value}
+        </span>
+      ),
+    },
+    {
       Header: t("products.category"),
-      accessor: "category",
+      accessor: "categories",
       Cell: (row) => (
         <span className="bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded text-sm">
           {row?.cell?.value}
@@ -215,21 +168,17 @@ const Ecommerce = () => {
       },
     },
     {
-      Header: t("products.stock"),
-      accessor: "stock",
+      Header: t("products.publish"),
+      accessor: "published",
       Cell: (row) => {
-        const stock = row?.cell?.value;
+        const published = row?.cell?.value;
         return (
           <span
             className={`font-medium ${
-              stock === 0
-                ? "text-danger-500"
-                : stock < 10
-                ? "text-warning-500"
-                : "text-slate-800 dark:text-slate-200"
+              published ? "text-success-500" : "text-danger-500"
             }`}
           >
-            {stock}
+            {published ? t("products.published") : t("products.unpublished")}
           </span>
         );
       },
@@ -270,7 +219,7 @@ const Ecommerce = () => {
               </Link>
             </Tooltip>
             <Tooltip content={t("common.edit")} placement="top" arrow animation="shift-away">
-              <Link to="/edit-product" className="action-btn">
+              <Link to={`/edit-product/${product?.id}`} className="action-btn">
                 <Icon icon="heroicons:pencil-square" />
               </Link>
             </Tooltip>
@@ -281,7 +230,11 @@ const Ecommerce = () => {
               animation="shift-away"
               theme="danger"
             >
-              <button className="action-btn" type="button">
+              <button
+                className="action-btn"
+                type="button"
+                onClick={() => handleDeleteClick(product)}
+              >
                 <Icon icon="heroicons:trash" />
               </button>
             </Tooltip>
@@ -291,7 +244,7 @@ const Ecommerce = () => {
     },
   ], [t]);
 
-  const data = useMemo(() => productData, []);
+  const data = useMemo(() => products, [products]);
   const [statusFilter, setStatusFilter] = useState("all");
 
   const filteredData = useMemo(() => {
@@ -342,199 +295,260 @@ const Ecommerce = () => {
   }, [data]);
 
   return (
-    <div className="space-y-5">
-      {/* Status Filter Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        {[
-          { key: "all", label: t("products.all"), icon: "heroicons:squares-2x2", color: "bg-slate-500" },
-          { key: "active", label: t("products.active"), icon: "heroicons:check-circle", color: "bg-success-500" },
-          { key: "out_of_stock", label: t("products.outOfStock"), icon: "heroicons:x-circle", color: "bg-danger-500" },
-          { key: "draft", label: t("products.draft"), icon: "heroicons:document", color: "bg-warning-500" },
-          { key: "hidden", label: t("products.hidden"), icon: "heroicons:eye-slash", color: "bg-slate-400" },
-        ].map((item) => (
-          <button
-            key={item.key}
-            onClick={() => setStatusFilter(item.key)}
-            className={`p-4 rounded-lg border-2 transition-all ${
-              statusFilter === item.key
-                ? "border-primary-500 bg-primary-500/10"
-                : "border-slate-200 dark:border-slate-700 hover:border-slate-300"
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <div className={`w-10 h-10 rounded-lg ${item.color} flex items-center justify-center`}>
-                <Icon icon={item.icon} className="text-white text-xl" />
-              </div>
-              <span className="text-2xl font-bold text-slate-800 dark:text-slate-200">
-                {statusCounts[item.key]}
-              </span>
-            </div>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 text-left">
-              {item.label}
-            </p>
-          </button>
-        ))}
-      </div>
-
-      <Card>
-        <div className="md:flex justify-between items-center mb-6">
-          <h4 className="card-title">{t("products.title")}</h4>
-          <div className="md:flex md:space-x-4 md:space-y-0 space-y-2 mt-4 md:mt-0">
-            <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} t={t} />
-            <button className="btn btn-outline-dark btn-sm">
-              <Icon icon="heroicons:arrow-down-tray" className="mr-1" />
-              {t("products.exportExcel")}
-            </button>
-            <Link to="/create-product" className="btn btn-dark btn-sm">
-              <Icon icon="heroicons:plus" className="mr-1" />
-              {t("products.createNew")}
-            </Link>
-          </div>
-        </div>
-        <div className="overflow-x-auto -mx-6">
-          <div className="inline-block min-w-full align-middle">
-            <div className="overflow-hidden">
-              <table
-                className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700!"
-                {...getTableProps()}
-              >
-                <thead className="bg-slate-200 dark:bg-slate-700">
-                  {headerGroups.map((headerGroup) => {
-                    const { key: headerKey, ...restHeaderProps } =
-                      headerGroup.getHeaderGroupProps();
-                    return (
-                      <tr key={headerKey} {...restHeaderProps}>
-                        {headerGroup.headers.map((column) => {
-                          const { key: columnKey, ...restColumnProps } =
-                            column.getHeaderProps(column.getSortByToggleProps());
-                          return (
-                            <th
-                              key={columnKey}
-                              {...restColumnProps}
-                              scope="col"
-                              className="table-th"
-                            >
-                              {column.render("Header")}
-                              <span>
-                                {column.isSorted
-                                  ? column.isSortedDesc
-                                    ? " 🔽"
-                                    : " 🔼"
-                                  : ""}
-                              </span>
-                            </th>
-                          );
-                        })}
-                      </tr>
-                    );
-                  })}
-                </thead>
-                <tbody
-                  className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700!"
-                  {...getTableBodyProps()}
-                >
-                  {page.map((row) => {
-                    prepareRow(row);
-                    const { key: rowKey, ...restRowProps } = row.getRowProps();
-                    return (
-                      <tr key={rowKey} {...restRowProps}>
-                        {row.cells.map((cell) => {
-                          const { key: cellKey, ...restCellProps } =
-                            cell.getCellProps();
-                          return (
-                            <td
-                              key={cellKey}
-                              {...restCellProps}
-                              className="table-td"
-                            >
-                              {cell.render("Cell")}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div className="md:flex md:space-y-0 space-y-5 justify-between mt-6 items-center">
-          <div className="flex items-center space-x-3 rtl:space-x-reverse">
-            <select
-              className="form-control py-2 w-max"
-              value={pageSize}
-              onChange={(e) => setPageSize(Number(e.target.value))}
+    <>
+      <div className="space-y-5">
+        {/* Status Filter Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {[
+            { key: "all", label: t("products.all"), icon: "heroicons:squares-2x2", color: "bg-slate-500" },
+            { key: "active", label: t("products.active"), icon: "heroicons:check-circle", color: "bg-success-500" },
+            { key: "out_of_stock", label: t("products.outOfStock"), icon: "heroicons:x-circle", color: "bg-danger-500" },
+            { key: "draft", label: t("products.draft"), icon: "heroicons:document", color: "bg-warning-500" },
+            { key: "hidden", label: t("products.hidden"), icon: "heroicons:eye-slash", color: "bg-slate-400" },
+          ].map((item) => (
+            <button
+              key={item.key}
+              onClick={() => setStatusFilter(item.key)}
+              className={`p-4 rounded-lg border-2 transition-all ${
+                statusFilter === item.key
+                  ? "border-primary-500 bg-primary-500/10"
+                  : "border-slate-200 dark:border-slate-700 hover:border-slate-300"
+              }`}
             >
-              {[10, 25, 50].map((size) => (
-                <option key={size} value={size}>
-                  {t("common.show")} {size}
-                </option>
-              ))}
-            </select>
-            <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
-              {t("common.page")}{" "}
-              <span>
-                {pageIndex + 1} {t("common.of")} {pageOptions.length}
-              </span>
-            </span>
+              <div className="flex items-center justify-between">
+                <div className={`w-10 h-10 rounded-lg ${item.color} flex items-center justify-center`}>
+                  <Icon icon={item.icon} className="text-white text-xl" />
+                </div>
+                <span className="text-2xl font-bold text-slate-800 dark:text-slate-200">
+                  {statusCounts[item.key]}
+                </span>
+              </div>
+              <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 text-left">
+                {item.label}
+              </p>
+            </button>
+          ))}
+        </div>
+
+        <Card>
+          <div className="md:flex justify-between items-center mb-6">
+            <h4 className="card-title">{t("products.title")}</h4>
+            <div className="md:flex md:space-x-4 md:space-y-0 space-y-2 mt-4 md:mt-0">
+              <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} t={t} />
+              <button className="btn btn-outline-dark btn-sm inline-flex items-center">
+                <Icon icon="heroicons:arrow-down-tray" className="ltr:mr-2 rtl:ml-2" />
+                {t("products.exportExcel")}
+              </button>
+              <Link to="/create-product" className="btn btn-dark btn-sm inline-flex items-center">
+                <Icon icon="heroicons:plus" className="ltr:mr-2 rtl:ml-2" />
+                {t("products.createNew")}
+              </Link>
+            </div>
           </div>
-          <ul className="flex items-center space-x-3 rtl:space-x-reverse">
-            <li className="text-xl leading-4 text-slate-900 dark:text-white rtl:rotate-180">
-              <button
-                className={`${!canPreviousPage ? "opacity-50 cursor-not-allowed" : ""}`}
-                onClick={() => gotoPage(0)}
-                disabled={!canPreviousPage}
-              >
-                <Icon icon="heroicons:chevron-double-left-solid" />
-              </button>
-            </li>
-            <li className="text-sm leading-4 text-slate-900 dark:text-white rtl:rotate-180">
-              <button
-                className={`${!canPreviousPage ? "opacity-50 cursor-not-allowed" : ""}`}
-                onClick={() => previousPage()}
-                disabled={!canPreviousPage}
-              >
-                {t("common.previous")}
-              </button>
-            </li>
-            {pageOptions.map((pageNum, pageIdx) => (
-              <li key={pageIdx}>
-                <button
-                  aria-current="page"
-                  className={`${
-                    pageIdx === pageIndex
-                      ? "bg-slate-900 dark:bg-slate-600 dark:text-slate-200 text-white font-medium"
-                      : "bg-slate-100 dark:bg-slate-700 dark:text-slate-400 text-slate-900 font-normal"
-                  } text-sm rounded leading-[16px] flex h-6 w-6 items-center justify-center transition-all duration-150`}
-                  onClick={() => gotoPage(pageIdx)}
+          <div className="overflow-x-auto -mx-6">
+            <div className="inline-block min-w-full align-middle">
+              <div className="overflow-hidden">
+                <table
+                  className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700!"
+                  {...getTableProps()}
                 >
-                  {pageNum + 1}
+                  <thead className="bg-slate-200 dark:bg-slate-700">
+                    {headerGroups.map((headerGroup) => {
+                      const { key: headerKey, ...restHeaderProps } =
+                        headerGroup.getHeaderGroupProps();
+                      return (
+                        <tr key={headerKey} {...restHeaderProps}>
+                          {headerGroup.headers.map((column) => {
+                            const { key: columnKey, ...restColumnProps } =
+                              column.getHeaderProps(column.getSortByToggleProps());
+                            return (
+                              <th
+                                key={columnKey}
+                                {...restColumnProps}
+                                scope="col"
+                                className="table-th"
+                              >
+                                {column.render("Header")}
+                                <span>
+                                  {column.isSorted
+                                    ? column.isSortedDesc
+                                      ? " 🔽"
+                                      : " 🔼"
+                                    : ""}
+                                </span>
+                              </th>
+                            );
+                          })}
+                        </tr>
+                      );
+                    })}
+                  </thead>
+                  <tbody
+                    className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700!"
+                    {...getTableBodyProps()}
+                  >
+                    {loading ? (
+                      <tr>
+                        <td colSpan={headerGroups[0]?.headers?.length || 6} className="table-td text-center py-8">
+                          <div className="flex flex-col items-center justify-center">
+                            <Icon icon="heroicons:arrow-path" className="animate-spin text-2xl text-slate-400 mb-2" />
+                            <span className="text-slate-500 dark:text-slate-400">{t("common.loading") || "Loading..."}</span>
+                          </div>
+                        </td>
+                      </tr>
+                    ) : page.length === 0 ? (
+                      <tr>
+                        <td colSpan={headerGroups[0]?.headers?.length || 6} className="table-td text-center py-8">
+                          <span className="text-slate-500 dark:text-slate-400">{t("products.noProducts") || "No products found"}</span>
+                        </td>
+                      </tr>
+                    ) : (
+                      page.map((row) => {
+                        prepareRow(row);
+                        const { key: rowKey, ...restRowProps } = row.getRowProps();
+                        return (
+                          <tr key={rowKey} {...restRowProps}>
+                            {row.cells.map((cell) => {
+                              const { key: cellKey, ...restCellProps } =
+                                cell.getCellProps();
+                              return (
+                                <td
+                                  key={cellKey}
+                                  {...restCellProps}
+                                  className="table-td"
+                                >
+                                  {cell.render("Cell")}
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div className="md:flex md:space-y-0 space-y-5 justify-between mt-6 items-center">
+            <div className="flex items-center space-x-3 rtl:space-x-reverse">
+              <select
+                className="form-control py-2 w-max"
+                value={pageSize}
+                onChange={(e) => setPageSize(Number(e.target.value))}
+              >
+                {[10, 25, 50].map((size) => (
+                  <option key={size} value={size}>
+                    {t("common.show")} {size}
+                  </option>
+                ))}
+              </select>
+              <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                {t("common.page")}{" "}
+                <span>
+                  {pageIndex + 1} {t("common.of")} {pageOptions.length}
+                </span>
+              </span>
+            </div>
+            <ul className="flex items-center space-x-3 rtl:space-x-reverse">
+              <li className="text-xl leading-4 text-slate-900 dark:text-white rtl:rotate-180">
+                <button
+                  className={`${!canPreviousPage ? "opacity-50 cursor-not-allowed" : ""}`}
+                  onClick={() => gotoPage(0)}
+                  disabled={!canPreviousPage}
+                >
+                  <Icon icon="heroicons:chevron-double-left-solid" />
                 </button>
               </li>
-            ))}
-            <li className="text-sm leading-4 text-slate-900 dark:text-white rtl:rotate-180">
-              <button
-                className={`${!canNextPage ? "opacity-50 cursor-not-allowed" : ""}`}
-                onClick={() => nextPage()}
-                disabled={!canNextPage}
-              >
-                {t("common.next")}
-              </button>
-            </li>
-            <li className="text-xl leading-4 text-slate-900 dark:text-white rtl:rotate-180">
-              <button
-                onClick={() => gotoPage(pageCount - 1)}
-                disabled={!canNextPage}
-                className={`${!canNextPage ? "opacity-50 cursor-not-allowed" : ""}`}
-              >
-                <Icon icon="heroicons:chevron-double-right-solid" />
-              </button>
-            </li>
-          </ul>
+              <li className="text-sm leading-4 text-slate-900 dark:text-white rtl:rotate-180">
+                <button
+                  className={`${!canPreviousPage ? "opacity-50 cursor-not-allowed" : ""}`}
+                  onClick={() => previousPage()}
+                  disabled={!canPreviousPage}
+                >
+                  {t("common.previous")}
+                </button>
+              </li>
+              {pageOptions.map((pageNum, pageIdx) => (
+                <li key={pageIdx}>
+                  <button
+                    aria-current="page"
+                    className={`${
+                      pageIdx === pageIndex
+                        ? "bg-slate-900 dark:bg-slate-600 dark:text-slate-200 text-white font-medium"
+                        : "bg-slate-100 dark:bg-slate-700 dark:text-slate-400 text-slate-900 font-normal"
+                    } text-sm rounded leading-[16px] flex h-6 w-6 items-center justify-center transition-all duration-150`}
+                    onClick={() => gotoPage(pageIdx)}
+                  >
+                    {pageNum + 1}
+                  </button>
+                </li>
+              ))}
+              <li className="text-sm leading-4 text-slate-900 dark:text-white rtl:rotate-180">
+                <button
+                  className={`${!canNextPage ? "opacity-50 cursor-not-allowed" : ""}`}
+                  onClick={() => nextPage()}
+                  disabled={!canNextPage}
+                >
+                  {t("common.next")}
+                </button>
+              </li>
+              <li className="text-xl leading-4 text-slate-900 dark:text-white rtl:rotate-180">
+                <button
+                  onClick={() => gotoPage(pageCount - 1)}
+                  disabled={!canNextPage}
+                  className={`${!canNextPage ? "opacity-50 cursor-not-allowed" : ""}`}
+                >
+                  <Icon icon="heroicons:chevron-double-right-solid" />
+                </button>
+              </li>
+            </ul>
+          </div>
+        </Card>
+      </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        title={t("common.deleteConfirmTitle")}
+        activeModal={deleteModalOpen}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setItemToDelete(null);
+        }}
+      >
+        <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-danger-500/20 flex items-center justify-center">
+            <Icon icon="heroicons:exclamation-triangle" className="text-danger-500 text-3xl" />
+          </div>
+          <p className="text-slate-600 dark:text-slate-300 mb-2">
+            {t("common.deleteProductMessage")}
+          </p>
+          {itemToDelete && (
+            <p className="font-semibold text-slate-800 dark:text-slate-200 mb-6">
+              "{itemToDelete.name}"
+            </p>
+          )}
+          <div className="flex justify-center space-x-3">
+            <button
+              className="btn btn-outline-dark inline-flex items-center"
+              onClick={() => {
+                setDeleteModalOpen(false);
+                setItemToDelete(null);
+              }}
+            >
+              {t("common.cancel")}
+            </button>
+            <button
+              className="btn btn-danger inline-flex items-center"
+              onClick={confirmDelete}
+            >
+              <Icon icon="heroicons:trash" className="ltr:mr-2 rtl:ml-2" />
+              {t("common.delete")}
+            </button>
+          </div>
         </div>
-      </Card>
-    </div>
+      </Modal>
+    </>
   );
 };
 

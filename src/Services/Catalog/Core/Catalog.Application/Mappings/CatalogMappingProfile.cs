@@ -1,6 +1,7 @@
 #region using
 
 using AutoMapper;
+using Catalog.Application.Dtos.Brands;
 using Catalog.Application.Dtos.Categories;
 using Catalog.Application.Dtos.Products;
 using Catalog.Application.Models.Results;
@@ -19,6 +20,7 @@ public sealed class CatalogMappingProfile : Profile
     {
         CreateProductMappings();
         CreateCategoryMappings();
+        CreateBrandMappings();
         CreateImageMappings();
         CreateResultMappings();
     }
@@ -51,6 +53,13 @@ public sealed class CatalogMappingProfile : Profile
         // All properties auto-map by convention
     }
 
+    private void CreateBrandMappings()
+    {
+        // BrandEntity -> BrandDto
+        CreateMap<BrandEntity, BrandDto>();
+        // All properties auto-map by convention
+    }
+
     private void CreateImageMappings()
     {
         // ProductImageEntity -> ProductImageDto
@@ -67,6 +76,9 @@ public sealed class CatalogMappingProfile : Profile
             .ForMember(dest => dest.OriginalFileName, opt => opt.MapFrom(src => src.FileName))
             .ForMember(dest => dest.FileName, opt => opt.Ignore())
             .ForMember(dest => dest.PublicURL, opt => opt.Ignore());
+
+        CreateMap<UploadFileResult, ProductImageEntity>()
+            .ReverseMap();
     }
 
     private void CreateResultMappings()

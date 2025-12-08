@@ -1,4 +1,4 @@
-﻿#region using
+#region using
 
 using Catalog.Api.Constants;
 using Catalog.Application.CQRS.Category.Queries;
@@ -19,7 +19,7 @@ public sealed class GetAllCategories : ICarterModule
         app.MapGet(ApiRoutes.Category.GetAll, HandleGetAllCategoriesAsync)
             .WithTags(ApiRoutes.Category.Tags)
             .WithName(nameof(GetAllCategories))
-            .Produces<GetAllCategoriesResult>(StatusCodes.Status200OK)
+            .Produces<ApiGetResponse<GetAllCategoriesResult>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
@@ -27,13 +27,14 @@ public sealed class GetAllCategories : ICarterModule
 
     #region Methods
 
-    private async Task<GetAllCategoriesResult> HandleGetAllCategoriesAsync(
+    private async Task<ApiGetResponse<GetAllCategoriesResult>> HandleGetAllCategoriesAsync(
         ISender sender,
         [AsParameters] GetAllCategoriesFilter req)
     {
         var query = new GetAllCategoriesQuery(req);
+        var result = await sender.Send(query);
 
-        return await sender.Send(query);
+        return new ApiGetResponse<GetAllCategoriesResult>(result);
     }
 
     #endregion

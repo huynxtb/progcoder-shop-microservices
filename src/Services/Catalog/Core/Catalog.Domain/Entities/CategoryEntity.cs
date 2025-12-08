@@ -12,16 +12,12 @@ public sealed class CategoryEntity : Entity<Guid>
 {
     #region Fields, Properties and Indexers
 
-    [JsonInclude]
     public string? Name { get; set; }
 
-    [JsonInclude]
     public string? Description { get; set; }
 
-    [JsonInclude]
     public string? Slug { get; set; }
 
-    [JsonInclude]
     public Guid? ParentId { get; set; }
 
     #endregion

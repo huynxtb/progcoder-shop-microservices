@@ -98,7 +98,64 @@ const GlobalFilter = ({ filter, setFilter, t }) => {
 
 const CategoryPage = () => {
   const { t } = useTranslation();
-  const [showModal, setShowModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const [editingCategory, setEditingCategory] = useState(null);
+  const [editFormData, setEditFormData] = useState({
+    name: "",
+    slug: "",
+    description: "",
+  });
+  const [addFormData, setAddFormData] = useState({
+    name: "",
+    slug: "",
+    description: "",
+  });
+
+  const handleEditClick = (category) => {
+    setEditingCategory(category);
+    setEditFormData({
+      name: category.name || "",
+      slug: category.slug || "",
+      description: category.description || "",
+    });
+    setShowEditModal(true);
+  };
+
+  const handleEditFormChange = (field, value) => {
+    setEditFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleAddFormChange = (field, value) => {
+    setAddFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSaveEdit = () => {
+    // Here you would save the edited category
+    console.log("Saving edited category:", editingCategory?.id, editFormData);
+    setShowEditModal(false);
+    setEditingCategory(null);
+  };
+
+  const handleSaveAdd = () => {
+    // Here you would save the new category
+    console.log("Saving new category:", addFormData);
+    setShowAddModal(false);
+    setAddFormData({ name: "", slug: "", description: "" });
+  };
+
+  const handleDeleteClick = (category) => {
+    setItemToDelete(category);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    console.log("Deleting category:", itemToDelete?.id);
+    setDeleteModalOpen(false);
+    setItemToDelete(null);
+  };
 
   const COLUMNS = useMemo(() => [
     {
@@ -165,7 +222,8 @@ const CategoryPage = () => {
     {
       Header: t("category.actions"),
       accessor: "action",
-      Cell: () => {
+      Cell: (row) => {
+        const category = row?.row?.original;
         return (
           <div className="flex space-x-3 rtl:space-x-reverse">
             <Tooltip content={t("common.view")} placement="top" arrow animation="shift-away">
@@ -174,7 +232,11 @@ const CategoryPage = () => {
               </button>
             </Tooltip>
             <Tooltip content={t("common.edit")} placement="top" arrow animation="shift-away">
-              <button className="action-btn" type="button">
+              <button
+                className="action-btn"
+                type="button"
+                onClick={() => handleEditClick(category)}
+              >
                 <Icon icon="heroicons:pencil-square" />
               </button>
             </Tooltip>
@@ -185,7 +247,11 @@ const CategoryPage = () => {
               animation="shift-away"
               theme="danger"
             >
-              <button className="action-btn" type="button">
+              <button
+                className="action-btn"
+                type="button"
+                onClick={() => handleDeleteClick(category)}
+              >
                 <Icon icon="heroicons:trash" />
               </button>
             </Tooltip>
@@ -236,10 +302,10 @@ const CategoryPage = () => {
           <div className="md:flex md:space-x-4 md:space-y-0 space-y-2">
             <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} t={t} />
             <button
-              className="btn btn-dark btn-sm"
-              onClick={() => setShowModal(true)}
+              className="btn btn-dark btn-sm inline-flex items-center"
+              onClick={() => setShowAddModal(true)}
             >
-              <Icon icon="heroicons:plus" className="mr-1" />
+              <Icon icon="heroicons:plus" className="ltr:mr-2 rtl:ml-2" />
               {t("category.addCategory")}
             </button>
           </div>
@@ -391,19 +457,23 @@ const CategoryPage = () => {
       {/* Add Category Modal */}
       <Modal
         title={t("category.addNewCategory")}
-        activeModal={showModal}
-        onClose={() => setShowModal(false)}
+        activeModal={showAddModal}
+        onClose={() => setShowAddModal(false)}
       >
         <div className="space-y-4">
           <Textinput
             label={t("category.name")}
             type="text"
             placeholder={t("category.namePlaceholder")}
+            value={addFormData.name}
+            onChange={(e) => handleAddFormChange("name", e.target.value)}
           />
           <Textinput
             label={t("category.slug")}
             type="text"
             placeholder={t("category.slugPlaceholder")}
+            value={addFormData.slug}
+            onChange={(e) => handleAddFormChange("slug", e.target.value)}
           />
           <div>
             <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
@@ -413,16 +483,123 @@ const CategoryPage = () => {
               className="form-control"
               rows={3}
               placeholder={t("category.descriptionPlaceholder")}
+              value={addFormData.description}
+              onChange={(e) => handleAddFormChange("description", e.target.value)}
             />
           </div>
           <div className="flex justify-end space-x-3">
             <button
-              className="btn btn-outline-dark"
-              onClick={() => setShowModal(false)}
+              className="btn btn-outline-dark inline-flex items-center"
+              onClick={() => setShowAddModal(false)}
             >
               {t("common.cancel")}
             </button>
-            <button className="btn btn-dark">{t("category.saveCategory")}</button>
+            <button
+              className="btn btn-dark inline-flex items-center"
+              onClick={handleSaveAdd}
+            >
+              <Icon icon="heroicons:check" className="ltr:mr-2 rtl:ml-2" />
+              {t("category.saveCategory")}
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Edit Category Modal */}
+      <Modal
+        title={t("category.editCategory")}
+        activeModal={showEditModal}
+        onClose={() => {
+          setShowEditModal(false);
+          setEditingCategory(null);
+        }}
+      >
+        <div className="space-y-4">
+          <Textinput
+            label={t("category.name")}
+            type="text"
+            placeholder={t("category.namePlaceholder")}
+            value={editFormData.name}
+            onChange={(e) => handleEditFormChange("name", e.target.value)}
+          />
+          <Textinput
+            label={t("category.slug")}
+            type="text"
+            placeholder={t("category.slugPlaceholder")}
+            value={editFormData.slug}
+            onChange={(e) => handleEditFormChange("slug", e.target.value)}
+          />
+          <div>
+            <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
+              {t("category.description")}
+            </label>
+            <textarea
+              className="form-control"
+              rows={3}
+              placeholder={t("category.descriptionPlaceholder")}
+              value={editFormData.description}
+              onChange={(e) => handleEditFormChange("description", e.target.value)}
+            />
+          </div>
+          <div className="flex justify-end space-x-3">
+            <button
+              className="btn btn-outline-dark inline-flex items-center"
+              onClick={() => {
+                setShowEditModal(false);
+                setEditingCategory(null);
+              }}
+            >
+              {t("common.cancel")}
+            </button>
+            <button
+              className="btn btn-dark inline-flex items-center"
+              onClick={handleSaveEdit}
+            >
+              <Icon icon="heroicons:check" className="ltr:mr-2 rtl:ml-2" />
+              {t("category.updateCategory")}
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        title={t("common.deleteConfirmTitle")}
+        activeModal={deleteModalOpen}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setItemToDelete(null);
+        }}
+      >
+        <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-danger-500/20 flex items-center justify-center">
+            <Icon icon="heroicons:exclamation-triangle" className="text-danger-500 text-3xl" />
+          </div>
+          <p className="text-slate-600 dark:text-slate-300 mb-2">
+            {t("common.deleteCategoryMessage")}
+          </p>
+          {itemToDelete && (
+            <p className="font-semibold text-slate-800 dark:text-slate-200 mb-6">
+              "{itemToDelete.name}"
+            </p>
+          )}
+          <div className="flex justify-center space-x-3">
+            <button
+              className="btn btn-outline-dark inline-flex items-center"
+              onClick={() => {
+                setDeleteModalOpen(false);
+                setItemToDelete(null);
+              }}
+            >
+              {t("common.cancel")}
+            </button>
+            <button
+              className="btn btn-danger inline-flex items-center"
+              onClick={confirmDelete}
+            >
+              <Icon icon="heroicons:trash" className="ltr:mr-2 rtl:ml-2" />
+              {t("common.delete")}
+            </button>
           </div>
         </div>
       </Modal>

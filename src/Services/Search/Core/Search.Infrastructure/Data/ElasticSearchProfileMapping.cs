@@ -33,7 +33,7 @@ public static class ElasticSearchProfileMapping
                                 .Name(n => n.Price)
                                 .Type(NumberType.Double))
                             .Number(t => t
-                                .Name(n => n.SalesPrice)
+                                .Name(n => n.SalePrice)
                                 .Type(NumberType.Double))
                             .Text(t => t
                                 .Name(n => n.Categories)

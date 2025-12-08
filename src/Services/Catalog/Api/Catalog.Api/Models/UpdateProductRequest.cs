@@ -1,4 +1,4 @@
-﻿namespace Catalog.Api.Models;
+namespace Catalog.Api.Models;
 
 public sealed class UpdateProductRequest
 {
@@ -14,13 +14,37 @@ public sealed class UpdateProductRequest
 
     public decimal Price { get; set; }
 
-    public decimal? SalesPrice { get; set; }
+    public decimal? SalePrice { get; set; }
 
     public List<string>? CategoryIds { get; set; }
 
     public List<string>? CurrentImageUrls { get; set; }
 
-    public List<IFormFile>? FormFiles { get; set; }
+    public List<IFormFile>? ImageFiles { get; set; }
+
+    public IFormFile? ThumbnailFile { get; set; }
+
+    public Guid? BrandId { get; set; }
+
+    public List<string>? Colors { get; set; }
+
+    public List<string>? Sizes { get; set; }
+
+    public List<string>? Tags { get; set; }
+
+    public bool Published { get; set; }
+
+    public bool Featured { get; set; }
+
+    public string? SEOTitle { get; set; }
+
+    public string? SEODescription { get; set; }
+
+    public string? Barcode { get; set; }
+
+    public string? Unit { get; set; }
+
+    public decimal? Weight { get; set; }
 
     #endregion
 }

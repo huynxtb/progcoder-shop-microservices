@@ -20,7 +20,7 @@ public sealed class UpsertProductDto
 
     public decimal Price { get; set; }
 
-    public decimal? SalesPrice { get; set; }
+    public decimal? SalePrice { get; set; }
 
     public List<string>? Categories { get; set; }
 

@@ -16,7 +16,7 @@ public sealed class ApproveCoupon : ICarterModule
         app.MapPost(ApiRoutes.Coupon.ApproveCoupon, HandleApproveCouponAsync)
             .WithTags(ApiRoutes.Coupon.Tags)
             .WithName(nameof(ApproveCoupon))
-            .Produces<bool>(StatusCodes.Status200OK)
+            .Produces<ApiUpdatedResponse<bool>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
@@ -26,13 +26,15 @@ public sealed class ApproveCoupon : ICarterModule
 
     #region Methods
 
-    private async Task<IResult> HandleApproveCouponAsync(
+    private async Task<ApiUpdatedResponse<bool>> HandleApproveCouponAsync(
         ISender sender,
         Guid id)
     {
         var command = new ApproveCouponCommand(id);
+
         var result = await sender.Send(command);
-        return Results.Ok(result);
+
+        return new ApiUpdatedResponse<bool>(result);
     }
 
     #endregion

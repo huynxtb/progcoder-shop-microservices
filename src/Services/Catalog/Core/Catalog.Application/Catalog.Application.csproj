@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CQRS\Category\Commands\" />
+    <Folder Include="CQRS\Brand\EventHandlers\" />
     <Folder Include="CQRS\Category\EventHandlers\" />
   </ItemGroup>
 

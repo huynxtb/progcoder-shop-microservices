@@ -1,11 +1,10 @@
-﻿#region using
+#region using
 
 using Catalog.Domain.Abstractions;
 using Catalog.Domain.Enums;
 using Catalog.Domain.Exceptions;
 using Common.Constants;
 using System.Data;
-using System.Text.Json.Serialization;
 
 #endregion
 
@@ -15,41 +14,49 @@ public sealed class ProductEntity : Aggregate<Guid>
 {
     #region Fields, Properties and Indexers
 
-    [JsonInclude]
     public string? Name { get; set; }
 
-    [JsonInclude]
     public string? Sku { get; set; }
 
-    [JsonInclude]
     public string? ShortDescription { get; set; }
 
-    [JsonInclude]
     public string? LongDescription { get; set; }
 
-    [JsonInclude]
     public string? Slug { get; set; }
 
-    [JsonInclude]
+    public string? Barcode { get; set; }
+
     public decimal Price { get; set; }
 
-    [JsonInclude]
-    public decimal? SalesPrice { get; set; }
+    public decimal? SalePrice { get; set; }
 
-    [JsonInclude]
     public List<Guid>? CategoryIds { get; set; }
 
-    [JsonInclude]
     public List<ProductImageEntity>? Images { get; set; }
 
-    [JsonInclude]
-    public string? Thumbnail { get; set; }
+    public ProductImageEntity? Thumbnail { get; set; }
 
-    [JsonInclude]
+    public List<string>? Colors { get; set; }
+
+    public List<string>? Sizes { get; set; }
+
+    public List<string>? Tags { get; set; }
+
     public bool Published { get; set; }
 
-    [JsonInclude]
+    public bool Featured { get; set; }
+
     public ProductStatus Status { get; set; }
+
+    public Guid? BrandId { get; set; }
+
+    public string? SEOTitle { get; set; }
+
+    public string? SEODescription { get; set; }
+
+    public string? Unit { get; set; }
+
+    public decimal? Weight { get; set; }
 
     #endregion
 
@@ -62,8 +69,9 @@ public sealed class ProductEntity : Aggregate<Guid>
         string longDescription,
         string slug,
         decimal price,
-        decimal? salesPrice,
+        decimal? salePrice,
         List<Guid>? categoryIds,
+        Guid? brandId,
         string performedBy)
     {
         var product = new ProductEntity
@@ -75,10 +83,11 @@ public sealed class ProductEntity : Aggregate<Guid>
             LongDescription = longDescription,
             Slug = slug,
             Price = price,
-            SalesPrice = salesPrice,
+            SalePrice = salePrice,
             Status = ProductStatus.OutOfStock,
             Published = false,
             CategoryIds = categoryIds,
+            BrandId = brandId,
             CreatedBy = performedBy,
             LastModifiedBy = performedBy,
             CreatedOnUtc = DateTimeOffset.UtcNow,
@@ -98,8 +107,9 @@ public sealed class ProductEntity : Aggregate<Guid>
         string longDescription,
         string slug,
         decimal price,
-        decimal? salesPrice,
+        decimal? salePrice,
         List<Guid>? categoryIds,
+        Guid? brandId,
         string performedBy)
     {
         Name = name;
@@ -108,15 +118,14 @@ public sealed class ProductEntity : Aggregate<Guid>
         LongDescription = longDescription;
         Slug = slug;
         Price = price;
-        SalesPrice = salesPrice;
+        SalePrice = salePrice;
         CategoryIds = categoryIds;
+        BrandId = brandId;
         LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
     }
 
-    public void AddOrUpdateImages(
-        IEnumerable<ProductImageEntity>? newImgs = null,
-        IEnumerable<string>? curentImageUrls = null)
+    public void AddOrUpdateImages(IEnumerable<ProductImageEntity>? newImgs = null, IEnumerable<string>? curentImageUrls = null)
     {
         if ((newImgs == null || !newImgs.Any()) &&
             (curentImageUrls == null || !curentImageUrls.Any())) return;
@@ -139,9 +148,24 @@ public sealed class ProductEntity : Aggregate<Guid>
             .ToList();
 
         Images = result;
-        Thumbnail = Images.FirstOrDefault()?.PublicURL;
     }
 
+    public void AddOrUpdateThumbnail(ProductImageEntity? newImg = null, string? curentImageUrl = null)
+    {
+        if (newImg == null && string.IsNullOrWhiteSpace(curentImageUrl))
+        {
+            return;
+        }
+
+        if (Thumbnail != null &&
+            !string.IsNullOrWhiteSpace(Thumbnail.PublicURL) &&
+            Thumbnail.PublicURL!.Equals(curentImageUrl, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        Thumbnail = newImg;
+    }
 
     public void Publish(string performedBy)
     {
@@ -175,6 +199,57 @@ public sealed class ProductEntity : Aggregate<Guid>
         }
 
         Status = status;
+        LastModifiedBy = performedBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+    }
+
+    public void UpdateFeatured(bool featured, string performedBy)
+    {
+        Featured = featured;
+        LastModifiedBy = performedBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+    }
+
+    public void UpdateSEO(string? seoTitle, string? seoDescription, string performedBy)
+    {
+        SEOTitle = seoTitle;
+        SEODescription = seoDescription;
+        LastModifiedBy = performedBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+    }
+
+    public void UpdateColors(List<string>? colors, string performedBy)
+    {
+        Colors = colors;
+        LastModifiedBy = performedBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+    }
+
+    public void UpdateSizes(List<string>? sizes, string performedBy)
+    {
+        Sizes = sizes;
+        LastModifiedBy = performedBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+    }
+
+    public void UpdateTags(List<string>? tags, string performedBy)
+    {
+        Tags = tags;
+        LastModifiedBy = performedBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+    }
+
+    public void UpdateBarcode(string? barcode, string performedBy)
+    {
+        Barcode = barcode;
+        LastModifiedBy = performedBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+    }
+
+    public void UpdateUnitAndWeight(string? unit, decimal? weight, string performedBy)
+    {
+        Unit = unit;
+        Weight = weight;
         LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
     }

@@ -109,8 +109,78 @@ public sealed class InitialCategoryData : IInitialData
                 slug: "home-living",
                 performedBy : Actor.System("catalog-service").ToString())
         };
+        var brands = new[]
+        {
+            BrandEntity.Create(
+                id: Guid.Parse("f4d5e6f7-8a9b-4c1e-0f1a-4b3c2d1e2f10"),
+                name: "Zara",
+                slug: "zara",
+                performedBy: Actor.System("catalog-service").ToString()),
+
+            BrandEntity.Create(
+                id: Guid.Parse("f4d5e6f7-8a9b-4c1e-0f1a-4b3c2d1e2f11"),
+                name: "Gucci",
+                slug: "gucci",
+                performedBy: Actor.System("catalog-service").ToString()),
+
+            BrandEntity.Create(
+                id: Guid.Parse("f4d5e6f7-8a9b-4c1e-0f1a-4b3c2d1e2f12"),
+                name: "Chanel",
+                slug: "chanel",
+                performedBy: Actor.System("catalog-service").ToString()),
+
+            BrandEntity.Create(
+                id: Guid.Parse("f4d5e6f7-8a9b-4c1e-0f1a-4b3c2d1e2f13"),
+                name: "Louis Vuitton",
+                slug: "louis-vuitton",
+                performedBy: Actor.System("catalog-service").ToString()),
+
+            BrandEntity.Create(
+                id: Guid.Parse("f4d5e6f7-8a9b-4c1e-0f1a-4b3c2d1e2f14"),
+                name: "Mango",
+                slug: "mango",
+                performedBy: Actor.System("catalog-service").ToString()),
+
+            BrandEntity.Create(
+                id: Guid.Parse("f4d5e6f7-8a9b-4c1e-0f1a-4b3c2d1e2f15"),
+                name: "Apple",
+                slug: "apple",
+                performedBy: Actor.System("catalog-service").ToString()),
+
+            BrandEntity.Create(
+                id: Guid.Parse("f4d5e6f7-8a9b-4c1e-0f1a-4b3c2d1e2f16"),
+                name: "Samsung",
+                slug: "samsung",
+                performedBy: Actor.System("catalog-service").ToString()),
+
+            BrandEntity.Create(
+                id: Guid.Parse("f4d5e6f7-8a9b-4c1e-0f1a-4b3c2d1e2f17"),
+                name: "Xiaomi",
+                slug: "xiaomi",
+                performedBy: Actor.System("catalog-service").ToString()),
+
+            BrandEntity.Create(
+                id: Guid.Parse("f4d5e6f7-8a9b-4c1e-0f1a-4b3c2d1e2f18"),
+                name: "Oppo",
+                slug: "oppo",
+                performedBy: Actor.System("catalog-service").ToString()),
+
+            BrandEntity.Create(
+                id: Guid.Parse("f4d5e6f7-8a9b-4c1e-0f1a-4b3c2d1e2f19"),
+                name: "Huawei",
+                slug: "huawei",
+                performedBy: Actor.System("catalog-service").ToString()),
+
+            BrandEntity.Create(
+                id: Guid.Parse("f4d5e6f7-8a9b-4c1e-0f1a-4b3c2d1e2f20"),
+                name: "Realme",
+                slug: "realme",
+                performedBy: Actor.System("catalog-service").ToString())
+        };
 
         session.Store(categories);
+        session.Store(brands);
+
         await session.SaveChangesAsync(cancellation);
     }
 

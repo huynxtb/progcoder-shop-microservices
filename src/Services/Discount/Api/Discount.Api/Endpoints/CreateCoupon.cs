@@ -18,7 +18,7 @@ public sealed class CreateCoupon : ICarterModule
         app.MapPost(ApiRoutes.Coupon.CreateCoupon, HandleCreateCouponAsync)
             .WithTags(ApiRoutes.Coupon.Tags)
             .WithName(nameof(CreateCoupon))
-            .Produces<Guid>(StatusCodes.Status201Created)
+            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .DisableAntiforgery()
@@ -29,13 +29,14 @@ public sealed class CreateCoupon : ICarterModule
 
     #region Methods
 
-    private async Task<IResult> HandleCreateCouponAsync(
+    private async Task<ApiCreatedResponse<Guid>> HandleCreateCouponAsync(
         ISender sender,
         [FromBody] CreateCouponDto dto)
     {
         var command = new CreateCouponCommand(dto);
         var id = await sender.Send(command);
-        return Results.Created($"{ApiRoutes.Coupon.GetCoupon.Replace("{id}", id.ToString())}", id);
+
+        return new ApiCreatedResponse<Guid>(id);
     }
 
     #endregion

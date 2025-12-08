@@ -1,4 +1,4 @@
-﻿namespace Catalog.Api.Constants;
+namespace Catalog.Api.Constants;
 
 public sealed class ApiRoutes
 {
@@ -28,7 +28,7 @@ public sealed class ApiRoutes
 
         public const string GetPublishProducts = $"/public/{Base}";
 
-        public const string GetAllProducts = $"/all/products";
+        public const string GetAllProducts = $"/products/all";
 
         #endregion
     }
@@ -41,9 +41,34 @@ public sealed class ApiRoutes
 
         private const string Base = "categories";
 
+        public const string Create = $"/{Base}";
+
+        public const string Update = $"/{Base}/{{categoryId}}";
+
+        public const string Delete = $"/{Base}/{{categoryId}}";
+
         public const string GetAll = $"/{Base}";
 
         public const string GetTree = $"/{Base}/tree";
+
+        #endregion
+    }
+
+    public static class Brand
+    {
+        #region Constants
+
+        public const string Tags = "Brands";
+
+        private const string Base = "brands";
+
+        public const string Create = $"/{Base}";
+
+        public const string Update = $"/{Base}/{{brandId}}";
+
+        public const string Delete = $"/{Base}/{{brandId}}";
+
+        public const string GetAll = $"/{Base}";
 
         #endregion
     }

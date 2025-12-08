@@ -1,4 +1,4 @@
-﻿#region using
+#region using
 
 using Catalog.Api.Constants;
 using Catalog.Application.CQRS.Product.Queries;
@@ -19,7 +19,7 @@ public sealed class GetPublishProductById : ICarterModule
         app.MapGet(ApiRoutes.Product.GetPublishProductById, HandleGetPublishProductByIdAsync)
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(GetPublishProductById))
-            .Produces<ResultSharedResponse<GetPublishProductByIdResult>>(StatusCodes.Status200OK)
+            .Produces<ApiGetResponse<GetPublishProductByIdResult>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound);
@@ -29,13 +29,14 @@ public sealed class GetPublishProductById : ICarterModule
 
     #region Methods
 
-    private async Task<GetPublishProductByIdResult> HandleGetPublishProductByIdAsync(
+    private async Task<ApiGetResponse<GetPublishProductByIdResult>> HandleGetPublishProductByIdAsync(
         ISender sender,
         [FromRoute] Guid productId)
     {
         var query = new GetPublishProductByIdQuery(productId);
+        var result = await sender.Send(query);
 
-        return await sender.Send(query);
+        return new ApiGetResponse<GetPublishProductByIdResult>(result);
     }
 
     #endregion

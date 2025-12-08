@@ -19,7 +19,7 @@ public sealed class ProductEntity : Entity<string>
 
     public decimal Price { get; set; } = default!;
 
-    public decimal? SalesPrice { get; set; } = default!;
+    public decimal? SalePrice { get; set; } = default!;
 
     public List<string>? Categories { get; set; } = default!;
 
@@ -38,7 +38,7 @@ public sealed class ProductEntity : Entity<string>
         string sku,
         string slug,
         decimal price,
-        decimal? salesPrice,
+        decimal? salePrice,
         List<string>? categories,
         string performedBy)
     {
@@ -49,7 +49,7 @@ public sealed class ProductEntity : Entity<string>
             Sku = sku,
             Slug = slug,
             Price = price,
-            SalesPrice = salesPrice,
+            SalePrice = salePrice,
             Status = ProductStatus.OutOfStock,
             Categories = categories,
             CreatedOnUtc = DateTimeOffset.UtcNow,
@@ -67,7 +67,7 @@ public sealed class ProductEntity : Entity<string>
         string sku,
         string slug,
         decimal price,
-        decimal? salesPrice,
+        decimal? salePrice,
         ProductStatus status,
         List<string>? categories,
         string? performedBy)
@@ -76,7 +76,7 @@ public sealed class ProductEntity : Entity<string>
         Sku = sku;
         Slug = slug;
         Price = price;
-        SalesPrice = salesPrice;
+        SalePrice = salePrice;
         Categories = categories;
         Status = status;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;

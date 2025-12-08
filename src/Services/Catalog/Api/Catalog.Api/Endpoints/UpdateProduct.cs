@@ -1,4 +1,4 @@
-﻿#region using
+#region using
 
 using BuildingBlocks.Abstractions.ValueObjects;
 using BuildingBlocks.Authentication.Extensions;
@@ -28,7 +28,7 @@ public sealed class UpdateProduct : ICarterModule
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(UpdateProduct))
             .WithMultipartForm<UpdateProductRequest>()
-            .Produces<Guid>(StatusCodes.Status200OK)
+            .Produces<ApiUpdatedResponse<Guid>>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status403Forbidden)
 			.ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -40,7 +40,7 @@ public sealed class UpdateProduct : ICarterModule
 
     #region Methods
 
-    private async Task<Guid> HandleUpdateProductAsync(
+    private async Task<ApiUpdatedResponse<Guid>> HandleUpdateProductAsync(
         ISender sender,
         IMapper mapper,
         IHttpContextAccessor httpContext,
@@ -48,30 +48,48 @@ public sealed class UpdateProduct : ICarterModule
         [FromForm] UpdateProductRequest req)
     {
         if (req == null) throw new ClientValidationException(MessageCode.BadRequest);
-        if ((req.FormFiles == null || req.FormFiles.Count == 0) && httpContext.HttpContext != null)
+        if ((req.ImageFiles == null || req.ImageFiles.Count == 0) && httpContext.HttpContext != null)
         {
-            req.FormFiles = httpContext.HttpContext.Request.Form.Files.ToList();
+            req.ImageFiles = httpContext.HttpContext.Request.Form.Files.ToList();
         }
 
         var dto = mapper.Map<UpdateProductDto>(req);
-        dto.Files ??= new();
 
-        foreach (var file in req.FormFiles!)
+        if (req.ImageFiles != null && req.ImageFiles.Count > 0)
+        {
+            dto.UploadImages ??= new();
+            foreach (var file in req.ImageFiles!)
+            {
+                using var ms = new MemoryStream();
+                await file.CopyToAsync(ms);
+                dto.UploadImages.Add(new UploadFileBytes
+                {
+                    FileName = file.FileName,
+                    Bytes = ms.ToArray(),
+                    ContentType = file.ContentType
+                });
+            }
+        }
+
+        if (req.ThumbnailFile != null && req.ThumbnailFile.Length > 0)
         {
             using var ms = new MemoryStream();
-            await file.CopyToAsync(ms);
-            dto.Files.Add(new UploadFileBytes
+            await req.ThumbnailFile.CopyToAsync(ms);
+
+            dto.UploadThumbnail = new UploadFileBytes
             {
-                FileName = file.FileName,
+                FileName = req.ThumbnailFile.FileName,
                 Bytes = ms.ToArray(),
-                ContentType = file.ContentType
-            });
+                ContentType = req.ThumbnailFile.ContentType
+            };
         }
 
         var currentUser = httpContext.GetCurrentUser();
         var command = new UpdateProductCommand(productId, dto, Actor.User(currentUser.Email));
 
-        return await sender.Send(command);
+        var result = await sender.Send(command);
+
+        return new ApiUpdatedResponse<Guid>(result);
     }
 
     #endregion

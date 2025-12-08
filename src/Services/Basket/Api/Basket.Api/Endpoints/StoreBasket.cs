@@ -1,4 +1,4 @@
-﻿#region using
+#region using
 
 using Basket.Api.Constants;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +19,7 @@ public sealed class StoreBasket : ICarterModule
         app.MapPost(ApiRoutes.Basket.StoreBasket, HandleStoreBasketAsync)
             .WithTags(ApiRoutes.Basket.Tags)
             .WithName(nameof(StoreBasket))
-            .Produces<Guid>(StatusCodes.Status200OK)
+            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .DisableAntiforgery()
@@ -30,14 +30,16 @@ public sealed class StoreBasket : ICarterModule
 
     #region Methods
 
-    private async Task<Guid> HandleStoreBasketAsync(
+    private async Task<ApiCreatedResponse<Guid>> HandleStoreBasketAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
         [FromBody] StoreShoppingCartDto dto)
     {
         var currentUser = httpContext.GetCurrentUser();
         var command = new StoreBasketCommand(currentUser.Id, dto);
-        return await sender.Send(command);
+        var result = await sender.Send(command);
+
+        return new ApiCreatedResponse<Guid>(result);
     }
 
     #endregion

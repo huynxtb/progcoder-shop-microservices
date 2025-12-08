@@ -32,7 +32,7 @@ public sealed class UpsertedProductIntegrationEventHandler(
             Sku = integrationEvent.Sku,
             Slug = integrationEvent.Slug,
             Price = integrationEvent.Price,
-            SalesPrice = integrationEvent.SalesPrice,
+            SalePrice = integrationEvent.SalePrice,
             Categories = integrationEvent.Categories,
             Images = integrationEvent.Images,
             Thumbnail = integrationEvent.Thumbnail,

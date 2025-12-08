@@ -16,7 +16,7 @@ public sealed class DeleteCoupon : ICarterModule
         app.MapDelete(ApiRoutes.Coupon.DeleteCoupon, HandleDeleteCouponAsync)
             .WithTags(ApiRoutes.Coupon.Tags)
             .WithName(nameof(DeleteCoupon))
-            .Produces<bool>(StatusCodes.Status200OK)
+            .Produces<ApiDeletedResponse<Guid>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
@@ -26,13 +26,15 @@ public sealed class DeleteCoupon : ICarterModule
 
     #region Methods
 
-    private async Task<IResult> HandleDeleteCouponAsync(
+    private async Task<ApiDeletedResponse<Guid>> HandleDeleteCouponAsync(
         ISender sender,
         Guid id)
     {
         var command = new DeleteCouponCommand(id);
-        var result = await sender.Send(command);
-        return Results.Ok(result);
+
+        await sender.Send(command);
+
+        return new ApiDeletedResponse<Guid>(id);
     }
 
     #endregion

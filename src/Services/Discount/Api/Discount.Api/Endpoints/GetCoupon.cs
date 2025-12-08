@@ -3,6 +3,7 @@
 using Discount.Api.Constants;
 using Discount.Application.CQRS.Coupon.Queries;
 using Discount.Application.Models.Results;
+using Common.Models.Reponses;
 
 #endregion
 
@@ -17,7 +18,7 @@ public sealed class GetCoupon : ICarterModule
         app.MapGet(ApiRoutes.Coupon.GetCoupon, HandleGetCouponAsync)
             .WithTags(ApiRoutes.Coupon.Tags)
             .WithName(nameof(GetCoupon))
-            .Produces<GetCouponResult>(StatusCodes.Status200OK)
+            .Produces<ApiGetResponse<GetCouponResult>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
@@ -27,12 +28,14 @@ public sealed class GetCoupon : ICarterModule
 
     #region Methods
 
-    private async Task<GetCouponResult> HandleGetCouponAsync(
+    private async Task<ApiGetResponse<GetCouponResult>> HandleGetCouponAsync(
         ISender sender,
         Guid id)
     {
         var query = new GetCouponQuery(id);
-        return await sender.Send(query);
+        var result = await sender.Send(query);
+
+        return new ApiGetResponse<GetCouponResult>(result);
     }
 
     #endregion

@@ -1,4 +1,4 @@
-﻿#region using
+#region using
 
 using Basket.Api.Constants;
 using Basket.Application.CQRS.Basket.Commands;
@@ -19,7 +19,7 @@ public sealed class BasketCheckout : ICarterModule
         app.MapPost(ApiRoutes.Basket.CheckoutBasket, HandleBasketCheckoutAsync)
             .WithTags(ApiRoutes.Basket.Tags)
             .WithName(nameof(BasketCheckout))
-            .Produces<Guid>(StatusCodes.Status200OK)
+            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .DisableAntiforgery()
@@ -30,14 +30,16 @@ public sealed class BasketCheckout : ICarterModule
 
     #region Methods
 
-    private async Task<Guid> HandleBasketCheckoutAsync(
+    private async Task<ApiCreatedResponse<Guid>> HandleBasketCheckoutAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
         [FromBody] BasketCheckoutDto dto)
     {
         var currentUser = httpContext.GetCurrentUser();
         var command = new BasketCheckoutCommand(currentUser.Id, dto);
-        return await sender.Send(command);
+        var result = await sender.Send(command);
+
+        return new ApiCreatedResponse<Guid>(result);
     }
 
     #endregion

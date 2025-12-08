@@ -1,6 +1,7 @@
 ﻿#region using
 
 using AutoMapper;
+using Catalog.Application.Dtos.Products;
 using Catalog.Application.Models.Results;
 using Catalog.Domain.Entities;
 using Marten;
@@ -23,9 +24,36 @@ public sealed class GetPublishProductByIdQueryHandler(IDocumentSession session, 
             .SingleOrDefaultAsync(cancellationToken)
             ?? throw new NotFoundException(MessageCode.ResourceNotFound, query.ProductId);
 
-        var reponse = mapper.Map<GetPublishProductByIdResult>(result);
+        var categories = await session.Query<CategoryEntity>()
+            .ToListAsync(cancellationToken);
+        var brands = await session.Query<BrandEntity>()
+            .ToListAsync(cancellationToken);
 
-        return reponse;
+        var reponse = mapper.Map<PublishProductDto>(result);
+
+        if (result.CategoryIds != null && result.CategoryIds.Count > 0)
+        {
+            foreach (var categoryId in result.CategoryIds)
+            {
+                var category = categories.FirstOrDefault(c => c.Id == categoryId);
+                if (category != null)
+                {
+                    reponse.CategoryNames ??= [];
+                    reponse.CategoryNames.Add(category.Name!);
+                }
+            }
+        }
+
+        if (result.BrandId.HasValue)
+        {
+            var brand = brands.FirstOrDefault(b => b.Id == result.BrandId.Value);
+            if (brand != null)
+            {
+                reponse.BrandName = brand.Name;
+            }
+        }
+
+        return new GetPublishProductByIdResult(reponse);
     }
 
     #endregion

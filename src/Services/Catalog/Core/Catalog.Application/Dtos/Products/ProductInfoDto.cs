@@ -1,4 +1,4 @@
-﻿#region using
+#region using
 
 using Catalog.Application.Dtos.Abstractions;
 using Catalog.Domain.Enums;
@@ -23,17 +23,35 @@ public class ProductInfoDto : DtoId<Guid>
 
     public decimal Price { get; set; }
 
-    public decimal? SalesPrice { get; set; }
+    public decimal? SalePrice { get; set; }
 
-    public List<string>? Categories { get; set; }
-
-    public bool Published { get; set; }
+    public List<string>? CategoryNames { get; set; }
 
     public bool IsAvaiable { get; set; }
 
     public ProductStatus Status { get; set; }
 
     public string DisplayStatus { get; set; } = default!;
+
+    public List<string>? Colors { get; set; }
+
+    public List<string>? Sizes { get; set; }
+
+    public List<string>? Tags { get; set; }
+
+    public bool Published { get; set; }
+
+    public bool Featured { get; set; }
+
+    public string? BrandName { get; set; }
+
+    public string? SEOTitle { get; set; }
+
+    public string? SEODescription { get; set; }
+
+    public string? Unit { get; set; }
+
+    public decimal? Weight { get; set; }
 
     #endregion
 }

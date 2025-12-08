@@ -1,5 +1,6 @@
 #region using
 
+using Common.Models.Reponses;
 using Discount.Api.Constants;
 using Discount.Application.CQRS.Coupon.Commands;
 using Discount.Application.Dtos.Coupons;
@@ -19,7 +20,7 @@ public sealed class EvaluateCoupon : ICarterModule
         app.MapPost(ApiRoutes.Coupon.EvaluateCoupon, HandleEvaluateCouponAsync)
             .WithTags(ApiRoutes.Coupon.Tags)
             .WithName(nameof(EvaluateCoupon))
-            .Produces<ApplyCouponResult>(StatusCodes.Status200OK)
+            .Produces<ApiPerformedResponse<EvaluateCouponResult>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -30,12 +31,15 @@ public sealed class EvaluateCoupon : ICarterModule
 
     #region Methods
 
-    private async Task<EvaluateCouponResult> HandleEvaluateCouponAsync(
+    private async Task<ApiPerformedResponse<EvaluateCouponResult>> HandleEvaluateCouponAsync(
         ISender sender,
         [FromBody] EvaluateCouponDto dto)
     {
         var command = new EvaluateCouponCommand(dto);
-        return await sender.Send(command);
+
+        var result = await sender.Send(command);
+
+        return new ApiPerformedResponse<EvaluateCouponResult>(result);
     }
 
     #endregion

@@ -14,7 +14,7 @@ public sealed record class UpsertedProductIntegrationEvent : IntegrationEvent
 
     public decimal Price { get; set; } = default!;
 
-    public decimal? SalesPrice { get; set; } = default!;
+    public decimal? SalePrice { get; set; } = default!;
 
     public List<string>? Categories { get; set; } = default!;
 

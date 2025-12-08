@@ -23,7 +23,7 @@ public sealed class GetAllCategoriesQueryHandler(IDocumentSession session, IMapp
     {
         var filter = query.Filter;
         var result = await session.Query<CategoryEntity>()
-            .Where(x => x.ParentId == filter.ParentId)
+            .Where(x => filter.ParentId == null || x.ParentId == filter.ParentId)
             .OrderByDescending(x => x.CreatedOnUtc)
             .ToListAsync(token: cancellationToken);
 

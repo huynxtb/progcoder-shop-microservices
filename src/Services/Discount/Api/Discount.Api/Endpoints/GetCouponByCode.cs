@@ -17,7 +17,7 @@ public sealed class GetCouponByCode : ICarterModule
         app.MapGet(ApiRoutes.Coupon.GetCouponByCode, HandleGetCouponByCodeAsync)
             .WithTags(ApiRoutes.Coupon.Tags)
             .WithName(nameof(GetCouponByCode))
-            .Produces<GetCouponResult>(StatusCodes.Status200OK)
+            .Produces<ApiGetResponse<GetCouponResult>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound);
     }
@@ -26,12 +26,15 @@ public sealed class GetCouponByCode : ICarterModule
 
     #region Methods
 
-    private async Task<GetCouponResult> HandleGetCouponByCodeAsync(
+    private async Task<ApiGetResponse<GetCouponResult>> HandleGetCouponByCodeAsync(
         ISender sender,
         string code)
     {
         var query = new GetCouponByCodeQuery(code);
-        return await sender.Send(query);
+
+        var result = await sender.Send(query);
+
+        return new ApiGetResponse<GetCouponResult>(result);
     }
 
     #endregion

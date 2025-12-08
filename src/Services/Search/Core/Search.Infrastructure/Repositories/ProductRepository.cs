@@ -167,9 +167,9 @@ public class ProductRepository(IElasticClient elasticClient) : IProductRepositor
             Domain.Enums.SortBy.Price => sortType == Domain.Enums.SortType.Asc
                 ? sort => sort.Ascending(p => p.Price)
                 : sort => sort.Descending(p => p.Price),
-            Domain.Enums.SortBy.SalesPrice => sortType == Domain.Enums.SortType.Asc
-                ? sort => sort.Ascending(p => p.SalesPrice)
-                : sort => sort.Descending(p => p.SalesPrice),
+            Domain.Enums.SortBy.SalePrice => sortType == Domain.Enums.SortType.Asc
+                ? sort => sort.Ascending(p => p.SalePrice)
+                : sort => sort.Descending(p => p.SalePrice),
             Domain.Enums.SortBy.Status => sortType == Domain.Enums.SortType.Asc
                 ? sort => sort.Ascending(p => p.Status)
                 : sort => sort.Descending(p => p.Status),

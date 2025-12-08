@@ -1,4 +1,4 @@
-﻿#region using
+#region using
 
 using Basket.Api.Constants;
 using Basket.Application.Models.Results;
@@ -18,7 +18,7 @@ public sealed class GetBasket : ICarterModule
         app.MapGet(ApiRoutes.Basket.GetBasket, HandleGetBasketAsync)
             .WithTags(ApiRoutes.Basket.Tags)
             .WithName(nameof(GetBasket))
-            .Produces<GetBasketResult>(StatusCodes.Status200OK)
+            .Produces<ApiGetResponse<GetBasketResult>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .RequireAuthorization();
@@ -28,13 +28,15 @@ public sealed class GetBasket : ICarterModule
 
     #region Methods
 
-    private async Task<GetBasketResult> HandleGetBasketAsync(
+    private async Task<ApiGetResponse<GetBasketResult>> HandleGetBasketAsync(
         ISender sender,
         IHttpContextAccessor httpContext)
     {
         var currentUser = httpContext.GetCurrentUser();
         var query = new GetBasketQuery(currentUser.Id);
-        return await sender.Send(query);
+        var result = await sender.Send(query);
+
+        return new ApiGetResponse<GetBasketResult>(result);
     }
 
     #endregion

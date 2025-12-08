@@ -1,4 +1,4 @@
-﻿#region using
+#region using
 
 using Catalog.Application.Dtos.Abstractions;
 
@@ -10,9 +10,13 @@ public class ProductDto : ProductInfoDto, IAuditableDto
 {
     #region Fields, Properties and Indexers
 
+    public ProductImageDto? Thumbnail { get; set; }
+
     public List<ProductImageDto>? Images {  get; set; }
 
-    public string? Thumbnail { get; set; }
+    public List<Guid>? CategoryIds { get; set; }
+
+    public Guid? BrandId { get; set; }
 
     public DateTimeOffset CreatedOnUtc { get; set; }
 

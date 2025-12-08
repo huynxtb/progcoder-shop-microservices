@@ -1,0 +1,737 @@
+---
+alwaysApply: true
+---
+
+# Backend Cursor Rules - Microservices, Clean Architecture, DDD, CQRS
+
+## Solution Structure
+
+```
+src/
+├── Services/                    # Microservices
+│   └── {ServiceName}/
+│       ├── Api/                 # API Layer (Carter endpoints)
+│       │   └── {Service}.Api/
+│       │       ├── Constants/   # ApiRoutes
+│       │       ├── Endpoints/   # ICarterModule implementations
+│       │       ├── Models/      # Request models
+│       │       ├── DependencyInjection.cs
+│       │       ├── GlobalUsing.cs
+│       │       └── Program.cs
+│       ├── Core/
+│       │   ├── {Service}.Domain/        # Domain Layer (innermost)
+│       │   │   ├── Abstractions/        # Entity, Aggregate, interfaces
+│       │   │   ├── Entities/            # Domain entities
+│       │   │   ├── Enums/
+│       │   │   ├── Events/              # Domain events
+│       │   │   ├── Exceptions/
+│       │   │   └── ValueObjects/
+│       │   ├── {Service}.Application/   # Application Layer
+│       │   │   ├── CQRS/
+│       │   │   │   └── {Feature}/
+│       │   │   │       ├── Commands/
+│       │   │   │       ├── Queries/
+│       │   │   │       └── EventHandlers/
+│       │   │   │           └── Domain/
+│       │   │   ├── Dtos/
+│       │   │   ├── Exceptions/
+│       │   │   ├── Mappings/
+│       │   │   ├── Models/
+│       │   │   │   ├── Filters/
+│       │   │   │   └── Results/
+│       │   │   ├── Repositories/
+│       │   │   ├── Services/
+│       │   │   ├── DependencyInjection.cs
+│       │   │   └── GlobalUsing.cs
+│       │   └── {Service}.Infrastructure/
+│       │       ├── Data/
+│       │       ├── Repositories/
+│       │       ├── Services/
+│       │       ├── ApiClients/
+│       │       ├── GrpcClients/
+│       │       ├── DependencyInjection.cs
+│       │       └── GlobalUsing.cs
+│       └── Worker/
+│           ├── {Service}.Worker.Consumer/
+│           └── {Service}.Worker.Outbox/
+├── Shared/
+│   ├── BuildingBlocks/
+│   │   ├── CQRS/
+│   │   ├── Behaviors/
+│   │   ├── Exceptions/
+│   │   ├── Pagination/
+│   │   └── Abstractions/
+│   ├── Common/
+│   │   ├── Configurations/
+│   │   ├── Constants/
+│   │   ├── Extensions/
+│   │   ├── Helpers/
+│   │   └── Models/
+│   ├── Contracts/
+│   │   └── {Service}.Contract/
+│   │       └── Protos/
+│   └── EventSourcing/
+│       ├── Events/
+│       │   └── {Feature}/
+│       └── MassTransit/
+├── JobOrchestrator/
+│   └── App.Job/
+│       ├── Attributes/
+│       ├── Jobs/{Feature}/
+│       └── Quartz/
+└── ApiGateway/
+    └── YarpApiGateway/
+```
+
+---
+
+## Layer Responsibilities
+
+### Domain Layer (Innermost - No dependencies)
+- **Entities**: Business objects with behavior, inherit from Entity<TId> or Aggregate<TId>
+- **Value Objects**: Immutable objects representing concepts
+- **Domain Events**: Events raised within domain, implement IDomainEvent
+- **Enums**: Domain-specific enumerations
+- **Exceptions**: DomainException for domain rule violations
+
+### Application Layer (Depends on Domain only)
+- **CQRS Commands/Queries**: Business use cases
+- **DTOs**: Data transfer objects for API contracts
+- **Repository Interfaces**: Abstractions for data access
+- **Service Interfaces**: Abstractions for external services
+- **Mappings**: AutoMapper profiles
+- **Validators**: FluentValidation validators
+
+### Infrastructure Layer (Implements Application interfaces)
+- **Repository Implementations**: Database access (Marten, EF Core, MongoDB)
+- **Service Implementations**: External service integrations
+- **API Clients**: Refit HTTP clients
+- **gRPC Clients**: Inter-service communication
+
+### API Layer (Entry point)
+- **Endpoints**: Carter modules for minimal API routing
+- **Request Models**: API request DTOs
+- **Response**: Response use (ApiCreatedResponse, ApiDeletedResponse, ApiUpdatedResponse, ApiGetResponse)
+- **DI Configuration**: Service registration
+
+---
+
+## CQRS Pattern
+
+### Command Definition
+```csharp
+// Command with response
+public sealed record CreateProductCommand(CreateProductDto Dto, Actor Actor) : ICommand<Guid>;
+
+// Command without response (returns Unit)
+public sealed record DeleteProductCommand(Guid Id) : ICommand;
+```
+
+### Command Handler
+```csharp
+public sealed class CreateProductCommandHandler(
+    IMapper mapper,
+    IDocumentSession session) : ICommandHandler<CreateProductCommand, Guid>
+{
+    #region Implementations
+
+    public async Task<Guid> Handle(CreateProductCommand command, CancellationToken cancellationToken)
+    {
+        var dto = command.Dto;
+        
+        var entity = ProductEntity.Create(
+            id: Guid.NewGuid(),
+            name: dto.Name!,
+            performedBy: command.Actor.ToString());
+
+        session.Store(entity);
+        await session.SaveChangesAsync(cancellationToken);
+
+        return entity.Id;
+    }
+
+    #endregion
+}
+```
+
+### Command Validator
+```csharp
+public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
+{
+    #region Ctors
+
+    public CreateProductCommandValidator()
+    {
+        RuleFor(x => x.Dto)
+            .NotNull()
+            .WithMessage(MessageCode.BadRequest)
+            .DependentRules(() =>
+            {
+                RuleFor(x => x.Dto.Name)
+                    .NotEmpty()
+                    .WithMessage(MessageCode.ProductNameIsRequired);
+            });
+    }
+
+    #endregion
+}
+```
+
+### Query Definition
+```csharp
+public sealed record SearchProductQuery(
+    SearchTermsFilter Filter,
+    PaginationRequest Paging) : IQuery<SearchProductResult>;
+```
+
+### Query Handler
+```csharp
+public sealed class SearchProductQueryHandler(
+    IProductRepository productRepository,
+    IMapper mapper) : IQueryHandler<SearchProductQuery, SearchProductResult>
+{
+    #region Implementations
+
+    public async Task<SearchProductResult> Handle(SearchProductQuery query, CancellationToken cancellationToken)
+    {
+        var (products, totalCount) = await productRepository.SearchAsync(
+            query.Filter, query.Paging, cancellationToken);
+
+        var productDtos = mapper.Map<List<ProductDto>>(products);
+
+        return new SearchProductResult(productDtos, totalCount, query.Paging);
+    }
+
+    #endregion
+}
+```
+
+---
+
+## Domain Modeling
+
+### Entity Base Class
+```csharp
+public abstract class Entity<T> : IEntityId<T>, IAuditable
+{
+    #region Fields, Properties and Indexers
+
+    public T Id { get; set; } = default!;
+    public DateTimeOffset CreatedOnUtc { get; set; }
+    public string? CreatedBy { get; set; }
+    public DateTimeOffset? LastModifiedOnUtc { get; set; }
+    public string? LastModifiedBy { get; set; }
+
+    #endregion
+}
+```
+
+### Aggregate Root (with Domain Events)
+```csharp
+public abstract class Aggregate<TId> : Entity<TId>, IAggregate<TId>
+{
+    #region Fields, Properties and Indexers
+
+    private readonly List<IDomainEvent> _domainEvents = new();
+
+    #endregion
+
+    #region Implementations
+
+    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+
+    public void AddDomainEvent(IDomainEvent domainEvent)
+    {
+        _domainEvents.Add(domainEvent);
+    }
+
+    public IDomainEvent[] ClearDomainEvents()
+    {
+        IDomainEvent[] dequeuedEvents = _domainEvents.ToArray();
+        _domainEvents.Clear();
+        return dequeuedEvents;
+    }
+
+    #endregion
+}
+```
+
+### Entity with Factory Method
+```csharp
+public sealed class ProductEntity : Aggregate<Guid>
+{
+    #region Fields, Properties and Indexers
+
+    public string? Name { get; set; }
+    public string? Sku { get; set; }
+    public decimal Price { get; set; }
+    public ProductStatus Status { get; set; }
+
+    #endregion
+
+    #region Factories
+
+    public static ProductEntity Create(
+        Guid id, string name, string sku, decimal price, string performedBy)
+    {
+        var product = new ProductEntity
+        {
+            Id = id,
+            Name = name,
+            Sku = sku,
+            Price = price,
+            Status = ProductStatus.OutOfStock,
+            CreatedBy = performedBy,
+            CreatedOnUtc = DateTimeOffset.UtcNow
+        };
+
+        return product;
+    }
+
+    #endregion
+
+    #region Methods
+
+    public void Update(string name, string sku, decimal price, string performedBy)
+    {
+        Name = name;
+        Sku = sku;
+        Price = price;
+        LastModifiedBy = performedBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+    }
+
+    public void ChangeStatus(ProductStatus status, string performedBy)
+    {
+        if (Status == status)
+            throw new DomainException(MessageCode.DecisionFlowIllegal);
+
+        Status = status;
+        LastModifiedBy = performedBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+    }
+
+    #endregion
+}
+```
+
+### Domain Event
+```csharp
+public sealed record UpsertedProductDomainEvent(
+    Guid Id,
+    string Name,
+    string Sku,
+    decimal Price,
+    ProductStatus Status,
+    DateTimeOffset CreatedOnUtc,
+    string CreatedBy) : IDomainEvent;
+```
+
+---
+
+## API Endpoint Convention (Carter)
+
+### Endpoint Structure
+```csharp
+public sealed class CreateProduct : ICarterModule
+{
+    #region Implementations
+
+    public void AddRoutes(IEndpointRouteBuilder app)
+    {
+        app.MapPost(ApiRoutes.Product.Create, HandleCreateProductAsync)
+            .WithTags(ApiRoutes.Product.Tags)
+            .WithName(nameof(CreateProduct))
+            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .RequireAuthorization();
+    }
+
+    #endregion
+
+    #region Methods
+
+    private async Task<ApiCreatedResponse<Guid>> HandleCreateProductAsync(
+        ISender sender,
+        IMapper mapper,
+        IHttpContextAccessor httpContext,
+        [FromBody] CreateProductRequest req)
+    {
+        var dto = mapper.Map<CreateProductDto>(req);
+        var currentUser = httpContext.GetCurrentUser();
+        var command = new CreateProductCommand(dto, Actor.User(currentUser.Id));
+        var result = await sender.Send(command);
+        return new ApiCreatedResponse<Guid>(result);
+    }
+
+    #endregion
+}
+```
+
+### API Routes Constants
+```csharp
+public static class ApiRoutes
+{
+    public static class Product
+    {
+        public const string Tags = "Products";
+        public const string Create = "/api/products";
+        public const string Update = "/api/products/{id}";
+        public const string Delete = "/api/products/{id}";
+        public const string GetById = "/api/products/{id}";
+        public const string GetAll = "/api/products";
+    }
+}
+```
+
+---
+
+## Dependency Injection Pattern
+
+### Application DI
+```csharp
+public static class DependencyInjection
+{
+    #region Methods
+
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    {
+        services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(typeof(ApplicationMarker).Assembly);
+            cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
+        });
+
+        services.AddValidatorsFromAssembly(typeof(ApplicationMarker).Assembly);
+        services.AddAutoMapper(typeof(ApplicationMarker).Assembly);
+
+        return services;
+    }
+
+    #endregion
+}
+```
+
+### Infrastructure DI (Scrutor Assembly Scanning)
+```csharp
+public static class DependencyInjection
+{
+    #region Methods
+
+    public static IServiceCollection AddInfrastructureServices(
+        this IServiceCollection services, IConfiguration cfg)
+    {
+        services.Scan(s => s
+            .FromAssemblyOf<InfrastructureMarker>()
+            .AddClasses(c => c.Where(t => t.Name.EndsWith("Service")))
+            .UsingRegistrationStrategy(Scrutor.RegistrationStrategy.Skip)
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
+
+        services.Scan(s => s
+            .FromAssemblyOf<InfrastructureMarker>()
+            .AddClasses(c => c.Where(t => t.Name.EndsWith("Repository")))
+            .UsingRegistrationStrategy(Scrutor.RegistrationStrategy.Skip)
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
+
+        return services;
+    }
+
+    public static WebApplication UseInfrastructure(this WebApplication app)
+    {
+        return app;
+    }
+
+    #endregion
+}
+```
+
+### Program.cs Pattern
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services
+    .AddApplicationServices()
+    .AddInfrastructureServices(builder.Configuration)
+    .AddApiServices(builder.Configuration);
+
+var app = builder.Build();
+
+app.UseApi();
+app.UseInfrastructure();
+
+app.Run();
+```
+
+---
+
+## Event Handling Pattern
+
+### Integration Event (Shared)
+```csharp
+public record IntegrationEvent
+{
+    #region Fields, Properties and Indexers
+
+    public string Id => Guid.NewGuid().ToString();
+    public DateTimeOffset OccurredOn => DateTimeOffset.UtcNow;
+    public string? EventType => GetType()?.AssemblyQualifiedName;
+
+    #endregion
+}
+
+public sealed record class UpsertedProductIntegrationEvent : IntegrationEvent
+{
+    public Guid ProductId { get; set; }
+    public string Name { get; set; } = default!;
+}
+```
+
+### Domain Event Handler (Outbox Pattern)
+```csharp
+public sealed class UpsertedProductDomainEventHandler(
+    IDocumentSession session,
+    ILogger<UpsertedProductDomainEventHandler> logger) : INotificationHandler<UpsertedProductDomainEvent>
+{
+    #region Implementations
+
+    public async Task Handle(UpsertedProductDomainEvent @event, CancellationToken cancellationToken)
+    {
+        logger.LogInformation("Domain Event handled: {DomainEvent}", @event.GetType().Name);
+
+        var message = new UpsertedProductIntegrationEvent
+        {
+            ProductId = @event.Id,
+            Name = @event.Name
+        };
+
+        var outboxMessage = OutboxMessageEntity.Create(
+            id: Guid.NewGuid(),
+            eventType: message.EventType!,
+            content: JsonConvert.SerializeObject(message),
+            occurredOnUtc: DateTimeOffset.UtcNow);
+
+        session.Store(outboxMessage);
+    }
+
+    #endregion
+}
+```
+
+### Integration Event Consumer (MassTransit)
+```csharp
+public sealed class UpsertedProductIntegrationEventHandler(
+    ISender sender,
+    ILogger<UpsertedProductIntegrationEventHandler> logger)
+    : IConsumer<UpsertedProductIntegrationEvent>
+{
+    #region Methods
+
+    public async Task Consume(ConsumeContext<UpsertedProductIntegrationEvent> context)
+    {
+        logger.LogInformation("Integration Event handled: {IntegrationEvent}", context.Message.GetType().Name);
+
+        var integrationEvent = context.Message;
+
+        var dto = new UpsertProductDto
+        {
+            ProductId = integrationEvent.ProductId.ToString(),
+            Name = integrationEvent.Name
+        };
+
+        var command = new UpsertProductCommand(dto);
+        await sender.Send(command, context.CancellationToken);
+    }
+
+    #endregion
+}
+```
+
+---
+
+## Job Orchestrator (Quartz)
+
+### Job Attribute
+```csharp
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+public class JobAttribute : Attribute
+{
+    public string? JobName { get; set; }
+    public string? JobGroup { get; set; }
+    public string? CronExpression { get; set; }
+    public string? Description { get; set; }
+    public bool AutoStart { get; set; } = true;
+}
+```
+
+### Job Implementation
+```csharp
+[Job(
+    JobName = "SyncDashboardReport",
+    JobGroup = "Report",
+    Description = "Synchronizes dashboard report data",
+    CronExpression = "0 0/5 * * * ?",
+    AutoStart = true)]
+public class SyncDashboardReportJob(ILogger<SyncDashboardReportJob> logger) : IJob
+{
+    #region Implementations
+
+    public async Task Execute(IJobExecutionContext context)
+    {
+        var jobKey = context.JobDetail.Key;
+
+        logger.LogInformation("Job {JobName} started at {StartTime}", jobKey.Name, DateTimeOffset.Now);
+
+        try
+        {
+            await DoWorkAsync(context.CancellationToken);
+            logger.LogInformation("Job {JobName} completed successfully", jobKey.Name);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Job {JobName} failed", jobKey.Name);
+            throw new JobExecutionException(ex, refireImmediately: false);
+        }
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    private async Task DoWorkAsync(CancellationToken cancellationToken) { }
+
+    #endregion
+}
+```
+
+---
+
+## Naming Conventions
+
+| Type | Pattern | Example |
+|------|---------|---------|
+| Entity | XxxEntity | ProductEntity, OrderEntity |
+| DTO | XxxDto | CreateProductDto, ProductDto |
+| Command | XxxCommand | CreateProductCommand |
+| Command Handler | XxxCommandHandler | CreateProductCommandHandler |
+| Query | XxxQuery | GetProductsQuery |
+| Query Handler | XxxQueryHandler | GetProductsQueryHandler |
+| Validator | XxxValidator or XxxCommandValidator | CreateProductCommandValidator |
+| Domain Event | XxxDomainEvent | UpsertedProductDomainEvent |
+| Integration Event | XxxIntegrationEvent | UpsertedProductIntegrationEvent |
+| Event Handler | XxxEventHandler | UpsertedProductIntegrationEventHandler |
+| Repository Interface | IXxxRepository | IProductRepository |
+| Repository Impl | XxxRepository | ProductRepository |
+| Service Interface | IXxxService | IMinIOCloudService |
+| Service Impl | XxxService | MinIOCloudService |
+| Filter | XxxFilter | GetProductsFilter |
+| Result | XxxResult | GetProductsResult |
+| Configuration | XxxCfg | ConnectionStringsCfg |
+
+---
+
+## Code Style
+
+### File Structure with Regions
+```csharp
+#region using
+
+using System;
+using Microsoft.Extensions.Logging;
+
+#endregion
+
+namespace Service.Application.CQRS.Feature.Commands;
+
+public sealed class MyClass
+{
+    #region Fields, Properties and Indexers
+
+    private readonly ILogger<MyClass> _logger;
+    public string Name { get; set; }
+
+    #endregion
+
+    #region Ctors
+
+    public MyClass(ILogger<MyClass> logger)
+    {
+        _logger = logger;
+    }
+
+    #endregion
+
+    #region Implementations
+
+    #endregion
+
+    #region Factories
+
+    public static MyClass Create() => new();
+
+    #endregion
+
+    #region Methods
+
+    public void DoSomething() { }
+
+    #endregion
+
+    #region Private Methods
+
+    private void InternalWork() { }
+
+    #endregion
+}
+```
+
+### Primary Constructor Pattern (Preferred for Handlers)
+```csharp
+public sealed class ProductQueryHandler(
+    IProductRepository repository,
+    IMapper mapper,
+    ILogger<ProductQueryHandler> logger) : IQueryHandler<GetProductQuery, ProductDto>
+{
+    #region Implementations
+
+    public async Task<ProductDto> Handle(GetProductQuery query, CancellationToken cancellationToken)
+    {
+        logger.LogInformation("Getting product {Id}", query.Id);
+        var product = await repository.GetByIdAsync(query.Id, cancellationToken);
+        return mapper.Map<ProductDto>(product);
+    }
+
+    #endregion
+}
+```
+
+### GlobalUsing.cs Pattern
+```csharp
+global using BuildingBlocks.CQRS;
+global using FluentValidation;
+global using Common.Models;
+global using Common.Constants;
+global using Common.Extensions;
+global using BuildingBlocks.Pagination;
+global using BuildingBlocks.Exceptions;
+global using BuildingBlocks.Abstractions.ValueObjects;
+```
+
+---
+
+## Best Practices
+
+1. **Keep Domain Layer Pure**: No external dependencies, only domain logic
+2. **Use Factory Methods**: Encapsulate entity creation logic in static Create() methods
+3. **Validate in Application Layer**: Use FluentValidation with ValidationBehavior pipeline
+4. **Use Outbox Pattern**: Ensure reliable event publishing across services
+5. **Primary Constructors**: Prefer for dependency injection in handlers
+6. **Regions**: Organize code with standard region names
+7. **File-Scoped Namespaces**: One namespace per file
+8. **Async All The Way**: Use async/await consistently
+9. **Use CancellationToken**: Pass through all async methods
+10. **Structured Logging**: Use ILogger with structured log messages
+11. **Configuration Classes**: Use XxxCfg classes for strongly-typed configuration
+12. **Scrutor for DI**: Auto-register services by naming convention

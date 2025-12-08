@@ -13,7 +13,7 @@ public sealed record UpsertedProductDomainEvent(
     string Sku,
     string Slug,
     decimal Price,
-    decimal? SalesPrice,
+    decimal? SalePrice,
     List<string>? Categories,
     List<string>? Images,
     string Thumbnail,

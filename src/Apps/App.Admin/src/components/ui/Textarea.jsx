@@ -9,7 +9,7 @@ const Textarea = ({
   register,
   name,
   readonly,
-  dvalue,
+  value,
   error,
   icon,
   disabled,
@@ -21,6 +21,7 @@ const Textarea = ({
   cols,
   row = 3,
   onChange,
+  onBlur,
   ...rest
 }) => {
   return (
@@ -40,36 +41,23 @@ const Textarea = ({
         </label>
       )}
       <div className={`relative ${horizontal ? "flex-1" : ""}`}>
-        {name && (
-          <textarea
-            {...register(name)}
-            {...rest}
-            className={`${
-              error ? " has-error" : " "
-            } form-control py-2 ${className}  `}
-            placeholder={placeholder}
-            readOnly={readonly}
-            disabled={disabled}
-            id={id}
-            cols={cols}
-            rows={row}
-            onChange={onChange}
-          ></textarea>
-        )}
-        {!name && (
-          <textarea
-            className={`${
-              error ? " has-error" : " "
-            } form-control py-2 ${className}  `}
-            placeholder={placeholder}
-            readOnly={readonly}
-            disabled={disabled}
-            id={id}
-            cols={cols}
-            rows={row}
-            onChange={onChange}
-          ></textarea>
-        )}
+        <textarea
+          {...(register && name ? register(name) : {})}
+          {...rest}
+          name={name}
+          className={`${
+            error ? " has-error" : " "
+          } form-control py-2 ${className}  `}
+          placeholder={placeholder}
+          readOnly={readonly}
+          disabled={disabled}
+          id={id}
+          cols={cols}
+          rows={row}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+        ></textarea>
 
         {/* icon */}
         <div className="flex text-xl absolute ltr:right-[14px] rtl:left-[14px] top-1/2 -translate-y-1/2  space-x-1 rtl:space-x-reverse">
