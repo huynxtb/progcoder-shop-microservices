@@ -50,7 +50,7 @@ const Submenu = ({
                   subItem={subItem}
                 />
               </div>
-            ) : subItem.isExternal ? (
+            ) : subItem.isExternal || subItem.isBlank ? (
               <a
                 href={subItem.childlink}
                 target="_blank"

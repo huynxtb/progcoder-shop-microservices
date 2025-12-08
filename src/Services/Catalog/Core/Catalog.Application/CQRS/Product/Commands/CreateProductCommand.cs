@@ -101,7 +101,7 @@ public class CreateProductCommandHandler(IMapper mapper,
         entity.UpdateBarcode(dto.Barcode, command.Actor.ToString());
         entity.UpdateUnitAndWeight(dto.Unit, dto.Weight, command.Actor.ToString());
 
-        if (entity.Published)
+        if (command.Dto.Published)
         {
             entity.Publish(command.Actor.ToString());
         }

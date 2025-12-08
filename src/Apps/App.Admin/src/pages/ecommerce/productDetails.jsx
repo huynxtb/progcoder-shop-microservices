@@ -149,10 +149,6 @@ export const ProductDetails = () => {
       }
     } catch (err) {
       console.error("Failed to update publish status:", err);
-      toast.error(t("productDetails.updateError"), {
-        position: "top-right",
-        autoClose: 5000,
-      });
     } finally {
       setIsUpdating(false);
     }
@@ -205,10 +201,17 @@ export const ProductDetails = () => {
 
   return (
     <div className="w-full bg-white dark:bg-slate-800 p-6 rounded-lg">
-      {/* Header with Publish/Unpublish Button */}
+      {/* Header with Edit and Publish/Unpublish Buttons */}
       <div className="flex justify-between items-start mb-5">
         <div></div>
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-3">
+          <Button
+            onClick={() => navigate(`/edit-product/${id}`)}
+            className="bg-primary-500 hover:bg-primary-600 text-white inline-flex items-center"
+          >
+            <Icon icon="heroicons:pencil-square" className="mr-2 w-4 h-4" />
+            {t("productDetails.edit")}
+          </Button>
           <Button
             onClick={handleTogglePublish}
             disabled={isUpdating}
@@ -216,21 +219,21 @@ export const ProductDetails = () => {
               product.published
                 ? "bg-danger-500 hover:bg-danger-600"
                 : "bg-success-500 hover:bg-success-600"
-            } text-white`}
+            } text-white inline-flex items-center`}
           >
             {isUpdating ? (
               <>
-                <Icon icon="heroicons:arrow-path" className="animate-spin mr-2" />
+                <Icon icon="heroicons:arrow-path" className="animate-spin mr-2 w-4 h-4" />
                 {t("productDetails.updating")}
               </>
             ) : product.published ? (
               <>
-                <Icon icon="heroicons:x-mark" className="mr-2" />
+                <Icon icon="heroicons:x-mark" className="mr-2 w-4 h-4" />
                 {t("productDetails.unpublish")}
               </>
             ) : (
               <>
-                <Icon icon="heroicons:check" className="mr-2" />
+                <Icon icon="heroicons:check" className="mr-2 w-4 h-4" />
                 {t("productDetails.publish")}
               </>
             )}

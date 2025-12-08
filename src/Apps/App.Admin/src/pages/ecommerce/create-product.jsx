@@ -166,14 +166,14 @@ const CreateProduct = () => {
         submitFormData.append("shortDescription", values.shortDescription);
         submitFormData.append("longDescription", values.longDescription);
         submitFormData.append("price", values.price);
-        submitFormData.append("salePrice", values.salePrice);
+        submitFormData.append("salePrice", values.salePrice || 0);
         submitFormData.append("published", published);
         submitFormData.append("featured", featured);
         submitFormData.append("seoTitle", values.metaTitle);
         submitFormData.append("seoDescription", values.metaDesc);
         submitFormData.append("barcode", values.barcode);
         submitFormData.append("unit", values.unit);
-        submitFormData.append("weight", values.weight);
+        submitFormData.append("weight", values.weight || 0);
 
         if (values.category && Array.isArray(values.category) && values.category.length > 0) {
           values.category.forEach((cat) => {
@@ -372,7 +372,7 @@ const CreateProduct = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="unit" className="form-label">
                       {t("createProduct.unit")}
@@ -403,24 +403,6 @@ const CreateProduct = () => {
                     />
                     {hasError("weight") && (
                       <p className="text-danger-500 text-sm mt-1">{formik.errors.weight}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label htmlFor="minQty" className="form-label">
-                      {t("createProduct.minQty")}
-                    </label>
-                    <Textinput
-                      id="minQty"
-                      name="minQty"
-                      type="number"
-                      placeholder={t("createProduct.minQtyPlaceholder")}
-                      value={formik.values.minQty}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      className={hasError("minQty") ? "border-danger-500" : ""}
-                    />
-                    {hasError("minQty") && (
-                      <p className="text-danger-500 text-sm mt-1">{formik.errors.minQty}</p>
                     )}
                   </div>
                 </div>

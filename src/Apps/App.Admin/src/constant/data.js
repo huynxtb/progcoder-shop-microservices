@@ -10,27 +10,38 @@ export const menuItems = [
     child: [
       {
         childtitle: "Grafana",
-        childlink: "http://localhost:3000"
+        childlink: "http://localhost:3000",
+        isBlank: true
       },
       {
         childtitle: "Prometheus",
-        childlink: "http://localhost:9090"
+        childlink: "http://localhost:9090",
+        isBlank: true
       },
       {
         childtitle: "Keycloak",
-        childlink: "http://localhost:8080"
+        childlink: "http://localhost:8080",
+        isBlank: true
       },
       {
         childtitle: "MailHog",
-        childlink: "http://localhost:8025"
+        childlink: "http://localhost:8025",
+        isBlank: true
       },
       {
         childtitle: "RabbitMQ",
-        childlink: "http://localhost:15672"
+        childlink: "http://localhost:15672",
+        isBlank: true
+      },
+      {
+        childtitle: "Elasticsearch",
+        childlink: "http://localhost:9200",
+        isBlank: true
       },
       {
         childtitle: "Github",
-        childlink: "https://github.com/aspnetrun/run-aspnetcore-microservices"
+        childlink: "https://github.com/aspnetrun/run-aspnetcore-microservices",
+        isBlank: true
       }
     ]
   },

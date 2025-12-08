@@ -50,17 +50,36 @@ const HorizentalMenu = () => {
               <ul className="sub-menu">
                 {item.child.map((childitem, index) => (
                   <li key={index}>
-                    <Link to={childitem.childlink}>
-                      <div className="flex space-x-2 items-start rtl:space-x-reverse">
-                        <Icon
-                          icon={childitem.childicon}
-                          className="leading-none text-base"
-                        />
-                        <span className="leading-none">
-                          {childitem.childtitle}
-                        </span>
-                      </div>
-                    </Link>
+                    {childitem.isExternal || childitem.isBlank ? (
+                      <a
+                        href={childitem.childlink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <div className="flex space-x-2 items-start rtl:space-x-reverse">
+                          <Icon
+                            icon={childitem.childicon}
+                            className="leading-none text-base"
+                          />
+                          <span className="leading-none">
+                            {childitem.childtitle}
+                          </span>
+                          <Icon icon="heroicons:arrow-top-right-on-square" className="w-4 h-4" />
+                        </div>
+                      </a>
+                    ) : (
+                      <Link to={childitem.childlink}>
+                        <div className="flex space-x-2 items-start rtl:space-x-reverse">
+                          <Icon
+                            icon={childitem.childicon}
+                            className="leading-none text-base"
+                          />
+                          <span className="leading-none">
+                            {childitem.childtitle}
+                          </span>
+                        </div>
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

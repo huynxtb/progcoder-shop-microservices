@@ -169,11 +169,6 @@ public sealed class ProductEntity : Aggregate<Guid>
 
     public void Publish(string performedBy)
     {
-        if (Published)
-        {
-            throw new DomainException(MessageCode.DecisionFlowIllegal);
-        }
-
         Published = true;
         LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
@@ -181,11 +176,6 @@ public sealed class ProductEntity : Aggregate<Guid>
 
     public void Unpublish(string performedBy)
     {
-        if (!Published)
-        {
-            throw new DomainException(MessageCode.DecisionFlowIllegal);
-        }
-
         Published = false;
         LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;

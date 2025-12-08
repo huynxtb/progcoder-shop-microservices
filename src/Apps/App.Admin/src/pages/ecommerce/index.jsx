@@ -46,6 +46,7 @@ const Ecommerce = () => {
   const [itemToDelete, setItemToDelete] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
 
   // Fetch products from API
   useEffect(() => {
@@ -90,10 +91,32 @@ const Ecommerce = () => {
     setDeleteModalOpen(true);
   };
 
-  const confirmDelete = () => {
-    console.log("Deleting product:", itemToDelete?.id);
-    setDeleteModalOpen(false);
-    setItemToDelete(null);
+  const confirmDelete = async () => {
+    if (!itemToDelete?.id) return;
+
+    try {
+      setDeleting(true);
+      const response = await api.delete(API_ENDPOINTS.CATALOG.DELETE_PRODUCT(itemToDelete.id));
+
+      if (response && response.status >= 200 && response.status < 300) {
+        toast.success(t("products.deleteSuccess") || "Product deleted successfully", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+
+        // Remove the deleted product from the list
+        setProducts((prevProducts) =>
+          prevProducts.filter((product) => product.id !== itemToDelete.id)
+        );
+
+        setDeleteModalOpen(false);
+        setItemToDelete(null);
+      }
+    } catch (error) {
+      console.error("Failed to delete product:", error);
+    } finally {
+      setDeleting(false);
+    }
   };
 
   const COLUMNS = useMemo(() => [
@@ -104,7 +127,7 @@ const Ecommerce = () => {
         const product = row?.row?.original;
         return (
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-700 flex-shrink-0">
+            <div className="w-12 h-12 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-700 shrink-0">
               <img
                 src={product?.image}
                 alt={product?.name}
@@ -249,7 +272,16 @@ const Ecommerce = () => {
 
   const filteredData = useMemo(() => {
     if (statusFilter === "all") return data;
-    return data.filter((product) => product.status === statusFilter);
+    if (statusFilter === "published") {
+      return data.filter((product) => product.published === true);
+    }
+    if (statusFilter === "unpublished") {
+      return data.filter((product) => product.published === false);
+    }
+    if (statusFilter === "out_of_stock") {
+      return data.filter((product) => product.status === "out_of_stock");
+    }
+    return data;
   }, [data, statusFilter]);
 
   const tableInstance = useTable(
@@ -287,10 +319,9 @@ const Ecommerce = () => {
   const statusCounts = useMemo(() => {
     return {
       all: data.length,
-      active: data.filter((p) => p.status === "active").length,
+      published: data.filter((p) => p.published === true).length,
+      unpublished: data.filter((p) => p.published === false).length,
       out_of_stock: data.filter((p) => p.status === "out_of_stock").length,
-      draft: data.filter((p) => p.status === "draft").length,
-      hidden: data.filter((p) => p.status === "hidden").length,
     };
   }, [data]);
 
@@ -298,13 +329,12 @@ const Ecommerce = () => {
     <>
       <div className="space-y-5">
         {/* Status Filter Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { key: "all", label: t("products.all"), icon: "heroicons:squares-2x2", color: "bg-slate-500" },
-            { key: "active", label: t("products.active"), icon: "heroicons:check-circle", color: "bg-success-500" },
+            { key: "published", label: t("products.published"), icon: "heroicons:check-circle", color: "bg-success-500" },
+            { key: "unpublished", label: t("products.unpublished"), icon: "heroicons:document", color: "bg-warning-500" },
             { key: "out_of_stock", label: t("products.outOfStock"), icon: "heroicons:x-circle", color: "bg-danger-500" },
-            { key: "draft", label: t("products.draft"), icon: "heroicons:document", color: "bg-warning-500" },
-            { key: "hidden", label: t("products.hidden"), icon: "heroicons:eye-slash", color: "bg-slate-400" },
           ].map((item) => (
             <button
               key={item.key}
@@ -541,9 +571,19 @@ const Ecommerce = () => {
             <button
               className="btn btn-danger inline-flex items-center"
               onClick={confirmDelete}
+              disabled={deleting}
             >
-              <Icon icon="heroicons:trash" className="ltr:mr-2 rtl:ml-2" />
-              {t("common.delete")}
+              {deleting ? (
+                <>
+                  <Icon icon="heroicons:arrow-path" className="ltr:mr-2 rtl:ml-2 animate-spin" />
+                  {t("common.loading")}
+                </>
+              ) : (
+                <>
+                  <Icon icon="heroicons:trash" className="ltr:mr-2 rtl:ml-2" />
+                  {t("common.delete")}
+                </>
+              )}
             </button>
           </div>
         </div>

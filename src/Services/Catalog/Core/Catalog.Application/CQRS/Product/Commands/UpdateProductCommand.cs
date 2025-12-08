@@ -70,7 +70,8 @@ public class UpdateProductCommandHandler(IMapper mapper,
 
         var entity = await session.LoadAsync<ProductEntity>(command.ProductId)
             ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, command.ProductId);
-
+        
+        var currentPublishStatus = entity.Published;
         var dto = command.Dto;
 
         await ValidateCategoryAsync(dto.CategoryIds, cancellationToken);
@@ -98,9 +99,13 @@ public class UpdateProductCommandHandler(IMapper mapper,
         entity.UpdateBarcode(dto.Barcode, command.Actor.ToString());
         entity.UpdateUnitAndWeight(dto.Unit, dto.Weight, command.Actor.ToString());
 
-        if (entity.Published)
+        if (command.Dto.Published)
         {
             entity.Publish(command.Actor.ToString());
+        }
+        else
+        {
+            entity.Unpublish(command.Actor.ToString());
         }
 
         session.Store(entity);
@@ -124,7 +129,7 @@ public class UpdateProductCommandHandler(IMapper mapper,
         await mediator.Publish(@event, cancellationToken);
         await session.SaveChangesAsync(cancellationToken);
 
-        if (entity.Published)
+        if (command.Dto.Published)
         {
             await sender.Send(new PublishProductCommand(entity.Id, command.Actor), cancellationToken);
         }

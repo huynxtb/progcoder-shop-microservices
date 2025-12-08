@@ -10,6 +10,8 @@ public class ProductDto : ProductInfoDto, IAuditableDto
 {
     #region Fields, Properties and Indexers
 
+    public string? Barcode { get; set; }
+
     public ProductImageDto? Thumbnail { get; set; }
 
     public List<ProductImageDto>? Images {  get; set; }
