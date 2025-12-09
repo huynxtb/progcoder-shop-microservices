@@ -1,9 +1,10 @@
 #region using
 
+using BuildingBlocks.Authentication.Extensions;
+using Common.Models.Reponses;
 using Report.Api.Constants;
 using Report.Application.CQRS.TopProductPieChart.Queries;
 using Report.Application.Models.Results;
-using BuildingBlocks.Authentication.Extensions;
 
 #endregion
 
@@ -20,7 +21,7 @@ public sealed class GetTopProductPieChart : ICarterModule
         app.MapGet(ApiRoutes.TopProductPieChart.GetTopProductPieChart, HandleGetTopProductPieChartAsync)
             .WithTags(ApiRoutes.TopProductPieChart.Tags)
             .WithName(nameof(GetTopProductPieChart))
-            .Produces<TopProductPieChartResult>(StatusCodes.Status200OK)
+            .Produces<ApiGetResponse<TopProductPieChartResult>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .RequireAuthorization();
     }
@@ -29,14 +30,15 @@ public sealed class GetTopProductPieChart : ICarterModule
 
     #region Methods
 
-    private async Task<TopProductPieChartResult> HandleGetTopProductPieChartAsync(
+    private async Task<ApiGetResponse<TopProductPieChartResult>> HandleGetTopProductPieChartAsync(
         ISender sender,
         [AsParameters] GetTopProductPieChartRequest request,
         CancellationToken cancellationToken)
     {
         var query = new GetTopProductPieChartQuery(request.Limit);
         var result = await sender.Send(query, cancellationToken);
-        return result;
+
+        return new ApiGetResponse<TopProductPieChartResult>(result);
     }
 
     #endregion

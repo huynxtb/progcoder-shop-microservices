@@ -1,11 +1,14 @@
-import React, { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import Card from "@/components/ui/Card";
 import Icon from "@/components/ui/Icon";
 import Tooltip from "@/components/ui/Tooltip";
 import Textinput from "@/components/ui/Textinput";
+import Select from "@/components/ui/Select";
 import Modal from "@/components/ui/Modal";
+import { api } from "@/api";
+import { API_ENDPOINTS } from "@/api/endpoints";
 import {
   useTable,
   useRowSelect,
@@ -14,99 +17,8 @@ import {
   usePagination,
 } from "react-table";
 
-// Sample inventory data
-const inventoryData = [
-  {
-    id: 1,
-    productName: "iPhone 15 Pro Max",
-    sku: "IPH-15-PM-256",
-    quantity: 150,
-    minQuantity: 20,
-    warehouse: "Kho Hà Nội",
-    location: "A1-01",
-    lastUpdated: "2024-06-15T10:30:00",
-    status: "in_stock",
-  },
-  {
-    id: 2,
-    productName: "Samsung Galaxy S24 Ultra",
-    sku: "SAM-S24-U-512",
-    quantity: 85,
-    minQuantity: 15,
-    warehouse: "Kho HCM",
-    location: "B2-05",
-    lastUpdated: "2024-06-14T14:20:00",
-    status: "in_stock",
-  },
-  {
-    id: 3,
-    productName: "MacBook Pro 14 M3",
-    sku: "MAC-PRO-14-M3",
-    quantity: 12,
-    minQuantity: 10,
-    warehouse: "Kho Hà Nội",
-    location: "C3-02",
-    lastUpdated: "2024-06-13T09:15:00",
-    status: "low_stock",
-  },
-  {
-    id: 4,
-    productName: "iPad Air 5",
-    sku: "IPAD-AIR-5-64",
-    quantity: 0,
-    minQuantity: 10,
-    warehouse: "Kho Đà Nẵng",
-    location: "D1-03",
-    lastUpdated: "2024-06-10T16:45:00",
-    status: "out_of_stock",
-  },
-  {
-    id: 5,
-    productName: "AirPods Pro 2",
-    sku: "APP-2-USB-C",
-    quantity: 200,
-    minQuantity: 30,
-    warehouse: "Kho HCM",
-    location: "A2-08",
-    lastUpdated: "2024-06-15T11:00:00",
-    status: "in_stock",
-  },
-  {
-    id: 6,
-    productName: "Sony WH-1000XM5",
-    sku: "SONY-XM5-BLK",
-    quantity: 45,
-    minQuantity: 10,
-    warehouse: "Kho Hà Nội",
-    location: "B1-04",
-    lastUpdated: "2024-06-12T08:30:00",
-    status: "in_stock",
-  },
-  {
-    id: 7,
-    productName: "Dell XPS 15",
-    sku: "DELL-XPS-15-I7",
-    quantity: 8,
-    minQuantity: 5,
-    warehouse: "Kho HCM",
-    location: "C2-01",
-    lastUpdated: "2024-06-11T15:45:00",
-    status: "low_stock",
-  },
-  {
-    id: 8,
-    productName: "Logitech MX Master 3S",
-    sku: "LOG-MX-3S",
-    quantity: 0,
-    minQuantity: 20,
-    warehouse: "Kho Đà Nẵng",
-    location: "D2-06",
-    lastUpdated: "2024-06-09T10:00:00",
-    status: "out_of_stock",
-  },
-];
-
 const formatDate = (dateString) => {
+  if (!dateString) return "-";
   const date = new Date(dateString);
   return date.toLocaleDateString("vi-VN", {
     day: "2-digit",
@@ -115,6 +27,12 @@ const formatDate = (dateString) => {
     hour: "2-digit",
     minute: "2-digit",
   });
+};
+
+const getStatusFromQuantity = (quantity, available) => {
+  if (quantity === 0 || available === 0) return "out_of_stock";
+  if (available < 10) return "low_stock";
+  return "in_stock";
 };
 
 const GlobalFilter = ({ filter, setFilter, t }) => {
@@ -138,16 +56,144 @@ const InventoryPage = () => {
   const [itemToDelete, setItemToDelete] = useState(null);
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [viewingItem, setViewingItem] = useState(null);
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [increaseStockModalOpen, setIncreaseStockModalOpen] = useState(false);
+  const [decreaseStockModalOpen, setDecreaseStockModalOpen] = useState(false);
+  const [stockItem, setStockItem] = useState(null);
+  const [stockQuantity, setStockQuantity] = useState("");
+  const [inventoryItems, setInventoryItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [loadingProducts, setLoadingProducts] = useState(false);
+  const [loadingLocations, setLoadingLocations] = useState(false);
+
+  // Form data for add
+  const [addFormData, setAddFormData] = useState({
+    productId: "",
+    locationId: "",
+    quantity: "",
+  });
+
+  // Form data for edit
+  const [editFormData, setEditFormData] = useState({
+    productId: "",
+    locationId: "",
+  });
+  const [editingItem, setEditingItem] = useState(null);
+
+  // Fetch inventory items
+  useEffect(() => {
+    const fetchInventoryItems = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get(API_ENDPOINTS.INVENTORY.GET_ALL);
+        
+        if (response.data && response.data.result && response.data.result.items) {
+          const mappedItems = response.data.result.items.map((item) => ({
+            id: item.id,
+            productId: item.productId,
+            productName: item.product?.name || "N/A",
+            sku: item.product?.sku || "N/A",
+            quantity: item.quantity || 0,
+            available: item.available || 0,
+            locationId: item.locationId,
+            location: item.location?.location || "N/A",
+            status: getStatusFromQuantity(item.quantity, item.available),
+            lastUpdated: item.lastModifiedOnUtc || item.createdOnUtc,
+          }));
+          setInventoryItems(mappedItems);
+        }
+      } catch (error) {
+        console.error("Failed to fetch inventory items:", error);
+        setInventoryItems([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInventoryItems();
+  }, []);
+
+  // Fetch products for dropdown
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoadingProducts(true);
+        const response = await api.get(API_ENDPOINTS.CATALOG.GET_ALL_PRODUCTS);
+        if (response.data && response.data.result && response.data.result.items) {
+          const productOptions = response.data.result.items.map((item) => ({
+            value: item.id,
+            label: item.name,
+          }));
+          setProducts(productOptions);
+        }
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      } finally {
+        setLoadingProducts(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Fetch locations for dropdown
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        setLoadingLocations(true);
+        const response = await api.get(API_ENDPOINTS.INVENTORY.GET_LOCATIONS);
+        if (response.data && response.data.result && response.data.result.items) {
+          const locationOptions = response.data.result.items.map((item) => ({
+            value: item.id,
+            label: item.location,
+          }));
+          setLocations(locationOptions);
+        }
+      } catch (error) {
+        console.error("Failed to fetch locations:", error);
+      } finally {
+        setLoadingLocations(false);
+      }
+    };
+
+    fetchLocations();
+  }, []);
 
   const handleDeleteClick = (item) => {
     setItemToDelete(item);
     setDeleteModalOpen(true);
   };
 
-  const confirmDelete = () => {
-    console.log("Deleting inventory item:", itemToDelete?.id);
-    setDeleteModalOpen(false);
-    setItemToDelete(null);
+  const confirmDelete = async () => {
+    if (!itemToDelete?.id) return;
+
+    try {
+      setDeleting(true);
+      const response = await api.delete(API_ENDPOINTS.INVENTORY.DELETE(itemToDelete.id));
+
+      if (response && response.status >= 200 && response.status < 300) {
+        toast.success(t("inventory.deleteSuccess") || "Inventory item deleted successfully", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+
+        setInventoryItems((prevItems) =>
+          prevItems.filter((item) => item.id !== itemToDelete.id)
+        );
+
+        setDeleteModalOpen(false);
+        setItemToDelete(null);
+      }
+    } catch (error) {
+      console.error("Failed to delete inventory item:", error);
+    } finally {
+      setDeleting(false);
+    }
   };
 
   const handleViewClick = (item) => {
@@ -155,12 +201,268 @@ const InventoryPage = () => {
     setViewModalOpen(true);
   };
 
+  const handleAddClick = () => {
+    setAddFormData({ productId: "", locationId: "", quantity: "" });
+    setAddModalOpen(true);
+  };
+
+  const handleAddFormChange = (field, value) => {
+    setAddFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSaveAdd = async () => {
+    if (!addFormData.productId || !addFormData.locationId) {
+      toast.error(t("inventory.fillRequiredFields") || "Please fill all required fields", {
+        position: "top-right",
+        autoClose: 5000,
+      });
+      return;
+    }
+
+    try {
+      setSaving(true);
+      const requestBody = {
+        productId: addFormData.productId,
+        locationId: addFormData.locationId,
+        quantity: parseInt(addFormData.quantity) || 0,
+      };
+
+      const response = await api.post(API_ENDPOINTS.INVENTORY.CREATE, requestBody);
+
+      if (response && response.status >= 200 && response.status < 300) {
+        toast.success(t("inventory.createSuccess") || "Inventory item created successfully", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+
+        // Refresh inventory items
+        const refreshResponse = await api.get(API_ENDPOINTS.INVENTORY.GET_ALL);
+        if (refreshResponse.data && refreshResponse.data.result && refreshResponse.data.result.items) {
+          const mappedItems = refreshResponse.data.result.items.map((item) => ({
+            id: item.id,
+            productId: item.productId,
+            productName: item.product?.name || "N/A",
+            sku: item.product?.sku || "N/A",
+            quantity: item.quantity || 0,
+            available: item.available || 0,
+            locationId: item.locationId,
+            location: item.location?.location || "N/A",
+            status: getStatusFromQuantity(item.quantity, item.available),
+            lastUpdated: item.lastModifiedOnUtc || item.createdOnUtc,
+          }));
+          setInventoryItems(mappedItems);
+        }
+
+        setAddModalOpen(false);
+        setAddFormData({ productId: "", locationId: "", quantity: "" });
+      }
+    } catch (error) {
+      console.error("Failed to create inventory item:", error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleIncreaseStockClick = (item) => {
+    setStockItem(item);
+    setStockQuantity("");
+    setIncreaseStockModalOpen(true);
+  };
+
+  const handleDecreaseStockClick = (item) => {
+    setStockItem(item);
+    setStockQuantity("");
+    setDecreaseStockModalOpen(true);
+  };
+
+  const handleIncreaseStock = async () => {
+    if (!stockItem?.id || !stockQuantity || parseInt(stockQuantity) <= 0) {
+      toast.error(t("inventory.invalidQuantity") || "Please enter a valid quantity", {
+        position: "top-right",
+        autoClose: 5000,
+      });
+      return;
+    }
+
+    try {
+      setSaving(true);
+      const requestBody = {
+        amount: parseInt(stockQuantity),
+      };
+
+      const response = await api.put(
+        API_ENDPOINTS.INVENTORY.INCREASE_STOCK(stockItem.id),
+        requestBody
+      );
+
+      if (response && response.status >= 200 && response.status < 300) {
+        toast.success(t("inventory.stockIncreased") || "Stock increased successfully", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+
+        // Refresh inventory items
+        const refreshResponse = await api.get(API_ENDPOINTS.INVENTORY.GET_ALL);
+        if (refreshResponse.data && refreshResponse.data.result && refreshResponse.data.result.items) {
+          const mappedItems = refreshResponse.data.result.items.map((item) => ({
+            id: item.id,
+            productId: item.productId,
+            productName: item.product?.name || "N/A",
+            sku: item.product?.sku || "N/A",
+            quantity: item.quantity || 0,
+            available: item.available || 0,
+            locationId: item.locationId,
+            location: item.location?.location || "N/A",
+            status: getStatusFromQuantity(item.quantity, item.available),
+            lastUpdated: item.lastModifiedOnUtc || item.createdOnUtc,
+          }));
+          setInventoryItems(mappedItems);
+        }
+
+        setIncreaseStockModalOpen(false);
+        setStockItem(null);
+        setStockQuantity("");
+      }
+    } catch (error) {
+      console.error("Failed to increase stock:", error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDecreaseStock = async () => {
+    if (!stockItem?.id || !stockQuantity || parseInt(stockQuantity) <= 0) {
+      toast.error(t("inventory.invalidQuantity") || "Please enter a valid quantity", {
+        position: "top-right",
+        autoClose: 5000,
+      });
+      return;
+    }
+
+    if (parseInt(stockQuantity) > stockItem.available) {
+      toast.error(t("inventory.insufficientStock") || "Insufficient stock", {
+        position: "top-right",
+        autoClose: 5000,
+      });
+      return;
+    }
+
+    try {
+      setSaving(true);
+      const requestBody = {
+        amount: parseInt(stockQuantity),
+      };
+
+      const response = await api.put(
+        API_ENDPOINTS.INVENTORY.DECREASE_STOCK(stockItem.id),
+        requestBody
+      );
+
+      if (response && response.status >= 200 && response.status < 300) {
+        toast.success(t("inventory.stockDecreased") || "Stock decreased successfully", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+
+        // Refresh inventory items
+        const refreshResponse = await api.get(API_ENDPOINTS.INVENTORY.GET_ALL);
+        if (refreshResponse.data && refreshResponse.data.result && refreshResponse.data.result.items) {
+          const mappedItems = refreshResponse.data.result.items.map((item) => ({
+            id: item.id,
+            productId: item.productId,
+            productName: item.product?.name || "N/A",
+            sku: item.product?.sku || "N/A",
+            quantity: item.quantity || 0,
+            available: item.available || 0,
+            locationId: item.locationId,
+            location: item.location?.location || "N/A",
+            status: getStatusFromQuantity(item.quantity, item.available),
+            lastUpdated: item.lastModifiedOnUtc || item.createdOnUtc,
+          }));
+          setInventoryItems(mappedItems);
+        }
+
+        setDecreaseStockModalOpen(false);
+        setStockItem(null);
+        setStockQuantity("");
+      }
+    } catch (error) {
+      console.error("Failed to decrease stock:", error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleEditClick = (item) => {
+    setEditingItem(item);
+    setEditFormData({
+      productId: item.productId,
+      locationId: item.locationId,
+    });
+    setEditModalOpen(true);
+  };
+
+  const handleEditFormChange = (field, value) => {
+    setEditFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingItem?.id || !editFormData.productId || !editFormData.locationId) {
+      toast.error(t("inventory.fillRequiredFields") || "Please fill all required fields", {
+        position: "top-right",
+        autoClose: 5000,
+      });
+      return;
+    }
+
+    try {
+      setSaving(true);
+      const requestBody = {
+        productId: editFormData.productId,
+        locationId: editFormData.locationId,
+      };
+
+      const response = await api.put(
+        API_ENDPOINTS.INVENTORY.UPDATE(editingItem.id),
+        requestBody
+      );
+
+      if (response && response.status >= 200 && response.status < 300) {
+        toast.success(t("inventory.updateSuccess") || "Inventory item updated successfully", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+
+        // Refresh inventory items
+        const refreshResponse = await api.get(API_ENDPOINTS.INVENTORY.GET_ALL);
+        if (refreshResponse.data && refreshResponse.data.result && refreshResponse.data.result.items) {
+          const mappedItems = refreshResponse.data.result.items.map((item) => ({
+            id: item.id,
+            productId: item.productId,
+            productName: item.product?.name || "N/A",
+            sku: item.product?.sku || "N/A",
+            quantity: item.quantity || 0,
+            available: item.available || 0,
+            locationId: item.locationId,
+            location: item.location?.location || "N/A",
+            status: getStatusFromQuantity(item.quantity, item.available),
+            lastUpdated: item.lastModifiedOnUtc || item.createdOnUtc,
+          }));
+          setInventoryItems(mappedItems);
+        }
+
+        setEditModalOpen(false);
+        setEditingItem(null);
+        setEditFormData({ productId: "", locationId: "" });
+      }
+    } catch (error) {
+      console.error("Failed to update inventory item:", error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const COLUMNS = useMemo(() => [
-    {
-      Header: t("inventory.id"),
-      accessor: "id",
-      Cell: (row) => <span className="font-medium">#{row?.cell?.value}</span>,
-    },
     {
       Header: t("inventory.productName"),
       accessor: "productName",
@@ -171,31 +473,44 @@ const InventoryPage = () => {
       ),
     },
     {
-      Header: t("inventory.sku"),
-      accessor: "sku",
-      Cell: (row) => (
-        <span className="font-mono text-sm bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">
-          {row?.cell?.value}
-        </span>
-      ),
-    },
-    {
       Header: t("inventory.quantity"),
       accessor: "quantity",
-      Cell: (row) => (
-        <span className="font-semibold">{row?.cell?.value}</span>
-      ),
+      Cell: (row) => {
+        const item = row?.row?.original;
+        return (
+          <div>
+            <span className="font-semibold">{item.quantity}</span>
+            <span className="text-xs text-slate-400 ml-2">
+              ({t("inventory.available")}: {item.available})
+            </span>
+          </div>
+        );
+      },
     },
     {
-      Header: t("inventory.warehouse"),
-      accessor: "warehouse",
+      Header: t("inventory.location"),
+      accessor: "location",
       Cell: (row) => <span>{row?.cell?.value}</span>,
     },
     {
       Header: t("inventory.status"),
       accessor: "status",
       Cell: (row) => {
-        const status = row?.cell?.value;
+        const item = row?.row?.original;
+        const quantity = item.quantity || 0;
+        const available = item.available || 0;
+        
+        // Determine status based on quantity
+        let status = "in_stock";
+        let statusText = t("inventory.inStock");
+        if (quantity === 0 || available === 0) {
+          status = "out_of_stock";
+          statusText = t("inventory.outOfStock");
+        } else if (available < 10) {
+          status = "low_stock";
+          statusText = t("inventory.lowStock");
+        }
+        
         return (
           <span className="block w-full">
             <span
@@ -208,9 +523,7 @@ const InventoryPage = () => {
               ${status === "out_of_stock" ? "text-danger-500 bg-danger-500/30" : ""}
               `}
             >
-              {status === "in_stock" && t("inventory.inStock")}
-              {status === "low_stock" && t("inventory.lowStock")}
-              {status === "out_of_stock" && t("inventory.outOfStock")}
+              {statusText}
             </span>
           </span>
         );
@@ -232,10 +545,32 @@ const InventoryPage = () => {
                 <Icon icon="heroicons:eye" />
               </button>
             </Tooltip>
+            <Tooltip content={t("inventory.increaseStock")} placement="top" arrow animation="shift-away">
+              <button
+                className="action-btn"
+                type="button"
+                onClick={() => handleIncreaseStockClick(item)}
+              >
+                <Icon icon="heroicons:arrow-up" />
+              </button>
+            </Tooltip>
+            <Tooltip content={t("inventory.decreaseStock")} placement="top" arrow animation="shift-away">
+              <button
+                className="action-btn"
+                type="button"
+                onClick={() => handleDecreaseStockClick(item)}
+              >
+                <Icon icon="heroicons:arrow-down" />
+              </button>
+            </Tooltip>
             <Tooltip content={t("common.edit")} placement="top" arrow animation="shift-away">
-              <Link to={`/edit-inventory/${item?.id}`} className="action-btn">
+              <button
+                className="action-btn"
+                type="button"
+                onClick={() => handleEditClick(item)}
+              >
                 <Icon icon="heroicons:pencil-square" />
-              </Link>
+              </button>
             </Tooltip>
             <Tooltip
               content={t("common.delete")}
@@ -258,7 +593,7 @@ const InventoryPage = () => {
     },
   ], [t]);
 
-  const data = useMemo(() => inventoryData, []);
+  const data = useMemo(() => inventoryItems, [inventoryItems]);
 
   const tableInstance = useTable(
     {
@@ -298,9 +633,12 @@ const InventoryPage = () => {
           <h4 className="card-title">{t("inventory.title")}</h4>
           <div className="md:flex md:space-x-4 md:space-y-0 space-y-2">
             <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} t={t} />
-            <button className="btn btn-dark btn-sm inline-flex items-center">
+            <button 
+              className="btn btn-dark btn-sm inline-flex items-center"
+              onClick={handleAddClick}
+            >
               <Icon icon="heroicons:plus" className="ltr:mr-2 rtl:ml-2" />
-              {t("inventory.import")}
+              {t("inventory.addNew")}
             </button>
           </div>
         </div>
@@ -346,27 +684,44 @@ const InventoryPage = () => {
                   className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700!"
                   {...getTableBodyProps()}
                 >
-                  {page.map((row) => {
-                    prepareRow(row);
-                    const { key: rowKey, ...restRowProps } = row.getRowProps();
-                    return (
-                      <tr key={rowKey} {...restRowProps}>
-                        {row.cells.map((cell) => {
-                          const { key: cellKey, ...restCellProps } =
-                            cell.getCellProps();
-                          return (
-                            <td
-                              key={cellKey}
-                              {...restCellProps}
-                              className="table-td"
-                            >
-                              {cell.render("Cell")}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    );
-                  })}
+                  {loading ? (
+                    <tr>
+                      <td colSpan={headerGroups[0]?.headers?.length || 7} className="table-td text-center py-8">
+                        <div className="flex flex-col items-center justify-center">
+                          <Icon icon="heroicons:arrow-path" className="animate-spin text-2xl text-slate-400 mb-2" />
+                          <span className="text-slate-500 dark:text-slate-400">{t("common.loading") || "Loading..."}</span>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : page.length === 0 ? (
+                    <tr>
+                      <td colSpan={headerGroups[0]?.headers?.length || 7} className="table-td text-center py-8">
+                        <span className="text-slate-500 dark:text-slate-400">{t("inventory.noItems") || "No inventory items found"}</span>
+                      </td>
+                    </tr>
+                  ) : (
+                    page.map((row) => {
+                      prepareRow(row);
+                      const { key: rowKey, ...restRowProps } = row.getRowProps();
+                      return (
+                        <tr key={rowKey} {...restRowProps}>
+                          {row.cells.map((cell) => {
+                            const { key: cellKey, ...restCellProps } =
+                              cell.getCellProps();
+                            return (
+                              <td
+                                key={cellKey}
+                                {...restCellProps}
+                                className="table-td"
+                              >
+                                {cell.render("Cell")}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      );
+                    })
+                  )}
                 </tbody>
               </table>
             </div>
@@ -448,6 +803,256 @@ const InventoryPage = () => {
         </div>
       </Card>
 
+      {/* Add Inventory Item Modal */}
+      <Modal
+        title={t("inventory.addNew")}
+        activeModal={addModalOpen}
+        onClose={() => setAddModalOpen(false)}
+      >
+        <div className="space-y-4">
+          <Select
+            label={t("inventory.product")}
+            placeholder={t("inventory.selectProduct")}
+            options={products}
+            value={addFormData.productId}
+            onChange={(e) => handleAddFormChange("productId", e.target.value)}
+            isLoading={loadingProducts}
+          />
+          <Select
+            label={t("inventory.location")}
+            placeholder={t("inventory.selectLocation")}
+            options={locations}
+            value={addFormData.locationId}
+            onChange={(e) => handleAddFormChange("locationId", e.target.value)}
+            isLoading={loadingLocations}
+          />
+          <Textinput
+            label={t("inventory.quantity")}
+            type="number"
+            placeholder="0"
+            value={addFormData.quantity}
+            onChange={(e) => handleAddFormChange("quantity", e.target.value)}
+          />
+          <div className="flex justify-end space-x-3">
+            <button
+              className="btn btn-outline-dark inline-flex items-center"
+              onClick={() => setAddModalOpen(false)}
+            >
+              {t("common.cancel")}
+            </button>
+            <button
+              className="btn btn-dark inline-flex items-center"
+              onClick={handleSaveAdd}
+              disabled={saving}
+            >
+              {saving ? (
+                <>
+                  <Icon icon="heroicons:arrow-path" className="ltr:mr-2 rtl:ml-2 animate-spin" />
+                  {t("common.loading")}
+                </>
+              ) : (
+                <>
+                  <Icon icon="heroicons:check" className="ltr:mr-2 rtl:ml-2" />
+                  {t("common.save")}
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Increase Stock Modal */}
+      <Modal
+        title={t("inventory.increaseStock")}
+        activeModal={increaseStockModalOpen}
+        onClose={() => {
+          setIncreaseStockModalOpen(false);
+          setStockItem(null);
+          setStockQuantity("");
+        }}
+      >
+        <div className="space-y-4">
+          {stockItem && (
+            <div className="bg-slate-100 dark:bg-slate-700 p-3 rounded">
+              <p className="text-sm text-slate-600 dark:text-slate-300">
+                {t("inventory.product")}: <span className="font-semibold">{stockItem.productName}</span>
+              </p>
+              <p className="text-sm text-slate-600 dark:text-slate-300">
+                {t("inventory.currentStock")}: <span className="font-semibold">{stockItem.quantity}</span>
+              </p>
+            </div>
+          )}
+          <Textinput
+            label={t("inventory.quantity")}
+            type="number"
+            placeholder="0"
+            value={stockQuantity}
+            onChange={(e) => setStockQuantity(e.target.value)}
+          />
+          <div className="flex justify-end space-x-3">
+            <button
+              className="btn btn-outline-dark inline-flex items-center"
+              onClick={() => {
+                setIncreaseStockModalOpen(false);
+                setStockItem(null);
+                setStockQuantity("");
+              }}
+            >
+              {t("common.cancel")}
+            </button>
+            <button
+              className="btn btn-dark inline-flex items-center"
+              onClick={handleIncreaseStock}
+              disabled={saving}
+            >
+              {saving ? (
+                <>
+                  <Icon icon="heroicons:arrow-path" className="ltr:mr-2 rtl:ml-2 animate-spin" />
+                  {t("common.loading")}
+                </>
+              ) : (
+                <>
+                  <Icon icon="heroicons:check" className="ltr:mr-2 rtl:ml-2" />
+                  {t("common.save")}
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Decrease Stock Modal */}
+      <Modal
+        title={t("inventory.decreaseStock")}
+        activeModal={decreaseStockModalOpen}
+        onClose={() => {
+          setDecreaseStockModalOpen(false);
+          setStockItem(null);
+          setStockQuantity("");
+        }}
+      >
+        <div className="space-y-4">
+          {stockItem && (
+            <div className="bg-slate-100 dark:bg-slate-700 p-3 rounded">
+              <p className="text-sm text-slate-600 dark:text-slate-300">
+                {t("inventory.product")}: <span className="font-semibold">{stockItem.productName}</span>
+              </p>
+              <p className="text-sm text-slate-600 dark:text-slate-300">
+                {t("inventory.currentStock")}: <span className="font-semibold">{stockItem.quantity}</span>
+              </p>
+              <p className="text-sm text-slate-600 dark:text-slate-300">
+                {t("inventory.available")}: <span className="font-semibold">{stockItem.available}</span>
+              </p>
+            </div>
+          )}
+          <Textinput
+            label={t("inventory.quantity")}
+            type="number"
+            placeholder="0"
+            value={stockQuantity}
+            onChange={(e) => setStockQuantity(e.target.value)}
+          />
+          <div className="flex justify-end space-x-3">
+            <button
+              className="btn btn-outline-dark inline-flex items-center"
+              onClick={() => {
+                setDecreaseStockModalOpen(false);
+                setStockItem(null);
+                setStockQuantity("");
+              }}
+            >
+              {t("common.cancel")}
+            </button>
+            <button
+              className="btn btn-dark inline-flex items-center"
+              onClick={handleDecreaseStock}
+              disabled={saving}
+            >
+              {saving ? (
+                <>
+                  <Icon icon="heroicons:arrow-path" className="ltr:mr-2 rtl:ml-2 animate-spin" />
+                  {t("common.loading")}
+                </>
+              ) : (
+                <>
+                  <Icon icon="heroicons:check" className="ltr:mr-2 rtl:ml-2" />
+                  {t("common.save")}
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Edit Inventory Item Modal */}
+      <Modal
+        title={t("inventory.editItem")}
+        activeModal={editModalOpen}
+        onClose={() => {
+          setEditModalOpen(false);
+          setEditingItem(null);
+          setEditFormData({ productId: "", locationId: "" });
+        }}
+      >
+        <div className="space-y-4">
+          {editingItem && (
+            <div className="bg-slate-100 dark:bg-slate-700 p-3 rounded">
+              <p className="text-sm text-slate-600 dark:text-slate-300">
+                {t("inventory.currentProduct")}: <span className="font-semibold">{editingItem.productName}</span>
+              </p>
+              <p className="text-sm text-slate-600 dark:text-slate-300">
+                {t("inventory.currentLocation")}: <span className="font-semibold">{editingItem.location}</span>
+              </p>
+            </div>
+          )}
+          <Select
+            label={t("inventory.product")}
+            placeholder={t("inventory.selectProduct")}
+            options={products}
+            value={editFormData.productId}
+            onChange={(e) => handleEditFormChange("productId", e.target.value)}
+            isLoading={loadingProducts}
+          />
+          <Select
+            label={t("inventory.location")}
+            placeholder={t("inventory.selectLocation")}
+            options={locations}
+            value={editFormData.locationId}
+            onChange={(e) => handleEditFormChange("locationId", e.target.value)}
+            isLoading={loadingLocations}
+          />
+          <div className="flex justify-end space-x-3">
+            <button
+              className="btn btn-outline-dark inline-flex items-center"
+              onClick={() => {
+                setEditModalOpen(false);
+                setEditingItem(null);
+                setEditFormData({ productId: "", locationId: "" });
+              }}
+            >
+              {t("common.cancel")}
+            </button>
+            <button
+              className="btn btn-dark inline-flex items-center"
+              onClick={handleSaveEdit}
+              disabled={saving}
+            >
+              {saving ? (
+                <>
+                  <Icon icon="heroicons:arrow-path" className="ltr:mr-2 rtl:ml-2 animate-spin" />
+                  {t("common.loading")}
+                </>
+              ) : (
+                <>
+                  <Icon icon="heroicons:check" className="ltr:mr-2 rtl:ml-2" />
+                  {t("common.save")}
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </Modal>
+
       {/* View Inventory Detail Modal */}
       <Modal
         title={t("inventory.viewDetail")}
@@ -476,6 +1081,12 @@ const InventoryPage = () => {
                 </p>
               </div>
               <div className="space-y-1">
+                <p className="text-sm text-slate-500">{t("inventory.available")}</p>
+                <p className="text-2xl font-bold text-slate-800 dark:text-slate-200">
+                  {viewingItem.available}
+                </p>
+              </div>
+              <div className="space-y-1">
                 <p className="text-sm text-slate-500">{t("inventory.status")}</p>
                 <span
                   className={`inline-block px-3 py-1 rounded-full text-sm ${
@@ -496,21 +1107,9 @@ const InventoryPage = () => {
             <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <p className="text-sm text-slate-500">{t("inventory.warehouse")}</p>
-                  <p className="font-medium text-slate-800 dark:text-slate-200">
-                    {viewingItem.warehouse}
-                  </p>
-                </div>
-                <div className="space-y-1">
                   <p className="text-sm text-slate-500">{t("inventory.location")}</p>
                   <p className="font-medium text-slate-800 dark:text-slate-200">
                     {viewingItem.location || "-"}
-                  </p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm text-slate-500">{t("inventory.minQuantity")}</p>
-                  <p className="font-medium text-slate-800 dark:text-slate-200">
-                    {viewingItem.minQuantity}
                   </p>
                 </div>
                 <div className="space-y-1">
@@ -532,13 +1131,16 @@ const InventoryPage = () => {
               >
                 {t("common.close")}
               </button>
-              <Link
-                to={`/edit-inventory/${viewingItem.id}`}
+              <button
                 className="btn btn-dark inline-flex items-center"
+                onClick={() => {
+                  setViewModalOpen(false);
+                  handleEditClick(viewingItem);
+                }}
               >
                 <Icon icon="heroicons:pencil-square" className="ltr:mr-2 rtl:ml-2" />
                 {t("common.edit")}
-              </Link>
+              </button>
             </div>
           </div>
         )}
@@ -578,9 +1180,19 @@ const InventoryPage = () => {
             <button
               className="btn btn-danger inline-flex items-center"
               onClick={confirmDelete}
+              disabled={deleting}
             >
-              <Icon icon="heroicons:trash" className="ltr:mr-2 rtl:ml-2" />
-              {t("common.delete")}
+              {deleting ? (
+                <>
+                  <Icon icon="heroicons:arrow-path" className="ltr:mr-2 rtl:ml-2 animate-spin" />
+                  {t("common.loading")}
+                </>
+              ) : (
+                <>
+                  <Icon icon="heroicons:trash" className="ltr:mr-2 rtl:ml-2" />
+                  {t("common.delete")}
+                </>
+              )}
             </button>
           </div>
         </div>

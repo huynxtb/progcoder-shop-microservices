@@ -28,6 +28,9 @@ public static class DependencyInjection
             config.AddOpenBehavior(typeof(LoggingBehavior<,>));
         });
         services.AddFeatureManagement();
+        
+        // Register all AutoMapper profiles from the current assembly
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
         return services;
     }

@@ -20,7 +20,7 @@ public sealed class MarkAsRead : ICarterModule
         app.MapPost(ApiRoutes.Notification.MarkAsRead, HandleMarkAsReadAsync)
             .WithTags(ApiRoutes.Notification.Tags)
             .WithName(nameof(MarkAsRead))
-            .Produces<Guid>(StatusCodes.Status200OK)
+            .Produces<ApiUpdatedResponse<Guid>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
@@ -30,7 +30,7 @@ public sealed class MarkAsRead : ICarterModule
 
     #region Methods
 
-    private async Task<Guid> HandleMarkAsReadAsync(
+    private async Task<ApiUpdatedResponse<Guid>> HandleMarkAsReadAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
         [FromRoute] Guid notificationId)
@@ -38,7 +38,8 @@ public sealed class MarkAsRead : ICarterModule
         var currentUser = httpContext.GetCurrentUser();
         var command = new MarkAsReadNotificationCommand(notificationId, Actor.User(currentUser.Id));
         var result = await sender.Send(command);
-        return result;
+
+        return new ApiUpdatedResponse<Guid>(result);
     }
 
     #endregion

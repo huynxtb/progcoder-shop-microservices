@@ -1,5 +1,6 @@
 #region using
 
+using Common.Models.Reponses;
 using Order.Api.Constants;
 using Order.Application.CQRS.Order.Queries;
 using Order.Application.Models.Filters;
@@ -18,7 +19,7 @@ public sealed class GetAllOrders : ICarterModule
         app.MapGet(ApiRoutes.Order.GetAllOrders, HandleGetAllOrdersAsync)
             .WithTags(ApiRoutes.Order.Tags)
             .WithName(nameof(GetAllOrders))
-            .Produces<GetAllOrdersResult>(StatusCodes.Status200OK)
+            .Produces<ApiGetResponse<GetAllOrdersResult>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .RequireAuthorization();
@@ -28,13 +29,14 @@ public sealed class GetAllOrders : ICarterModule
 
     #region Methods
 
-    private async Task<GetAllOrdersResult> HandleGetAllOrdersAsync(
+    private async Task<ApiGetResponse<GetAllOrdersResult>> HandleGetAllOrdersAsync(
         ISender sender,
         [AsParameters] GetAllOrdersFilter filter)
     {
         var query = new GetAllOrdersQuery(filter);
+        var result = await sender.Send(query);
 
-        return await sender.Send(query);
+        return new ApiGetResponse<GetAllOrdersResult>(result);
     }
 
     #endregion

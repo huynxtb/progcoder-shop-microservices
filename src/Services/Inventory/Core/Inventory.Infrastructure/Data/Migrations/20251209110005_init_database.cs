@@ -32,46 +32,19 @@ namespace Inventory.Infrastructure.Data.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "inventory_items",
+                name: "locations",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "char(36)", nullable: false),
-                    quantity = table.Column<int>(type: "int", nullable: false),
-                    reserved = table.Column<int>(type: "int", nullable: false),
-                    location_address = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
-                    product_id = table.Column<Guid>(type: "char(50)", maxLength: 50, nullable: false),
-                    product_name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
-                    created_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: false),
-                    created_by = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    last_modified_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
-                    last_modified_by = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
+                    location = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
+                    CreatedOnUtc = table.Column<DateTimeOffset>(type: "datetime", nullable: false),
+                    CreatedBy = table.Column<string>(type: "longtext", nullable: true),
+                    LastModifiedOnUtc = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "longtext", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_inventory_items", x => x.id);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "inventory_reservations",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "char(36)", nullable: false),
-                    reference_id = table.Column<Guid>(type: "char(36)", nullable: false),
-                    quantity = table.Column<long>(type: "bigint", nullable: false),
-                    expires_at = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
-                    status = table.Column<int>(type: "int", nullable: false),
-                    location_address = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
-                    product_id = table.Column<Guid>(type: "char(50)", maxLength: 50, nullable: false),
-                    product_name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    created_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: false),
-                    created_by = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    last_modified_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
-                    last_modified_by = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_inventory_reservations", x => x.id);
+                    table.PrimaryKey("PK_locations", x => x.id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -96,10 +69,76 @@ namespace Inventory.Infrastructure.Data.Migrations
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "inventory_items",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    quantity = table.Column<int>(type: "int", nullable: false),
+                    reserved = table.Column<int>(type: "int", nullable: false),
+                    location_id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    product_id = table.Column<Guid>(type: "char(50)", maxLength: 50, nullable: false),
+                    product_name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
+                    created_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: false),
+                    created_by = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    last_modified_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
+                    last_modified_by = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_inventory_items", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_inventory_items_locations_location_id",
+                        column: x => x.location_id,
+                        principalTable: "locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "inventory_reservations",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    reference_id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    quantity = table.Column<long>(type: "bigint", nullable: false),
+                    expires_at = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
+                    status = table.Column<int>(type: "int", nullable: false),
+                    location_id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    product_id = table.Column<Guid>(type: "char(50)", maxLength: 50, nullable: false),
+                    product_name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    created_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: false),
+                    created_by = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    last_modified_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
+                    last_modified_by = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_inventory_reservations", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_inventory_reservations_locations_location_id",
+                        column: x => x.location_id,
+                        principalTable: "locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
             migrationBuilder.CreateIndex(
                 name: "IX_inventory_histories_inventory_item_id_changed_at",
                 table: "inventory_histories",
                 columns: new[] { "inventory_item_id", "changed_at" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_inventory_items_location_id",
+                table: "inventory_items",
+                column: "location_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_inventory_reservations_location_id",
+                table: "inventory_reservations",
+                column: "location_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_inventory_reservations_reference_id",
@@ -161,6 +200,9 @@ namespace Inventory.Infrastructure.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "outbox_messages");
+
+            migrationBuilder.DropTable(
+                name: "locations");
         }
     }
 }

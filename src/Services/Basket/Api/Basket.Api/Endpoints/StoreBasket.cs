@@ -19,7 +19,7 @@ public sealed class StoreBasket : ICarterModule
         app.MapPost(ApiRoutes.Basket.StoreBasket, HandleStoreBasketAsync)
             .WithTags(ApiRoutes.Basket.Tags)
             .WithName(nameof(StoreBasket))
-            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status200OK)
+            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .DisableAntiforgery()

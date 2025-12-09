@@ -67,14 +67,14 @@ public sealed class InventoryReservationConfiguration : IEntityTypeConfiguration
                     .IsRequired();
             });
 
-        builder.ComplexProperty(
-            o => o.Location, nameBuilder =>
-            {
-                nameBuilder.Property(n => n.Address)
-                    .HasColumnName("location_address")
-                    .HasMaxLength(255)
-                    .IsRequired();
-            });
+        builder.Property(x => x.LocationId)
+            .HasColumnName("location_id")
+            .IsRequired();
+
+        builder.HasOne(x => x.Location)
+            .WithMany()
+            .HasForeignKey(x => x.LocationId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasIndex(x => new { x.ReferenceId });
         builder.HasIndex(x => new { x.Status, x.ExpiresAt });

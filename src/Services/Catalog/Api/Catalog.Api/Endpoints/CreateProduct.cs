@@ -27,7 +27,7 @@ public sealed class CreateProduct : ICarterModule
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(CreateProduct))
             .WithMultipartForm<CreateProductRequest>()
-            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status200OK)
+            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .DisableAntiforgery()

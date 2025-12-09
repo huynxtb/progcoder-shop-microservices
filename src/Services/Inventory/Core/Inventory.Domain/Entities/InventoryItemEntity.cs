@@ -24,22 +24,23 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
 
     public int Available => Quantity - Reserved;
 
-    public Location Location { get; set; } = default!;
+    public Guid LocationId { get; set; }
+
+    public LocationEntity Location { get; set; } = default!;
 
     #endregion
 
     #region Factories
 
-    public static InventoryItemEntity Create(
-        Guid id,
+    public static InventoryItemEntity Create(Guid id,
         Guid productId,
         string productName,
-        string location,
+        Guid locationId,
         string performedBy,
         int quantity = 0)
     {
         if (quantity < 0) throw new ArgumentOutOfRangeException(nameof(quantity));
-        if (string.IsNullOrWhiteSpace(location)) throw new ArgumentNullException(nameof(location));
+        if (locationId == Guid.Empty) throw new ArgumentException(nameof(locationId));
 
         var entity = new InventoryItemEntity
         {
@@ -47,22 +48,37 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
             Product = Product.Of(productId, productName),
             Quantity = quantity,
             Reserved = 0,
+            LocationId = locationId,
             CreatedBy = performedBy,
-            LastModifiedBy = performedBy,
-            Location = Location.Of(location)
+            LastModifiedBy = performedBy
         };
+        
         entity.AddDomainEvent(new StockChangedDomainEvent(id,
             productId,
             quantity,
             quantity,
             InventoryChangeType.Init,
             InventorySource.ManualAdjustment.GetDescription()));
+
         return entity;
     }
 
     #endregion
 
     #region Methods
+
+    public void Update(Guid locationId, 
+        string performedBy, 
+        Guid productId,
+        string productName)
+    {
+        if (locationId == Guid.Empty) throw new ArgumentException(nameof(locationId));
+
+        Product = Product.Of(productId, productName);
+        LocationId = locationId;
+        LastModifiedBy = performedBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+    }
 
     public void Increase(
         int amount,

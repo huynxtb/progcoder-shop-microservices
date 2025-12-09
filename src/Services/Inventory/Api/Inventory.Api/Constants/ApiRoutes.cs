@@ -12,13 +12,38 @@ public sealed class ApiRoutes
 
         public const string GetInventoryItems = Base;
 
+        public const string GetAllInventoryItems = $"{Base}/all";
+
         public const string Create = Base;
 
         public const string DecreaseStock = $"{Base}/{{inventoryItemId}}/stock/decrease";
 
         public const string IncreaseStock = $"{Base}/{{inventoryItemId}}/stock/increase";
 
+        public const string Update = $"{Base}/{{inventoryItemId}}";
+
         public const string Delete = $"{Base}/{{inventoryItemId}}";
+
+        #endregion
+    }
+
+    public static class Location
+    {
+        #region Constants
+
+        public const string Tags = "Locations";
+
+        private const string Base = "/locations";
+
+        public const string GetAll = Base;
+
+        public const string GetById = $"{Base}/{{locationId}}";
+
+        public const string Create = Base;
+
+        public const string Update = $"{Base}/{{locationId}}";
+
+        public const string Delete = $"{Base}/{{locationId}}";
 
         #endregion
     }

@@ -82,6 +82,10 @@ namespace Inventory.Infrastructure.Data.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("last_modified_on_utc");
 
+                    b.Property<Guid>("LocationId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("location_id");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int")
                         .HasColumnName("quantity");
@@ -89,17 +93,6 @@ namespace Inventory.Infrastructure.Data.Migrations
                     b.Property<int>("Reserved")
                         .HasColumnType("int")
                         .HasColumnName("reserved");
-
-                    b.ComplexProperty<Dictionary<string, object>>("Location", "Inventory.Domain.Entities.InventoryItemEntity.Location#Location", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("Address")
-                                .IsRequired()
-                                .HasMaxLength(255)
-                                .HasColumnType("varchar(255)")
-                                .HasColumnName("location_address");
-                        });
 
                     b.ComplexProperty<Dictionary<string, object>>("Product", "Inventory.Domain.Entities.InventoryItemEntity.Product#Product", b1 =>
                         {
@@ -118,6 +111,8 @@ namespace Inventory.Infrastructure.Data.Migrations
                         });
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LocationId");
 
                     b.ToTable("inventory_items", (string)null);
                 });
@@ -152,6 +147,10 @@ namespace Inventory.Infrastructure.Data.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("last_modified_on_utc");
 
+                    b.Property<Guid>("LocationId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("location_id");
+
                     b.Property<long>("Quantity")
                         .HasColumnType("bigint")
                         .HasColumnName("quantity");
@@ -163,17 +162,6 @@ namespace Inventory.Infrastructure.Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int")
                         .HasColumnName("status");
-
-                    b.ComplexProperty<Dictionary<string, object>>("Location", "Inventory.Domain.Entities.InventoryReservationEntity.Location#Location", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("Address")
-                                .IsRequired()
-                                .HasMaxLength(255)
-                                .HasColumnType("varchar(255)")
-                                .HasColumnName("location_address");
-                        });
 
                     b.ComplexProperty<Dictionary<string, object>>("Product", "Inventory.Domain.Entities.InventoryReservationEntity.Product#Product", b1 =>
                         {
@@ -193,11 +181,43 @@ namespace Inventory.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("LocationId");
+
                     b.HasIndex("ReferenceId");
 
                     b.HasIndex("Status", "ExpiresAt");
 
                     b.ToTable("inventory_reservations", (string)null);
+                });
+
+            modelBuilder.Entity("Inventory.Domain.Entities.LocationEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTimeOffset>("CreatedOnUtc")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTimeOffset?>("LastModifiedOnUtc")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("location");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("locations", (string)null);
                 });
 
             modelBuilder.Entity("Inventory.Domain.Entities.OutboxMessageEntity", b =>
@@ -266,6 +286,28 @@ namespace Inventory.Infrastructure.Data.Migrations
                     b.HasIndex("ProcessedOnUtc", "AttemptCount", "MaxAttempts");
 
                     b.ToTable("outbox_messages", (string)null);
+                });
+
+            modelBuilder.Entity("Inventory.Domain.Entities.InventoryItemEntity", b =>
+                {
+                    b.HasOne("Inventory.Domain.Entities.LocationEntity", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("Inventory.Domain.Entities.InventoryReservationEntity", b =>
+                {
+                    b.HasOne("Inventory.Domain.Entities.LocationEntity", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Location");
                 });
 #pragma warning restore 612, 618
         }

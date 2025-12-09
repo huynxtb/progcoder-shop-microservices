@@ -2,6 +2,7 @@
 
 using BuildingBlocks.Abstractions.ValueObjects;
 using BuildingBlocks.Authentication.Extensions;
+using Common.Models.Reponses;
 using Microsoft.AspNetCore.Mvc;
 using Order.Api.Constants;
 using Order.Application.CQRS.Order.Commands;
@@ -20,7 +21,7 @@ public sealed class CreateOrder : ICarterModule
         app.MapPost(ApiRoutes.Order.Create, HandleCreateOrderAsync)
             .WithTags(ApiRoutes.Order.Tags)
             .WithName(nameof(CreateOrder))
-            .Produces<Guid>(StatusCodes.Status200OK)
+            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
@@ -34,14 +35,16 @@ public sealed class CreateOrder : ICarterModule
 
     #region Methods
 
-    private async Task<Guid> HandleCreateOrderAsync(
+    private async Task<ApiCreatedResponse<Guid>> HandleCreateOrderAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
         [FromBody] CreateOrUpdateOrderDto dto)
     {
         var currentUser = httpContext.GetCurrentUser();
         var command = new CreateOrderCommand(dto, Actor.User(currentUser.Email));
-        return await sender.Send(command);
+        var result = await sender.Send(command);
+
+        return new ApiCreatedResponse<Guid>(result);
     }
 
     #endregion

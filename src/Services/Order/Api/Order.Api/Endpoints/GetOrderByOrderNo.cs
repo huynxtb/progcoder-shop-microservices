@@ -1,5 +1,6 @@
 #region using
 
+using Common.Models.Reponses;
 using Order.Api.Constants;
 using Order.Application.CQRS.Order.Queries;
 using Order.Application.Models.Results;
@@ -18,7 +19,7 @@ public sealed class GetOrderByOrderNo : ICarterModule
         app.MapGet(ApiRoutes.Order.GetOrderByOrderNo, HandleGetOrderByOrderNoAsync)
             .WithTags(ApiRoutes.Order.Tags)
             .WithName(nameof(GetOrderByOrderNo))
-            .Produces<GetOrderByOrderNoResult>(StatusCodes.Status200OK)
+            .Produces<ApiGetResponse<GetOrderByOrderNoResult>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -29,13 +30,14 @@ public sealed class GetOrderByOrderNo : ICarterModule
 
     #region Methods
 
-    private async Task<GetOrderByOrderNoResult> HandleGetOrderByOrderNoAsync(
+    private async Task<ApiGetResponse<GetOrderByOrderNoResult>> HandleGetOrderByOrderNoAsync(
         ISender sender,
         [FromRoute] string orderNo)
     {
         var query = new GetOrderByOrderNoQuery(orderNo);
+        var result = await sender.Send(query);
 
-        return await sender.Send(query);
+        return new ApiGetResponse<GetOrderByOrderNoResult>(result);
     }
 
     #endregion

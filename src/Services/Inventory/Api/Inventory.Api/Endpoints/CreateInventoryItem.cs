@@ -21,7 +21,7 @@ public sealed class CreateInventoryItem : ICarterModule
         app.MapPost(ApiRoutes.InventoryItem.Create, HandleCreateInventoryItemAsync)
             .WithTags(ApiRoutes.InventoryItem.Tags)
             .WithName(nameof(CreateInventoryItem))
-            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status200OK)
+            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();

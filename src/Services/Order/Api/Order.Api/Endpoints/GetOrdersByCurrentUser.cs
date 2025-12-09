@@ -1,12 +1,13 @@
 ﻿#region using
 
 using BuildingBlocks.Pagination;
+using BuildingBlocks.Abstractions.ValueObjects;
+using BuildingBlocks.Authentication.Extensions;
+using Common.Models.Reponses;
 using Order.Api.Constants;
 using Order.Application.CQRS.Order.Queries;
 using Order.Application.Models.Filters;
 using Order.Application.Models.Results;
-using BuildingBlocks.Abstractions.ValueObjects;
-using BuildingBlocks.Authentication.Extensions;
 
 #endregion
 
@@ -21,7 +22,7 @@ public sealed class GetOrdersByCurrentUser : ICarterModule
         app.MapGet(ApiRoutes.Order.GetOrdersByCurrentUser, HandleGetOrdersByCurrentUserAsync)
             .WithTags(ApiRoutes.Order.Tags)
             .WithName(nameof(GetOrdersByCurrentUser))
-            .Produces<GetOrdersByCurrentUserResult>(StatusCodes.Status200OK)
+            .Produces<ApiGetResponse<GetOrdersByCurrentUserResult>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .RequireAuthorization();
@@ -31,7 +32,7 @@ public sealed class GetOrdersByCurrentUser : ICarterModule
 
     #region Methods
 
-    private async Task<GetOrdersByCurrentUserResult> HandleGetOrdersByCurrentUserAsync(
+    private async Task<ApiGetResponse<GetOrdersByCurrentUserResult>> HandleGetOrdersByCurrentUserAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
         [AsParameters] GetOrdersByCurrentUserFilter filter,
@@ -39,8 +40,9 @@ public sealed class GetOrdersByCurrentUser : ICarterModule
     {
         var currentUser = httpContext.GetCurrentUser();
         var query = new GetOrdersByCurrentUserQuery(filter, paging, Actor.User(currentUser.Id));
+        var result = await sender.Send(query);
 
-        return await sender.Send(query);
+        return new ApiGetResponse<GetOrdersByCurrentUserResult>(result);
     }
 
     #endregion

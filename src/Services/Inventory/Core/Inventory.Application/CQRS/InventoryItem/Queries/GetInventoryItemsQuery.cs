@@ -1,5 +1,6 @@
 ﻿#region using
 
+using AutoMapper;
 using BuildingBlocks.Pagination.Extensions;
 using Inventory.Application.Data;
 using Inventory.Application.Dtos.InventoryItems;
@@ -15,7 +16,7 @@ public sealed record GetInventoryItemsQuery(
     GetInventoryItemsFilter Filter,
     PaginationRequest Paging) : IQuery<GetInventoryItemsResult>;
 
-public sealed class GetInventoryItemsQueryHandler(IApplicationDbContext dbContext)
+public sealed class GetInventoryItemsQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
     : IQueryHandler<GetInventoryItemsQuery, GetInventoryItemsResult>
 {
     #region Implementations
@@ -27,9 +28,10 @@ public sealed class GetInventoryItemsQueryHandler(IApplicationDbContext dbContex
 
         var filteredQuery = dbContext.InventoryItems
             .AsNoTracking()
+            .Include(x => x.Location)
             .Where(x => string.IsNullOrEmpty(filter.SearchText) || 
                     x.Product.Name!.Contains(filter.SearchText) ||
-                    x.Location.Address!.Contains(filter.SearchText));
+                    x.Location.Location!.Contains(filter.SearchText));
 
         var totalCount = await filteredQuery.CountAsync(cancellationToken);
         var result = await filteredQuery
@@ -37,7 +39,7 @@ public sealed class GetInventoryItemsQueryHandler(IApplicationDbContext dbContex
             .WithPaging(query.Paging)
             .ToListAsync(cancellationToken);
 
-        var items = result.Adapt<List<InventoryItemDto>>();
+        var items = mapper.Map<List<InventoryItemDto>>(result);
         var reponse = new GetInventoryItemsResult(items, totalCount, paging);
 
         return reponse;

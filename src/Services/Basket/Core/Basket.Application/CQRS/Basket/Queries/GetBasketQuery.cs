@@ -1,5 +1,6 @@
 ﻿#region using
 
+using AutoMapper;
 using Basket.Application.Dtos.Baskets;
 using Basket.Application.Models.Results;
 using Basket.Application.Repositories;
@@ -10,7 +11,7 @@ namespace Basket.Application.CQRS.Basket.Queries;
 
 public sealed record GetBasketQuery(string UserId) : IQuery<GetBasketResult>;
 
-public sealed class GetBasketQueryHandler(IBasketRepository repository) : IQueryHandler<GetBasketQuery, GetBasketResult>
+public sealed class GetBasketQueryHandler(IBasketRepository repository, IMapper mapper) : IQueryHandler<GetBasketQuery, GetBasketResult>
 {
     #region Implementations
 
@@ -18,7 +19,7 @@ public sealed class GetBasketQueryHandler(IBasketRepository repository) : IQuery
     {
         var basket = await repository.GetBasketAsync(query.UserId, cancellationToken);
 
-        var result = basket.Adapt<ShoppingCartDto>();
+        var result = mapper.Map<ShoppingCartDto>(basket);
         var response = new GetBasketResult(result);
 
         return response;

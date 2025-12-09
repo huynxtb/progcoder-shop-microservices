@@ -19,7 +19,7 @@ public sealed class CreateCategory : ICarterModule
         app.MapPost(ApiRoutes.Category.Create, HandleCreateCategoryAsync)
             .WithTags(ApiRoutes.Category.Tags)
             .WithName(nameof(CreateCategory))
-            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status200OK)
+            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .RequireAuthorization();
     }

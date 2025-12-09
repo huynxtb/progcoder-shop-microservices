@@ -4,7 +4,9 @@ public class LocationDto
 {
     #region Fields, Properties and Indexers
 
-    public string? Address { get; set; }
+    public Guid Id { get; set; }
+
+    public string? Location { get; set; }
 
     #endregion
 }

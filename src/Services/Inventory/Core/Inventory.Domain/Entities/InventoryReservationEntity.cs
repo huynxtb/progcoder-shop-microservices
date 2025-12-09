@@ -24,7 +24,9 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
 
     public ReservationStatus Status { get; set; }
 
-    public Location Location { get; set; } = default!;
+    public Guid LocationId { get; set; }
+
+    public LocationEntity Location { get; set; } = default!;
 
     #endregion
 
@@ -35,17 +37,20 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
         Guid productId,
         string productName,
         Guid referenceId,
+        Guid locationId,
         long quantity,
         DateTimeOffset? expiresAt,
         string performedBy)
     {
         if (quantity <= 0) throw new ArgumentOutOfRangeException(nameof(quantity));
+        if (locationId == Guid.Empty) throw new ArgumentException("LocationId cannot be empty", nameof(locationId));
 
         var entity = new InventoryReservationEntity
         {
             Id = id,
             Product = Product.Of(productId, productName),
             ReferenceId = referenceId,
+            LocationId = locationId,
             Quantity = quantity,
             ExpiresAt = expiresAt,
             CreatedBy = performedBy,

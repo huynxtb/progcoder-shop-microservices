@@ -34,7 +34,7 @@ public sealed class CreateInventoryItemCommandValidator : AbstractValidator<Crea
                     .GreaterThan(0)
                     .WithMessage(MessageCode.QuantityCannotBeNegative);
 
-                RuleFor(x => x.Dto.Location)
+                RuleFor(x => x.Dto.LocationId)
                     .NotEmpty()
                     .WithMessage(MessageCode.LocationIsRequired);
             });
@@ -65,7 +65,7 @@ public sealed class CreateInventoryItemCommandHandler(
         await AddInventoryItemAsync(inventoryItemId,
             productByGrpc.Product.Id,
             productByGrpc.Product.Name!,
-            dto.Location!, 
+            dto.LocationId, 
             dto.Quantity, 
             command.Actor);
         await dbContext.SaveChangesAsync(cancellationToken);
@@ -81,7 +81,7 @@ public sealed class CreateInventoryItemCommandHandler(
         Guid inventoryItemId, 
         Guid productId, 
         string productName, 
-        string location, 
+        Guid locationId, 
         int qty, 
         Actor actor)
     {
@@ -89,7 +89,7 @@ public sealed class CreateInventoryItemCommandHandler(
             id: inventoryItemId,
             productId: productId,
             productName: productName,
-            location: location,
+            locationId: locationId,
             quantity: qty,
             performedBy: actor.ToString());
 

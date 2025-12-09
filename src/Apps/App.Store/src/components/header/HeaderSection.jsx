@@ -1,11 +1,14 @@
 import React, { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { FarzaaContext } from "../../context/FarzaaContext";
 import { Link } from "react-router-dom";
 import HeaderNav from "../navigation/HeaderNav";
 import WishlistModal from "../modal/WishlistModal";
 import CartModal from "../modal/CartModal";
+import LanguageSwitcher from "../language/LanguageSwitcher";
 
 const HeaderSection = () => {
+  const { t } = useTranslation();
   const {
     isHeaderFixed,
     handleWishlistShow,
@@ -33,7 +36,7 @@ const HeaderSection = () => {
             </div>
 
             <div className="col-lg-4 col-md-6">
-              <h6>SALE: 400+ products up to 70% off. Shop Now</h6>
+              <h6>{t("header.topSale")}</h6>
             </div>
 
             <div className="col-lg-4 col-md-6">
@@ -60,12 +63,7 @@ const HeaderSection = () => {
                   <option value="Rupee">Rupee</option>
                 </select>
 
-                <select name="language" id="top-header-language-dropdown">
-                  <option value="English">English</option>
-                  <option value="Bangla">Bangla</option>
-                  <option value="French">French</option>
-                  <option value="Hindi">Hindi</option>
-                </select>
+                <LanguageSwitcher />
               </div>
             </div>
           </div>
@@ -103,7 +101,7 @@ const HeaderSection = () => {
                     type="text"
                     name="search"
                     id="bottom-header-search-input"
-                    placeholder="Search keyword"
+                    placeholder={t("header.searchPlaceholder")}
                   />
                   <button type="submit">
                     <i className="fa-regular fa-magnifying-glass"></i>

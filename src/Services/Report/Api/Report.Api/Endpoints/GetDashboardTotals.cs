@@ -1,9 +1,10 @@
 #region using
 
+using BuildingBlocks.Authentication.Extensions;
+using Common.Models.Reponses;
 using Report.Api.Constants;
 using Report.Application.CQRS.DashboardTotal.Queries;
 using Report.Application.Models.Results;
-using BuildingBlocks.Authentication.Extensions;
 
 #endregion
 
@@ -18,7 +19,7 @@ public sealed class GetDashboardTotals : ICarterModule
         app.MapGet(ApiRoutes.DashboardTotal.GetDashboardTotals, HandleGetDashboardTotalsAsync)
             .WithTags(ApiRoutes.DashboardTotal.Tags)
             .WithName(nameof(GetDashboardTotals))
-            .Produces<DashboardTotalsResult>(StatusCodes.Status200OK)
+            .Produces<ApiGetResponse<DashboardTotalsResult>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .RequireAuthorization();
     }
@@ -27,13 +28,14 @@ public sealed class GetDashboardTotals : ICarterModule
 
     #region Methods
 
-    private async Task<DashboardTotalsResult> HandleGetDashboardTotalsAsync(
+    private async Task<ApiGetResponse<DashboardTotalsResult>> HandleGetDashboardTotalsAsync(
         ISender sender,
         CancellationToken cancellationToken)
     {
         var query = new GetDashboardTotalsQuery();
         var result = await sender.Send(query, cancellationToken);
-        return result;
+
+        return new ApiGetResponse<DashboardTotalsResult>(result);
     }
 
     #endregion

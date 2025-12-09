@@ -4,6 +4,7 @@
 using Basket.Api.Constants;
 using Basket.Application.CQRS.Basket.Commands;
 using BuildingBlocks.Authentication.Extensions;
+using Common.Models.Reponses;
 
 #endregion
 
@@ -18,7 +19,7 @@ public sealed class DeleteBasket : ICarterModule
         app.MapDelete(ApiRoutes.Basket.DeleteBasket, HandleDeleteBasketAsync)
             .WithTags(ApiRoutes.Basket.Tags)
             .WithName(nameof(DeleteBasket))
-            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status200OK)
+            .Produces<ApiDeletedResponse<Guid>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -29,7 +30,7 @@ public sealed class DeleteBasket : ICarterModule
 
     #region Methods
 
-    private async Task<ApiCreatedResponse<Guid>> HandleDeleteBasketAsync(
+    private async Task<ApiDeletedResponse<Guid>> HandleDeleteBasketAsync(
         ISender sender,
         IHttpContextAccessor httpContext)
     {
@@ -38,7 +39,7 @@ public sealed class DeleteBasket : ICarterModule
 
         await sender.Send(command);
 
-        return new ApiCreatedResponse<Guid>(Guid.Parse(currentUser.Id));
+        return new ApiDeletedResponse<Guid>(Guid.Parse(currentUser.Id));
     }
 
     #endregion

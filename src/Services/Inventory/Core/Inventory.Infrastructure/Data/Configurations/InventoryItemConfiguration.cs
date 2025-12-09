@@ -59,14 +59,14 @@ public sealed class InventoryItemConfiguration : IEntityTypeConfiguration<Invent
                     .IsRequired();
             });
 
-        builder.ComplexProperty(
-            o => o.Location, b =>
-            {
-                b.Property(n => n.Address)
-                    .HasColumnName("location_address")
-                    .HasMaxLength(255)
-                    .IsRequired();
-            });
+        builder.Property(x => x.LocationId)
+            .HasColumnName("location_id")
+            .IsRequired();
+
+        builder.HasOne(x => x.Location)
+            .WithMany()
+            .HasForeignKey(x => x.LocationId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 
     #endregion

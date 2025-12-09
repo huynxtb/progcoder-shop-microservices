@@ -8,7 +8,7 @@ public class CreateInventoryItemDto
 
     public int Quantity { get; set; }
 
-    public string? Location { get; set; }
+    public Guid LocationId { get; set; }
 
     #endregion
 }

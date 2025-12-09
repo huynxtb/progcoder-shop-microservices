@@ -19,7 +19,7 @@ public sealed class CreateBrand : ICarterModule
         app.MapPost(ApiRoutes.Brand.Create, HandleCreateBrandAsync)
             .WithTags(ApiRoutes.Brand.Tags)
             .WithName(nameof(CreateBrand))
-            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status200OK)
+            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .RequireAuthorization();
     }

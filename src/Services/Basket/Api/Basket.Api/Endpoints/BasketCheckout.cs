@@ -19,7 +19,7 @@ public sealed class BasketCheckout : ICarterModule
         app.MapPost(ApiRoutes.Basket.CheckoutBasket, HandleBasketCheckoutAsync)
             .WithTags(ApiRoutes.Basket.Tags)
             .WithName(nameof(BasketCheckout))
-            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status200OK)
+            .Produces<ApiCreatedResponse<Guid>>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .DisableAntiforgery()

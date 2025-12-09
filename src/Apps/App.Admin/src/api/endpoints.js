@@ -4,18 +4,6 @@
  */
 
 export const API_ENDPOINTS = {
-  // Authentication
-  AUTH: {
-    LOGIN: "/auth/login",
-    REGISTER: "/auth/register",
-    LOGOUT: "/auth/logout",
-    REFRESH_TOKEN: "/auth/refresh",
-    FORGOT_PASSWORD: "/auth/forgot-password",
-    RESET_PASSWORD: "/auth/reset-password",
-    PROFILE: "/auth/profile",
-    CHANGE_PASSWORD: "/auth/change-password",
-  },
-
   // Catalog Service
   CATALOG: {
     GET_PRODUCTS: "/catalog-service/products",
@@ -39,15 +27,21 @@ export const API_ENDPOINTS = {
     DELETE_BRAND: (id) => `/catalog-service/brands/${id}`
   },
 
-  // Inventory
+  // Inventory Service
   INVENTORY: {
-    GET_LIST: "/inventories",
-    GET_DETAIL: (id) => `/inventories/${id}`,
-    UPDATE: (id) => `/inventories/${id}`,
-    IMPORT: "/inventories/import",
-    EXPORT: "/inventories/export",
-    ADJUST: (id) => `/inventories/${id}/adjust`,
-    HISTORY: (id) => `/inventories/${id}/history`,
+    GET_LIST: "/inventory-service/inventory-items",
+    GET_ALL: "/inventory-service/inventory-items/all",
+    GET_DETAIL: (id) => `/inventory-service/inventory-items/${id}`,
+    CREATE: "/inventory-service/inventory-items",
+    UPDATE: (id) => `/inventory-service/inventory-items/${id}`,
+    DELETE: (id) => `/inventory-service/inventory-items/${id}`,
+    INCREASE_STOCK: (id) => `/inventory-service/inventory-items/${id}/stock/increase`,
+    DECREASE_STOCK: (id) => `/inventory-service/inventory-items/${id}/stock/decrease`,
+    GET_LOCATIONS: "/inventory-service/locations",
+    GET_LOCATION: (id) => `/inventory-service/locations/${id}`,
+    CREATE_LOCATION: "/inventory-service/locations",
+    UPDATE_LOCATION: (id) => `/inventory-service/locations/${id}`,
+    DELETE_LOCATION: (id) => `/inventory-service/locations/${id}`,
   },
 
   // Coupons

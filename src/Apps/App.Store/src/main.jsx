@@ -13,6 +13,7 @@ import "../public/assets/scss/style.scss";
 
 import { FarzaaContextProvider } from "./context/FarzaaContext.jsx";
 import { ToastContainer } from "react-toastify";
+import "./i18n/config";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <FarzaaContextProvider>

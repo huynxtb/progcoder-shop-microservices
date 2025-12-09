@@ -1,6 +1,7 @@
 #region using
 
 using BuildingBlocks.Pagination;
+using Common.Models.Reponses;
 using Search.Api.Constants;
 using Search.Application.CQRS.Product.Queries;
 using Search.Application.Models.Filters;
@@ -20,7 +21,7 @@ public sealed class SearchProduct : ICarterModule
         app.MapGet(ApiRoutes.Product.Search, HandleSearchProductAsync)
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(SearchProduct))
-            .Produces<SearchProductResult>(StatusCodes.Status200OK)
+            .Produces<ApiGetResponse<SearchProductResult>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
@@ -28,7 +29,7 @@ public sealed class SearchProduct : ICarterModule
 
     #region Methods
 
-    private async Task<SearchProductResult> HandleSearchProductAsync(
+    private async Task<ApiGetResponse<SearchProductResult>> HandleSearchProductAsync(
         ISender sender,
         [AsParameters] PaginationRequest paging,
         string? searchText = null,
@@ -49,8 +50,9 @@ public sealed class SearchProduct : ICarterModule
             SortType: sortType);
 
         var query = new SearchProductQuery(filter, paging);
+        var result = await sender.Send(query);
 
-        return await sender.Send(query);
+        return new ApiGetResponse<SearchProductResult>(result);
     }
 
     #endregion

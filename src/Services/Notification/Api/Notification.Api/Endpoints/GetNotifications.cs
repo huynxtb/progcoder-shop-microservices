@@ -1,10 +1,11 @@
 ﻿#region using
 
 using BuildingBlocks.Pagination;
-using Notification.Api.Constants;
-using Notification.Application.CQRS.Notification.Queries;
 using BuildingBlocks.Abstractions.ValueObjects;
 using BuildingBlocks.Authentication.Extensions;
+using Common.Models.Reponses;
+using Notification.Api.Constants;
+using Notification.Application.CQRS.Notification.Queries;
 using Notification.Application.Models.Results;
 
 #endregion
@@ -20,7 +21,7 @@ public sealed class GetNotifications : ICarterModule
         app.MapGet(ApiRoutes.Notification.GetNotifications, HandleGetNotificationsAsync)
             .WithTags(ApiRoutes.Notification.Tags)
             .WithName(nameof(GetNotifications))
-            .Produces<GetNotificationsResult>(StatusCodes.Status200OK)
+            .Produces<ApiGetResponse<GetNotificationsResult>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
@@ -30,7 +31,7 @@ public sealed class GetNotifications : ICarterModule
 
     #region Methods
 
-    private async Task<GetNotificationsResult> HandleGetNotificationsAsync(
+    private async Task<ApiGetResponse<GetNotificationsResult>> HandleGetNotificationsAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
         [AsParameters] PaginationRequest paging)
@@ -38,7 +39,8 @@ public sealed class GetNotifications : ICarterModule
         var currentUser = httpContext.GetCurrentUser();
         var query = new GetNotificationsQuery(Actor.User(currentUser.Id), paging);
         var result = await sender.Send(query);
-        return result;
+
+        return new ApiGetResponse<GetNotificationsResult>(result);
     }
 
     #endregion
