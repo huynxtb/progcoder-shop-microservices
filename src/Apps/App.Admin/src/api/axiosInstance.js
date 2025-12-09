@@ -4,6 +4,7 @@ import i18n from "@/i18n/config";
 
 // Get the API Gateway URL from environment variables
 const API_BASE_URL = import.meta.env.VITE_API_GATEWAY || "not_config";
+const KEYCLOAK_BASE_URL = import.meta.env.VITE_KEYCLOAK_BASE_URL || "not_config";
 
 // Helper function to get cookie by name
 const getCookie = (name) => {
@@ -100,8 +101,34 @@ const axiosInstance = axios.create({
   },
 });
 
+// Create Keycloak axios instance with base configuration
+const keycloakAxiosInstance = axios.create({
+  baseURL: KEYCLOAK_BASE_URL,
+  timeout: 30000,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 // Request interceptor - Add Bearer token from cookie
 axiosInstance.interceptors.request.use(
+  (config) => {
+    // Get token from cookie
+    const token = getCookie("access_token");
+    
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Keycloak request interceptor - Add Bearer token from cookie
+keycloakAxiosInstance.interceptors.request.use(
   (config) => {
     // Get token from cookie
     const token = getCookie("access_token");
@@ -146,13 +173,181 @@ axiosInstance.interceptors.response.use(
   }
 );
 
+// Keycloak response interceptor - Handle errors globally
+keycloakAxiosInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    const { response } = error;
+    
+    if (response) {
+      // Handle API error response
+      handleErrorResponse(response);
+      
+      // Special handling for 401 - redirect to login
+      if (response.status === 401) {
+        document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        window.location.href = "/login";
+      }
+    } else if (error.request) {
+      // Network error - no response received
+      showErrorToast("NETWORK_ERROR");
+    } else {
+      // Something else happened
+      showErrorToast("DEFAULT_ERROR");
+    }
+    
+    return Promise.reject(error);
+  }
+);
+
 // Export helper methods for common HTTP operations
 export const api = {
-  get: (url, config = {}) => axiosInstance.get(url, config),
-  post: (url, data, config = {}) => axiosInstance.post(url, data, config),
-  put: (url, data, config = {}) => axiosInstance.put(url, data, config),
-  patch: (url, data, config = {}) => axiosInstance.patch(url, data, config),
-  delete: (url, config = {}) => axiosInstance.delete(url, config),
+  get: (url, config = {}) => {
+    // Check if config has baseURL override
+    if (config.baseURL) {
+      const customInstance = axios.create({
+        ...axiosInstance.defaults,
+        baseURL: config.baseURL,
+      });
+      // Add interceptors
+      customInstance.interceptors.request.use(axiosInstance.interceptors.request.handlers[0].fulfilled, axiosInstance.interceptors.request.handlers[0].rejected);
+      customInstance.interceptors.response.use(axiosInstance.interceptors.response.handlers[0].fulfilled, axiosInstance.interceptors.response.handlers[0].rejected);
+      return customInstance.get(url, { ...config, baseURL: undefined });
+    }
+    return axiosInstance.get(url, config);
+  },
+  post: (url, data, config = {}) => {
+    if (config.baseURL) {
+      const customInstance = axios.create({
+        ...axiosInstance.defaults,
+        baseURL: config.baseURL,
+      });
+      customInstance.interceptors.request.use(axiosInstance.interceptors.request.handlers[0].fulfilled, axiosInstance.interceptors.request.handlers[0].rejected);
+      customInstance.interceptors.response.use(axiosInstance.interceptors.response.handlers[0].fulfilled, axiosInstance.interceptors.response.handlers[0].rejected);
+      return customInstance.post(url, data, { ...config, baseURL: undefined });
+    }
+    return axiosInstance.post(url, data, config);
+  },
+  put: (url, data, config = {}) => {
+    if (config.baseURL) {
+      const customInstance = axios.create({
+        ...axiosInstance.defaults,
+        baseURL: config.baseURL,
+      });
+      customInstance.interceptors.request.use(axiosInstance.interceptors.request.handlers[0].fulfilled, axiosInstance.interceptors.request.handlers[0].rejected);
+      customInstance.interceptors.response.use(axiosInstance.interceptors.response.handlers[0].fulfilled, axiosInstance.interceptors.response.handlers[0].rejected);
+      return customInstance.put(url, data, { ...config, baseURL: undefined });
+    }
+    return axiosInstance.put(url, data, config);
+  },
+  patch: (url, data, config = {}) => {
+    if (config.baseURL) {
+      const customInstance = axios.create({
+        ...axiosInstance.defaults,
+        baseURL: config.baseURL,
+      });
+      customInstance.interceptors.request.use(axiosInstance.interceptors.request.handlers[0].fulfilled, axiosInstance.interceptors.request.handlers[0].rejected);
+      customInstance.interceptors.response.use(axiosInstance.interceptors.response.handlers[0].fulfilled, axiosInstance.interceptors.response.handlers[0].rejected);
+      return customInstance.patch(url, data, { ...config, baseURL: undefined });
+    }
+    return axiosInstance.patch(url, data, config);
+  },
+  delete: (url, config = {}) => {
+    if (config.baseURL) {
+      const customInstance = axios.create({
+        ...axiosInstance.defaults,
+        baseURL: config.baseURL,
+      });
+      customInstance.interceptors.request.use(axiosInstance.interceptors.request.handlers[0].fulfilled, axiosInstance.interceptors.request.handlers[0].rejected);
+      customInstance.interceptors.response.use(axiosInstance.interceptors.response.handlers[0].fulfilled, axiosInstance.interceptors.response.handlers[0].rejected);
+      return customInstance.delete(url, { ...config, baseURL: undefined });
+    }
+    return axiosInstance.delete(url, config);
+  },
+};
+
+// Helper function to create axios instance with custom baseURL
+const createAxiosInstanceWithBaseURL = (baseURL) => {
+  const instance = axios.create({
+    baseURL: baseURL,
+    timeout: 30000,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  // Add request interceptor
+  instance.interceptors.request.use(
+    (config) => {
+      const token = getCookie("access_token");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+
+  // Add response interceptor
+  instance.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      const { response } = error;
+      
+      if (response) {
+        handleErrorResponse(response);
+        
+        if (response.status === 401) {
+          document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          window.location.href = "/login";
+        }
+      } else if (error.request) {
+        showErrorToast("NETWORK_ERROR");
+      } else {
+        showErrorToast("DEFAULT_ERROR");
+      }
+      
+      return Promise.reject(error);
+    }
+  );
+
+  return instance;
+};
+
+// Export Keycloak API helper
+export const keycloakApi = {
+  get: (url, config = {}) => {
+    // Allow baseURL override from config, otherwise use KEYCLOAK_BASE_URL
+    const baseURL = config.baseURL || KEYCLOAK_BASE_URL;
+    const instance = createAxiosInstanceWithBaseURL(baseURL);
+    return instance.get(url, { ...config, baseURL: undefined });
+  },
+  post: (url, data, config = {}) => {
+    const baseURL = config.baseURL || KEYCLOAK_BASE_URL;
+    const instance = createAxiosInstanceWithBaseURL(baseURL);
+    return instance.post(url, data, { ...config, baseURL: undefined });
+  },
+  put: (url, data, config = {}) => {
+    const baseURL = config.baseURL || KEYCLOAK_BASE_URL;
+    const instance = createAxiosInstanceWithBaseURL(baseURL);
+    return instance.put(url, data, { ...config, baseURL: undefined });
+  },
+  patch: (url, data, config = {}) => {
+    const baseURL = config.baseURL || KEYCLOAK_BASE_URL;
+    const instance = createAxiosInstanceWithBaseURL(baseURL);
+    return instance.patch(url, data, { ...config, baseURL: undefined });
+  },
+  delete: (url, config = {}) => {
+    const baseURL = config.baseURL || KEYCLOAK_BASE_URL;
+    const instance = createAxiosInstanceWithBaseURL(baseURL);
+    return instance.delete(url, { ...config, baseURL: undefined });
+  },
 };
 
 export default axiosInstance;

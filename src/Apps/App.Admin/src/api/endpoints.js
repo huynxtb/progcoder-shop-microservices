@@ -121,6 +121,11 @@ export const API_ENDPOINTS = {
     FILE: "/upload/file",
     BULK: "/upload/bulk",
   },
+
+  // Keycloak
+  KEYCLOAK: {
+    GET_ME: "/account/me",
+  },
 };
 
 export default API_ENDPOINTS;

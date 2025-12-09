@@ -1,13 +1,53 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Icon from "@/components/ui/Icon";
 import Card from "@/components/ui/Card";
 import BasicArea from "../chart/appex-chart/BasicArea";
+import { keycloakApi } from "@/api";
+import { API_ENDPOINTS } from "@/api/endpoints";
+import LoaderCircle from "@/components/Loader-circle";
 
 // import images
 import ProfileImage from "@/assets/images/users/user-1.jpg";
 
 const profile = () => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        setLoading(true);
+        const response = await keycloakApi.get(API_ENDPOINTS.KEYCLOAK.GET_ME);
+        setUser(response.data);
+      } catch (error) {
+        console.error("Failed to fetch user profile:", error);
+
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <LoaderCircle />
+      </div>
+    );
+  }
+
+  const displayName = user?.firstName && user?.lastName 
+    ? `${user.firstName} ${user.lastName}`
+    : user?.username || user?.email || "Albert Flores";
+  
+  const email = user?.email || "info-500@progcoder.com";
+  const phone = user?.phone || user?.phoneNumber || "+1-202-555-0151";
+  const location = user?.location || user?.address || "Home# 320/N, Road# 71/B, Mohakhali, Dhaka-1207, Bangladesh";
+  const jobTitle = user?.jobTitle || user?.title || "Front End Developer";
+
   return (
     <div>
       <div className="space-y-5 profile-page">
@@ -32,10 +72,10 @@ const profile = () => {
               </div>
               <div className="flex-1">
                 <div className="text-2xl font-medium text-slate-900 dark:text-slate-200 mb-[3px]">
-                  Albert Flores
+                  {displayName}
                 </div>
                 <div className="text-sm font-light text-slate-600 dark:text-slate-400">
-                  Front End Developer
+                  {jobTitle}
                 </div>
               </div>
             </div>
@@ -83,10 +123,10 @@ const profile = () => {
                       EMAIL
                     </div>
                     <a
-                      href="mailto:someone@example.com"
+                      href={`mailto:${email}`}
                       className="text-base text-slate-600 dark:text-slate-50"
                     >
-                      info-500@progcoder.com
+                      {email}
                     </a>
                   </div>
                 </li>
@@ -100,10 +140,10 @@ const profile = () => {
                       PHONE
                     </div>
                     <a
-                      href="tel:0189749676767"
+                      href={`tel:${phone.replace(/\D/g, '')}`}
                       className="text-base text-slate-600 dark:text-slate-50"
                     >
-                      +1-202-555-0151
+                      {phone}
                     </a>
                   </div>
                 </li>
@@ -117,7 +157,7 @@ const profile = () => {
                       LOCATION
                     </div>
                     <div className="text-base text-slate-600 dark:text-slate-50">
-                      Home# 320/N, Road# 71/B, Mohakhali, Dhaka-1207, Bangladesh
+                      {location}
                     </div>
                   </div>
                 </li>
