@@ -70,6 +70,10 @@ export const menuItems = [
         childtitle: "Quản lý danh mục",
         childlink: "categories",
       },
+      {
+        childtitle: "Quản lý thương hiệu",
+        childlink: "brands",
+      },
     ],
   },
   {

@@ -5,7 +5,6 @@ import Card from "@/components/ui/Card";
 import Icon from "@/components/ui/Icon";
 import Tooltip from "@/components/ui/Tooltip";
 import Textinput from "@/components/ui/Textinput";
-import Select from "@/components/ui/Select";
 import Modal from "@/components/ui/Modal";
 import LoaderCircle from "@/components/Loader-circle";
 import { api } from "@/api";
@@ -28,75 +27,66 @@ const GlobalFilter = ({ filter, setFilter, t }) => {
     <Textinput
       value={value || ""}
       onChange={onChange}
-      placeholder={t("category.search")}
+      placeholder={t("brand.search")}
     />
   );
 };
 
-const CategoryPage = () => {
+const BrandPage = () => {
   const { t } = useTranslation();
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
-  const [viewingCategory, setViewingCategory] = useState(null);
+  const [viewingBrand, setViewingBrand] = useState(null);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
-  const [editingCategory, setEditingCategory] = useState(null);
-  const [categories, setCategories] = useState([]);
+  const [editingBrand, setEditingBrand] = useState(null);
+  const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [editFormData, setEditFormData] = useState({
     name: "",
-    description: "",
-    parentId: "",
   });
   const [addFormData, setAddFormData] = useState({
     name: "",
-    description: "",
-    parentId: "",
   });
 
-  // Fetch categories from API
+  // Fetch brands from API
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchBrands = async () => {
       try {
         setLoading(true);
-        const response = await api.get(API_ENDPOINTS.CATALOG.GET_CATEGORIES);
+        const response = await api.get(API_ENDPOINTS.CATALOG.GET_BRANDS);
         
         // Map API response to component format
-        const mappedCategories = response.data.result.items.map((item) => ({
+        const mappedBrands = response.data.result.items.map((item) => ({
           id: item.id,
           name: item.name,
           slug: item.slug || "",
-          description: item.description || "",
-          parentId: item.parentId || null,
-          parentName: item.parentName || null,
         }));
         
-        setCategories(mappedCategories);
+        setBrands(mappedBrands);
       } catch (error) {
-        console.error("Failed to fetch categories:", error);
-        setCategories([]);
+        console.error("Failed to fetch brands:", error);
+        setBrands([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCategories();
+    fetchBrands();
   }, []);
 
-  const handleViewClick = (category) => {
-    setViewingCategory(category);
+  const handleViewClick = (brand) => {
+    setViewingBrand(brand);
     setShowViewModal(true);
   };
 
-  const handleEditClick = (category) => {
-    setEditingCategory(category);
+  const handleEditClick = (brand) => {
+    setEditingBrand(brand);
     setEditFormData({
-      name: category.name || "",
-      description: category.description || "",
-      parentId: category.parentId || "",
+      name: brand.name || "",
     });
     setShowEditModal(true);
   };
@@ -110,49 +100,40 @@ const CategoryPage = () => {
   };
 
   const handleSaveEdit = async () => {
-    if (!editingCategory?.id) return;
+    if (!editingBrand?.id) return;
 
     try {
       setSaving(true);
       const requestBody = {
         name: editFormData.name,
-        description: editFormData.description,
       };
       
-      // Only include parentId if it's not empty
-      if (editFormData.parentId) {
-        requestBody.parentId = editFormData.parentId;
-      }
-      
       const response = await api.put(
-        API_ENDPOINTS.CATALOG.UPDATE_CATEGORY(editingCategory.id),
+        API_ENDPOINTS.CATALOG.UPDATE_BRAND(editingBrand.id),
         requestBody
       );
 
       if (response && response.status >= 200 && response.status < 300) {
-        toast.success(t("category.updateSuccess") || "Category updated successfully", {
+        toast.success(t("brand.updateSuccess") || "Brand updated successfully", {
           position: "top-right",
           autoClose: 5000,
         });
 
-        // Refresh categories list
-        const refreshResponse = await api.get(API_ENDPOINTS.CATALOG.GET_CATEGORIES);
-        const mappedCategories = refreshResponse.data.result.items.map((item) => ({
+        // Refresh brands list
+        const refreshResponse = await api.get(API_ENDPOINTS.CATALOG.GET_BRANDS);
+        const mappedBrands = refreshResponse.data.result.items.map((item) => ({
           id: item.id,
           name: item.name,
           slug: item.slug || "",
-          description: item.description || "",
-          parentId: item.parentId || null,
-          parentName: item.parentName || null,
         }));
-        setCategories(mappedCategories);
+        setBrands(mappedBrands);
 
         setShowEditModal(false);
-        setEditingCategory(null);
-        setEditFormData({ name: "", description: "", parentId: "" });
+        setEditingBrand(null);
+        setEditFormData({ name: "" });
       }
     } catch (error) {
-      console.error("Failed to update category:", error);
+      console.error("Failed to update brand:", error);
     } finally {
       setSaving(false);
     }
@@ -163,46 +144,37 @@ const CategoryPage = () => {
       setSaving(true);
       const requestBody = {
         name: addFormData.name,
-        description: addFormData.description,
       };
       
-      // Only include parentId if it's not empty
-      if (addFormData.parentId) {
-        requestBody.parentId = addFormData.parentId;
-      }
-      
-      const response = await api.post(API_ENDPOINTS.CATALOG.CREATE_CATEGORY, requestBody);
+      const response = await api.post(API_ENDPOINTS.CATALOG.CREATE_BRAND, requestBody);
 
       if (response && response.status >= 200 && response.status < 300) {
-        toast.success(t("category.createSuccess") || "Category created successfully", {
+        toast.success(t("brand.createSuccess") || "Brand created successfully", {
           position: "top-right",
           autoClose: 5000,
         });
 
-        // Refresh categories list
-        const refreshResponse = await api.get(API_ENDPOINTS.CATALOG.GET_CATEGORIES);
-        const mappedCategories = refreshResponse.data.result.items.map((item) => ({
+        // Refresh brands list
+        const refreshResponse = await api.get(API_ENDPOINTS.CATALOG.GET_BRANDS);
+        const mappedBrands = refreshResponse.data.result.items.map((item) => ({
           id: item.id,
           name: item.name,
           slug: item.slug || "",
-          description: item.description || "",
-          parentId: item.parentId || null,
-          parentName: item.parentName || null,
         }));
-        setCategories(mappedCategories);
+        setBrands(mappedBrands);
 
         setShowAddModal(false);
-        setAddFormData({ name: "", description: "", parentId: "" });
+        setAddFormData({ name: "" });
       }
     } catch (error) {
-      console.error("Failed to create category:", error);
+      console.error("Failed to create brand:", error);
     } finally {
       setSaving(false);
     }
   };
 
-  const handleDeleteClick = (category) => {
-    setItemToDelete(category);
+  const handleDeleteClick = (brand) => {
+    setItemToDelete(brand);
     setDeleteModalOpen(true);
   };
 
@@ -211,24 +183,24 @@ const CategoryPage = () => {
 
     try {
       setDeleting(true);
-      const response = await api.delete(API_ENDPOINTS.CATALOG.DELETE_CATEGORY(itemToDelete.id));
+      const response = await api.delete(API_ENDPOINTS.CATALOG.DELETE_BRAND(itemToDelete.id));
 
       if (response && response.status >= 200 && response.status < 300) {
-        toast.success(t("category.deleteSuccess") || "Category deleted successfully", {
+        toast.success(t("brand.deleteSuccess") || "Brand deleted successfully", {
           position: "top-right",
           autoClose: 5000,
         });
 
-        // Remove the deleted category from the list
-        setCategories((prevCategories) =>
-          prevCategories.filter((category) => category.id !== itemToDelete.id)
+        // Remove the deleted brand from the list
+        setBrands((prevBrands) =>
+          prevBrands.filter((brand) => brand.id !== itemToDelete.id)
         );
 
         setDeleteModalOpen(false);
         setItemToDelete(null);
       }
     } catch (error) {
-      console.error("Failed to delete category:", error);
+      console.error("Failed to delete brand:", error);
     } finally {
       setDeleting(false);
     }
@@ -236,7 +208,7 @@ const CategoryPage = () => {
 
   const COLUMNS = useMemo(() => [
     {
-      Header: t("category.name"),
+      Header: t("brand.name"),
       accessor: "name",
       Cell: (row) => (
         <span className="font-semibold text-slate-800 dark:text-slate-200">
@@ -245,7 +217,7 @@ const CategoryPage = () => {
       ),
     },
     {
-      Header: t("category.slug"),
+      Header: t("brand.slug"),
       accessor: "slug",
       Cell: (row) => (
         <span className="font-mono text-sm text-slate-500 dark:text-slate-400">
@@ -254,42 +226,17 @@ const CategoryPage = () => {
       ),
     },
     {
-      Header: t("category.description"),
-      accessor: "description",
-      Cell: (row) => (
-        <span className="text-slate-600 dark:text-slate-300 truncate max-w-[200px] block">
-          {row?.cell?.value}
-        </span>
-      ),
-    },
-    {
-      Header: t("category.parentName"),
-      accessor: "parentName",
-      Cell: (row) => {
-        const parentName = row?.cell?.value;
-        return parentName ? (
-          <span className="bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded text-sm">
-            {parentName}
-          </span>
-        ) : (
-          <span className="text-slate-400 dark:text-slate-500 text-sm italic">
-            {t("category.noParent") || "—"}
-          </span>
-        );
-      },
-    },
-    {
-      Header: t("category.actions"),
+      Header: t("brand.actions"),
       accessor: "action",
       Cell: (row) => {
-        const category = row?.row?.original;
+        const brand = row?.row?.original;
         return (
           <div className="flex space-x-3 rtl:space-x-reverse">
             <Tooltip content={t("common.view")} placement="top" arrow animation="shift-away">
               <button 
                 className="action-btn" 
                 type="button"
-                onClick={() => handleViewClick(category)}
+                onClick={() => handleViewClick(brand)}
               >
                 <Icon icon="heroicons:eye" />
               </button>
@@ -298,7 +245,7 @@ const CategoryPage = () => {
               <button
                 className="action-btn"
                 type="button"
-                onClick={() => handleEditClick(category)}
+                onClick={() => handleEditClick(brand)}
               >
                 <Icon icon="heroicons:pencil-square" />
               </button>
@@ -313,7 +260,7 @@ const CategoryPage = () => {
               <button
                 className="action-btn"
                 type="button"
-                onClick={() => handleDeleteClick(category)}
+                onClick={() => handleDeleteClick(brand)}
               >
                 <Icon icon="heroicons:trash" />
               </button>
@@ -324,24 +271,7 @@ const CategoryPage = () => {
     },
   ], [t]);
 
-  const data = useMemo(() => categories, [categories]);
-
-  // Prepare parent category options for Select component
-  const parentCategoryOptions = useMemo(() => {
-    if (!Array.isArray(categories)) {
-      return [];
-    }
-    const options = [];
-    categories.forEach((category) => {
-      // When editing, exclude the current category from parent options to prevent circular reference
-      if (category && category.id && category.name) {
-        if (!editingCategory || category.id !== editingCategory.id) {
-          options.push({ value: category.id, label: category.name });
-        }
-      }
-    });
-    return options;
-  }, [categories, editingCategory]);
+  const data = useMemo(() => brands, [brands]);
 
   const tableInstance = useTable(
     {
@@ -378,7 +308,7 @@ const CategoryPage = () => {
     <>
       <Card>
         <div className="md:flex justify-between items-center mb-6">
-          <h4 className="card-title">{t("category.title")}</h4>
+          <h4 className="card-title">{t("brand.title")}</h4>
           <div className="md:flex md:space-x-4 md:space-y-0 space-y-2">
             <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} t={t} />
             <button
@@ -386,7 +316,7 @@ const CategoryPage = () => {
               onClick={() => setShowAddModal(true)}
             >
               <Icon icon="heroicons:plus" className="ltr:mr-2 rtl:ml-2" />
-              {t("category.addCategory")}
+              {t("brand.addBrand")}
             </button>
           </div>
         </div>
@@ -434,7 +364,7 @@ const CategoryPage = () => {
                 >
                   {loading ? (
                     <tr>
-                      <td colSpan={headerGroups[0]?.headers?.length || 5} className="table-td text-center py-8">
+                      <td colSpan={headerGroups[0]?.headers?.length || 3} className="table-td text-center py-8">
                         <div className="flex flex-col items-center justify-center">
                           <Icon icon="heroicons:arrow-path" className="animate-spin text-2xl text-slate-400 mb-2" />
                           <span className="text-slate-500 dark:text-slate-400">{t("common.loading") || "Loading..."}</span>
@@ -443,8 +373,8 @@ const CategoryPage = () => {
                     </tr>
                   ) : page.length === 0 ? (
                     <tr>
-                      <td colSpan={headerGroups[0]?.headers?.length || 5} className="table-td text-center py-8">
-                        <span className="text-slate-500 dark:text-slate-400">{t("category.noCategories") || "No categories found"}</span>
+                      <td colSpan={headerGroups[0]?.headers?.length || 3} className="table-td text-center py-8">
+                        <span className="text-slate-500 dark:text-slate-400">{t("brand.noBrands") || "No brands found"}</span>
                       </td>
                     </tr>
                   ) : (
@@ -551,39 +481,20 @@ const CategoryPage = () => {
         </div>
       </Card>
 
-      {/* Add Category Modal */}
+      {/* Add Brand Modal */}
       <Modal
-        title={t("category.addNewCategory")}
+        title={t("brand.addNewBrand")}
         activeModal={showAddModal}
         onClose={() => setShowAddModal(false)}
       >
         <div className="space-y-4">
           <Textinput
-            label={t("category.name")}
+            label={t("brand.name")}
             type="text"
-            placeholder={t("category.namePlaceholder")}
+            placeholder={t("brand.namePlaceholder")}
             value={addFormData.name}
             onChange={(e) => handleAddFormChange("name", e.target.value)}
           />
-          <Select
-            label={t("category.parentName")}
-            placeholder={t("category.noParent") || "No parent"}
-            options={parentCategoryOptions}
-            value={addFormData.parentId || ""}
-            onChange={(e) => handleAddFormChange("parentId", e.target.value || "")}
-          />
-          <div>
-            <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
-              {t("category.description")}
-            </label>
-            <textarea
-              className="form-control"
-              rows={3}
-              placeholder={t("category.descriptionPlaceholder")}
-              value={addFormData.description}
-              onChange={(e) => handleAddFormChange("description", e.target.value)}
-            />
-          </div>
           <div className="flex justify-end space-x-3">
             <button
               className="btn btn-outline-dark inline-flex items-center"
@@ -604,7 +515,7 @@ const CategoryPage = () => {
               ) : (
                 <>
                   <Icon icon="heroicons:check" className="ltr:mr-2 rtl:ml-2" />
-                  {t("category.saveCategory")}
+                  {t("brand.saveBrand")}
                 </>
               )}
             </button>
@@ -612,48 +523,29 @@ const CategoryPage = () => {
         </div>
       </Modal>
 
-      {/* Edit Category Modal */}
+      {/* Edit Brand Modal */}
       <Modal
-        title={t("category.editCategory")}
+        title={t("brand.editBrand")}
         activeModal={showEditModal}
         onClose={() => {
           setShowEditModal(false);
-          setEditingCategory(null);
+          setEditingBrand(null);
         }}
       >
         <div className="space-y-4">
           <Textinput
-            label={t("category.name")}
+            label={t("brand.name")}
             type="text"
-            placeholder={t("category.namePlaceholder")}
+            placeholder={t("brand.namePlaceholder")}
             value={editFormData.name}
             onChange={(e) => handleEditFormChange("name", e.target.value)}
           />
-          <Select
-            label={t("category.parentName")}
-            placeholder={t("category.noParent") || "No parent"}
-            options={parentCategoryOptions}
-            value={editFormData.parentId || ""}
-            onChange={(e) => handleEditFormChange("parentId", e.target.value || "")}
-          />
-          <div>
-            <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
-              {t("category.description")}
-            </label>
-            <textarea
-              className="form-control"
-              rows={3}
-              placeholder={t("category.descriptionPlaceholder")}
-              value={editFormData.description}
-              onChange={(e) => handleEditFormChange("description", e.target.value)}
-            />
-          </div>
           <div className="flex justify-end space-x-3">
             <button
               className="btn btn-outline-dark inline-flex items-center"
               onClick={() => {
                 setShowEditModal(false);
-                setEditingCategory(null);
+                setEditingBrand(null);
               }}
             >
               {t("common.cancel")}
@@ -671,7 +563,7 @@ const CategoryPage = () => {
               ) : (
                 <>
                   <Icon icon="heroicons:check" className="ltr:mr-2 rtl:ml-2" />
-                  {t("category.updateCategory")}
+                  {t("brand.updateBrand")}
                 </>
               )}
             </button>
@@ -693,7 +585,7 @@ const CategoryPage = () => {
             <Icon icon="heroicons:exclamation-triangle" className="text-danger-500 text-3xl" />
           </div>
           <p className="text-slate-600 dark:text-slate-300 mb-2">
-            {t("common.deleteCategoryMessage")}
+            {t("common.deleteBrandMessage")}
           </p>
           {itemToDelete && (
             <p className="font-semibold text-slate-800 dark:text-slate-200 mb-6">
@@ -731,61 +623,39 @@ const CategoryPage = () => {
         </div>
       </Modal>
 
-      {/* View Category Detail Modal */}
+      {/* View Brand Detail Modal */}
       <Modal
-        title={t("category.viewDetails") || "Category Details"}
+        title={t("brand.viewDetails") || "Brand Details"}
         activeModal={showViewModal}
         onClose={() => {
           setShowViewModal(false);
-          setViewingCategory(null);
+          setViewingBrand(null);
         }}
       >
-        {viewingCategory && (
+        {viewingBrand && (
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">
-                {t("category.name")}
+                {t("brand.name")}
               </label>
               <p className="text-slate-800 dark:text-slate-200 font-semibold">
-                {viewingCategory.name}
+                {viewingBrand.name}
               </p>
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">
-                {t("category.slug")}
+                {t("brand.slug")}
               </label>
               <p className="text-slate-800 dark:text-slate-200 font-mono text-sm">
-                {viewingCategory.slug}
+                {viewingBrand.slug}
               </p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">
-                {t("category.description")}
-              </label>
-              <p className="text-slate-800 dark:text-slate-200">
-                {viewingCategory.description || t("category.noDescription") || "No description"}
-              </p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">
-                {t("category.parentName")}
-              </label>
-              {viewingCategory.parentName ? (
-                <span className="inline-block bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded text-sm font-medium">
-                  {viewingCategory.parentName}
-                </span>
-              ) : (
-                <span className="text-slate-400 dark:text-slate-500 text-sm italic">
-                  {t("category.noParent") || "—"}
-                </span>
-              )}
             </div>
             <div className="flex justify-end pt-4">
               <button
                 className="btn btn-dark inline-flex items-center"
                 onClick={() => {
                   setShowViewModal(false);
-                  setViewingCategory(null);
+                  setViewingBrand(null);
                 }}
               >
                 {t("common.close") || "Close"}
@@ -798,4 +668,5 @@ const CategoryPage = () => {
   );
 };
 
-export default CategoryPage;
+export default BrandPage;
+

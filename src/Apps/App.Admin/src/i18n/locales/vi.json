@@ -46,6 +46,7 @@
     "deleteConfirmMessage": "Bạn có chắc chắn muốn xóa mục này? Hành động này không thể hoàn tác.",
     "deleteProductMessage": "Bạn có chắc chắn muốn xóa sản phẩm này?",
     "deleteCategoryMessage": "Bạn có chắc chắn muốn xóa danh mục này?",
+    "deleteBrandMessage": "Bạn có chắc chắn muốn xóa thương hiệu này?",
     "deleteInventoryMessage": "Bạn có chắc chắn muốn xóa mục kho này?",
     "deleteCouponMessage": "Bạn có chắc chắn muốn xóa mã giảm giá này?",
     "deleteOrderMessage": "Bạn có chắc chắn muốn xóa đơn hàng này?"
@@ -462,7 +463,28 @@
     "createSuccess": "Tạo danh mục thành công",
     "updateSuccess": "Cập nhật danh mục thành công",
     "deleteSuccess": "Xóa danh mục thành công",
-    "noCategories": "Không tìm thấy danh mục"
+    "noCategories": "Không tìm thấy danh mục",
+    "viewDetails": "Chi tiết danh mục",
+    "selectParent": "Chọn danh mục cha",
+    "noDescription": "Không có mô tả"
+  },
+  "brand": {
+    "title": "Quản lý thương hiệu",
+    "search": "Tìm kiếm...",
+    "addBrand": "Thêm thương hiệu",
+    "addNewBrand": "Thêm thương hiệu mới",
+    "name": "Tên thương hiệu",
+    "namePlaceholder": "Nhập tên thương hiệu",
+    "slug": "Slug",
+    "actions": "Thao tác",
+    "saveBrand": "Lưu thương hiệu",
+    "editBrand": "Chỉnh sửa thương hiệu",
+    "updateBrand": "Cập nhật thương hiệu",
+    "createSuccess": "Tạo thương hiệu thành công",
+    "updateSuccess": "Cập nhật thương hiệu thành công",
+    "deleteSuccess": "Xóa thương hiệu thành công",
+    "noBrands": "Không tìm thấy thương hiệu",
+    "viewDetails": "Chi tiết thương hiệu"
   },
   "coupon": {
     "title": "Quản lý mã giảm giá",

@@ -26,6 +26,7 @@ const EcommercePage = lazy(() => import("./pages/ecommerce"));
 const CreateProduct = lazy(() => import("./pages/ecommerce/create-product"));
 const InventoryPage = lazy(() => import("./pages/inventory"));
 const CategoryPage = lazy(() => import("./pages/category"));
+const BrandPage = lazy(() => import("./pages/brand"));
 const CouponPage = lazy(() => import("./pages/coupon"));
 const CreateCoupon = lazy(() => import("./pages/coupon/create-coupon"));
 const EditCoupon = lazy(() => import("./pages/coupon/edit-coupon"));
@@ -65,7 +66,7 @@ function App() {
           {/* Dashboard */}
           <Route path="dashboard" element={<Ecommerce />} />
 
-          {/* Products */}
+          {/* Products */}``
           <Route path="products" element={<EcommercePage />} />
           <Route path="products/:id" element={<ProductDetails />} />
           <Route path="create-product" element={<CreateProduct />} />
@@ -77,6 +78,9 @@ function App() {
 
           {/* Categories */}
           <Route path="categories" element={<CategoryPage />} />
+
+          {/* Brands */}
+          <Route path="brands" element={<BrandPage />} />
 
           {/* Coupons */}
           <Route path="coupons" element={<CouponPage />} />

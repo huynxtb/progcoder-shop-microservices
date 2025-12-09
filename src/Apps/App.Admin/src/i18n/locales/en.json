@@ -46,6 +46,7 @@
     "deleteConfirmMessage": "Are you sure you want to delete this item? This action cannot be undone.",
     "deleteProductMessage": "Are you sure you want to delete this product?",
     "deleteCategoryMessage": "Are you sure you want to delete this category?",
+    "deleteBrandMessage": "Are you sure you want to delete this brand?",
     "deleteInventoryMessage": "Are you sure you want to delete this inventory item?",
     "deleteCouponMessage": "Are you sure you want to delete this coupon?",
     "deleteOrderMessage": "Are you sure you want to delete this order?"
@@ -462,7 +463,28 @@
     "createSuccess": "Category created successfully",
     "updateSuccess": "Category updated successfully",
     "deleteSuccess": "Category deleted successfully",
-    "noCategories": "No categories found"
+    "noCategories": "No categories found",
+    "viewDetails": "Category Details",
+    "selectParent": "Select parent category",
+    "noDescription": "No description"
+  },
+  "brand": {
+    "title": "Brand Management",
+    "search": "Search...",
+    "addBrand": "Add Brand",
+    "addNewBrand": "Add New Brand",
+    "name": "Brand Name",
+    "namePlaceholder": "Enter brand name",
+    "slug": "Slug",
+    "actions": "Actions",
+    "saveBrand": "Save Brand",
+    "editBrand": "Edit Brand",
+    "updateBrand": "Update Brand",
+    "createSuccess": "Brand created successfully",
+    "updateSuccess": "Brand updated successfully",
+    "deleteSuccess": "Brand deleted successfully",
+    "noBrands": "No brands found",
+    "viewDetails": "Brand Details"
   },
   "coupon": {
     "title": "Coupon Management",
