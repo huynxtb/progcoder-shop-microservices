@@ -1,19 +1,21 @@
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const CartItemTable = ({ cartArray, remove, quantity }) => {
+  const { t } = useTranslation();
   return (
     <table className="cart-page-table">
       <tbody>
         <tr>
-          <th>Product</th>
-          <th>Price</th>
-          <th>Quantity</th>
-          <th>Total</th>
-          <th>Remove</th>
+          <th>{t("cart.product")}</th>
+          <th>{t("common.price")}</th>
+          <th>{t("common.quantity")}</th>
+          <th>{t("common.total")}</th>
+          <th>{t("cart.remove")}</th>
         </tr>
         {cartArray.length === 0 ? (
           <tr className="no-item-msg">
-            <td className="no-item-msg-text">No items in the cart</td>
+            <td className="no-item-msg-text">{t("cart.emptyCart")}</td>
           </tr>
         ) : (
           cartArray.map((item) => (

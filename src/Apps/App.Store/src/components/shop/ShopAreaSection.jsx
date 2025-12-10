@@ -2,7 +2,7 @@ import React from 'react'
 import SearchFilter from './SearchFilter'
 import ProductCategoryList from './ProductCategoryList'
 import ProductPriceFilter from './ProductPriceFilter'
-import ProductTag from './ProductTag'
+import BrandFilter from './BrandFilter'
 import ProductViewFilter from './ProductViewFilter'
 import ProductContainer from './ProductContainer'
 import ProductPagination from './ProductPagination'
@@ -20,7 +20,7 @@ const ShopAreaSection = () => {
 
                         <ProductPriceFilter/>
 
-                        <ProductTag/>
+                        <BrandFilter/>
                     </div>
                 </div>
 

@@ -39,7 +39,7 @@ public sealed class GetAllCategoriesQueryHandler(IDocumentSession session, IMapp
 
             item.ParentName = parrent.Name;
         }
-
+ 
         var response = new GetAllCategoriesResult(categories);
 
         return response;

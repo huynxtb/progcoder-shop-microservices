@@ -1,13 +1,16 @@
 import React, { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import HeaderNav from "../navigation/HeaderNav";
 import WishlistModal from "../modal/WishlistModal";
 import CartModal from "../modal/CartModal";
 import SearchModal from "../modal/SearchModal";
+import LanguageSwitcher from "../language/LanguageSwitcher";
 import { FarzaaContext } from "../../context/FarzaaContext";
 import RightSideBar from "../sidebar/RightSideBar";
 
 const HeaderSection8 = () => {
+  const { t } = useTranslation();
   const {
     isHeaderFixed,
     handleWishlistShow,
@@ -36,7 +39,7 @@ const HeaderSection8 = () => {
             </div>
 
             <div className="col-lg-4 col-md-6">
-              <h6>SALE: 400+ products up to 70% off. Shop Now</h6>
+              <h6>{t("header.topSale")}</h6>
             </div>
 
             <div className="col-lg-4 col-md-6">
@@ -63,12 +66,7 @@ const HeaderSection8 = () => {
                   <option value="Rupee">Rupee</option>
                 </select>
 
-                <select name="language" id="top-header-language-dropdown">
-                  <option value="English">English</option>
-                  <option value="Bangla">Bangla</option>
-                  <option value="French">French</option>
-                  <option value="Hindi">Hindi</option>
-                </select>
+                <LanguageSwitcher />
               </div>
             </div>
           </div>

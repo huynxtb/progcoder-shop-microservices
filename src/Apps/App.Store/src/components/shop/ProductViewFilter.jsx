@@ -1,8 +1,10 @@
 import { FarzaaContext } from '../../context/FarzaaContext';
 import React, { useContext } from 'react'
+import { useTranslation } from "react-i18next";
 import { Form } from 'react-bootstrap'
 
 const ProductViewFilter = () => {
+    const { t } = useTranslation();
     const {
         isListView,
         setListView,
@@ -19,7 +21,7 @@ const ProductViewFilter = () => {
     <div className="product-view-actions">
         <div className="row gy-3 align-items-center">
             <div className="col-xxl-6 col-xl-6 col-lg-5 col-6 col-xxs-12 text-center text-md-start">
-                <p className="text-center text-sm-start"> Showing {startItem}-{endItem} of {totalProducts} results</p>
+                <p className="text-center text-sm-start">{t("shop.showingResults", "Showing {{start}}-{{end}} of {{total}} results", { start: startItem, end: endItem, total: totalProducts })}</p>
             </div>
 
             <div className="col-xxl-6 col-xl-6 col-lg-7 col-6 col-xxs-12 col-sm-6">
@@ -37,11 +39,11 @@ const ProductViewFilter = () => {
                     <div className="product-sorting d-inline-block">
                         <form className="" action="#">
                             <Form.Select className="nice-select" onChange={handleSortChange} value={sortBy}>
-                            <option value="">Default</option>
-                            <option value="name-az">By Name (A to Z)</option>
-                            <option value="name-za">By Name (Z to A)</option>
-                            <option value="price-low-high">By Price (Low to High)</option>
-                            <option value="price-high-low">By Price (High to Low)</option>
+                            <option value="">{t("shop.default", "Default")}</option>
+                            <option value="name-az">{t("common.nameAZ")}</option>
+                            <option value="name-za">{t("common.nameZA")}</option>
+                            <option value="price-low-high">{t("common.priceLowToHigh")}</option>
+                            <option value="price-high-low">{t("common.priceHighToLow")}</option>
                             </Form.Select>
                         </form>
                     </div>

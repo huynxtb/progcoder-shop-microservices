@@ -1,9 +1,11 @@
 import React, { useContext } from 'react'
+import { useTranslation } from "react-i18next";
 import CartItemTable from './CartItemTable'
 import { FarzaaContext } from '../../context/FarzaaContext'
 import { Link } from 'react-router-dom'
 
 const CartSection = () => {
+    const { t } = useTranslation();
     const {
         subTotal, 
         shipping, 
@@ -25,11 +27,11 @@ const CartSection = () => {
 
                         <div className="cart-left-actions d-flex justify-content-end">
                             {cartItems.length === 0? (
-                              <Link className='fz-1-banner-btn update-cart-btn' to='/shop'>Go to Shop</Link>  
+                              <Link className='fz-1-banner-btn update-cart-btn' to='/shop'>{t("common.continueShopping")}</Link>  
                             ):(
                                 <form action="#" className="cart-coupon-form">
-                                    <input type="text" name="cart-coupon-input" id="cart-coupon-input" placeholder="Enter Your Coupon Code"/>
-                                    <button type="submit" className="fz-1-banner-btn coupon-apply-btn">Apply Coupon</button>
+                                    <input type="text" name="cart-coupon-input" id="cart-coupon-input" placeholder={t("cart.enterCouponCode", "Enter Your Coupon Code")}/>
+                                    <button type="submit" className="fz-1-banner-btn coupon-apply-btn">{t("cart.applyCoupon", "Apply Coupon")}</button>
                                 </form>
                             )}
                         </div>
@@ -38,32 +40,32 @@ const CartSection = () => {
             </div>
 
             <div className="cart-checkout-area">
-                <h4 className="cart-checkout-area__title">Billing Summary</h4>
+                <h4 className="cart-checkout-area__title">{t("cart.billingSummary", "Billing Summary")}</h4>
 
                 <ul className="checkout-summary">
                     <li>
-                        <span className="checkout-summary__key">Subtotal</span>
+                        <span className="checkout-summary__key">{t("common.subtotal")}</span>
                         <span className="checkout-summary__value"><span>$</span>{subTotal}</span>
                     </li>
 
                     <li>
-                        <span className="checkout-summary__key">Shipping</span>
+                        <span className="checkout-summary__key">{t("common.shipping")}</span>
                         <span className="checkout-summary__value"><span>$</span>{shipping}</span>
                     </li>
 
                     <li>
-                        <span className="checkout-summary__key">Coupon discount</span>
+                        <span className="checkout-summary__key">{t("cart.couponDiscount", "Coupon discount")}</span>
                         <span className="checkout-summary__value">-<span>$</span>{coupon}</span>
                     </li>
 
                     <li className="cart-checkout-total">
-                        <span className="checkout-summary__key">Total</span>
+                        <span className="checkout-summary__key">{t("common.total")}</span>
                         <span className="checkout-summary__value"><span>$</span>{finalPrice}</span>
                     </li>
                 </ul>
 
 
-                <Link to="/checkout" className="fz-1-banner-btn cart-checkout-btn">Proceed to checkout</Link>
+                <Link to="/checkout" className="fz-1-banner-btn cart-checkout-btn">{t("common.proceedToCheckout")}</Link>
             </div>
         </div>
     </div>

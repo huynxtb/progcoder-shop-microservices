@@ -65,10 +65,12 @@
     "zipCode": "Mã bưu điện",
     "language": "Ngôn ngữ",
     "english": "Tiếng Anh",
-    "vietnamese": "Tiếng Việt"
+    "vietnamese": "Tiếng Việt",
+    "pages": "Trang"
   },
   "header": {
     "topSale": "KHUYẾN MÃI: 400+ sản phẩm giảm đến 70%. Mua ngay",
+    "shopEvents": "Sự kiện mua sắm & tiết kiệm đến 65%!",
     "myAccount": "Tài khoản",
     "wishlist": "Yêu thích",
     "cart": "Giỏ hàng",
@@ -88,7 +90,11 @@
     "subscribe": "Đăng ký",
     "subscribePlaceholder": "Nhập email của bạn",
     "followUs": "Theo dõi chúng tôi",
-    "copyright": "Bản quyền 2024, Tất cả quyền được bảo lưu."
+    "copyright": "Bản quyền",
+    "allRightsReserved": "Tất cả quyền được bảo lưu",
+    "waysToShop": "Cách mua sắm",
+    "quickLinks": "Liên kết nhanh",
+    "storeAddress": "Địa chỉ cửa hàng"
   },
   "product": {
     "addToCart": "Thêm vào giỏ",
@@ -126,7 +132,12 @@
     "shipping": "Vận chuyển",
     "total": "Tổng cộng",
     "emptyCart": "Giỏ hàng của bạn trống",
-    "emptyCartMessage": "Có vẻ như bạn chưa thêm sản phẩm nào vào giỏ hàng."
+    "emptyCartMessage": "Có vẻ như bạn chưa thêm sản phẩm nào vào giỏ hàng.",
+    "billingSummary": "Tóm tắt thanh toán",
+    "enterCouponCode": "Nhập mã giảm giá",
+    "applyCoupon": "Áp dụng mã giảm giá",
+    "couponDiscount": "Giảm giá từ mã",
+    "viewFullCart": "Xem giỏ hàng đầy đủ"
   },
   "checkout": {
     "title": "Thanh toán",
@@ -162,7 +173,8 @@
     "addToCart": "Thêm vào giỏ",
     "remove": "Xóa",
     "emptyWishlist": "Danh sách yêu thích của bạn trống",
-    "emptyWishlistMessage": "Bạn chưa thêm sản phẩm nào vào danh sách yêu thích."
+    "emptyWishlistMessage": "Bạn chưa thêm sản phẩm nào vào danh sách yêu thích.",
+    "goToWishlist": "Đi đến danh sách yêu thích"
   },
   "account": {
     "title": "Tài khoản của tôi",
@@ -216,6 +228,20 @@
     "pageNotFound": "Không tìm thấy trang",
     "pageNotFoundMessage": "Trang bạn đang tìm có thể đã bị xóa, đổi tên hoặc tạm thời không khả dụng.",
     "goHome": "Về trang chủ"
+  },
+  "shop": {
+    "title": "Trang cửa hàng",
+    "searchProduct": "Tìm kiếm sản phẩm",
+    "productCategories": "Danh mục sản phẩm",
+    "allCategories": "Tất cả danh mục",
+    "filterByPrice": "Lọc theo giá",
+    "priceRange": "Khoảng giá",
+    "productTags": "Thẻ sản phẩm",
+    "showingResults": "Hiển thị {{start}}-{{end}} trong tổng số {{total}} kết quả",
+    "default": "Mặc định",
+    "noProductsAvailable": "Không có sản phẩm",
+    "noSearchResults": "Xin lỗi. Chúng tôi không tìm thấy kết quả nào phù hợp với từ khóa tìm kiếm của bạn.",
+    "selectToCompare": "Chọn để so sánh"
   }
 }
 

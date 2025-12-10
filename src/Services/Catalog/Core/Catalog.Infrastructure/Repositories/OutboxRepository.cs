@@ -81,7 +81,7 @@ public class OutboxRepository(IDocumentSession session, ILogger<OutboxRepository
         catch (Exception ex)
         {
             logger.LogError(ex, "Error occurred while claiming outbox messages");
-            throw;
+            return [];
         }
     }
 
@@ -135,7 +135,7 @@ public class OutboxRepository(IDocumentSession session, ILogger<OutboxRepository
         catch (Exception ex)
         {
             logger.LogError(ex, "Error occurred while claiming retry outbox messages");
-            throw;
+            return [];
         }
     }
 

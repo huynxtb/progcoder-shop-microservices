@@ -1,7 +1,9 @@
 import React from 'react'
+import { useTranslation } from "react-i18next";
 import { Link } from 'react-router-dom'
 
 const BreadcrumbSection = ({title,current}) => {
+  const { t } = useTranslation();
   return (
     <div className="fz-inner-page-breadcrumb">
         <div className="container">
@@ -10,7 +12,7 @@ const BreadcrumbSection = ({title,current}) => {
                     <div className="breadcrumb-txt">
                         <h1>{title}</h1>
                         <ul className="fz-inner-page-breadcrumb-nav">
-                            <li><Link to="/">Home</Link></li>
+                            <li><Link to="/">{t("common.home")}</Link></li>
                             <li className="current-page">{current}</li>
                         </ul>
                     </div>

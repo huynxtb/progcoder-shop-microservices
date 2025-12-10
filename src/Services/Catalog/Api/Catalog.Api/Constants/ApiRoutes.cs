@@ -8,27 +8,29 @@ public sealed class ApiRoutes
 
         public const string Tags = "Products";
 
-        private const string Base = "products";
+        private const string Base = "/products";
 
-        public const string Create = $"/{Base}";
+        private const string BaseAdmin = "/admin/products";
 
-        public const string Delete = $"/{Base}/{{productId}}";
+        public const string Create = $"{BaseAdmin}";
 
-        public const string Update = $"/{Base}/{{productId}}";
+        public const string Delete = $"{BaseAdmin}/{{productId}}";
 
-        public const string Unpublish = $"/{Base}/{{productId}}/unpublish";
+        public const string Update = $"{BaseAdmin}/{{productId}}";
 
-        public const string Publish = $"/{Base}/{{productId}}/publish";
+        public const string Unpublish = $"{BaseAdmin}/{{productId}}/unpublish";
 
-        public const string GetProductById = $"/{Base}/{{productId}}";
+        public const string Publish = $"{BaseAdmin}/{{productId}}/publish";
 
-        public const string GetPublishProductById = $"/public/{Base}/{{productId}}";
+        public const string GetProductById = $"{BaseAdmin}/{{productId}}";
 
-        public const string GetProducts = $"/{Base}";
+        public const string GetProducts = $"{BaseAdmin}";
 
-        public const string GetPublishProducts = $"/public/{Base}";
+        public const string GetAllProducts = $"{BaseAdmin}/all";
 
-        public const string GetAllProducts = $"/products/all";
+        public const string GetPublicProductById = $"{Base}/{{productId}}";
+
+        public const string GetPublicProducts = $"{Base}";
 
         #endregion
     }
@@ -39,17 +41,19 @@ public sealed class ApiRoutes
 
         public const string Tags = "Categories";
 
-        private const string Base = "categories";
+        private const string Base = "/categories";
 
-        public const string Create = $"/{Base}";
+        private const string BaseAdmin = "/admin/categories";
 
-        public const string Update = $"/{Base}/{{categoryId}}";
+        public const string Create = $"{BaseAdmin}";
 
-        public const string Delete = $"/{Base}/{{categoryId}}";
+        public const string Update = $"{BaseAdmin}/{{categoryId}}";
 
-        public const string GetAll = $"/{Base}";
+        public const string Delete = $"{BaseAdmin}/{{categoryId}}";
 
-        public const string GetTree = $"/{Base}/tree";
+        public const string GetAll = $"{Base}";
+
+        public const string GetTree = $"{Base}/tree";
 
         #endregion
     }
@@ -60,15 +64,17 @@ public sealed class ApiRoutes
 
         public const string Tags = "Brands";
 
-        private const string Base = "brands";
+        private const string Base = "/brands";
 
-        public const string Create = $"/{Base}";
+        private const string BaseAdmin = "/admin/brands";
 
-        public const string Update = $"/{Base}/{{brandId}}";
+        public const string Create = $"{BaseAdmin}";
 
-        public const string Delete = $"/{Base}/{{brandId}}";
+        public const string Update = $"{BaseAdmin}/{{brandId}}";
 
-        public const string GetAll = $"/{Base}";
+        public const string Delete = $"{BaseAdmin}/{{brandId}}";
+
+        public const string GetAll = $"{Base}";
 
         #endregion
     }

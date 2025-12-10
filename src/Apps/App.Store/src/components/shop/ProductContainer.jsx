@@ -1,8 +1,11 @@
 import React, { useContext } from 'react'
+import { useTranslation } from "react-i18next";
 import { FarzaaContext } from '../../context/FarzaaContext'
 import { Link } from 'react-router-dom'
+import { formatCurrency } from '../../utils/format'
 
 const ProductContainer = () => {
+    const { t } = useTranslation();
     const {
         isListView,
         paginatedProducts,
@@ -14,8 +17,8 @@ const ProductContainer = () => {
         <div className="row justify-content-center">
             {paginatedProducts.length === 0 ? (
                 <div className='no-product-area'>
-                    <h3 className='no-product-text'>No Products Available</h3>
-                    <p className='no-product-desc'>We're sorry. We cannot find any matches for your search term.</p>
+                    <h3 className='no-product-text'>{t("shop.noProductsAvailable", "No Products Available")}</h3>
+                    <p className='no-product-desc'>{t("shop.noSearchResults", "We're sorry. We cannot find any matches for your search term.")}</p>
                 </div>
             ):(
               paginatedProducts.map((item) => (
@@ -28,7 +31,7 @@ const ProductContainer = () => {
                             className="fz-add-to-wishlist-btn"
                             onClick={() => addToWishlist(item.id)}
                             >
-                                <span className="btn-txt">add To wishlist</span>
+                                <span className="btn-txt">{t("common.addToWishlist")}</span>
                                 <span className="btn-icon">{item.isInWishlist? (<i className="fa-solid fa-heart"></i>):(<i className="fa-light fa-heart"></i>)}</span>
                             </button>
 
@@ -36,23 +39,32 @@ const ProductContainer = () => {
                             className="fz-add-to-cart-btn"
                             onClick={() => addToCart(item.id)}
                             >
-                                <span className="btn-txt">add To cart</span>
+                                <span className="btn-txt">{t("common.addToCart")}</span>
                                 <span className="btn-icon"><i className="fa-light fa-cart-shopping"></i></span>
                             </button>
 
                             <button className="fz-add-to-compare-btn">
-                                <span className="btn-txt">select to compare</span>
+                                <span className="btn-txt">{t("shop.selectToCompare", "Select to compare")}</span>
                                 <span className="btn-icon"><i className="fa-light fa-arrow-right-arrow-left"></i></span>
                             </button>
                         </div>
                     </div>
 
                     <div className="fz-single-product__txt">
-                        <span className="fz-single-product__category list-view-text">{item.category}</span>
-                        <Link to="/shopDetails" className="fz-single-product__title">{item.name}</Link>
+                        {item.displayStatus && (
+                            <span className="fz-single-product__category list-view-text">{item.displayStatus}</span>
+                        )}
+                        <Link to={`/shopDetails/${item.id}`} className="fz-single-product__title">{item.name}</Link>
                         <div className="fz-single-product__price-rating">
                             <p className="fz-single-product__price">
-                                <span className="current-price">${item.price}</span>
+                                {item.salePrice && item.salePrice > 0 ? (
+                                    <>
+                                        <span className="current-price">{formatCurrency(item.salePrice)}</span>
+                                        <span className="old-price">{formatCurrency(item.price)}</span>
+                                    </>
+                                ) : (
+                                    <span className="current-price">{formatCurrency(item.price)}</span>
+                                )}
                             </p>
 
                             <div className="rating list-view-text">
@@ -64,17 +76,18 @@ const ProductContainer = () => {
                             </div>
                         </div>
 
-                        <p className="fz-single-product__desc list-view-text">
-                            2021 Latest G5 3200DPI Gaming Mouse 7-Color RGB Breathing
-                            Led Light for Notebook Laptop/PC RGB Backlit Universal.
-                        </p>
+                        {item.sku && (
+                            <p className="fz-single-product__desc list-view-text">
+                                SKU: {item.sku}
+                            </p>
+                        )}
 
                         <div className="fz-single-product__actions list-view-text">
                             <button 
                             className="fz-add-to-wishlist-btn"
                             onClick={() => addToWishlist(item.id)}
                             >                                
-                                <span className="btn-txt">add To wishlist</span>
+                                <span className="btn-txt">{t("common.addToWishlist")}</span>
                                 <span className="btn-icon">{item.isInWishlist? (<i className="fa-solid fa-heart"></i>):(<i className="fa-light fa-heart"></i>)}</span>
                             </button>
 
@@ -82,12 +95,12 @@ const ProductContainer = () => {
                             className="fz-add-to-cart-btn"
                             onClick={() => addToCart(item.id)}
                             >
-                                <span className="btn-txt">add To cart</span>
+                                <span className="btn-txt">{t("common.addToCart")}</span>
                                 <span className="btn-icon"><i className="fa-light fa-cart-shopping"></i></span>
                             </button>
 
                             <button className="fz-add-to-compare-btn">
-                                <span className="btn-txt">select to compare</span>
+                                <span className="btn-txt">{t("shop.selectToCompare", "Select to compare")}</span>
                                 <span className="btn-icon"><i className="fa-light fa-arrow-right-arrow-left"></i></span>
                             </button>
                         </div>

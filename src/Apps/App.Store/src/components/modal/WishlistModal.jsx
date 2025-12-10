@@ -1,9 +1,11 @@
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import WishlistItemTable from "../wishlist/WishlistItemTable";
 import { FarzaaContext } from "../../context/FarzaaContext";
 import { useNavigate } from "react-router-dom";
 
 const WishlistModal = ({ wishlistArray, removeItem }) => {
+  const { t } = useTranslation();
   const { showWishlist, handleWishlistClose, addWishlistToCart } =
     useContext(FarzaaContext);
   const navigate = useNavigate(); // Initialize the useNavigate hook
@@ -27,7 +29,7 @@ const WishlistModal = ({ wishlistArray, removeItem }) => {
         id="wishlist-modal-area"
       >
         <div className="cart__header">
-          <h3 className="cart__title">Your Wishlist</h3>
+          <h3 className="cart__title">{t("wishlist.title")}</h3>
           <button
             className="cart-area-modal-close-btn"
             onClick={handleWishlistClose}
@@ -50,7 +52,7 @@ const WishlistModal = ({ wishlistArray, removeItem }) => {
                 onClick={() => closeAndNavigate("/shop")}
                 className="fz-1-banner-btn update-cart-btn"
               >
-                Go to Shop
+                {t("common.continueShopping")}
               </button>
             </div>
           ) : (
@@ -59,13 +61,13 @@ const WishlistModal = ({ wishlistArray, removeItem }) => {
                 onClick={() => closeAndNavigate("/wishlist")}
                 className="fz-1-banner-btn update-cart-btn"
               >
-                Go to Wishlist
+                {t("wishlist.goToWishlist", "Go to Wishlist")}
               </button>
               <button
                 className="fz-1-banner-btn update-cart-btn"
                 onClick={addWishlistToCart}
               >
-                Add to Cart
+                {t("common.addToCart")}
               </button>
             </div>
           )}

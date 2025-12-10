@@ -65,10 +65,12 @@
     "zipCode": "Zip Code",
     "language": "Language",
     "english": "English",
-    "vietnamese": "Vietnamese"
+    "vietnamese": "Vietnamese",
+    "pages": "Pages"
   },
   "header": {
     "topSale": "SALE: 400+ products up to 70% off. Shop Now",
+    "shopEvents": "Shop events & save up to 65% off!",
     "myAccount": "My Account",
     "wishlist": "Wishlist",
     "cart": "Cart",
@@ -88,7 +90,11 @@
     "subscribe": "Subscribe",
     "subscribePlaceholder": "Enter your email",
     "followUs": "Follow Us",
-    "copyright": "Copyright 2024, All Rights Reserved."
+    "copyright": "Copyright",
+    "allRightsReserved": "All Rights Reserved",
+    "waysToShop": "Ways to Shop",
+    "quickLinks": "Quick Links",
+    "storeAddress": "Store Address"
   },
   "product": {
     "addToCart": "Add to Cart",
@@ -126,7 +132,12 @@
     "shipping": "Shipping",
     "total": "Total",
     "emptyCart": "Your cart is empty",
-    "emptyCartMessage": "Looks like you haven't added anything to your cart yet."
+    "emptyCartMessage": "Looks like you haven't added anything to your cart yet.",
+    "billingSummary": "Billing Summary",
+    "enterCouponCode": "Enter Your Coupon Code",
+    "applyCoupon": "Apply Coupon",
+    "couponDiscount": "Coupon discount",
+    "viewFullCart": "View Full cart"
   },
   "checkout": {
     "title": "Checkout",
@@ -162,7 +173,8 @@
     "addToCart": "Add to Cart",
     "remove": "Remove",
     "emptyWishlist": "Your wishlist is empty",
-    "emptyWishlistMessage": "You haven't added any products to your wishlist yet."
+    "emptyWishlistMessage": "You haven't added any products to your wishlist yet.",
+    "goToWishlist": "Go to Wishlist"
   },
   "account": {
     "title": "My Account",
@@ -216,6 +228,20 @@
     "pageNotFound": "Page Not Found",
     "pageNotFoundMessage": "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.",
     "goHome": "Go Home"
+  },
+  "shop": {
+    "title": "Shop Page",
+    "searchProduct": "Search Product",
+    "productCategories": "Product categories",
+    "allCategories": "All Categories",
+    "filterByPrice": "Filter by price",
+    "priceRange": "Price range",
+    "productTags": "Product tags",
+    "showingResults": "Showing {{start}}-{{end}} of {{total}} results",
+    "default": "Default",
+    "noProductsAvailable": "No Products Available",
+    "noSearchResults": "We're sorry. We cannot find any matches for your search term.",
+    "selectToCompare": "Select to compare"
   }
 }
 

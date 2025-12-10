@@ -1,22 +1,24 @@
 import { useContext } from 'react'
+import { useTranslation } from "react-i18next";
 import { FarzaaContext } from '../../context/FarzaaContext'
 import { Link } from 'react-router-dom'
 
 const WishlistItemTable = ({wishlistArray,removeItem}) => {
+    const { t } = useTranslation();
     const {addToCartFromWishlist} = useContext(FarzaaContext)
   return (
     <div className='wishlist-table'>
        <table >
         <tbody>
             <tr>
-                <th>Product</th>
-                <th>price</th>
-                <th>action</th>
-                <th>remove</th>
+                <th>{t("wishlist.product")}</th>
+                <th>{t("common.price")}</th>
+                <th>{t("wishlist.action")}</th>
+                <th>{t("cart.remove")}</th>
             </tr>
             {wishlistArray.length === 0 ? (
                     <tr className='no-item-msg'>
-                        <td className='no-item-msg-text'>No items in the wishlist.</td>
+                        <td className='no-item-msg-text'>{t("wishlist.emptyWishlist")}</td>
                     </tr>
                 ) : (
                     wishlistArray.map((item) => (
@@ -37,7 +39,7 @@ const WishlistItemTable = ({wishlistArray,removeItem}) => {
                                     <button 
                                     className="fz-add-to-cart-btn fz-1-banner-btn fz-wishlist-action-btn"
                                     onClick={() => addToCartFromWishlist(item)}
-                                    >Add to cart</button>
+                                    >{t("common.addToCart")}</button>
                                 </div>
                             </td>
                             <td>

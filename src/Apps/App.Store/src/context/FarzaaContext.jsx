@@ -1,15 +1,18 @@
 import {
   allCakeList,
-  allProductList,
   blogList,
   ornamentList,
 } from "../data/Data";
 import { createContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
+import { useKeycloak } from "../contexts/KeycloakContext";
+import { searchProducts, getCategories, getBrands } from "../api/services/productService";
 
 const FarzaaContext = createContext();
 
 const FarzaaContextProvider = ({ children }) => {
+  const { authenticated, login } = useKeycloak();
+  
   // Wishlist Modal
   const [showWishlist, setShowWishlist] = useState(false);
 
@@ -141,165 +144,273 @@ const FarzaaContextProvider = ({ children }) => {
     setIsListView(false);
   };
   // Price Filter
-  const [startPrice, setStartPrice] = useState(20);
-  const [endPrice, setEndPrice] = useState(500);
-  const [price, setPrice] = useState([startPrice, endPrice]);
+  const [maxPrice, setMaxPrice] = useState(10000000); // Default max price
+  const [price, setPrice] = useState([0, 10000000]);
 
   const handlePriceChange = (event, newPrice) => {
     setPrice(newPrice);
   };
 
-  // All Product Filter
-  const [filteredProducts, setFilteredProducts] = useState(allProductList);
+  // API Data States
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [productsLoading, setProductsLoading] = useState(false);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
+  const [brandsLoading, setBrandsLoading] = useState(false);
+
+  // Product Filter States
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+  // Calculate max price from products (only on initial load)
+  useEffect(() => {
+    if (filteredProducts && filteredProducts.length > 0 && isInitialLoad) {
+      const prices = filteredProducts.map(p => p.price || 0);
+      const calculatedMaxPrice = Math.max(...prices, 0);
+      if (calculatedMaxPrice > 0) {
+        // Round up to nearest 10000000 for better UX
+        const roundedMax = Math.ceil(calculatedMaxPrice / 10000000) * 10000000;
+        setMaxPrice(roundedMax);
+        // Only update price range on initial load
+        setPrice([0, roundedMax]);
+        setIsInitialLoad(false);
+      }
+    } else if (filteredProducts && filteredProducts.length > 0 && !isInitialLoad) {
+      // Update maxPrice when products change, but don't reset price filter
+      const prices = filteredProducts.map(p => p.price || 0);
+      const calculatedMaxPrice = Math.max(...prices, 0);
+      if (calculatedMaxPrice > 0) {
+        const roundedMax = Math.ceil(calculatedMaxPrice / 10000000) * 10000000;
+        // Only update maxPrice if it's larger, but keep current price filter
+        setMaxPrice(prevMax => Math.max(prevMax, roundedMax));
+      }
+    }
+  }, [filteredProducts, isInitialLoad]);
+  const [paginatedProducts, setPaginatedProducts] = useState([]);
   const [sortBy, setSortBy] = useState("");
-  // Handle sort
-  const handleSortChange = (event) => {
-    const value = event.target.value;
-    setSortBy(value);
-    sortProducts(value);
-  };
-  // sort product
-  const sortProducts = (criteria) => {
-    let sortedProducts = [...filteredProducts];
-
-    switch (criteria) {
-      case "name-az":
-        sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case "name-za":
-        sortedProducts.sort((a, b) => b.name.localeCompare(a.name));
-        break;
-      case "price-low-high":
-        sortedProducts.sort((a, b) => a.price - b.price);
-        break;
-      case "price-high-low":
-        sortedProducts.sort((a, b) => b.price - a.price);
-        break;
-      default:
-        break;
-    }
-
-    setFilteredProducts(sortedProducts);
-  };
-  // category handle method
-  const handleCategoryFilter = (category) => {
-    if (category === null) {
-      setFilteredProducts(allProductList); // Show all products
-    } else {
-      const filtered = allProductList.filter(
-        (product) => product.category === category
-      );
-      setFilteredProducts(filtered);
-    }
-    setCurrentPage(1);
-  };
-
-  // Price Filter
-  const handlePriceFilter = () => {
-    const filtered = allProductList.filter(
-      (product) => product.price >= price[0] && product.price <= price[1]
-    );
-    setFilteredProducts(filtered);
-  };
-
-  // Search Filter
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchedProducts, setSearchedProducts] = useState([]);
-
-  const handleSearchChange = (event) => {
-    const value = event.target.value;
-    setSearchTerm(value);
-    performSearch(value);
-  };
-
-  const performSearch = (term) => {
-    const filtered = allProductList.filter((product) =>
-      product.name.toLowerCase().includes(term.toLowerCase())
-    );
-    setSearchedProducts(filtered);
-  };
-
-  useEffect(() => {
-    if (searchTerm) {
-      setFilteredProducts(searchedProducts);
-      setCurrentPage(1); // Reset pagination when search changes
-    } else {
-      setFilteredProducts(allProductList);
-    }
-  }, [searchedProducts, searchTerm]);
-  // Tag Filter
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
-
-  const handleTagSelection = (tag) => {
-    if (selectedTags.includes(tag)) {
-      setSelectedTags(
-        selectedTags.filter((selectedTag) => selectedTag !== tag)
-      );
-    } else {
-      setSelectedTags([...selectedTags, tag]);
-    }
-  };
-
-  // Filter products based on selected tags
-  const filteredByTags =
-    selectedTags.length === 0
-      ? allProductList
-      : allProductList.filter((product) =>
-          selectedTags.includes(product.category)
-        );
-
-  useEffect(() => {
-    if (selectedTags.length > 0) {
-      const filteredByTags = allProductList.filter((product) =>
-        selectedTags.includes(product.category)
-      );
-      setFilteredProducts(filteredByTags);
-      setCurrentPage(1); // Reset pagination when tags change
-    } else {
-      setFilteredProducts(allProductList);
-    }
-  }, [selectedTags]);
-
+  
   // Pagination
   const productsPerPage = 9;
   const [currentPage, setCurrentPage] = useState(1);
-
-  const totalProducts = filteredProducts.length;
-  const totalPages = Math.ceil(totalProducts / productsPerPage);
-
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-    scrollToTop(); // Scroll to the top after changing the page
-  };
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
   // Scroll to the top of the page
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth", // You can also use "auto" for instant scrolling
+      behavior: "smooth",
     });
   };
 
+  // Map API product to component format
+  const mapApiProductToComponent = (apiProduct) => {
+    return {
+      id: apiProduct.id,
+      name: apiProduct.name,
+      price: apiProduct.price,
+      salePrice: apiProduct.salePrice || 0,
+      imgSrc: apiProduct.thumbnail || (apiProduct.images && apiProduct.images[0]) || "",
+      category: apiProduct.categories && apiProduct.categories.length > 0 ? apiProduct.categories[0] : null,
+      categories: apiProduct.categories || [],
+      sku: apiProduct.sku,
+      slug: apiProduct.slug,
+      status: apiProduct.status,
+      displayStatus: apiProduct.displayStatus,
+      images: apiProduct.images || [],
+      isInWishlist: false,
+    };
+  };
+
+  // Fetch products from API
+  const fetchProducts = async (filters = {}) => {
+    try {
+      setProductsLoading(true);
+      
+      // Merge filters with current state
+      const {
+        searchText = filters.searchText !== undefined ? filters.searchText : searchTerm,
+        categoryId = filters.categoryId !== undefined ? filters.categoryId : selectedCategory,
+        minPrice = filters.minPrice !== undefined ? filters.minPrice : price[0],
+        maxPrice = filters.maxPrice !== undefined ? filters.maxPrice : price[1],
+        status = filters.status !== undefined ? filters.status : null,
+        sortBy: sortByValue = filters.sortBy !== undefined ? filters.sortBy : sortBy,
+        pageNumber = filters.pageNumber !== undefined ? filters.pageNumber : currentPage,
+        pageSize = filters.pageSize !== undefined ? filters.pageSize : productsPerPage,
+      } = filters;
+
+      // Map sortBy to API format
+      let apiSortBy = null;
+      let apiSortType = null;
+      
+      switch (sortByValue) {
+        case "name-az":
+          apiSortBy = 1; // Name
+          apiSortType = 1; // Asc
+          break;
+        case "name-za":
+          apiSortBy = 1; // Name
+          apiSortType = 2; // Desc
+          break;
+        case "price-low-high":
+          apiSortBy = 3; // Price
+          apiSortType = 1; // Asc
+          break;
+        case "price-high-low":
+          apiSortBy = 3; // Price
+          apiSortType = 2; // Desc
+          break;
+        default:
+          break;
+      }
+
+      const params = {
+        searchText: searchText || null,
+        categories: categoryId || null,
+        minPrice: minPrice > 0 ? minPrice : null,
+        maxPrice: maxPrice && maxPrice > 0 ? maxPrice : null,
+        status: status,
+        sortBy: apiSortBy,
+        sortType: apiSortType,
+        pageNumber,
+        pageSize,
+      };
+
+      const response = await searchProducts(params);
+      
+      if (response && response.result) {
+        const products = response.result.products.map(mapApiProductToComponent);
+        setFilteredProducts(products);
+        setPaginatedProducts(products);
+        setTotalProducts(response.result.paging?.totalCount || 0);
+        setTotalPages(response.result.paging?.totalPages || 0);
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      toast.error("Failed to load products");
+      setFilteredProducts([]);
+      setPaginatedProducts([]);
+    } finally {
+      setProductsLoading(false);
+    }
+  };
+
+  // Fetch categories from API
+  const fetchCategories = async () => {
+    try {
+      setCategoriesLoading(true);
+      const response = await getCategories();
+      if (response && response.result && response.result.items) {
+        setCategories(response.result.items);
+      } else {
+        setCategories([]);
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      toast.error("Failed to load categories");
+      setCategories([]);
+    } finally {
+      setCategoriesLoading(false);
+    }
+  };
+
+  // Fetch brands from API
+  const fetchBrands = async () => {
+    try {
+      setBrandsLoading(true);
+      const response = await getBrands();
+      if (response && response.result && response.result.items) {
+        setBrands(response.result.items);
+      } else {
+        setBrands([]);
+      }
+    } catch (error) {
+      console.error("Error fetching brands:", error);
+      toast.error("Failed to load brands");
+      setBrands([]);
+    } finally {
+      setBrandsLoading(false);
+    }
+  };
+
+  // Load initial data
   useEffect(() => {
-    // Calculate the index range for pagination
-    const startIndex = (currentPage - 1) * productsPerPage;
-    const endIndex = currentPage * productsPerPage;
+    fetchCategories();
+    fetchBrands();
+    fetchProducts();
+  }, []);
 
-    // Slice the filtered products based on the calculated index range
-    const paginatedSlice = filteredProducts.slice(startIndex, endIndex);
+  // Handle sort change
+  const handleSortChange = (event) => {
+    const value = event.target.value;
+    setSortBy(value);
+    setCurrentPage(1);
+    fetchProducts({ sortBy: value, pageNumber: 1 });
+  };
 
-    // Set the paginated products
-    setPaginatedProducts(paginatedSlice);
+  // Handle category filter
+  const handleCategoryFilter = (categoryId) => {
+    setSelectedCategory(categoryId);
+    setCurrentPage(1);
+    fetchProducts({ categoryId, pageNumber: 1 });
+  };
 
-    // Scroll to the top whenever the page changes
-  }, [currentPage, filteredProducts]);
+  // Handle price filter
+  const handlePriceFilter = () => {
+    setCurrentPage(1);
+    fetchProducts({ 
+      minPrice: price[0], 
+      maxPrice: price[1],
+      pageNumber: 1 
+    });
+  };
 
-  // Use this state to store the paginated products
-  const [paginatedProducts, setPaginatedProducts] = useState([]);
+  // Handle search change with debounce
+  const handleSearchChange = (event) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+    setCurrentPage(1);
+  };
+
+  // Debounce search effect
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      fetchProducts({ searchText: searchTerm, pageNumber: 1 });
+    }, 500);
+    
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm]);
+
+  // Handle tag selection (for brands)
+  const handleTagSelection = (tagId) => {
+    const newSelectedTags = selectedTags.includes(tagId)
+      ? selectedTags.filter((id) => id !== tagId)
+      : [...selectedTags, tagId];
+    
+    setSelectedTags(newSelectedTags);
+    setCurrentPage(1);
+    
+    // Filter by selected brand tags
+    if (newSelectedTags.length > 0) {
+      // For now, we'll use categories filter - brands can be added later
+      fetchProducts({ pageNumber: 1 });
+    } else {
+      fetchProducts({ pageNumber: 1 });
+    }
+  };
+
+  // Handle page change
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    scrollToTop();
+    fetchProducts({ pageNumber: newPage });
+  };
 
   // Cart Item Table
-  const initialCartItems = allProductList.slice(0, 2);
-  const [cartItems, setCartItems] = useState(initialCartItems);
+  const [cartItems, setCartItems] = useState([]);
   const cartItemAmount = cartItems.reduce(
     (total, item) => total + item.quantity,
     0
@@ -331,8 +442,15 @@ const FarzaaContextProvider = ({ children }) => {
 
   // Add to Cart
   const addToCart = (itemId) => {
-    // Find the item from allProductList using itemId
-    const itemToAdd = allProductList.find((item) => item.id === itemId);
+    // Check if user is authenticated
+    if (!authenticated) {
+      // Redirect to Keycloak login with current page as redirect URI
+      login({ redirectUri: window.location.href });
+      return;
+    }
+
+    // Find the item from filteredProducts using itemId
+    const itemToAdd = filteredProducts.find((item) => item.id === itemId);
 
     if (itemToAdd) {
       const existingItemIndex = cartItems.findIndex(
@@ -360,13 +478,12 @@ const FarzaaContextProvider = ({ children }) => {
         toast.success("Item list updated in cart!");
       }
     } else {
-      toast.warning("Item not found in allProductList.");
+      toast.warning("Item not found.");
     }
   };
 
   // Wishlist Item Table
-  const initialWishlist = allProductList.slice(-2);
-  const [wishlist, setWishlist] = useState(initialWishlist);
+  const [wishlist, setWishlist] = useState([]);
   const wishlistItemAmount = wishlist.reduce(
     (total, item) => total + item.quantity,
     0
@@ -955,11 +1072,11 @@ const FarzaaContextProvider = ({ children }) => {
         setListView,
         setGridView,
         price,
+        maxPrice,
         handlePriceChange,
         filteredProducts,
         sortBy,
         handleSortChange,
-        sortProducts,
         handleCategoryFilter,
         handlePriceFilter,
         currentPage,
@@ -976,6 +1093,13 @@ const FarzaaContextProvider = ({ children }) => {
         addToCart,
         cartItemAmount,
         addToWishlist,
+        categories,
+        brands,
+        productsLoading,
+        categoriesLoading,
+        brandsLoading,
+        selectedTags,
+        handleTagSelection,
         subTotal,
         shipping,
         coupon,
@@ -1020,9 +1144,6 @@ const FarzaaContextProvider = ({ children }) => {
         handleSidebarClose,
         isDropdownOpen,
         handleDropdownToggle,
-        selectedTags,
-        handleTagSelection,
-        filteredByTags,
         selectedBlogTags,
         handleBlogTagSelection,
         wishlistItemAmount,

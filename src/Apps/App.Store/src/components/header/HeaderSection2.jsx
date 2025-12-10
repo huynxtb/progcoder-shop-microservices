@@ -1,11 +1,20 @@
 import React, { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import HeaderNav from "../navigation/HeaderNav";
 import HeaderRightContent from "./HeaderRightContent";
+import LanguageSwitcher from "../language/LanguageSwitcher";
 import { Link } from "react-router-dom";
 import { FarzaaContext } from "../../context/FarzaaContext";
+import { useKeycloak } from "../../contexts/KeycloakContext";
 
 const HeaderSection2 = () => {
+  const { t } = useTranslation();
   const { isHeaderFixed } = useContext(FarzaaContext);
+  const { authenticated, login, logout, getUserInfo } = useKeycloak();
+  
+  // Get user info if authenticated
+  const userInfo = authenticated ? getUserInfo() : null;
+  const userName = userInfo?.name || userInfo?.username || userInfo?.email || 'User';
   return (
     <header className="fz-header-section fz-1-header-section inner-page-header">
       <div className="top-header">
@@ -24,28 +33,60 @@ const HeaderSection2 = () => {
             </div>
 
             <div className="col-md-4 col-6 col-xxs-12">
-              <h6>Shop events & save up to 65% off!</h6>
+              <h6>{t("header.shopEvents", "Shop events & save up to 65% off!")}</h6>
             </div>
 
             <div className="col-md-4 col-6 col-xxs-12">
               <div className="top-header-right-actions">
-                <Link to="account">
-                  <i className="fa-light fa-user"></i> Sign up
-                </Link>
+                {authenticated ? (
+                  <>
+                    <span style={{ 
+                      marginRight: '15px', 
+                      whiteSpace: 'nowrap',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      verticalAlign: 'middle'
+                    }}>
+                      <i className="fa-light fa-user" style={{ marginRight: '5px' }}></i>
+                      <span style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {userName}
+                      </span>
+                    </span>
+                    <Link 
+                      to="#" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        logout();
+                      }}
+                      style={{ 
+                        cursor: 'pointer',
+                        whiteSpace: 'nowrap',
+                        display: 'inline-block',
+                        marginRight: '15px'
+                      }}
+                    >
+                      <i className="fa-light fa-sign-out"></i> {t("common.logout", "Logout")}
+                    </Link>
+                  </>
+                ) : (
+                  <Link 
+                    to="#" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      login();
+                    }}
+                    style={{ 
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      display: 'inline-block',
+                      marginRight: '15px'
+                    }}
+                  >
+                    <i className="fa-light fa-sign-in"></i> {t("common.login", "Login")}
+                  </Link>
+                )}
 
-                <select name="currency" id="top-header-currency-dropdown">
-                  <option value="USD">USD</option>
-                  <option value="Taka">Taka</option>
-                  <option value="Euro">Euro</option>
-                  <option value="Rupee">Rupee</option>
-                </select>
-
-                <select name="language" id="top-header-language-dropdown">
-                  <option value="English">English</option>
-                  <option value="Bangla">Bangla</option>
-                  <option value="French">French</option>
-                  <option value="Hindi">Hindi</option>
-                </select>
+                <LanguageSwitcher />
               </div>
             </div>
           </div>

@@ -28,9 +28,9 @@ const HeaderSection = () => {
           <div className="row gy-3 align-items-center">
             <div className="col-lg-4 d-lg-block d-none">
               <span className="mail-address">
-                <a to="mailto:info@webmail.com">
+                <a to="mailto:progcoder.com@gmail.com">
                   <i className="fa-regular fa-envelope-open"></i>
-                  info@webmail.com
+                  progcoder.com@gmail.com
                 </a>
               </span>
             </div>

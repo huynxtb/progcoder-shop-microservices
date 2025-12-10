@@ -16,7 +16,7 @@ public sealed class GetPublishProductById : ICarterModule
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet(ApiRoutes.Product.GetPublishProductById, HandleGetPublishProductByIdAsync)
+        app.MapGet(ApiRoutes.Product.GetPublicProductById, HandleGetPublishProductByIdAsync)
             .WithTags(ApiRoutes.Product.Tags)
             .WithName(nameof(GetPublishProductById))
             .Produces<ApiGetResponse<GetPublishProductByIdResult>>(StatusCodes.Status200OK)

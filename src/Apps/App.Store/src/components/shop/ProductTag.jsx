@@ -1,7 +1,9 @@
 import { FarzaaContext } from "../../context/FarzaaContext";
 import React, { useContext } from "react";
+import { useTranslation } from "react-i18next";
 
 const ProductTag = () => {
+  const { t } = useTranslation();
   const { selectedTags, handleTagSelection } = useContext(FarzaaContext);
   const tags = [
     "Plastic Door",
@@ -16,7 +18,7 @@ const ProductTag = () => {
 
   return (
     <section className="sidebar-single-area product-tags-area">
-      <h3 className="sidebar-single-area__title">Product tags</h3>
+      <h3 className="sidebar-single-area__title">{t("shop.productTags", "Product tags")}</h3>
       <div className="tags">
         {tags.map((tag) => (
           <a

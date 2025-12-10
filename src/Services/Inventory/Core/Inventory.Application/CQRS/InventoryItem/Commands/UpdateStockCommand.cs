@@ -4,8 +4,6 @@ using Inventory.Application.Data;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
-using Common.Models.Reponses;
-using BuildingBlocks.Abstractions.ValueObjects;
 
 #endregion
 

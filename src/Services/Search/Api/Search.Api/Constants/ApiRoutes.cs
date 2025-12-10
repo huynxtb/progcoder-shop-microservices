@@ -10,7 +10,7 @@ public sealed class ApiRoutes
 
         private const string Base = "products";
 
-        public const string Search = $"/{Base}/search";
+        public const string Search = $"/{Base}";
 
         #endregion
     }

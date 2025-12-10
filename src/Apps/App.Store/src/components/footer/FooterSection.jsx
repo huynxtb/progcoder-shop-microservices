@@ -1,7 +1,9 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const FooterSection = ({ logo }) => {
+  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
   return (
     <footer className="fz-footer-section fz-1-footer-section">
@@ -30,7 +32,7 @@ const FooterSection = ({ logo }) => {
 
             <div className="col-xxl-2 col-lg-3 col-md-4 col-6 col-xxs-12">
               <div className="fz-footer-widget">
-                <h5 className="fz-footer-widget__title">Ways to Shop</h5>
+                <h5 className="fz-footer-widget__title">{t("footer.waysToShop", "Ways to Shop")}</h5>
                 <ul>
                   <li>
                     <Link to="#">Shop on Facebook</Link>
@@ -53,7 +55,7 @@ const FooterSection = ({ logo }) => {
 
             <div className="col-xxl-2 col-lg-3 col-md-4 col-6 col-xxs-12">
               <div className="fz-footer-widget">
-                <h5 className="fz-footer-widget__title">Customer Service</h5>
+                <h5 className="fz-footer-widget__title">{t("footer.customerService")}</h5>
                 <ul>
                   <li>
                     <Link to="#">Shipping and Returns</Link>
@@ -76,7 +78,7 @@ const FooterSection = ({ logo }) => {
 
             <div className="col-xxl-2 col-lg-3 col-md-4 col-6 col-xxs-12">
               <div className="fz-footer-widget">
-                <h5 className="fz-footer-widget__title">Quick Links</h5>
+                <h5 className="fz-footer-widget__title">{t("footer.quickLinks", "Quick Links")}</h5>
                 <ul>
                   <li>
                     <Link to="/about">Our Story</Link>
@@ -99,7 +101,7 @@ const FooterSection = ({ logo }) => {
 
             <div className="col-xxl-2 col-lg-3 col-md-4 col-6 col-xxs-12">
               <div className="fz-footer__contact-info">
-                <h5 className="fz-footer-widget__title">Store Address</h5>
+                <h5 className="fz-footer-widget__title">{t("footer.storeAddress", "Store Address")}</h5>
                 <ul>
                   <li>
                     <Link to="#">
@@ -130,8 +132,7 @@ const FooterSection = ({ logo }) => {
           <div className="row gy-4 align-items-center">
             <div className="col-md-6 col-12">
               <p className="fz-copyright">
-                &copy;
-                {currentYear} Design & Developed by <b>CodeBasket</b>
+                {t("footer.copyright", "Copyright")} &copy; {currentYear} {t("footer.allRightsReserved", "All Rights Reserved")}
               </p>
             </div>
 

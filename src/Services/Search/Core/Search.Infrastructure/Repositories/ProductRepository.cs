@@ -105,10 +105,9 @@ public class ProductRepository(IElasticClient elasticClient) : IProductRepositor
 
             if (categoryList.Any())
             {
-                // Categories is a List<string>, so we use Terms query on the field directly
                 mustClauses.Add(q.Terms(t => t
-                    .Field(f => f.Categories)
-                    .Terms(categoryList)));
+                .Field(f => f.Categories.Suffix("keyword"))
+                .Terms(categoryList)));
             }
         }
 

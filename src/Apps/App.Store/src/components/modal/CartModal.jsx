@@ -1,9 +1,11 @@
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import CartItemTable from "../cart/CartItemTable";
 import { FarzaaContext } from "../../context/FarzaaContext";
 
 const CartModal = ({ cartArray, remove, quantity }) => {
+  const { t } = useTranslation();
   const { showCart, handleCartClose } = useContext(FarzaaContext);
   const navigate = useNavigate(); // Initialize the useNavigate hook
 
@@ -25,7 +27,7 @@ const CartModal = ({ cartArray, remove, quantity }) => {
         id="cart-area-modal"
       >
         <div className="cart__header">
-          <h3 className="cart__title">Shopping cart</h3>
+          <h3 className="cart__title">{t("cart.title")}</h3>
           <button
             className="cart-area-modal-close-btn"
             onClick={handleCartClose}
@@ -48,7 +50,7 @@ const CartModal = ({ cartArray, remove, quantity }) => {
                 onClick={() => closeAndNavigate("/shop")}
                 className="fz-1-banner-btn update-cart-btn"
               >
-                Go to Shop
+                {t("common.continueShopping")}
               </button>
             </div>
           ) : (
@@ -57,13 +59,13 @@ const CartModal = ({ cartArray, remove, quantity }) => {
                 onClick={() => closeAndNavigate("/cart")}
                 className="fz-1-banner-btn update-cart-btn"
               >
-                View Full cart
+                {t("cart.viewFullCart", "View Full cart")}
               </button>
               <button
                 className="fz-1-banner-btn update-cart-btn"
                 onClick={() => closeAndNavigate("/checkout")}
               >
-                Proceed to Checkout
+                {t("common.proceedToCheckout")}
               </button>
             </div>
           )}
