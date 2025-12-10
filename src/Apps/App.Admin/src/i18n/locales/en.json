@@ -533,7 +533,28 @@
     "usageLimit": "Limit",
     "unlimited": "Unlimited",
     "dateInfo": "Duration",
-    "startDate": "Start Date"
+    "startDate": "Start Date",
+    "approve": "Approve",
+    "reject": "Reject",
+    "approved": "Approved",
+    "pending": "Pending",
+    "rejected": "Rejected",
+    "editValidityPeriod": "Edit Validity Period",
+    "validityPeriod": "Validity Period",
+    "validFrom": "Valid From",
+    "validTo": "Valid To",
+    "approveSuccess": "Coupon approved successfully",
+    "rejectSuccess": "Coupon rejected successfully",
+    "updateValiditySuccess": "Validity period updated successfully",
+    "approveError": "Failed to approve coupon",
+    "rejectError": "Failed to reject coupon",
+    "updateValidityError": "Failed to update validity period",
+    "validityDateError": "End date must be after start date",
+    "fetchError": "Failed to load coupons",
+    "fetchDetailError": "Failed to load coupon details",
+    "deleteSuccess": "Coupon deleted successfully",
+    "deleteError": "Failed to delete coupon",
+    "noCoupons": "No coupons found"
   },
   "createCoupon": {
     "title": "Create New Coupon",
@@ -574,7 +595,15 @@
     "statusLabel": "Status:",
     "activeStatus": "Active",
     "inactiveStatus": "Inactive",
-    "createCoupon": "Create Coupon"
+    "createCoupon": "Create Coupon",
+    "codeRequired": "Coupon code is required",
+    "descriptionRequired": "Description is required",
+    "discountValueRequired": "Discount value is required",
+    "percentMaxError": "Percentage cannot exceed 100%",
+    "usageLimitRequired": "Usage limit is required",
+    "dateError": "End date must be after start date",
+    "createSuccess": "Coupon created successfully",
+    "createError": "Failed to create coupon"
   },
   "editCoupon": {
     "title": "Edit Coupon",
@@ -615,7 +644,14 @@
     "statusLabel": "Status:",
     "activeStatus": "Active",
     "inactiveStatus": "Inactive",
-    "updateCoupon": "Update Coupon"
+    "updateCoupon": "Update Coupon",
+    "descriptionRequired": "Description is required",
+    "discountValueRequired": "Discount value is required",
+    "percentMaxError": "Percentage cannot exceed 100%",
+    "usageLimitRequired": "Usage limit is required",
+    "updateSuccess": "Coupon updated successfully",
+    "updateError": "Failed to update coupon",
+    "fetchError": "Failed to load coupon"
   },
   "editInventory": {
     "title": "Edit Inventory",

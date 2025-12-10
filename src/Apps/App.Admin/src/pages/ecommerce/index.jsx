@@ -73,7 +73,7 @@ const Ecommerce = () => {
         setProducts(mappedProducts);
       } catch (error) {
         console.error("Failed to fetch products:", error);
-        toast.error(t("products.fetchError") || "Failed to load products", {
+        toast.error(t("products.fetchError"), {
           position: "top-right",
           autoClose: 5000,
         });
@@ -99,7 +99,7 @@ const Ecommerce = () => {
       const response = await api.delete(API_ENDPOINTS.CATALOG.DELETE_PRODUCT(itemToDelete.id));
 
       if (response && response.status >= 200 && response.status < 300) {
-        toast.success(t("products.deleteSuccess") || "Product deleted successfully", {
+        toast.success(t("products.deleteSuccess"), {
           position: "top-right",
           autoClose: 5000,
         });
@@ -422,14 +422,14 @@ const Ecommerce = () => {
                         <td colSpan={headerGroups[0]?.headers?.length || 6} className="table-td text-center py-8">
                           <div className="flex flex-col items-center justify-center">
                             <Icon icon="heroicons:arrow-path" className="animate-spin text-2xl text-slate-400 mb-2" />
-                            <span className="text-slate-500 dark:text-slate-400">{t("common.loading") || "Loading..."}</span>
+                            <span className="text-slate-500 dark:text-slate-400">{t("common.loading")}</span>
                           </div>
                         </td>
                       </tr>
                     ) : page.length === 0 ? (
                       <tr>
                         <td colSpan={headerGroups[0]?.headers?.length || 6} className="table-td text-center py-8">
-                          <span className="text-slate-500 dark:text-slate-400">{t("products.noProducts") || "No products found"}</span>
+                          <span className="text-slate-500 dark:text-slate-400">{t("products.noProducts")}</span>
                         </td>
                       </tr>
                     ) : (

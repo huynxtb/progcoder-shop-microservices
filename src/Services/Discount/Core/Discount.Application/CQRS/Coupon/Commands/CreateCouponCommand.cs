@@ -28,6 +28,12 @@ public sealed class CreateCouponCommandValidator : AbstractValidator<CreateCoupo
                     .MaximumLength(50)
                     .WithMessage(MessageCode.Max50Characters);
 
+                RuleFor(x => x.Dto.Name)
+                    .NotEmpty()
+                    .WithMessage(MessageCode.ProgramNameIsRequired)
+                    .MaximumLength(255)
+                    .WithMessage(MessageCode.Max255Characters);
+
                 RuleFor(x => x.Dto.Description)
                     .NotEmpty()
                     .WithMessage(MessageCode.DescriptionIsRequired)
@@ -38,15 +44,15 @@ public sealed class CreateCouponCommandValidator : AbstractValidator<CreateCoupo
                     .GreaterThan(0)
                     .WithMessage(MessageCode.PriceIsRequired);
 
-                RuleFor(x => x.Dto.MaxUses)
+                RuleFor(x => x.Dto.MaxUsage)
                     .GreaterThan(0)
-                    .WithMessage(MessageCode.QuantityIsRequired);
+                    .WithMessage(MessageCode.MaxUsageIsRequired);
 
                 When(x => x.Dto.MaxDiscountAmount.HasValue, () =>
                 {
                     RuleFor(x => x.Dto.MaxDiscountAmount!.Value)
                         .GreaterThanOrEqualTo(0)
-                        .WithMessage(MessageCode.MoneyCannotBeNegative);
+                        .WithMessage(MessageCode.MaxDiscountAmountCannotBeNegative);
                 });
 
                 RuleFor(x => x.Dto.ValidFrom)
@@ -83,15 +89,15 @@ public sealed class CreateCouponCommandHandler(ICouponRepository repository) : I
         if (exists)
             throw new ClientValidationException(MessageCode.CouponCodeIsExists, dto.Code);
 
-        var coupon = CouponEntity.Create(
+        var coupon = CouponEntity.Create(name: dto.Name,
             id: Guid.NewGuid(),
             code: dto.Code,
             description: dto.Description,
             type: dto.Type,
             value: dto.Value,
-            maxUsage: dto.MaxUses,
+            maxUsage: dto.MaxUsage,
             maxDiscountAmount: dto.MaxDiscountAmount,
-            minPurchaseAmount: null,
+            minPurchaseAmount: dto.MinPurchaseAmount,
             validFrom: dto.ValidFrom,
             validTo: dto.ValidTo,
             performBy: command.Actor.ToString());

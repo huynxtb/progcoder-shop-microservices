@@ -1,14 +1,32 @@
-﻿namespace Order.Domain.Enums;
+﻿#region using
+
+using System.ComponentModel;
+
+#endregion
+
+namespace Order.Domain.Enums;
 
 public enum OrderStatus
 {
     #region Fields, Properties and Indexers
 
+    [Description("Pending")]
     Pending = 1,
-    PendingPayment = 2,
-    Paid = 3,
-    PaymentFailed = 4,
-    Cancelled = 5
+
+    [Description("Confirmed")]
+    Confirmed = 2,
+
+    [Description("Processing")]
+    Processing = 3,
+
+    [Description("Shipped")]
+    Shipped = 4,
+
+    [Description("Delivered")]
+    Delivered = 5,
+
+    [Description("Cancelled")]
+    Cancelled = 6
 
     #endregion
 }

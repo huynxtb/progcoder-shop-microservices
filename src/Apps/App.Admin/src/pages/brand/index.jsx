@@ -114,7 +114,7 @@ const BrandPage = () => {
       );
 
       if (response && response.status >= 200 && response.status < 300) {
-        toast.success(t("brand.updateSuccess") || "Brand updated successfully", {
+        toast.success(t("brand.updateSuccess"), {
           position: "top-right",
           autoClose: 5000,
         });
@@ -149,7 +149,7 @@ const BrandPage = () => {
       const response = await api.post(API_ENDPOINTS.CATALOG.CREATE_BRAND, requestBody);
 
       if (response && response.status >= 200 && response.status < 300) {
-        toast.success(t("brand.createSuccess") || "Brand created successfully", {
+        toast.success(t("brand.createSuccess"), {
           position: "top-right",
           autoClose: 5000,
         });
@@ -186,7 +186,7 @@ const BrandPage = () => {
       const response = await api.delete(API_ENDPOINTS.CATALOG.DELETE_BRAND(itemToDelete.id));
 
       if (response && response.status >= 200 && response.status < 300) {
-        toast.success(t("brand.deleteSuccess") || "Brand deleted successfully", {
+        toast.success(t("brand.deleteSuccess"), {
           position: "top-right",
           autoClose: 5000,
         });
@@ -367,14 +367,14 @@ const BrandPage = () => {
                       <td colSpan={headerGroups[0]?.headers?.length || 3} className="table-td text-center py-8">
                         <div className="flex flex-col items-center justify-center">
                           <Icon icon="heroicons:arrow-path" className="animate-spin text-2xl text-slate-400 mb-2" />
-                          <span className="text-slate-500 dark:text-slate-400">{t("common.loading") || "Loading..."}</span>
+                            <span className="text-slate-500 dark:text-slate-400">{t("common.loading")}</span>
                         </div>
                       </td>
                     </tr>
                   ) : page.length === 0 ? (
                     <tr>
                       <td colSpan={headerGroups[0]?.headers?.length || 3} className="table-td text-center py-8">
-                        <span className="text-slate-500 dark:text-slate-400">{t("brand.noBrands") || "No brands found"}</span>
+                        <span className="text-slate-500 dark:text-slate-400">{t("brand.noBrands")}</span>
                       </td>
                     </tr>
                   ) : (
@@ -625,7 +625,7 @@ const BrandPage = () => {
 
       {/* View Brand Detail Modal */}
       <Modal
-        title={t("brand.viewDetails") || "Brand Details"}
+        title={t("brand.viewDetails")}
         activeModal={showViewModal}
         onClose={() => {
           setShowViewModal(false);
@@ -658,7 +658,7 @@ const BrandPage = () => {
                   setViewingBrand(null);
                 }}
               >
-                {t("common.close") || "Close"}
+                {t("common.close")}
               </button>
             </div>
           </div>

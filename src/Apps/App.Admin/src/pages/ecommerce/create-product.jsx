@@ -42,10 +42,6 @@ const CreateProduct = () => {
         setCategories(categoryOptions);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
-        toast.error(t("createProduct.fetchCategoriesError") || "Failed to load categories", {
-          position: "top-right",
-          autoClose: 5000,
-        });
       } finally {
         setLoadingCategories(false);
       }
@@ -67,7 +63,7 @@ const CreateProduct = () => {
         setBrands(brandOptions);
       } catch (error) {
         console.error("Failed to fetch brands:", error);
-        toast.error(t("createProduct.fetchBrandsError") || "Failed to load brands", {
+        toast.error(t("createProduct.fetchBrandsError"), {
           position: "top-right",
           autoClose: 5000,
         });
@@ -608,7 +604,7 @@ const CreateProduct = () => {
               </Link>
             </div>
           </div>
-
+        
           {/* Right Column */}
           <div className="col-span-12 lg:col-span-4 space-y-5">
             {/* Giá sản phẩm */}

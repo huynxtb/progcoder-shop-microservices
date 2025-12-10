@@ -81,6 +81,7 @@ public static class DatabaseExtentions
             var fixedId = Guid.NewGuid();
             var randomFixedCoupon = CouponEntity.Create(id: fixedId,
                 code: $"RND-{fixedId.ToString().Split("-").First().ToUpper()}",
+                name: $"Random Fixed Coupon {fixedId.ToString().Split("-").First().ToUpper()}",
                 description: "Random Fixed Coupon",
                 type: Domain.Enums.CouponType.Fixed,
                 value: 55000,
@@ -95,6 +96,7 @@ public static class DatabaseExtentions
             var percentageId = Guid.NewGuid();
             var randomPercentageCoupon = CouponEntity.Create(id: percentageId,
                 code: $"RND-{percentageId.ToString().Split("-").First().ToUpper()}",
+                name: $"Random Percentage Coupon {percentageId.ToString().Split("-").First().ToUpper()}",
                 description: "Random Percentage Coupon",
                 type: Domain.Enums.CouponType.Percentage,
                 value: 30,

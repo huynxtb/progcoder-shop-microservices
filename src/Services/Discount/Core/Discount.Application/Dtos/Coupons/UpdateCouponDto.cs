@@ -10,6 +10,8 @@ public sealed class UpdateCouponDto
 {
     #region Fields, Properties and Indexers
 
+    public string Name { get; set; } = default!;
+
     public string? Description { get; set; }
 
     public double Value { get; set; }

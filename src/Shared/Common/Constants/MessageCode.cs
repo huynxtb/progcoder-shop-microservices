@@ -212,5 +212,7 @@ public sealed class MessageCode
 
     public const string ValueIsRequired = "VALUE_IS_REQUIRED";
 
+    public const string ProgramNameIsRequired = "PROGRAM_NAME_IS_REQUIRED";
+
     #endregion
 }

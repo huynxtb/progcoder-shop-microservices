@@ -533,7 +533,28 @@
     "usageLimit": "Giới hạn",
     "unlimited": "Không giới hạn",
     "dateInfo": "Thời gian áp dụng",
-    "startDate": "Ngày bắt đầu"
+    "startDate": "Ngày bắt đầu",
+    "approve": "Phê duyệt",
+    "reject": "Từ chối",
+    "approved": "Đã phê duyệt",
+    "pending": "Chờ phê duyệt",
+    "rejected": "Đã từ chối",
+    "editValidityPeriod": "Chỉnh sửa thời gian hiệu lực",
+    "validityPeriod": "Thời gian hiệu lực",
+    "validFrom": "Có hiệu lực từ",
+    "validTo": "Có hiệu lực đến",
+    "approveSuccess": "Phê duyệt mã giảm giá thành công",
+    "rejectSuccess": "Từ chối mã giảm giá thành công",
+    "updateValiditySuccess": "Cập nhật thời gian hiệu lực thành công",
+    "approveError": "Phê duyệt mã giảm giá thất bại",
+    "rejectError": "Từ chối mã giảm giá thất bại",
+    "updateValidityError": "Cập nhật thời gian hiệu lực thất bại",
+    "validityDateError": "Ngày kết thúc phải sau ngày bắt đầu",
+    "fetchError": "Không thể tải danh sách mã giảm giá",
+    "fetchDetailError": "Không thể tải chi tiết mã giảm giá",
+    "deleteSuccess": "Xóa mã giảm giá thành công",
+    "deleteError": "Xóa mã giảm giá thất bại",
+    "noCoupons": "Không tìm thấy mã giảm giá nào"
   },
   "createCoupon": {
     "title": "Tạo mã giảm giá mới",
@@ -574,7 +595,15 @@
     "statusLabel": "Trạng thái:",
     "activeStatus": "Hoạt động",
     "inactiveStatus": "Tạm dừng",
-    "createCoupon": "Tạo mã giảm giá"
+    "createCoupon": "Tạo mã giảm giá",
+    "codeRequired": "Mã giảm giá là bắt buộc",
+    "descriptionRequired": "Mô tả là bắt buộc",
+    "discountValueRequired": "Giá trị giảm giá là bắt buộc",
+    "percentMaxError": "Phần trăm không được vượt quá 100%",
+    "usageLimitRequired": "Giới hạn sử dụng là bắt buộc",
+    "dateError": "Ngày kết thúc phải sau ngày bắt đầu",
+    "createSuccess": "Tạo mã giảm giá thành công",
+    "createError": "Tạo mã giảm giá thất bại"
   },
   "editCoupon": {
     "title": "Chỉnh sửa mã giảm giá",
@@ -615,7 +644,14 @@
     "statusLabel": "Trạng thái:",
     "activeStatus": "Hoạt động",
     "inactiveStatus": "Tạm dừng",
-    "updateCoupon": "Cập nhật mã giảm giá"
+    "updateCoupon": "Cập nhật mã giảm giá",
+    "descriptionRequired": "Mô tả là bắt buộc",
+    "discountValueRequired": "Giá trị giảm giá là bắt buộc",
+    "percentMaxError": "Phần trăm không được vượt quá 100%",
+    "usageLimitRequired": "Giới hạn sử dụng là bắt buộc",
+    "updateSuccess": "Cập nhật mã giảm giá thành công",
+    "updateError": "Cập nhật mã giảm giá thất bại",
+    "fetchError": "Không thể tải mã giảm giá"
   },
   "editInventory": {
     "title": "Chỉnh sửa kho hàng",

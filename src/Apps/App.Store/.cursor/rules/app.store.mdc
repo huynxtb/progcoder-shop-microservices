@@ -1,0 +1,164 @@
+---
+alwaysApply: true
+---
+
+# Cursor Rules - React/Next.js Project
+
+## Project Architecture & Best Practices
+
+### React/Next.js Standards
+- Follow React/Next.js best practices and conventions
+- Use functional components with hooks
+- Implement proper code splitting and lazy loading
+- Follow the Next.js App Router or Pages Router conventions consistently
+- Use proper TypeScript types (avoid `any` unless absolutely necessary)
+- Implement proper error boundaries
+- Follow React performance optimization patterns (useMemo, useCallback when needed)
+
+## API & Data Fetching
+
+### Axios & API Endpoints
+- **ALWAYS check `/api` for available endpoints before creating new API calls**
+- Use existing endpoint definitions from `/api/endpoints.js`
+- In catch blocks: **ONLY use `console.error()` or `console.log()` - NO toast notifications**
+- Example:
+  ```javascript
+  try {
+    const response = await apiService.getData();
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    // NO toast.error() here
+  }
+  ```
+
+### API Services
+- **ALL API calls must be created as services in `services`**
+- Create reusable service functions for API interactions
+- Service files should be organized by feature/domain
+- Example structure:
+  ```javascript
+  // /services/userService.js
+  export const userService = {
+    getUsers: () => axios.get(endpoints.users.list),
+    createUser: (data) => axios.post(endpoints.users.create, data),
+  };
+  ```
+
+## Internationalization (i18n)
+
+### i18n Usage Rules
+- **ALL labels, text, and messages MUST use i18n**
+- **NO hardcoded text in the UI**
+- Use only `t("translation.key")` format
+- **NEVER use fallback pattern like**: `t("validation.mustBeNumber") || "Must be a number"`
+- If translation key doesn't exist, add it to `/i18n/locales` files
+
+### API Response Handling
+- When API returns properties starting with `display*` (e.g., `displayName`, `displayStatus`), consider these scenarios:
+  - If it's already translated by backend → use directly
+  - If it's a key for translation → pass through `t()`
+  - Think carefully about the context before deciding
+- Example:
+  ```javascript
+  // If displayStatus is a translation key
+  const status = t(response.displayStatus);
+  
+  // If displayStatus is already translated
+  const status = response.displayStatus;
+  ```
+
+### Translation File Management
+- Add missing translations to `/i18n/locales[language].json`
+- Keep translation keys organized and hierarchical
+- Use meaningful, descriptive keys
+
+## Code Organization
+
+### Utility Functions
+- **Check `/utils` for existing utility functions before creating new ones**
+- If a function is used multiple times across components, extract it to `/utils`
+- Keep utilities pure and well-tested
+- Organize by functionality (e.g., `dateUtils.js`, `formatUtils.js`)
+
+### Constants
+- **NO hardcoded values in components**
+- Create all constants in `/constant` directory
+- Organize constants by domain/feature
+- Use UPPER_SNAKE_CASE for constant names
+- Examples:
+  ```javascript
+  // /constant/status.js
+  export const USER_STATUS = {
+    ACTIVE: 'active',
+    INACTIVE: 'inactive',
+    PENDING: 'pending'
+  };
+  
+  // /constant/routes.js
+  export const ROUTES = {
+    HOME: '/',
+    DASHBOARD: '/dashboard',
+    PROFILE: '/profile'
+  };
+  ```
+
+## Forms
+
+### Form Management
+- **ALWAYS use Formik + Yup for all forms**
+- Create validation schemas with Yup
+- Use Formik's built-in error handling
+- All validation messages must use i18n
+- Example structure:
+  ```javascript
+  import { Formik } from 'formik';
+  import * as Yup from 'yup';
+  import { useTranslation } from 'react-i18next';
+  
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email(t('validation.invalidEmail'))
+      .required(t('validation.required')),
+    age: Yup.number()
+      .positive(t('validation.mustBePositive'))
+      .required(t('validation.required'))
+  });
+  
+  <Formik
+    initialValues={initialValues}
+    validationSchema={validationSchema}
+    onSubmit={handleSubmit}
+  >
+    {/* form content */}
+  </Formik>
+  ```
+
+## File Structure
+
+```
+/api
+  /endpoints     # API endpoint definitions
+/constant        # Constants and configuration
+/services        # API service functions
+/utils           # Utility functions
+/i18n            # Translation files
+  /locales
+    /en.json
+    /vi.json
+/components      # React components
+/pages or /app   # Next.js pages
+```
+
+## Summary Checklist
+
+Before completing any task, verify:
+- [ ] Checked `/api/endpoints` for existing endpoints
+- [ ] Created service in `/services` for API calls
+- [ ] Used `console` only in catch blocks (no toast)
+- [ ] All text uses `t()` without fallback patterns
+- [ ] Added missing translations to `/i18n/locales`
+- [ ] API responses with `display*` handled appropriately
+- [ ] Reused or created utilities in `/utils` for repeated logic
+- [ ] All magic values moved to `/constant`
+- [ ] Forms use Formik + Yup
+- [ ] No hardcoded strings, numbers, or configurations

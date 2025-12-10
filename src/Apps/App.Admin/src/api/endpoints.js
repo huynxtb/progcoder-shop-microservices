@@ -44,15 +44,19 @@ export const API_ENDPOINTS = {
     DELETE_LOCATION: (id) => `/inventory-service/locations/${id}`,
   },
 
-  // Coupons
-  COUPON: {
-    GET_LIST: "/coupons",
-    GET_DETAIL: (id) => `/coupons/${id}`,
-    CREATE: "/coupons",
-    UPDATE: (id) => `/coupons/${id}`,
-    DELETE: (id) => `/coupons/${id}`,
-    VALIDATE: "/coupons/validate",
-    APPLY: "/coupons/apply",
+  // Discount
+  DISCOUNT: {
+    GET_LIST: "/discount-service/admin/coupons",
+    GET_ALL_COUPONS: "/discount-service/admin/coupons/all",
+    GET_DETAIL: (id) => `/discount-service/admin/coupons/${id}`,
+    CREATE: "/discount-service/admin/coupons",
+    UPDATE: (id) => `/discount-service/admin/coupons/${id}`,
+    DELETE: (id) => `/discount-service/admin/coupons/${id}`,
+    APPROVE_COUPON: (id) => `/discount-service/admin/coupons/${id}/approve`,
+    REJECT_COUPON: (id) => `/discount-service/admin/coupons/${id}/reject`,
+    UPDATE_VALIDITY_PERIOD: (id) => `/discount-service/admin/coupons/${id}/validity-period`,
+    VALIDATE: "/discount-service/coupons/validate",
+    APPLY: "/discount-service/coupons/apply",
   },
 
   // Orders

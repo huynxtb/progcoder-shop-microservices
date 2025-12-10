@@ -13,6 +13,8 @@ public sealed class CouponEntity : Aggregate<Guid>
 
     public string Code { get; set; } = default!;
 
+    public string Name { get; set; } = default!;
+
     public string? Description { get; set; }
 
     public CouponType Type { get; set; }
@@ -39,6 +41,7 @@ public sealed class CouponEntity : Aggregate<Guid>
 
     public static CouponEntity Create(Guid id,
         string code,
+        string name,
         string description,
         CouponType type,
         double value,
@@ -67,6 +70,7 @@ public sealed class CouponEntity : Aggregate<Guid>
         {
             Id = id,
             Code = code,
+            Name = name,
             Description = description,
             Type = type,
             Value = value,
@@ -87,7 +91,8 @@ public sealed class CouponEntity : Aggregate<Guid>
 
     #region Methods
 
-    public void Update(string? description,
+    public void Update(string name,
+        string? description,
         CouponType type,
         double value,
         int maxUsage,
@@ -95,6 +100,7 @@ public sealed class CouponEntity : Aggregate<Guid>
         decimal? minPurchaseAmount,
         string performBy)
     {
+        Name = name;
         Description = description;
         Type = type;
         Value = value;

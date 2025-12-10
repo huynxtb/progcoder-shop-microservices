@@ -24,12 +24,17 @@ public sealed class UpdateCouponCommandValidator : AbstractValidator<UpdateCoupo
             .WithMessage(MessageCode.BadRequest)
             .DependentRules(() =>
             {
-                When(x => !string.IsNullOrWhiteSpace(x.Dto.Description), () =>
-                {
-                    RuleFor(x => x.Dto.Description)
-                        .MaximumLength(500)
-                        .WithMessage(MessageCode.Max500Characters);
-                });
+                RuleFor(x => x.Dto.Description)
+                    .NotEmpty()
+                    .WithMessage(MessageCode.DescriptionIsRequired)
+                    .MaximumLength(500)
+                    .WithMessage(MessageCode.Max500Characters);
+
+                RuleFor(x => x.Dto.Name)
+                    .NotEmpty()
+                    .WithMessage(MessageCode.ProgramNameIsRequired)
+                    .MaximumLength(255)
+                    .WithMessage(MessageCode.Max255Characters);
 
                 RuleFor(x => x.Dto.Value)
                     .GreaterThan(0)
@@ -63,6 +68,7 @@ public sealed class UpdateCouponCommandHandler(ICouponRepository repository) : I
         var dto = command.Dto;
 
         coupon.Update(description: dto.Description,
+            name: dto.Name,
             type: dto.Type,
             value: dto.Value,
             maxUsage: dto.MaxUsage,

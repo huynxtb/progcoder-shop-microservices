@@ -12,15 +12,19 @@ public sealed class CreateCouponDto
 
     public string Code { get; init; } = string.Empty;
 
+    public string Name { get; set; } = default!;
+
     public string Description { get; init; } = string.Empty;
 
     public CouponType Type { get; init; }
 
     public double Value { get; init; }
 
-    public int MaxUses { get; init; }
+    public int MaxUsage { get; init; }
 
     public decimal? MaxDiscountAmount { get; init; }
+
+    public decimal? MinPurchaseAmount { get; init; }
 
     public DateTime ValidFrom { get; init; }
 

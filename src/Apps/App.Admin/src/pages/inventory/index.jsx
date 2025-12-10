@@ -177,7 +177,7 @@ const InventoryPage = () => {
       const response = await api.delete(API_ENDPOINTS.INVENTORY.DELETE(itemToDelete.id));
 
       if (response && response.status >= 200 && response.status < 300) {
-        toast.success(t("inventory.deleteSuccess") || "Inventory item deleted successfully", {
+        toast.success(t("inventory.deleteSuccess"), {
           position: "top-right",
           autoClose: 5000,
         });
@@ -212,7 +212,7 @@ const InventoryPage = () => {
 
   const handleSaveAdd = async () => {
     if (!addFormData.productId || !addFormData.locationId) {
-      toast.error(t("inventory.fillRequiredFields") || "Please fill all required fields", {
+      toast.error(t("inventory.fillRequiredFields"), {
         position: "top-right",
         autoClose: 5000,
       });
@@ -230,7 +230,7 @@ const InventoryPage = () => {
       const response = await api.post(API_ENDPOINTS.INVENTORY.CREATE, requestBody);
 
       if (response && response.status >= 200 && response.status < 300) {
-        toast.success(t("inventory.createSuccess") || "Inventory item created successfully", {
+        toast.success(t("inventory.createSuccess"), {
           position: "top-right",
           autoClose: 5000,
         });
@@ -277,7 +277,7 @@ const InventoryPage = () => {
 
   const handleIncreaseStock = async () => {
     if (!stockItem?.id || !stockQuantity || parseInt(stockQuantity) <= 0) {
-      toast.error(t("inventory.invalidQuantity") || "Please enter a valid quantity", {
+      toast.error(t("inventory.invalidQuantity"), {
         position: "top-right",
         autoClose: 5000,
       });
@@ -296,7 +296,7 @@ const InventoryPage = () => {
       );
 
       if (response && response.status >= 200 && response.status < 300) {
-        toast.success(t("inventory.stockIncreased") || "Stock increased successfully", {
+        toast.success(t("inventory.stockIncreased"), {
           position: "top-right",
           autoClose: 5000,
         });
@@ -332,7 +332,7 @@ const InventoryPage = () => {
 
   const handleDecreaseStock = async () => {
     if (!stockItem?.id || !stockQuantity || parseInt(stockQuantity) <= 0) {
-      toast.error(t("inventory.invalidQuantity") || "Please enter a valid quantity", {
+      toast.error(t("inventory.invalidQuantity"), {
         position: "top-right",
         autoClose: 5000,
       });
@@ -340,7 +340,7 @@ const InventoryPage = () => {
     }
 
     if (parseInt(stockQuantity) > stockItem.available) {
-      toast.error(t("inventory.insufficientStock") || "Insufficient stock", {
+      toast.error(t("inventory.insufficientStock"), {
         position: "top-right",
         autoClose: 5000,
       });
@@ -359,7 +359,7 @@ const InventoryPage = () => {
       );
 
       if (response && response.status >= 200 && response.status < 300) {
-        toast.success(t("inventory.stockDecreased") || "Stock decreased successfully", {
+        toast.success(t("inventory.stockDecreased"), {
           position: "top-right",
           autoClose: 5000,
         });
@@ -408,7 +408,7 @@ const InventoryPage = () => {
 
   const handleSaveEdit = async () => {
     if (!editingItem?.id || !editFormData.productId || !editFormData.locationId) {
-      toast.error(t("inventory.fillRequiredFields") || "Please fill all required fields", {
+      toast.error(t("inventory.fillRequiredFields"), {
         position: "top-right",
         autoClose: 5000,
       });
@@ -428,7 +428,7 @@ const InventoryPage = () => {
       );
 
       if (response && response.status >= 200 && response.status < 300) {
-        toast.success(t("inventory.updateSuccess") || "Inventory item updated successfully", {
+        toast.success(t("inventory.updateSuccess"), {
           position: "top-right",
           autoClose: 5000,
         });
@@ -689,14 +689,14 @@ const InventoryPage = () => {
                       <td colSpan={headerGroups[0]?.headers?.length || 7} className="table-td text-center py-8">
                         <div className="flex flex-col items-center justify-center">
                           <Icon icon="heroicons:arrow-path" className="animate-spin text-2xl text-slate-400 mb-2" />
-                          <span className="text-slate-500 dark:text-slate-400">{t("common.loading") || "Loading..."}</span>
+                            <span className="text-slate-500 dark:text-slate-400">{t("common.loading")}</span>
                         </div>
                       </td>
                     </tr>
                   ) : page.length === 0 ? (
                     <tr>
                       <td colSpan={headerGroups[0]?.headers?.length || 7} className="table-td text-center py-8">
-                        <span className="text-slate-500 dark:text-slate-400">{t("inventory.noItems") || "No inventory items found"}</span>
+                        <span className="text-slate-500 dark:text-slate-400">{t("inventory.noItems")}</span>
                       </td>
                     </tr>
                   ) : (

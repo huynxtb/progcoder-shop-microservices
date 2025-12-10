@@ -130,7 +130,7 @@ const CategoryPage = () => {
       );
 
       if (response && response.status >= 200 && response.status < 300) {
-        toast.success(t("category.updateSuccess") || "Category updated successfully", {
+        toast.success(t("category.updateSuccess"), {
           position: "top-right",
           autoClose: 5000,
         });
@@ -174,7 +174,7 @@ const CategoryPage = () => {
       const response = await api.post(API_ENDPOINTS.CATALOG.CREATE_CATEGORY, requestBody);
 
       if (response && response.status >= 200 && response.status < 300) {
-        toast.success(t("category.createSuccess") || "Category created successfully", {
+        toast.success(t("category.createSuccess"), {
           position: "top-right",
           autoClose: 5000,
         });
@@ -214,7 +214,7 @@ const CategoryPage = () => {
       const response = await api.delete(API_ENDPOINTS.CATALOG.DELETE_CATEGORY(itemToDelete.id));
 
       if (response && response.status >= 200 && response.status < 300) {
-        toast.success(t("category.deleteSuccess") || "Category deleted successfully", {
+        toast.success(t("category.deleteSuccess"), {
           position: "top-right",
           autoClose: 5000,
         });
@@ -273,7 +273,7 @@ const CategoryPage = () => {
           </span>
         ) : (
           <span className="text-slate-400 dark:text-slate-500 text-sm italic">
-            {t("category.noParent") || "—"}
+            {t("category.noParent")}
           </span>
         );
       },
@@ -437,14 +437,14 @@ const CategoryPage = () => {
                       <td colSpan={headerGroups[0]?.headers?.length || 5} className="table-td text-center py-8">
                         <div className="flex flex-col items-center justify-center">
                           <Icon icon="heroicons:arrow-path" className="animate-spin text-2xl text-slate-400 mb-2" />
-                          <span className="text-slate-500 dark:text-slate-400">{t("common.loading") || "Loading..."}</span>
+                            <span className="text-slate-500 dark:text-slate-400">{t("common.loading")}</span>
                         </div>
                       </td>
                     </tr>
                   ) : page.length === 0 ? (
                     <tr>
                       <td colSpan={headerGroups[0]?.headers?.length || 5} className="table-td text-center py-8">
-                        <span className="text-slate-500 dark:text-slate-400">{t("category.noCategories") || "No categories found"}</span>
+                        <span className="text-slate-500 dark:text-slate-400">{t("category.noCategories")}</span>
                       </td>
                     </tr>
                   ) : (
@@ -567,7 +567,7 @@ const CategoryPage = () => {
           />
           <Select
             label={t("category.parentName")}
-            placeholder={t("category.noParent") || "No parent"}
+            placeholder={t("category.noParent")}
             options={parentCategoryOptions}
             value={addFormData.parentId || ""}
             onChange={(e) => handleAddFormChange("parentId", e.target.value || "")}
@@ -631,7 +631,7 @@ const CategoryPage = () => {
           />
           <Select
             label={t("category.parentName")}
-            placeholder={t("category.noParent") || "No parent"}
+            placeholder={t("category.noParent")}
             options={parentCategoryOptions}
             value={editFormData.parentId || ""}
             onChange={(e) => handleEditFormChange("parentId", e.target.value || "")}
@@ -733,7 +733,7 @@ const CategoryPage = () => {
 
       {/* View Category Detail Modal */}
       <Modal
-        title={t("category.viewDetails") || "Category Details"}
+        title={t("category.viewDetails")}
         activeModal={showViewModal}
         onClose={() => {
           setShowViewModal(false);
@@ -763,7 +763,7 @@ const CategoryPage = () => {
                 {t("category.description")}
               </label>
               <p className="text-slate-800 dark:text-slate-200">
-                {viewingCategory.description || t("category.noDescription") || "No description"}
+                {viewingCategory.description || t("category.noDescription")}
               </p>
             </div>
             <div>
@@ -776,7 +776,7 @@ const CategoryPage = () => {
                 </span>
               ) : (
                 <span className="text-slate-400 dark:text-slate-500 text-sm italic">
-                  {t("category.noParent") || "—"}
+                  {t("category.noParent")}
                 </span>
               )}
             </div>
@@ -788,7 +788,7 @@ const CategoryPage = () => {
                   setViewingCategory(null);
                 }}
               >
-                {t("common.close") || "Close"}
+                {t("common.close")}
               </button>
             </div>
           </div>

@@ -26,6 +26,7 @@ public sealed class DiscountMappingProfile : Profile
         // CouponEntity -> CouponDto
         CreateMap<CouponEntity, CouponDto>()
             .ForMember(dest => dest.DisplayStatus, opt => opt.MapFrom(src => src.Status.GetDescription()))
+            .ForMember(dest => dest.DisplayType, opt => opt.MapFrom(src => src.Type.GetDescription()))
             .ForMember(dest => dest.IsValid, opt => opt.MapFrom(src => src.IsValid()))
             .ForMember(dest => dest.IsExpired, opt => opt.MapFrom(src => src.IsExpired()))
             .ForMember(dest => dest.IsOutOfUses, opt => opt.MapFrom(src => src.IsOutOfUses()));

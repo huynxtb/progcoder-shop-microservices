@@ -45,7 +45,7 @@ const EditProduct = () => {
         setCategories(categoryOptions);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
-        toast.error(t("createProduct.fetchCategoriesError") || "Failed to load categories", {
+        toast.error(t("createProduct.fetchCategoriesError"), {
           position: "top-right",
           autoClose: 5000,
         });
@@ -70,7 +70,7 @@ const EditProduct = () => {
         setBrands(brandOptions);
       } catch (error) {
         console.error("Failed to fetch brands:", error);
-        toast.error(t("createProduct.fetchBrandsError") || "Failed to load brands", {
+        toast.error(t("createProduct.fetchBrandsError"), {
           position: "top-right",
           autoClose: 5000,
         });
@@ -101,7 +101,7 @@ const EditProduct = () => {
         }
       } catch (error) {
         console.error("Failed to fetch product:", error);
-        toast.error(t("editProduct.fetchError") || "Failed to load product", {
+        toast.error(t("editProduct.fetchError"), {
           position: "top-right",
           autoClose: 5000,
         });
@@ -292,7 +292,7 @@ const EditProduct = () => {
         });
 
         if (response && response.status >= 200 && response.status < 300) {
-          toast.success(t("editProduct.updateSuccess") || "Product updated successfully", {
+          toast.success(t("editProduct.updateSuccess"), {
             position: "top-right",
             autoClose: 5000,
           });

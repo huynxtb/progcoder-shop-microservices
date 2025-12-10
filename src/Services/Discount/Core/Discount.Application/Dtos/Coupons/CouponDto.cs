@@ -12,33 +12,39 @@ public sealed class CouponDto : EntityDto<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public string Code { get; init; } = string.Empty;
+    public string Code { get; set; } = default!;
 
-    public string Description { get; init; } = string.Empty;
+    public string Name { get; set; } = default!;
 
-    public CouponType Type { get; init; }
+    public string? Description { get; set; }
 
-    public double Value { get; init; }
+    public CouponType Type { get; set; }
 
-    public int MaxUses { get; init; }
+    public string DisplayType { get; set; } = default!;
 
-    public int UsesCount { get; init; }
+    public double Value { get; set; }
 
-    public decimal? MaxDiscountAmount { get; init; }
+    public int MaxUsage { get; set; }
 
-    public CouponStatus Status { get; init; }
+    public int UsageCount { get; set; }
+
+    public decimal? MaxDiscountAmount { get; set; }
+
+    public decimal? MinPurchaseAmount { get; set; }
+
+    public CouponStatus Status { get; set; }
 
     public string DisplayStatus { get; set; } = default!;
 
-    public DateTime ValidFrom { get; init; }
+    public DateTime ValidFrom { get; set; }
 
-    public DateTime ValidTo { get; init; }
+    public DateTime ValidTo { get; set; }
 
-    public bool IsValid { get; init; }
+    public bool IsValid { get; set; }
 
-    public bool IsExpired { get; init; }
+    public bool IsExpired { get; set; }
 
-    public bool IsOutOfUses { get; init; }
+    public bool IsOutOfUses { get; set; }
 
     #endregion
 }
