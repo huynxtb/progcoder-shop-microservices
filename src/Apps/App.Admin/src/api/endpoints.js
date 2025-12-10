@@ -6,25 +6,25 @@
 export const API_ENDPOINTS = {
   // Catalog Service
   CATALOG: {
-    GET_PRODUCTS: "/catalog-service/products",
-    GET_ALL_PRODUCTS: "/catalog-service/products/all",
-    GET_PRODUCT_DETAIL: (id) => `/catalog-service/products/${id}`,
-    CREATE_PRODUCT: "/catalog-service/products",
-    UPDATE_PRODUCT : (id) => `/catalog-service/products/${id}`,
-    DELETE_PRODUCT: (id) => `/catalog-service/products/${id}`,
-    PUBLISH_PRODUCT: (id) => `/catalog-service/products/${id}/publish`,
-    UNPUBLISH_PRODUCT: (id) => `/catalog-service/products/${id}/unpublish`,
+    GET_PRODUCTS: "/catalog-service/admin/products",
+    GET_ALL_PRODUCTS: "/catalog-service/admin/products/all",
+    GET_PRODUCT_DETAIL: (id) => `/catalog-service/admin/products/${id}`,
+    CREATE_PRODUCT: "/catalog-service/admin/products",
+    UPDATE_PRODUCT : (id) => `/catalog-service/admin/products/${id}`,
+    DELETE_PRODUCT: (id) => `/catalog-service/admin/products/${id}`,
+    PUBLISH_PRODUCT: (id) => `/catalog-service/admin/products/${id}/publish`,
+    UNPUBLISH_PRODUCT: (id) => `/catalog-service/admin/products/${id}/unpublish`,
     GET_CATEGORIES: "/catalog-service/categories",
-    GET_CATEGORY_TREE: "/catalog-service/categories/tree",
-    GET_CATEGORY_DETAIL: (id) => `/catalog-service/categories/${id}`,
-    CREATE_CATEGORY: "/catalog-service/categories",
-    UPDATE_CATEGORY: (id) => `/catalog-service/categories/${id}`,
-    DELETE_CATEGORY: (id) => `/catalog-service/categories/${id}`,
+    GET_CATEGORY_TREE: "/catalog-service/admin/categories/tree",
+    GET_CATEGORY_DETAIL: (id) => `/catalog-service/admin/categories/${id}`,
+    CREATE_CATEGORY: "/catalog-service/admin/categories",
+    UPDATE_CATEGORY: (id) => `/catalog-service/admin/categories/${id}`,
+    DELETE_CATEGORY: (id) => `/catalog-service/admin/categories/${id}`,
     GET_BRANDS: "/catalog-service/brands",
-    GET_BRAND_DETAIL: (id) => `/catalog-service/brands/${id}`,
-    CREATE_BRAND: "/catalog-service/brands",
-    UPDATE_BRAND: (id) => `/catalog-service/brands/${id}`,
-    DELETE_BRAND: (id) => `/catalog-service/brands/${id}`
+    GET_BRAND_DETAIL: (id) => `/catalog-service/admin/brands/${id}`,
+    CREATE_BRAND: "/catalog-service/admin/brands",
+    UPDATE_BRAND: (id) => `/catalog-service/admin/brands/${id}`,
+    DELETE_BRAND: (id) => `/catalog-service/admin/brands/${id}`
   },
 
   // Inventory Service

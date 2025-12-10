@@ -60,32 +60,6 @@ const HeaderNav = ({ position, downArrow }) => {
             </li>
           </ul>
         </li>
-        <li className="fz-dropdown fz-nav-item">
-          <a role="button" className="fz-nav-link">
-            {t("common.blog")}{" "}
-            <i
-              className={
-                downArrow ? "fa-solid fa-angle-down" : "fa-regular fa-plus"
-              }
-            ></i>
-          </a>
-
-          <ul className="fz-submenu">
-            <li>
-              <Link to="/blog" className="fz-nav-link fz-submenu-nav-link">
-                {t("common.blog")}
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/blogDetails"
-                className="fz-nav-link fz-submenu-nav-link"
-              >
-                Blog-details
-              </Link>
-            </li>
-          </ul>
-        </li>
         <li className="fz-nav-item">
           <Link to="/contact" className="fz-nav-link">
             {t("common.contact")}

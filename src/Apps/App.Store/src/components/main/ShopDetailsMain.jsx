@@ -3,11 +3,12 @@ import BreadcrumbSection from '../breadcrumb/BreadcrumbSection'
 import ProductDetailSection from '../product/ProductDetailSection'
 import RelatedProductSection from '../product/RelatedProductSection'
 
-const ShopDetailsMain = () => {
+const ShopDetailsMain = ({ product }) => {
+  const breadcrumbTitle = product?.name || "Shop Details";
   return (
     <>
-        <BreadcrumbSection title={"Shop Details"} current={"Shop Details"}/>
-        <ProductDetailSection/>
+        <BreadcrumbSection title={breadcrumbTitle} current={breadcrumbTitle}/>
+        <ProductDetailSection product={product}/>
         <RelatedProductSection/>
     </>
   )

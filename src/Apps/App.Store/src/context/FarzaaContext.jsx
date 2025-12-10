@@ -208,18 +208,32 @@ const FarzaaContextProvider = ({ children }) => {
 
   // Map API product to component format
   const mapApiProductToComponent = (apiProduct) => {
+    // Get thumbnail URL
+    let imgSrc = "";
+    if (apiProduct.thumbnail) {
+      imgSrc = typeof apiProduct.thumbnail === 'string' 
+        ? apiProduct.thumbnail 
+        : apiProduct.thumbnail.publicURL || "";
+    } else if (apiProduct.images && apiProduct.images.length > 0) {
+      const firstImage = apiProduct.images[0];
+      imgSrc = typeof firstImage === 'string' 
+        ? firstImage 
+        : firstImage.publicURL || "";
+    }
+
     return {
       id: apiProduct.id,
       name: apiProduct.name,
       price: apiProduct.price,
       salePrice: apiProduct.salePrice || 0,
-      imgSrc: apiProduct.thumbnail || (apiProduct.images && apiProduct.images[0]) || "",
+      imgSrc: imgSrc,
       category: apiProduct.categories && apiProduct.categories.length > 0 ? apiProduct.categories[0] : null,
       categories: apiProduct.categories || [],
       sku: apiProduct.sku,
       slug: apiProduct.slug,
       status: apiProduct.status,
       displayStatus: apiProduct.displayStatus,
+      featured: apiProduct.featured || false,
       images: apiProduct.images || [],
       isInWishlist: false,
     };

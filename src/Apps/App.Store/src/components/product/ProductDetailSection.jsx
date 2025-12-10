@@ -4,7 +4,7 @@ import ProductDetailTextSection from './ProductDetailTextSection';
 import ProductDescTabPane from './ProductDescTabPane';
 import ProductReviewTabPane from './ProductReviewTabPane';
 import { useState } from 'react';
-const ProductDetailSection = () => {
+const ProductDetailSection = ({ product }) => {
     const [activeTab, setActiveTab] = useState('description');
 
     const handleTabChange = (tab) => {
@@ -15,12 +15,12 @@ const ProductDetailSection = () => {
         <div className="container">
             <div className="row align-items-start justify-content-center">
                 <div className="col-lg-5 col-md-6 col-12 col-xxs-12">
-                    <ProductDetailSlider/>
+                    <ProductDetailSlider product={product}/>
                 </div>
 
 
                 <div className="col-lg-7 col-md-6">
-                    <ProductDetailTextSection/>
+                    <ProductDetailTextSection product={product}/>
                 </div>
 
                 <div className="col-12">
@@ -54,7 +54,7 @@ const ProductDetailSection = () => {
                         </Nav>
                         <Tab.Content>
                             <Tab.Pane eventKey='description' className={`tab-pane ${activeTab === 'description' ? 'show active' : ''}`}>
-                                <ProductDescTabPane/>
+                                <ProductDescTabPane product={product}/>
                             </Tab.Pane>
 
 

@@ -4,6 +4,7 @@ import JewelleryShop from "./pages/JewelleryShop";
 import CakeShop from "./pages/CakeShop";
 import Shop from "./pages/Shop";
 import ShopDetails from "./pages/ShopDetails";
+import ProductDetail from "./pages/ProductDetail";
 import About from "./pages/About";
 import Faq from "./pages/Faq";
 import Wishlist from "./pages/Wishlist";
@@ -44,6 +45,7 @@ function App() {
       <Route path="/shop" element={<Shop />} />
       <Route path="/shop-2" element={<Shop2 />} />
       <Route path="/shopDetails" element={<ShopDetails />} />
+      <Route path="/products/:id" element={<ProductDetail />} />
       <Route path="/about" element={<About />} />
       <Route path="/faq" element={<Faq />} />
       <Route 

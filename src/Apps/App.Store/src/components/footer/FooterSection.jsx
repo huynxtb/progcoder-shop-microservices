@@ -22,34 +22,6 @@ const FooterSection = ({ logo }) => {
                   Wayfarer, Cat-Eye, Round, Some Sunglasses Also Have Polarized
                   Lenses
                 </p>
-                <img
-                  src="assets/images/card.png"
-                  alt="Pyament Methods"
-                  className="fz-payment-methods"
-                />
-              </div>
-            </div>
-
-            <div className="col-xxl-2 col-lg-3 col-md-4 col-6 col-xxs-12">
-              <div className="fz-footer-widget">
-                <h5 className="fz-footer-widget__title">{t("footer.waysToShop", "Ways to Shop")}</h5>
-                <ul>
-                  <li>
-                    <Link to="#">Shop on Facebook</Link>
-                  </li>
-                  <li>
-                    <Link to="#">Shop on Ebay</Link>
-                  </li>
-                  <li>
-                    <Link to="/shop">Shop by Category</Link>
-                  </li>
-                  <li>
-                    <Link to="/shop">Shop All</Link>
-                  </li>
-                  <li>
-                    <Link to="#">Coupons and Discounts</Link>
-                  </li>
-                </ul>
               </div>
             </div>
 
@@ -71,29 +43,6 @@ const FooterSection = ({ logo }) => {
                   </li>
                   <li>
                     <Link to="#">Jewelry Care Instruction</Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="col-xxl-2 col-lg-3 col-md-4 col-6 col-xxs-12">
-              <div className="fz-footer-widget">
-                <h5 className="fz-footer-widget__title">{t("footer.quickLinks", "Quick Links")}</h5>
-                <ul>
-                  <li>
-                    <Link to="/about">Our Story</Link>
-                  </li>
-                  <li>
-                    <Link to="/blog">Blog & Press</Link>
-                  </li>
-                  <li>
-                    <Link to="#">Order History</Link>
-                  </li>
-                  <li>
-                    <Link to="#">Wish List</Link>
-                  </li>
-                  <li>
-                    <Link to="#">Terms & Conditions</Link>
                   </li>
                 </ul>
               </div>

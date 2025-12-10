@@ -70,3 +70,13 @@ export const getBrands = async () => {
   return response.data;
 };
 
+/**
+ * Get product detail by ID
+ * @param {string} id - Product ID
+ * @returns {Promise} API response
+ */
+export const getProductDetail = async (id) => {
+  const response = await api.get(API_ENDPOINTS.CATALOG.GET_PRODUCT_DETAIL(id));
+  return response.data;
+};
+

@@ -26,16 +26,6 @@ const ProductViewFilter = () => {
 
             <div className="col-xxl-6 col-xl-6 col-lg-7 col-6 col-xxs-12 col-sm-6">
                 <div className="product-view-right-actions text-center text-md-end d-flex justify-content-center justify-content-md-end">
-                    <div className="view-type">
-                        <button className={`grid-view ${isListView? '' :'active'}`} onClick={setGridView}>
-                            <i className="fa-solid fa-grid-2"></i>
-                        </button>
-
-                        <button className={`list-view ${isListView? 'active' :''}`} onClick={setListView}>
-                            <i className="fa-light fa-list"></i>
-                        </button>
-                    </div>
-
                     <div className="product-sorting d-inline-block">
                         <form className="" action="#">
                             <Form.Select className="nice-select" onChange={handleSortChange} value={sortBy}>
