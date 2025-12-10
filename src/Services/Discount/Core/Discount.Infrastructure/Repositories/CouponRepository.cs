@@ -39,13 +39,12 @@ public sealed class CouponRepository : ICouponRepository
 
     public async Task<CouponEntity?> GetByCodeAsync(CouponCode code, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(code);
         return await GetByCodeAsync(code.Value, cancellationToken);
     }
 
     public async Task<CouponEntity?> GetByCodeAsync(string code, CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(code);
+        var now = DateTime.UtcNow;
         return await _collection
             .Find(x => x.Code == code)
             .FirstOrDefaultAsync(cancellationToken);
@@ -53,13 +52,11 @@ public sealed class CouponRepository : ICouponRepository
 
     public async Task<bool> ExistsByCodeAsync(CouponCode code, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(code);
         return await ExistsByCodeAsync(code.Value, cancellationToken);
     }
 
     public async Task<bool> ExistsByCodeAsync(string code, CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(code);
         var count = await _collection
             .CountDocumentsAsync(x => x.Code == code, cancellationToken: cancellationToken);
         return count > 0;
@@ -86,15 +83,7 @@ public sealed class CouponRepository : ICouponRepository
             .Find(x => x.Status == CouponStatus.Approved
                 && x.ValidFrom <= now
                 && x.ValidTo >= now
-                && x.UsesCount < x.MaxUses)
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<IEnumerable<CouponEntity>> GetExpiredCouponsAsync(CancellationToken cancellationToken = default)
-    {
-        var now = DateTime.UtcNow;
-        return await _collection
-            .Find(x => x.ValidTo < now)
+                && x.UsageCount < x.MaxUsage)
             .ToListAsync(cancellationToken);
     }
 
@@ -107,14 +96,12 @@ public sealed class CouponRepository : ICouponRepository
 
     public async Task<CouponEntity> CreateAsync(CouponEntity coupon, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(coupon);
         await _collection.InsertOneAsync(coupon, cancellationToken: cancellationToken);
         return coupon;
     }
 
     public async Task<bool> UpdateAsync(CouponEntity coupon, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(coupon);
         var result = await _collection.ReplaceOneAsync(
             x => x.Id == coupon.Id,
             coupon,
@@ -125,13 +112,6 @@ public sealed class CouponRepository : ICouponRepository
     public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var result = await _collection.DeleteOneAsync(x => x.Id == id, cancellationToken);
-        return result.IsAcknowledged && result.DeletedCount > 0;
-    }
-
-    public async Task<bool> DeleteByCodeAsync(CouponCode code, CancellationToken cancellationToken = default)
-    {
-        ArgumentNullException.ThrowIfNull(code);
-        var result = await _collection.DeleteOneAsync(x => x.Code == code.Value, cancellationToken);
         return result.IsAcknowledged && result.DeletedCount > 0;
     }
 

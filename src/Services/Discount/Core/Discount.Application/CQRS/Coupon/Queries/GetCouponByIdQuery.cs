@@ -9,20 +9,20 @@ using Discount.Application.Repositories;
 
 namespace Discount.Application.CQRS.Coupon.Queries;
 
-public sealed record GetCouponQuery(Guid Id) : IQuery<GetCouponResult>;
+public sealed record GetCouponByIdQuery(Guid Id) : IQuery<GetCouponByIdResult>;
 
-public sealed class GetCouponQueryHandler(ICouponRepository repository, IMapper mapper) : IQueryHandler<GetCouponQuery, GetCouponResult>
+public sealed class GetCouponQueryHandler(ICouponRepository repository, IMapper mapper) : IQueryHandler<GetCouponByIdQuery, GetCouponByIdResult>
 {
     #region Implementations
 
-    public async Task<GetCouponResult> Handle(GetCouponQuery query, CancellationToken cancellationToken)
+    public async Task<GetCouponByIdResult> Handle(GetCouponByIdQuery query, CancellationToken cancellationToken)
     {
         var coupon = await repository.GetByIdAsync(query.Id, cancellationToken)
             ?? throw new NotFoundException(MessageCode.ResourceNotFound, query.Id);
 
         var dto = mapper.Map<CouponDto>(coupon);
         
-        return new GetCouponResult(dto);
+        return new GetCouponByIdResult(dto);
     }
 
     #endregion

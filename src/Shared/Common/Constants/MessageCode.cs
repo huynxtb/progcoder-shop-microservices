@@ -108,6 +108,8 @@ public sealed class MessageCode
 
     public const string MoneyCannotBeNegative = "MONEY_CANNOT_BE_NEGATIVE";
 
+    public const string MaxDiscountAmountCannotBeNegative = "MAX_DISCOUNT_AMOUNT_CANNOT_BE_NEGATIVE";
+
     public const string ProductIdIsRequired = "PRODUCT_ID_IS_REQUIRED";
 
     public const string ProductIsNotFound = "PRODUCT_IS_NOT_FOUND";
@@ -205,6 +207,10 @@ public sealed class MessageCode
     public const string CategoryHasChildren = "CATEGORY_HAS_CHILDREN";
 
     public const string CategoryCannotBeItsOwnParent = "CATEGORY_CANNOT_BE_ITS_OWN_PARENT";
+
+    public const string MaxUsageIsRequired = "MAX_USAGE_IS_REQUIRED";
+
+    public const string ValueIsRequired = "VALUE_IS_REQUIRED";
 
     #endregion
 }

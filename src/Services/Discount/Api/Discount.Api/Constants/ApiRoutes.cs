@@ -8,15 +8,15 @@ public sealed class ApiRoutes
 
         public const string Tags = "Baskets";
 
-        private const string Base = "basket";
+        private const string Base = "/basket";
 
-        public const string GetBasket = $"/{Base}";
+        public const string GetBasket = $"{Base}";
 
-        public const string StoreBasket = $"/{Base}";
+        public const string StoreBasket = $"{Base}";
 
-        public const string DeleteBasket = $"/{Base}";
+        public const string DeleteBasket = $"{Base}";
 
-        public const string CheckoutBasket = $"/{Base}/checkout";
+        public const string CheckoutBasket = $"{Base}/checkout";
 
         #endregion
     }
@@ -27,25 +27,33 @@ public sealed class ApiRoutes
 
         public const string Tags = "Coupons";
 
-        private const string Base = "coupons";
+        private const string BaseAdmin = "/admin/coupons";
 
-        public const string GetCoupon = $"/{Base}/{{id}}";
+        private const string Base = "/coupons";
 
-        public const string GetCouponByCode = $"/{Base}/code/{{code}}";
+        public const string CreateCoupon = $"{BaseAdmin}";
 
-        public const string GetCoupons = $"/{Base}";
+        public const string UpdateCoupon = $"{BaseAdmin}/{{id}}";
 
-        public const string CreateCoupon = $"/{Base}";
+        public const string DeleteCoupon = $"{BaseAdmin}/{{id}}";
 
-        public const string UpdateCoupon = $"/{Base}/{{id}}";
+        public const string ApproveCoupon = $"{BaseAdmin}/{{id}}/approve";
 
-        public const string DeleteCoupon = $"/{Base}/{{id}}";
+        public const string RejectCoupon = $"{BaseAdmin}/{{id}}/reject";
 
-        public const string ApproveCoupon = $"/{Base}/{{id}}/approve";
+        public const string GetCoupon = $"{BaseAdmin}/{{id}}";
 
-        public const string RejectCoupon = $"/{Base}/{{id}}/reject";
+        public const string GetCoupons = $"{BaseAdmin}";
 
-        public const string EvaluateCoupon = $"/{Base}/evaluate";
+        public const string GetAlloupons = $"{BaseAdmin}/all";
+
+        public const string GetCouponsApproved = $"{BaseAdmin}/approved";
+
+        public const string UpdateValidityPeriod = $"{BaseAdmin}/{{id}}/validity-period";
+
+        public const string GetCouponByCode = $"{Base}/code/{{code}}";
+
+        public const string EvaluateCoupon = $"{Base}/evaluate";
 
         #endregion
     }

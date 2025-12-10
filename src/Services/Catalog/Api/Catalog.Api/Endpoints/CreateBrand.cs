@@ -34,7 +34,7 @@ public sealed class CreateBrand : ICarterModule
         [FromBody] CreateBrandDto req)
     {
         var currentUser = httpContext.GetCurrentUser();
-        var command = new CreateBrandCommand(req, Actor.User(currentUser.Id));
+        var command = new CreateBrandCommand(req, Actor.User(currentUser.Email));
 
         var result = await sender.Send(command);
 

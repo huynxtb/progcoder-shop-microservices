@@ -9,18 +9,17 @@ using Common.Models.Reponses;
 
 namespace Discount.Api.Endpoints;
 
-public sealed class GetCoupon : ICarterModule
+public sealed class GetAllCoupons : ICarterModule
 {
     #region Implementations
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet(ApiRoutes.Coupon.GetCoupon, HandleGetCouponAsync)
+        app.MapGet(ApiRoutes.Coupon.GetAlloupons, HandleGetAllCouponsAsync)
             .WithTags(ApiRoutes.Coupon.Tags)
-            .WithName(nameof(GetCoupon))
-            .Produces<ApiGetResponse<GetCouponByIdResult>>(StatusCodes.Status200OK)
+            .WithName(nameof(GetAllCoupons))
+            .Produces<ApiGetResponse<GetCouponsResult>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
-            .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
     }
 
@@ -28,14 +27,13 @@ public sealed class GetCoupon : ICarterModule
 
     #region Methods
 
-    private async Task<ApiGetResponse<GetCouponByIdResult>> HandleGetCouponAsync(
-        ISender sender,
-        Guid id)
+    private async Task<ApiGetResponse<GetCouponsResult>> HandleGetAllCouponsAsync(
+        ISender sender)
     {
-        var query = new GetCouponByIdQuery(id);
+        var query = new GetAllCouponsQuery();
         var result = await sender.Send(query);
 
-        return new ApiGetResponse<GetCouponByIdResult>(result);
+        return new ApiGetResponse<GetCouponsResult>(result);
     }
 
     #endregion

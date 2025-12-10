@@ -60,6 +60,7 @@ public static class DependencyInjection
     public static WebApplication UseInfrastructure(this WebApplication app)
     {
         app.EnsureIndexesAsync().GetAwaiter();
+        app.SeedDataAsync().GetAwaiter();
 
         return app;
     }

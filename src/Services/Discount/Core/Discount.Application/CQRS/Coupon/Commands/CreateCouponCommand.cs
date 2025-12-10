@@ -9,7 +9,7 @@ using Discount.Domain.ValueObjects;
 
 namespace Discount.Application.CQRS.Coupon.Commands;
 
-public sealed record CreateCouponCommand(CreateCouponDto Dto) : ICommand<Guid>;
+public sealed record CreateCouponCommand(CreateCouponDto Dto, Actor Actor) : ICommand<Guid>;
 
 public sealed class CreateCouponCommandValidator : AbstractValidator<CreateCouponCommand>
 {
@@ -79,20 +79,22 @@ public sealed class CreateCouponCommandHandler(ICouponRepository repository) : I
     {
         var dto = command.Dto;
 
-        // Check if coupon code already exists
         var exists = await repository.ExistsByCodeAsync(dto.Code, cancellationToken);
         if (exists)
             throw new ClientValidationException(MessageCode.CouponCodeIsExists, dto.Code);
 
         var coupon = CouponEntity.Create(
+            id: Guid.NewGuid(),
             code: dto.Code,
             description: dto.Description,
             type: dto.Type,
             value: dto.Value,
-            maxUses: dto.MaxUses,
+            maxUsage: dto.MaxUses,
             maxDiscountAmount: dto.MaxDiscountAmount,
+            minPurchaseAmount: null,
             validFrom: dto.ValidFrom,
-            validTo: dto.ValidTo);
+            validTo: dto.ValidTo,
+            performBy: command.Actor.ToString());
 
         await repository.CreateAsync(coupon, cancellationToken);
 

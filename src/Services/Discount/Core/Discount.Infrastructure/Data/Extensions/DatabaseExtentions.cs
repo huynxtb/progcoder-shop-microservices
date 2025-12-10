@@ -1,6 +1,9 @@
 ﻿#region using
 
+using BuildingBlocks.Abstractions.ValueObjects;
+using Common.Constants;
 using Discount.Domain.Entities;
+using Discount.Domain.Enums;
 using Discount.Infrastructure.Constants;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,38 +22,31 @@ public static class DatabaseExtentions
         var db = app.Services.GetRequiredService<IMongoDatabase>();
         var coupon = db.GetCollection<CouponEntity>(MongoCollection.Coupon);
         
-        // Unique index on Code.Value for fast lookups and uniqueness constraint
         await coupon.Indexes.CreateOneAsync(new CreateIndexModel<CouponEntity>(
             Builders<CouponEntity>.IndexKeys
                 .Ascending(x => x.Code),
             new CreateIndexOptions { Unique = true, Name = "IX_Coupon_Code_Unique" }));
 
-        // Index on Status for filtering by coupon status
         await coupon.Indexes.CreateOneAsync(new CreateIndexModel<CouponEntity>(
             Builders<CouponEntity>.IndexKeys
                 .Ascending(x => x.Status),
             new CreateIndexOptions { Name = "IX_Coupon_Status" }));
 
-        // Index on Type for filtering by coupon type (Fixed/Percentage)
         await coupon.Indexes.CreateOneAsync(new CreateIndexModel<CouponEntity>(
             Builders<CouponEntity>.IndexKeys
                 .Ascending(x => x.Type),
             new CreateIndexOptions { Name = "IX_Coupon_Type" }));
 
-        // Index on ValidFrom for finding coupons that are valid from a specific date
         await coupon.Indexes.CreateOneAsync(new CreateIndexModel<CouponEntity>(
             Builders<CouponEntity>.IndexKeys
                 .Ascending(x => x.ValidFrom),
             new CreateIndexOptions { Name = "IX_Coupon_ValidFrom" }));
 
-        // Index on ValidTo for finding expired coupons
         await coupon.Indexes.CreateOneAsync(new CreateIndexModel<CouponEntity>(
             Builders<CouponEntity>.IndexKeys
                 .Ascending(x => x.ValidTo),
             new CreateIndexOptions { Name = "IX_Coupon_ValidTo" }));
 
-        // Compound index for finding valid/active coupons efficiently
-        // Common query: Status = Approved AND ValidFrom <= now AND ValidTo >= now
         await coupon.Indexes.CreateOneAsync(new CreateIndexModel<CouponEntity>(
             Builders<CouponEntity>.IndexKeys
                 .Ascending(x => x.Status)
@@ -58,19 +54,60 @@ public static class DatabaseExtentions
                 .Ascending(x => x.ValidTo),
             new CreateIndexOptions { Name = "IX_Coupon_Status_ValidFrom_ValidTo" }));
 
-        // Compound index for finding coupons by status and type
         await coupon.Indexes.CreateOneAsync(new CreateIndexModel<CouponEntity>(
             Builders<CouponEntity>.IndexKeys
                 .Ascending(x => x.Status)
                 .Ascending(x => x.Type),
             new CreateIndexOptions { Name = "IX_Coupon_Status_Type" }));
 
-        // Index on UsesCount for finding coupons that are not out of uses
         await coupon.Indexes.CreateOneAsync(new CreateIndexModel<CouponEntity>(
             Builders<CouponEntity>.IndexKeys
-                .Ascending(x => x.UsesCount),
-            new CreateIndexOptions { Name = "IX_Coupon_UsesCount" }));
+                .Ascending(x => x.UsageCount),
+            new CreateIndexOptions { Name = "IX_Coupon_UsageCount" }));
     }
 
+    public static async Task SeedDataAsync(this WebApplication app)
+    {
+        var db = app.Services.GetRequiredService<IMongoDatabase>();
+        var couponCollection = db.GetCollection<CouponEntity>(MongoCollection.Coupon);
+        var now = DateTime.UtcNow;
+        var count = await couponCollection.CountDocumentsAsync(x => x.Status == CouponStatus.Approved
+                && x.ValidFrom <= now
+                && x.ValidTo >= now
+                && x.UsageCount < x.MaxUsage);
+
+        if (count == 0)
+        {
+            var fixedId = Guid.NewGuid();
+            var randomFixedCoupon = CouponEntity.Create(id: fixedId,
+                code: $"RND-{fixedId.ToString().Split("-").First().ToUpper()}",
+                description: "Random Fixed Coupon",
+                type: Domain.Enums.CouponType.Fixed,
+                value: 55000,
+                maxUsage: 5,
+                minPurchaseAmount: 100000,
+                maxDiscountAmount: null,
+                validFrom: now,
+                validTo: now.AddDays(3),
+                performBy: Actor.System(AppConstants.Service.Coupon).ToString());
+            randomFixedCoupon.Approve(Actor.System(AppConstants.Service.Coupon).ToString());
+
+            var percentageId = Guid.NewGuid();
+            var randomPercentageCoupon = CouponEntity.Create(id: percentageId,
+                code: $"RND-{percentageId.ToString().Split("-").First().ToUpper()}",
+                description: "Random Percentage Coupon",
+                type: Domain.Enums.CouponType.Percentage,
+                value: 30,
+                maxUsage: 5,
+                minPurchaseAmount: 100000,
+                maxDiscountAmount: 25000,
+                validFrom: now,
+                validTo: now.AddDays(3),
+                performBy: Actor.System(AppConstants.Service.Coupon).ToString());
+            randomPercentageCoupon.Approve(Actor.System(AppConstants.Service.Coupon).ToString());
+
+            await couponCollection.InsertManyAsync(new[] { randomFixedCoupon, randomPercentageCoupon });
+        }
+    }
     #endregion
 }

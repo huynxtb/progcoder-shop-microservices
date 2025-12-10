@@ -11,19 +11,21 @@ public sealed class CouponEntity : Aggregate<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public string Code { get; set; }
+    public string Code { get; set; } = default!;
 
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     public CouponType Type { get; set; }
 
     public double Value { get; set; }
 
-    public int MaxUses { get; set; }
+    public int MaxUsage { get; set; }
 
-    public int UsesCount { get; set; }
+    public int UsageCount { get; set; }
 
     public decimal? MaxDiscountAmount { get; set; }
+
+    public decimal? MinPurchaseAmount { get; set; }
 
     public CouponStatus Status { get; set; }
 
@@ -33,80 +35,94 @@ public sealed class CouponEntity : Aggregate<Guid>
 
     #endregion
 
-    #region Ctors
-
-    private CouponEntity(
-        string code,
-        string description,
-        CouponType type,
-        double value,
-        int maxUses,
-        decimal? maxDiscountAmount,
-        DateTime validFrom,
-        DateTime validTo)
-    {
-        Id = Guid.NewGuid();
-        Code = code;
-        Description = description;
-        Type = type;
-        Value = value;
-        MaxUses = maxUses;
-        UsesCount = 0;
-        MaxDiscountAmount = maxDiscountAmount;
-        Status = CouponStatus.Pending;
-        ValidFrom = validFrom;
-        ValidTo = validTo;
-    }
-
-    #endregion
-
     #region Factories
 
-    public static CouponEntity Create(
+    public static CouponEntity Create(Guid id,
         string code,
         string description,
         CouponType type,
         double value,
-        int maxUses,
+        int maxUsage,
         decimal? maxDiscountAmount,
+        decimal? minPurchaseAmount,
         DateTime validFrom,
-        DateTime validTo)
+        DateTime validTo,
+        string performBy)
     {
         ArgumentNullException.ThrowIfNull(code);
         ArgumentException.ThrowIfNullOrWhiteSpace(description);
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value);
-        ArgumentOutOfRangeException.ThrowIfNegative(maxUses);
-        
+        ArgumentOutOfRangeException.ThrowIfNegative(maxUsage);
+
         if (maxDiscountAmount.HasValue && maxDiscountAmount.Value < 0)
             throw new ArgumentException("MaxDiscountAmount cannot be negative", nameof(maxDiscountAmount));
-        
+
         if (validFrom >= validTo)
             throw new ArgumentException("ValidFrom must be before ValidTo", nameof(validTo));
 
         if (type == CouponType.Percentage && value > 100)
             throw new ArgumentException("Percentage value cannot exceed 100", nameof(value));
 
-        return new CouponEntity(code, description, type, value, maxUses, maxDiscountAmount, validFrom, validTo);
+        return new CouponEntity()
+        {
+            Id = id,
+            Code = code,
+            Description = description,
+            Type = type,
+            Value = value,
+            MaxUsage = maxUsage,
+            MaxDiscountAmount = maxDiscountAmount,
+            MinPurchaseAmount = minPurchaseAmount,
+            Status = CouponStatus.Pending,
+            ValidFrom = validFrom,
+            ValidTo = validTo,
+            CreatedOnUtc = DateTimeOffset.UtcNow,
+            CreatedBy = performBy,
+            LastModifiedOnUtc = DateTimeOffset.UtcNow,
+            LastModifiedBy = performBy
+        };
     }
 
     #endregion
 
-    #region Operations
+    #region Methods
 
-    public void Approve()
+    public void Update(string? description,
+        CouponType type,
+        double value,
+        int maxUsage,
+        decimal? maxDiscountAmount,
+        decimal? minPurchaseAmount,
+        string performBy)
+    {
+        Description = description;
+        Type = type;
+        Value = value;
+        MaxUsage = maxUsage;
+        MaxDiscountAmount = maxDiscountAmount;
+        MinPurchaseAmount = minPurchaseAmount;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+        LastModifiedBy = performBy;
+    }
+
+    public void Approve(string performBy)
     {
         if (Status != CouponStatus.Pending)
             throw new InvalidOperationException("Only pending coupons can be approved");
 
         Status = CouponStatus.Approved;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+        LastModifiedBy = performBy;
     }
 
-    public void Reject()
+    public void Reject(string performBy)
     {
         if (Status != CouponStatus.Pending)
             throw new InvalidOperationException("Only pending coupons can be rejected");
 
         Status = CouponStatus.Rejected;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+        LastModifiedBy = performBy;
     }
 
     public void Apply()
@@ -114,9 +130,9 @@ public sealed class CouponEntity : Aggregate<Guid>
         if (!CanBeUsed())
             throw new InvalidOperationException("Coupon cannot be used");
 
-        UsesCount++;
-        
-        if (UsesCount >= MaxUses)
+        UsageCount++;
+
+        if (UsageCount >= MaxUsage)
             Status = CouponStatus.OutOfStock;
     }
 
@@ -146,59 +162,23 @@ public sealed class CouponEntity : Aggregate<Guid>
         return discount > originalAmount ? originalAmount : discount;
     }
 
-    public void UpdateDescription(string description)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(description);
-        Description = description;
-    }
-
-    public void UpdateValue(double value)
-    {
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value);
-
-        if (Type == CouponType.Percentage && value > 100)
-            throw new ArgumentException("Percentage value cannot exceed 100", nameof(value));
-
-        Value = value;
-    }
-
-    public void UpdateValidityPeriod(DateTime validFrom, DateTime validTo)
+    public void UpdateValidityPeriod(DateTime validFrom, DateTime validTo, string performBy)
     {
         if (validFrom >= validTo)
             throw new ArgumentException("ValidFrom must be before ValidTo", nameof(validTo));
 
         ValidFrom = validFrom;
         ValidTo = validTo;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+        LastModifiedBy = performBy;
     }
-
-    public void UpdateMaxUses(int maxUses)
-    {
-        ArgumentOutOfRangeException.ThrowIfNegative(maxUses);
-        
-        if (maxUses < UsesCount)
-            throw new ArgumentException("MaxUses cannot be less than current UsesCount", nameof(maxUses));
-
-        MaxUses = maxUses;
-    }
-
-    public void UpdateMaxDiscountAmount(decimal? maxDiscountAmount)
-    {
-        if (maxDiscountAmount.HasValue && maxDiscountAmount.Value < 0)
-            throw new ArgumentException("MaxDiscountAmount cannot be negative", nameof(maxDiscountAmount));
-
-        MaxDiscountAmount = maxDiscountAmount;
-    }
-
-    #endregion
-
-    #region Validation
 
     public bool IsValid()
     {
         return Status == CouponStatus.Approved
             && DateTime.UtcNow >= ValidFrom
             && DateTime.UtcNow <= ValidTo
-            && UsesCount < MaxUses;
+            && UsageCount < MaxUsage;
     }
 
     public bool CanBeUsed()
@@ -213,7 +193,7 @@ public sealed class CouponEntity : Aggregate<Guid>
 
     public bool IsOutOfUses()
     {
-        return UsesCount >= MaxUses;
+        return UsageCount >= MaxUsage;
     }
 
     #endregion

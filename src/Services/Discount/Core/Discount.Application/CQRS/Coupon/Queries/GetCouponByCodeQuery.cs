@@ -9,7 +9,7 @@ using Discount.Application.Repositories;
 
 namespace Discount.Application.CQRS.Coupon.Queries;
 
-public sealed record GetCouponByCodeQuery(string Code) : IQuery<GetCouponResult>;
+public sealed record GetCouponByCodeQuery(string Code) : IQuery<GetCouponByIdResult>;
 
 public sealed class GetCouponByCodeQueryValidator : AbstractValidator<GetCouponByCodeQuery>
 {
@@ -25,18 +25,18 @@ public sealed class GetCouponByCodeQueryValidator : AbstractValidator<GetCouponB
     #endregion
 }
 
-public sealed class GetCouponByCodeQueryHandler(ICouponRepository repository, IMapper mapper) : IQueryHandler<GetCouponByCodeQuery, GetCouponResult>
+public sealed class GetCouponByCodeQueryHandler(ICouponRepository repository, IMapper mapper) : IQueryHandler<GetCouponByCodeQuery, GetCouponByIdResult>
 {
     #region Implementations
 
-    public async Task<GetCouponResult> Handle(GetCouponByCodeQuery query, CancellationToken cancellationToken)
+    public async Task<GetCouponByIdResult> Handle(GetCouponByCodeQuery query, CancellationToken cancellationToken)
     {
         var coupon = await repository.GetByCodeAsync(query.Code, cancellationToken)
             ?? throw new NotFoundException(MessageCode.ResourceNotFound, query.Code);
 
         var dto = mapper.Map<CouponDto>(coupon);
 
-        return new GetCouponResult(dto);
+        return new GetCouponByIdResult(dto);
     }
 
     #endregion

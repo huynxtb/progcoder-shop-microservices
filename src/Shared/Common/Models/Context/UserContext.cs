@@ -1,6 +1,6 @@
-﻿namespace Common.Models.Identity;
+﻿namespace Common.Models.Context;
 
-public sealed class UserIdentity
+public sealed class UserContext
 {
     #region Fields, Properties and Indexers
 

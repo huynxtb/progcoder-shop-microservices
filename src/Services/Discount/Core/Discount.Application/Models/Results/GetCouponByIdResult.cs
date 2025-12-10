@@ -6,7 +6,7 @@ using Discount.Application.Dtos.Coupons;
 
 namespace Discount.Application.Models.Results;
 
-public sealed class GetCouponResult
+public sealed class GetCouponByIdResult
 {
     #region Fields, Properties and Indexers
 
@@ -16,7 +16,7 @@ public sealed class GetCouponResult
 
     #region Ctors
 
-    public GetCouponResult(CouponDto coupon)
+    public GetCouponByIdResult(CouponDto coupon)
     {
         Coupon = coupon;
     }

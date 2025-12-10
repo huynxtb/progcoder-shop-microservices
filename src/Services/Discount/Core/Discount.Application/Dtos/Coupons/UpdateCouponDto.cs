@@ -10,17 +10,17 @@ public sealed class UpdateCouponDto
 {
     #region Fields, Properties and Indexers
 
-    public string? Description { get; init; }
+    public string? Description { get; set; }
 
-    public double? Value { get; init; }
+    public double Value { get; set; }
 
-    public int? MaxUses { get; init; }
+    public int MaxUsage { get; set; }
 
-    public decimal? MaxDiscountAmount { get; init; }
+    public decimal? MaxDiscountAmount { get; set; }
 
-    public DateTime? ValidFrom { get; init; }
+    public decimal? MinPurchaseAmount { get; set; }
 
-    public DateTime? ValidTo { get; init; }
+    public CouponType Type { get; set; }
 
     #endregion
 }

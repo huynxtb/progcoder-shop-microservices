@@ -6,7 +6,7 @@ using Discount.Application.Repositories;
 
 namespace Discount.Application.CQRS.Coupon.Commands;
 
-public sealed record ApproveCouponCommand(Guid Id) : ICommand<bool>;
+public sealed record ApproveCouponCommand(Guid Id, Actor Actor) : ICommand<bool>;
 
 public sealed class ApproveCouponCommandValidator : AbstractValidator<ApproveCouponCommand>
 {
@@ -31,7 +31,7 @@ public sealed class ApproveCouponCommandHandler(ICouponRepository repository) : 
         var coupon = await repository.GetByIdAsync(command.Id, cancellationToken)
             ?? throw new NotFoundException(MessageCode.ResourceNotFound, command.Id);
 
-        coupon.Approve();
+        coupon.Approve(command.Actor.ToString());
 
         return await repository.UpdateAsync(coupon, cancellationToken);
     }

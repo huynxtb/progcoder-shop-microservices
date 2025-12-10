@@ -82,7 +82,7 @@ public sealed class CreateProduct : ICarterModule
         }
 
         var currentUser = httpContext.GetCurrentUser();
-        var command = new CreateProductCommand(dto, Actor.User(currentUser.Id));
+        var command = new CreateProductCommand(dto, Actor.User(currentUser.Email));
 
         var result = await sender.Send(command);
 

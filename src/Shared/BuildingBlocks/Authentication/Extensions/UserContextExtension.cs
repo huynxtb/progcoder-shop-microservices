@@ -1,8 +1,7 @@
 ﻿#region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
 using Common.Constants;
-using Common.Models.Identity;
+using Common.Models.Context;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
@@ -10,11 +9,11 @@ using System.Security.Claims;
 
 namespace BuildingBlocks.Authentication.Extensions;
 
-public static class UserIdentityExtension
+public static class UserContextExtension
 {
     #region Methods
 
-    public static UserIdentity GetCurrentUser(this IHttpContextAccessor context)
+    public static UserContext GetCurrentUser(this IHttpContextAccessor context)
     {
         var identity = context.HttpContext?.User;
         var userId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
@@ -26,7 +25,7 @@ public static class UserIdentityExtension
         var roles = identity?.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList() ?? [];
         bool.TryParse(identity?.FindFirst(CustomClaimTypes.EmailVerified)?.Value, out bool emailVerified);
 
-        return new UserIdentity()
+        return new UserContext()
         {
             EmailVerified = emailVerified,
             FirstName = firstName,

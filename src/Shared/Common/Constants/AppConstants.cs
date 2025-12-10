@@ -28,6 +28,8 @@ public sealed class AppConstants
         public const string Inventory = "inventory";
 
         public const string Report = "report";
+
+        public const string Coupon = "coupon";
     }
 
     #endregion

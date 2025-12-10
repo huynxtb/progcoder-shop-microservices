@@ -735,3 +735,4 @@ global using BuildingBlocks.Abstractions.ValueObjects;
 10. **Structured Logging**: Use ILogger with structured log messages
 11. **Configuration Classes**: Use XxxCfg classes for strongly-typed configuration
 12. **Scrutor for DI**: Auto-register services by naming convention
+12. **Commentary**: Do not use comments for Method/Class/Property definitions

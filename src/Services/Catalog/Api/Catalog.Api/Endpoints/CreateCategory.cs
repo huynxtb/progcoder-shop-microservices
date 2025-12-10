@@ -34,7 +34,7 @@ public sealed class CreateCategory : ICarterModule
         [FromBody] CreateCategoryDto req)
     {
         var currentUser = httpContext.GetCurrentUser();
-        var command = new CreateCategoryCommand(req, Actor.User(currentUser.Id));
+        var command = new CreateCategoryCommand(req, Actor.User(currentUser.Email));
 
         var result = await sender.Send(command);
 

@@ -36,7 +36,7 @@ public sealed class UpdateBrand : ICarterModule
         [FromBody] UpdateBrandDto req)
     {
         var currentUser = httpContext.GetCurrentUser();
-        var command = new UpdateBrandCommand(brandId, req, Actor.User(currentUser.Id));
+        var command = new UpdateBrandCommand(brandId, req, Actor.User(currentUser.Email));
 
         var result = await sender.Send(command);
 

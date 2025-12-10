@@ -28,8 +28,6 @@ public interface ICouponRepository
 
     Task<IEnumerable<CouponEntity>> GetValidCouponsAsync(CancellationToken cancellationToken = default);
 
-    Task<IEnumerable<CouponEntity>> GetExpiredCouponsAsync(CancellationToken cancellationToken = default);
-
     Task<IEnumerable<CouponEntity>> GetAllAsync(CancellationToken cancellationToken = default);
 
     Task<CouponEntity> CreateAsync(CouponEntity coupon, CancellationToken cancellationToken = default);
@@ -37,8 +35,6 @@ public interface ICouponRepository
     Task<bool> UpdateAsync(CouponEntity coupon, CancellationToken cancellationToken = default);
 
     Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
-
-    Task<bool> DeleteByCodeAsync(CouponCode code, CancellationToken cancellationToken = default);
 
     #endregion
 }

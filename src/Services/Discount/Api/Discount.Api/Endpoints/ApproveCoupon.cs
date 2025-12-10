@@ -1,5 +1,6 @@
 #region using
 
+using BuildingBlocks.Authentication.Extensions;
 using Discount.Api.Constants;
 using Discount.Application.CQRS.Coupon.Commands;
 
@@ -28,9 +29,11 @@ public sealed class ApproveCoupon : ICarterModule
 
     private async Task<ApiUpdatedResponse<bool>> HandleApproveCouponAsync(
         ISender sender,
+        IHttpContextAccessor httpContext,
         Guid id)
     {
-        var command = new ApproveCouponCommand(id);
+        var currentUser = httpContext.GetCurrentUser();
+        var command = new ApproveCouponCommand(id, Actor.User(currentUser.Email));
 
         var result = await sender.Send(command);
 

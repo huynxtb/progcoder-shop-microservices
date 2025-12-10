@@ -1,5 +1,6 @@
 #region using
 
+using BuildingBlocks.Authentication.Extensions;
 using Discount.Api.Constants;
 using Discount.Application.CQRS.Coupon.Commands;
 using Discount.Application.Dtos.Coupons;
@@ -31,9 +32,11 @@ public sealed class CreateCoupon : ICarterModule
 
     private async Task<ApiCreatedResponse<Guid>> HandleCreateCouponAsync(
         ISender sender,
+        IHttpContextAccessor httpContext,
         [FromBody] CreateCouponDto dto)
     {
-        var command = new CreateCouponCommand(dto);
+        var currentUser = httpContext.GetCurrentUser();
+        var command = new CreateCouponCommand(dto, Actor.User(currentUser.Email));
         var id = await sender.Send(command);
 
         return new ApiCreatedResponse<Guid>(id);

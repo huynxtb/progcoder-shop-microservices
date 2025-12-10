@@ -36,7 +36,7 @@ public sealed class UpdateCategory : ICarterModule
         [FromBody] UpdateCategoryDto req)
     {
         var currentUser = httpContext.GetCurrentUser();
-        var command = new UpdateCategoryCommand(categoryId, req, Actor.User(currentUser.Id));
+        var command = new UpdateCategoryCommand(categoryId, req, Actor.User(currentUser.Email));
 
         var result = await sender.Send(command);
 

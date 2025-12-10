@@ -1,5 +1,6 @@
 #region using
 
+using BuildingBlocks.Authentication.Extensions;
 using Discount.Api.Constants;
 using Discount.Application.CQRS.Coupon.Commands;
 using Discount.Application.Dtos.Coupons;
@@ -32,10 +33,12 @@ public sealed class UpdateCoupon : ICarterModule
 
     private async Task<ApiUpdatedResponse<bool>> HandleUpdateCouponAsync(
         ISender sender,
+        IHttpContextAccessor httpContext,
         Guid id,
         [FromBody] UpdateCouponDto dto)
     {
-        var command = new UpdateCouponCommand(id, dto);
+        var currentUser = httpContext.GetCurrentUser();
+        var command = new UpdateCouponCommand(id, dto, Actor.User(currentUser.Email));
         var result = await sender.Send(command);
 
         return new ApiUpdatedResponse<bool>(result);

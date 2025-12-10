@@ -7,7 +7,7 @@ using Discount.Application.Repositories;
 
 namespace Discount.Application.CQRS.Coupon.Commands;
 
-public sealed record UpdateCouponCommand(Guid Id, UpdateCouponDto Dto) : ICommand<bool>;
+public sealed record UpdateCouponCommand(Guid Id, UpdateCouponDto Dto, Actor Actor) : ICommand<bool>;
 
 public sealed class UpdateCouponCommandValidator : AbstractValidator<UpdateCouponCommand>
 {
@@ -31,32 +31,19 @@ public sealed class UpdateCouponCommandValidator : AbstractValidator<UpdateCoupo
                         .WithMessage(MessageCode.Max500Characters);
                 });
 
-                When(x => x.Dto.Value.HasValue, () =>
-                {
-                    RuleFor(x => x.Dto.Value!.Value)
-                        .GreaterThan(0)
-                        .WithMessage(MessageCode.PriceIsRequired);
-                });
+                RuleFor(x => x.Dto.Value)
+                    .GreaterThan(0)
+                    .WithMessage(MessageCode.ValueIsRequired);
 
-                When(x => x.Dto.MaxUses.HasValue, () =>
-                {
-                    RuleFor(x => x.Dto.MaxUses!.Value)
-                        .GreaterThan(0)
-                        .WithMessage(MessageCode.QuantityIsRequired);
-                });
+                RuleFor(x => x.Dto.MaxUsage)
+                    .GreaterThan(0)
+                    .WithMessage(MessageCode.MaxUsageIsRequired);
 
                 When(x => x.Dto.MaxDiscountAmount.HasValue, () =>
                 {
                     RuleFor(x => x.Dto.MaxDiscountAmount!.Value)
                         .GreaterThanOrEqualTo(0)
-                        .WithMessage(MessageCode.MoneyCannotBeNegative);
-                });
-
-                When(x => x.Dto.ValidFrom.HasValue && x.Dto.ValidTo.HasValue, () =>
-                {
-                    RuleFor(x => x.Dto.ValidTo!.Value)
-                        .GreaterThan(x => x.Dto.ValidFrom!.Value)
-                        .WithMessage(MessageCode.BadRequest);
+                        .WithMessage(MessageCode.MaxDiscountAmountCannotBeNegative);
                 });
             });
     }
@@ -75,23 +62,13 @@ public sealed class UpdateCouponCommandHandler(ICouponRepository repository) : I
 
         var dto = command.Dto;
 
-        if (!string.IsNullOrWhiteSpace(dto.Description))
-            coupon.UpdateDescription(dto.Description);
-
-        if (dto.Value.HasValue)
-            coupon.UpdateValue(dto.Value.Value);
-
-        if (dto.MaxUses.HasValue)
-            coupon.UpdateMaxUses(dto.MaxUses.Value);
-
-        // Update MaxDiscountAmount if a value is provided
-        // Note: To clear MaxDiscountAmount, you would need to send a special value or use a separate endpoint
-        // For now, we only update when a non-null value is provided
-        if (dto.MaxDiscountAmount.HasValue)
-            coupon.UpdateMaxDiscountAmount(dto.MaxDiscountAmount.Value);
-
-        if (dto.ValidFrom.HasValue && dto.ValidTo.HasValue)
-            coupon.UpdateValidityPeriod(dto.ValidFrom.Value, dto.ValidTo.Value);
+        coupon.Update(description: dto.Description,
+            type: dto.Type,
+            value: dto.Value,
+            maxUsage: dto.MaxUsage,
+            maxDiscountAmount: dto.MaxDiscountAmount,
+            minPurchaseAmount: dto.MinPurchaseAmount,
+            performBy: command.Actor.ToString());
 
         return await repository.UpdateAsync(coupon, cancellationToken);
     }
