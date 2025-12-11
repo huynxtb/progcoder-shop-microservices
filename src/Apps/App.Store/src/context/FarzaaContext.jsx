@@ -144,8 +144,8 @@ const FarzaaContextProvider = ({ children }) => {
     setIsListView(false);
   };
   // Price Filter
-  const [maxPrice, setMaxPrice] = useState(10000000); // Default max price
-  const [price, setPrice] = useState([0, 10000000]);
+  const [maxPrice, setMaxPrice] = useState(100000000); // Default max price
+  const [price, setPrice] = useState([0, 100000000]);
 
   const handlePriceChange = (event, newPrice) => {
     setPrice(newPrice);
@@ -168,8 +168,8 @@ const FarzaaContextProvider = ({ children }) => {
       const prices = filteredProducts.map(p => p.price || 0);
       const calculatedMaxPrice = Math.max(...prices, 0);
       if (calculatedMaxPrice > 0) {
-        // Round up to nearest 10000000 for better UX
-        const roundedMax = Math.ceil(calculatedMaxPrice / 10000000) * 10000000;
+        // Round up to nearest 100000000 for better UX
+        const roundedMax = Math.ceil(calculatedMaxPrice / 100000000) * 100000000;
         setMaxPrice(roundedMax);
         // Only update price range on initial load
         setPrice([0, roundedMax]);
@@ -180,7 +180,7 @@ const FarzaaContextProvider = ({ children }) => {
       const prices = filteredProducts.map(p => p.price || 0);
       const calculatedMaxPrice = Math.max(...prices, 0);
       if (calculatedMaxPrice > 0) {
-        const roundedMax = Math.ceil(calculatedMaxPrice / 10000000) * 10000000;
+        const roundedMax = Math.ceil(calculatedMaxPrice / 100000000) * 100000000;
         // Only update maxPrice if it's larger, but keep current price filter
         setMaxPrice(prevMax => Math.max(prevMax, roundedMax));
       }
