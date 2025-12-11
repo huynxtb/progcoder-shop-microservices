@@ -22,8 +22,8 @@ const Settings = lazy(() => import("./pages/utility/settings"));
 const Profile = lazy(() => import("./pages/utility/profile"));
 
 // Ecommerce pages
-const EcommercePage = lazy(() => import("./pages/ecommerce"));
-const CreateProduct = lazy(() => import("./pages/ecommerce/create-product"));
+const EcommercePage = lazy(() => import("./pages/product"));
+const CreateProduct = lazy(() => import("./pages/product/create-product"));
 const InventoryPage = lazy(() => import("./pages/inventory"));
 const CategoryPage = lazy(() => import("./pages/category"));
 const BrandPage = lazy(() => import("./pages/brand"));
@@ -33,12 +33,14 @@ const EditCoupon = lazy(() => import("./pages/coupon/edit-coupon"));
 const EditInventory = lazy(() => import("./pages/inventory/edit-inventory"));
 
 import Loading from "@/components/Loading";
-import { ProductDetails } from "./pages/ecommerce/productDetails";
-import Orders from "./pages/ecommerce/orders";
-import OrderDetails from "./pages/ecommerce/orderDetails";
-import EditProduct from "./pages/ecommerce/edit-product";
-import Customers from "./pages/ecommerce/customers";
-import InvoiceEPage from "./pages/ecommerce/invoice-ecompage";
+import { ProductDetails } from "./pages/product/productDetails";
+import Orders from "./pages/orders";
+import OrderDetails from "./pages/orders/details";
+import CreateOrder from "./pages/orders/create";
+import EditOrder from "./pages/orders/edit";
+import EditProduct from "./pages/product/edit-product";
+import Customers from "./pages/product/customers";
+import InvoiceEPage from "./pages/product/invoice-ecompage";
 import RootRedirect from "./components/auth/RootRedirect";
 
 function App() {
@@ -89,7 +91,9 @@ function App() {
 
           {/* Orders */}
           <Route path="orders" element={<Orders />} />
-          <Route path="order-details/:id" element={<OrderDetails />} />
+          <Route path="orders/create" element={<CreateOrder />} />
+          <Route path="orders/:id" element={<OrderDetails />} />
+          <Route path="orders/:id/edit" element={<EditOrder />} />
 
           {/* Customers */}
           <Route path="customers" element={<Customers />} />

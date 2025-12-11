@@ -30,5 +30,11 @@ public class OrderDto : EntityDto<Guid>
 
     public decimal FinalPrice { get; set; }
 
+    public string? Notes { get; set; }
+
+    public string? CancelReason { get; set; }
+
+    public string? RefundReason { get; set; }
+
     #endregion
 }

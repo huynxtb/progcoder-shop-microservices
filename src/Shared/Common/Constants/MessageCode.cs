@@ -214,5 +214,17 @@ public sealed class MessageCode
 
     public const string ProgramNameIsRequired = "PROGRAM_NAME_IS_REQUIRED";
 
+    public const string InvalidOrderStatus = "INVALID_ORDER_STATUS";
+
+    public const string OrderStatusSameAsCurrent = "ORDER_STATUS_SAME_AS_CURRENT";
+
+    public const string CancelReasonIsRequired = "CANCEL_REASON_IS_REQUIRED";
+
+    public const string RefundReasonIsRequired = "REFUND_REASON_IS_REQUIRED";
+
+    public const string OrderCannotBeUpdated = "ORDER_CANNOT_BE_UPDATED";
+
+    public const string OrderStatusCannotBeUpdated = "ORDER_STATUS_CANNOT_BE_UPDATED";
+
     #endregion
 }

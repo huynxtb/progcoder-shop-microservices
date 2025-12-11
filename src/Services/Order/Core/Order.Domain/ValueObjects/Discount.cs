@@ -24,8 +24,6 @@ public class Discount
 
     public static Discount Of(string couponCode, decimal discountAmount)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(couponCode);
-
         return new Discount(couponCode, discountAmount);
     }
 

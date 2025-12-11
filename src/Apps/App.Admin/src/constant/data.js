@@ -42,6 +42,11 @@ export const menuItems = [
         childtitle: "Github",
         childlink: "https://github.com/aspnetrun/run-aspnetcore-microservices",
         isBlank: true
+      },
+      {
+        childtitle: "App Store",
+        childlink: "http://localhost:3001",
+        isBlank: true
       }
     ]
   },
@@ -95,11 +100,6 @@ export const menuItems = [
     title: "Orders",
     icon: "heroicons:shopping-bag",
     link: "orders",
-  },
-  {
-    title: "Customers",
-    icon: "heroicons:users",
-    link: "customers",
   },
   {
     title: "Invoice",

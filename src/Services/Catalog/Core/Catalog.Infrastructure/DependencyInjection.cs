@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
 using Common.Configurations;
+using Catalog.Infrastructure.Data;
 
 #endregion
 
@@ -45,7 +46,7 @@ public static class DependencyInjection
                     .WithSSL(cfg.GetValue<bool>(cfg[$"{MinIoCfg.Section}:{MinIoCfg.Secure}"]!))
                     .Build());
 
-        services.InitializeMartenWith<InitialCategoryData>();
+        services.InitializeMartenWith<InitialData>();
 
         return services;
     }

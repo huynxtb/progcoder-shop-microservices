@@ -721,6 +721,73 @@ global using BuildingBlocks.Abstractions.ValueObjects;
 
 ---
 
+## Message Code Convention
+
+### Rule: Never Use Direct Messages in Exceptions, Responses, or Validations
+
+**❌ WRONG - Using direct string messages:**
+```csharp
+// Exception with direct message
+throw new ArgumentException("Invalid order status.", nameof(status));
+throw new DomainException("Product not found.");
+throw new NotFoundException("User does not exist.");
+
+// Response with direct message
+return new ApiErrorResponse("Invalid request data.");
+
+// Validation with direct message
+.WithMessage("Product name is required.");
+```
+
+**✅ CORRECT - Using MessageCode constants:**
+```csharp
+// Exception with MessageCode
+throw new ArgumentException(MessageCode.InvalidOrderStatus, nameof(status));
+throw new DomainException(MessageCode.ProductNotFound);
+throw new NotFoundException(MessageCode.UserNotFound);
+
+// Response with MessageCode
+return new ApiErrorResponse(MessageCode.InvalidRequestData);
+
+// Validation with MessageCode
+.WithMessage(MessageCode.ProductNameIsRequired);
+```
+
+### MessageCode Class Structure
+```csharp
+public static class MessageCode
+{
+    public const string InvalidOrderStatus = "INVALID_ORDER_STATUS";
+    public const string ProductNotFound = "PRODUCT_NOT_FOUND";
+    public const string UserNotFound = "USER_NOT_FOUND";
+    public const string InvalidRequestData = "INVALID_REQUEST_DATA";
+    public const string ProductNameIsRequired = "PRODUCT_NAME_IS_REQUIRED";
+    public const string BadRequest = "BAD_REQUEST";
+    public const string DecisionFlowIllegal = "DECISION_FLOW_ILLEGAL";
+    // ... more constants
+}
+```
+
+### Checklist
+- [ ] **Exceptions**: All exception messages use `MessageCode` constants, never direct strings
+- [ ] **API Responses**: All error/success messages use `MessageCode` constants
+- [ ] **Validators**: All FluentValidation `.WithMessage()` use `MessageCode` constants
+- [ ] **Domain Exceptions**: All `DomainException` instances use `MessageCode` constants
+- [ ] **ArgumentException**: All `ArgumentException` instances use `MessageCode` constants
+- [ ] **NotFoundException**: All `NotFoundException` instances use `MessageCode` constants
+- [ ] **MessageCode Class**: All message codes are defined as `public const string` in `MessageCode` class
+- [ ] **Naming Convention**: Message code constants use UPPER_SNAKE_CASE format
+
+### Where MessageCode Should Be Used
+1. **Exception Constructors**: `throw new XxxException(MessageCode.Xxx, ...)`
+2. **API Error Responses**: `new ApiErrorResponse(MessageCode.Xxx)`
+3. **FluentValidation Rules**: `.WithMessage(MessageCode.Xxx)`
+4. **Domain Rule Violations**: `throw new DomainException(MessageCode.Xxx)`
+5. **Argument Validation**: `throw new ArgumentException(MessageCode.Xxx, nameof(param))`
+6. **Business Logic Errors**: Any error message returned to clients
+
+---
+
 ## Best Practices
 
 1. **Keep Domain Layer Pure**: No external dependencies, only domain logic

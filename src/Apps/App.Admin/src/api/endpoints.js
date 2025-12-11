@@ -61,14 +61,14 @@ export const API_ENDPOINTS = {
 
   // Orders
   ORDER: {
-    GET_LIST: "/orders",
-    GET_DETAIL: (id) => `/orders/${id}`,
-    CREATE: "/orders",
-    UPDATE: (id) => `/orders/${id}`,
-    UPDATE_STATUS: (id) => `/orders/${id}/status`,
-    CANCEL: (id) => `/orders/${id}/cancel`,
-    EXPORT: "/orders/export",
-    PRINT: (id) => `/orders/${id}/print`,
+    GET_LIST: "/order-service/admin/orders",
+    GET_ALL: "/order-service/admin/orders/all",
+    GET_DETAIL: (id) => `/order-service/admin/orders/${id}`,
+    CREATE: "/order-service/admin/orders",
+    UPDATE: (id) => `/order-service/admin/orders/${id}`,
+    UPDATE_STATUS: (id) => `/order-service/admin/orders/${id}/status`,
+    GET_BY_ORDER_NO: (orderNo) => `/order-service/orders/order-no/${orderNo}`,
+    GET_BY_CURRENT_USER: "/order-service/orders/me",
   },
 
   // Customers

@@ -27,6 +27,14 @@ public sealed class OrderEntityConfiguration : IEntityTypeConfiguration<OrderEnt
             .HasConversion<int>()
             .IsRequired();
 
+        builder.Property(x => x.CancelReason)
+            .HasColumnName("cancel_reason")
+            .HasMaxLength(255);
+
+        builder.Property(x => x.RefundReason)
+            .HasColumnName("refund_reason")
+            .HasMaxLength(255);
+
         builder.Property(x => x.CreatedOnUtc)
             .HasColumnName("created_on_utc")
             .IsRequired();

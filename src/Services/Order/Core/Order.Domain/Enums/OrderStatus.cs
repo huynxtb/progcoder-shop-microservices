@@ -25,8 +25,11 @@ public enum OrderStatus
     [Description("Delivered")]
     Delivered = 5,
 
-    [Description("Cancelled")]
-    Cancelled = 6
+    [Description("Canceled")]
+    Canceled = 6,
+
+    [Description("Refunded")]
+    Refunded = 7
 
     #endregion
 }

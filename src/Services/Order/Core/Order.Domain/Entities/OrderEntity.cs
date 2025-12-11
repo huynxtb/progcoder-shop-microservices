@@ -1,5 +1,6 @@
 ﻿#region using
 
+using Common.Constants;
 using Order.Domain.Abstractions;
 using Order.Domain.Enums;
 using Order.Domain.ValueObjects;
@@ -28,6 +29,12 @@ public sealed class OrderEntity : Aggregate<Guid>
 
     public Discount Discount { get; set; } = default!;
 
+    public string? Notes { get; set; }
+
+    public string? CancelReason { get; set; }
+
+    public string? RefundReason { get; set; }
+
     public decimal TotalPrice
     {
         get => OrderItems.Sum(x => x.LineTotal);
@@ -48,7 +55,12 @@ public sealed class OrderEntity : Aggregate<Guid>
 
     #region Factories
 
-    public static OrderEntity Create(Guid id, Customer customer, OrderNo orderNo, Address shippingAddress, string performedBy)
+    public static OrderEntity Create(Guid id, 
+        Customer customer, 
+        OrderNo orderNo, 
+        Address shippingAddress, 
+        string? notes,
+        string performedBy)
     {
         var order = new OrderEntity
         {
@@ -57,6 +69,7 @@ public sealed class OrderEntity : Aggregate<Guid>
             OrderNo = orderNo,
             ShippingAddress = shippingAddress,
             Status = OrderStatus.Pending,
+            Notes = notes,
             CreatedBy = performedBy,
             LastModifiedBy = performedBy
         };
@@ -70,17 +83,19 @@ public sealed class OrderEntity : Aggregate<Guid>
 
     #region Methods
 
-    public void UpdateShippingAddress(Address shippingAddress)
+    public void UpdateShippingAddress(Address shippingAddress, string performBy)
     {
         ShippingAddress = shippingAddress;
-
+        LastModifiedBy = performBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
         //AddDomainEvent(new OrderUpdatedEvent(this));
     }
 
-    public void UpdateCustomerInfo(Customer customer)
+    public void UpdateCustomerInfo(Customer customer, string performBy)
     {
         Customer = customer;
-
+        LastModifiedBy = performBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
         //AddDomainEvent(new OrderUpdatedEvent(this));
     }
 
@@ -105,6 +120,37 @@ public sealed class OrderEntity : Aggregate<Guid>
     public void ApplyDiscount(Discount discount)
     {
         Discount = discount;
+    }
+
+    public void UpdateStatus(OrderStatus status, string performBy)
+    {
+        if (!Enum.IsDefined(typeof(OrderStatus), status))
+        {
+            throw new ArgumentException(MessageCode.InvalidOrderStatus, nameof(status));
+        }
+
+        Status = status;
+        LastModifiedBy = performBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+        //AddDomainEvent(new OrderStatusChangedEvent(this));
+    }
+
+    public void CancelOrder(string reason, string performBy)
+    {
+        UpdateStatus(OrderStatus.Canceled, performBy);
+
+        CancelReason = reason;
+        LastModifiedBy = performBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+    }
+
+    public void RefundOrder(string reason, string performBy)
+    {
+        UpdateStatus(OrderStatus.Refunded, performBy);
+
+        RefundReason = reason;
+        LastModifiedBy = performBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
     }
 
     #endregion

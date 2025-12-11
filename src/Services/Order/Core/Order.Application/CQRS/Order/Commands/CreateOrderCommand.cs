@@ -126,7 +126,12 @@ public sealed class CreateOrderCommandHandler(IApplicationDbContext dbContext, I
             dto.ShippingAddress.State,
             dto.ShippingAddress.ZipCode);
 
-        var order = OrderEntity.Create(orderId, customer, orderNo, shippingAddress, command.Actor.ToString());
+        var order = OrderEntity.Create(id: orderId, 
+            notes: dto.Notes,
+            customer: customer, 
+            orderNo: orderNo, 
+            shippingAddress: shippingAddress, 
+            performedBy: command.Actor.ToString());
         var productIds = dto.OrderItems.Select(x => x.ProductId.ToString()).ToArray();
         
         var productsResponse = await catalogGrpc.GetProductsAsync(ids: productIds, cancellationToken: cancellationToken);
@@ -172,7 +177,6 @@ public sealed class CreateOrderCommandHandler(IApplicationDbContext dbContext, I
             discountAmt = discountResult.DiscountAmount;
             couponCode = discountResult.CouponCode;
 
-            // TO-DO: Handle exception and revert coupon usage
             await discountGrpc.ApplyCouponAsync(dto.CouponCode, amount);
         }
 

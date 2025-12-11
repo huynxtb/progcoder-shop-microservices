@@ -1,4 +1,8 @@
-﻿using Order.Application.Dtos.ValueObjects;
+﻿#region using
+
+using Order.Application.Dtos.ValueObjects;
+
+#endregion
 
 namespace Order.Application.Dtos.Orders;
 
@@ -15,6 +19,8 @@ public sealed class CreateOrUpdateOrderDto
     public List<CreateOrderItemDto> OrderItems { get; set; } = [];
 
     public string CouponCode { get; set; } = string.Empty;
+
+    public string? Notes { get; set; }
 
     #endregion
 }

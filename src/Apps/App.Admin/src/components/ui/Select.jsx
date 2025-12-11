@@ -66,7 +66,7 @@ const Select = ({
           </option>
           {options.map((option, i) => (
             <Fragment key={i}>
-              {option.value && option.label ? (
+              {typeof option === 'object' && option !== null && 'value' in option && 'label' in option ? (
                 <option key={i} value={option.value}>
                   {option.label}
                 </option>

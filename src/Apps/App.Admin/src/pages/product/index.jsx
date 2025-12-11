@@ -47,6 +47,9 @@ const Ecommerce = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
+  const [publishModalOpen, setPublishModalOpen] = useState(false);
+  const [itemToPublish, setItemToPublish] = useState(null);
+  const [publishing, setPublishing] = useState(false);
 
   // Fetch products from API
   useEffect(() => {
@@ -116,6 +119,53 @@ const Ecommerce = () => {
       console.error("Failed to delete product:", error);
     } finally {
       setDeleting(false);
+    }
+  };
+
+  const handlePublishClick = (product) => {
+    setItemToPublish(product);
+    setPublishModalOpen(true);
+  };
+
+  const confirmPublish = async () => {
+    if (!itemToPublish?.id) return;
+
+    try {
+      setPublishing(true);
+      const isCurrentlyPublished = itemToPublish.published;
+      const endpoint = isCurrentlyPublished
+        ? API_ENDPOINTS.CATALOG.UNPUBLISH_PRODUCT(itemToPublish.id)
+        : API_ENDPOINTS.CATALOG.PUBLISH_PRODUCT(itemToPublish.id);
+
+      const response = await api.post(endpoint);
+
+      if (response && response.status >= 200 && response.status < 300) {
+        toast.success(
+          isCurrentlyPublished
+            ? t("productDetails.unpublishSuccess")
+            : t("productDetails.publishSuccess"),
+          {
+            position: "top-right",
+            autoClose: 5000,
+          }
+        );
+
+        // Update the product in the list
+        setProducts((prevProducts) =>
+          prevProducts.map((product) =>
+            product.id === itemToPublish.id
+              ? { ...product, published: !isCurrentlyPublished }
+              : product
+          )
+        );
+
+        setPublishModalOpen(false);
+        setItemToPublish(null);
+      }
+    } catch (error) {
+      console.error("Failed to update publish status:", error);
+    } finally {
+      setPublishing(false);
     }
   };
 
@@ -245,6 +295,20 @@ const Ecommerce = () => {
               <Link to={`/edit-product/${product?.id}`} className="action-btn">
                 <Icon icon="heroicons:pencil-square" />
               </Link>
+            </Tooltip>
+            <Tooltip
+              content={product?.published ? t("productDetails.unpublish") : t("productDetails.publish")}
+              placement="top"
+              arrow
+              animation="shift-away"
+            >
+              <button
+                className="action-btn"
+                type="button"
+                onClick={() => handlePublishClick(product)}
+              >
+                <Icon icon={product?.published ? "heroicons:lock-closed" : "heroicons:globe-alt"} />
+              </button>
             </Tooltip>
             <Tooltip
               content={t("common.delete")}
@@ -582,6 +646,81 @@ const Ecommerce = () => {
                 <>
                   <Icon icon="heroicons:trash" className="ltr:mr-2 rtl:ml-2" />
                   {t("common.delete")}
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Publish/Unpublish Confirmation Modal */}
+      <Modal
+        title={itemToPublish?.published ? t("productDetails.unpublish") : t("productDetails.publish")}
+        activeModal={publishModalOpen}
+        onClose={() => {
+          setPublishModalOpen(false);
+          setItemToPublish(null);
+        }}
+      >
+        <div className="text-center">
+          <div className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center ${
+            itemToPublish?.published 
+              ? "bg-warning-500/20" 
+              : "bg-success-500/20"
+          }`}>
+            <Icon 
+              icon={itemToPublish?.published ? "heroicons:lock-closed" : "heroicons:globe-alt"} 
+              className={`text-3xl ${
+                itemToPublish?.published 
+                  ? "text-warning-500" 
+                  : "text-success-500"
+              }`} 
+            />
+          </div>
+          <p className="text-slate-600 dark:text-slate-300 mb-2">
+            {itemToPublish?.published
+              ? t("productDetails.unpublishConfirmMessage")
+              : t("productDetails.publishConfirmMessage")}
+          </p>
+          {itemToPublish && (
+            <p className="font-semibold text-slate-800 dark:text-slate-200 mb-6">
+              "{itemToPublish.name}"
+            </p>
+          )}
+          <div className="flex justify-center space-x-3">
+            <button
+              className="btn btn-outline-dark inline-flex items-center"
+              onClick={() => {
+                setPublishModalOpen(false);
+                setItemToPublish(null);
+              }}
+              disabled={publishing}
+            >
+              {t("common.cancel")}
+            </button>
+            <button
+              className={`btn inline-flex items-center ${
+                itemToPublish?.published 
+                  ? "btn-warning" 
+                  : "btn-success"
+              }`}
+              onClick={confirmPublish}
+              disabled={publishing}
+            >
+              {publishing ? (
+                <>
+                  <Icon icon="heroicons:arrow-path" className="ltr:mr-2 rtl:ml-2 animate-spin" />
+                  {t("common.loading")}
+                </>
+              ) : (
+                <>
+                  <Icon 
+                    icon={itemToPublish?.published ? "heroicons:lock-closed" : "heroicons:globe-alt"} 
+                    className="ltr:mr-2 rtl:ml-2" 
+                  />
+                  {itemToPublish?.published
+                    ? t("productDetails.unpublish")
+                    : t("productDetails.publish")}
                 </>
               )}
             </button>

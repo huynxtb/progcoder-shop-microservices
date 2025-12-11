@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Order.Application.Data;
 using Order.Application.Dtos.Orders;
 using Order.Application.Services;
+using Order.Domain.Enums;
 using Order.Domain.ValueObjects;
 
 #endregion
@@ -117,6 +118,13 @@ public sealed class UpdateOrderCommandHandler(IApplicationDbContext dbContext, I
             .SingleOrDefaultAsync(x => x.Id == command.OrderId, cancellationToken)
             ?? throw new NotFoundException(MessageCode.ResourceNotFound, command.OrderId);
 
+        if (existingOrder.Status == OrderStatus.Delivered ||
+            existingOrder.Status == OrderStatus.Canceled ||
+            existingOrder.Status == OrderStatus.Refunded)
+        {
+            throw new ClientValidationException(MessageCode.OrderCannotBeUpdated);
+        }
+
         var dto = command.Dto;
         var customer = Customer.Of(
             dto.Customer.Id,
@@ -131,8 +139,8 @@ public sealed class UpdateOrderCommandHandler(IApplicationDbContext dbContext, I
             dto.ShippingAddress.State,
             dto.ShippingAddress.ZipCode);
 
-        existingOrder.UpdateCustomerInfo(customer);
-        existingOrder.UpdateShippingAddress(shippingAddress);
+        existingOrder.UpdateCustomerInfo(customer, command.Actor.ToString());
+        existingOrder.UpdateShippingAddress(shippingAddress, command.Actor.ToString());
 
         var productIds = dto.OrderItems
             .Select(x => x.ProductId.ToString())

@@ -70,7 +70,7 @@ public static class DependencyInjection
 
     public static WebApplication UseInfrastructure(this WebApplication app)
     {
-        app.InitialiseDatabaseAsync().Wait();
+        app.InitialiseDatabaseAsync().GetAwaiter().GetResult();
 
         return app;
     }
