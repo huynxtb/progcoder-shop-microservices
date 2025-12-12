@@ -26,10 +26,10 @@ public sealed class UpsertedProductIntegrationEventHandler(
         logger.LogInformation("Integration Event handled: {IntegrationEvent}", context.Message.GetType().Name);
 
         var integrationEvent = context.Message;
-        var templateData = new Dictionary<string, object>
+        var templateVariables = new Dictionary<string, object>
         {
-            { TemplateKeyMap.ProductName, integrationEvent.Name },
-            { TemplateKeyMap.PerformBy, integrationEvent.LastModifiedBy! }
+            { TemplateVariables.ProductName, integrationEvent.Name },
+            { TemplateVariables.PerformBy, integrationEvent.LastModifiedBy! }
         };
 
         var deliveryDto = new CreateDeliveryDto
@@ -38,7 +38,7 @@ public sealed class UpsertedProductIntegrationEventHandler(
             TemplateKey = TemplateKey.ProductUpserted,
             ChannelType = ChannelType.Discord,
             To = [],
-            TemplateData = templateData,
+            TemplateVariables = templateVariables,
             Priority = DeliveryPriority.Medium,
             MaxAttempts = AppConstants.MaxAttempts
         };

@@ -16,7 +16,7 @@ services:
       SA_PASSWORD: ${MSSQL_PASSWORD}
       ACCEPT_EULA: "Y"
     networks:
-      - prog_coder_network
+      - progcoder_network
     healthcheck:
       test: /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "${MSSQL_PASSWORD}" -Q "SELECT 1" || exit 1
       interval: 10s
@@ -39,7 +39,7 @@ services:
       - ./config/postgres-sql:/docker-entrypoint-initdb.d
     entrypoint: ["/bin/bash", "-c", "chmod +x /docker-entrypoint-initdb.d/*.sh && docker-entrypoint.sh postgres"]
     networks:
-      - prog_coder_network
+      - progcoder_network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d postgres -h localhost"]
       interval: 10s
@@ -58,7 +58,7 @@ services:
     volumes:
       - ./local-data/mongodb:/data/db
     networks:
-      - prog_coder_network
+      - progcoder_network
 
   mysql:
     image: ${MYSQL_IMAGE_NAME}
@@ -71,7 +71,7 @@ services:
     volumes:
       - ./local-data/mysql:/var/lib/mysql
     networks:
-      - prog_coder_network
+      - progcoder_network
 
   # =========================
   # Storage / Object store
@@ -92,7 +92,7 @@ services:
     volumes:
       - ./local-data/minio:/data
     networks:
-      - prog_coder_network
+      - progcoder_network
     healthcheck:
       test: ["CMD", "mc", "ready", "local"]
       interval: 5s
@@ -129,7 +129,7 @@ services:
     depends_on:
       - postgres-sql
     networks:
-      - prog_coder_network
+      - progcoder_network
 
   # =========================
   # Cache / Messaging / Mail
@@ -144,7 +144,7 @@ services:
     volumes: 
       - ./local-data/redis:/data
     networks:
-      - prog_coder_network
+      - progcoder_network
   
   rabbitmq:
     image: ${RABBITMQ_IMAGE_NAME}
@@ -161,7 +161,7 @@ services:
       - ./local-data/rabbitmq:/var/lib/rabbitmq
       - ./config/rabbitmq/rabbitmq_enabled_plugins:/etc/rabbitmq/enabled_plugins
     networks:
-      - prog_coder_network
+      - progcoder_network
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
       interval: 30s
@@ -176,7 +176,7 @@ services:
       - ${MAILHOG_SMTP_PORT}:1025
       - ${MAILHOG_WEB_UI}:8025
     networks:
-      - prog_coder_network
+      - progcoder_network
 
   # =========================
   # Search Engine
@@ -202,7 +202,7 @@ services:
         soft: 65536
         hard: 65536
     networks:
-      - prog_coder_network
+      - progcoder_network
     healthcheck:
       test: ["CMD-SHELL", "curl -s -o /dev/null -w '%{http_code}' http://localhost:9200 | grep -qE '(200|401|403)' || exit 1"]
       interval: 30s
@@ -219,7 +219,7 @@ services:
       elasticsearch:
         condition: service_healthy
     networks:
-      - prog_coder_network
+      - progcoder_network
     environment:
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
     command:
@@ -257,7 +257,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./local-data/portainer:/data
     networks:
-      - prog_coder_network
+      - progcoder_network
 
   # =====================================
   # Monitoring
@@ -278,7 +278,7 @@ services:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--web.config.file=/etc/prometheus/web.yml"
     networks:
-      - prog_coder_network
+      - progcoder_network
 
   grafana:
     image: ${GRAFANA_IMAGE_NAME}
@@ -296,7 +296,7 @@ services:
     environment:
       GF_INSTALL_PLUGINS: "flant-statusmap-panel,grafana-piechart-panel,grafana-exploretraces-app"
     networks:
-      - prog_coder_network
+      - progcoder_network
 
   cadvisor:
     image: ${CADVISOR_IMAGE_NAME}
@@ -311,7 +311,7 @@ services:
     devices:
       - /dev/kmsg
     networks:
-      - prog_coder_network
+      - progcoder_network
 
   # =====================================
   # Tracing
@@ -332,7 +332,7 @@ services:
       - ${OTEL_OTLP_GRPC_PORT}:4317   # OTLP gRPC receiver
       - ${OTEL_ZPAGES_PORT}:55679 # zpages extension
     networks:
-      - prog_coder_network
+      - progcoder_network
 
   # =====================================
   # Logging
@@ -347,7 +347,7 @@ services:
       - ./local-data/loki:/loki
       - ./config/loki/loki-config.yml:/etc/loki/loki-config.yaml
     networks:
-      - prog_coder_network
+      - progcoder_network
 
   promtail:
     container_name: promtail
@@ -360,7 +360,7 @@ services:
     volumes:
     - ./config/promtail/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
     networks:
-      - prog_coder_network
+      - progcoder_network
 
   tempo:
     image: ${TEMPO_IMAGE_NAME}
@@ -375,10 +375,10 @@ services:
       - ./local-data/tempo:/var/tempo
     command: [ "-config.file=/etc/tempo/tempo.yaml" ]
     networks:
-      - prog_coder_network
+      - progcoder_network
 
   # =====================================
   # Exporter
   # =====================================
 networks:
-  prog_coder_network:
+  progcoder_network:

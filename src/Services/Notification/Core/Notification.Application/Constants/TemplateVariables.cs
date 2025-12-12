@@ -1,6 +1,6 @@
 ﻿namespace Notification.Application.Constants;
 
-public sealed class TemplateKeyMap
+public sealed class TemplateVariables
 {
     #region Constants
 

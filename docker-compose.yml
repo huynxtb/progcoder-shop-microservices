@@ -16,7 +16,7 @@ services:
       - ASPNETCORE_URLS=https://+;http://+
       - ASPNETCORE_HTTPS_PORTS=15001
       - ASPNETCORE_HTTP_PORTS=17001
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=ProGCoder
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=progcoder.com
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnet.pfx
       - ConnectionStrings__DefaultConnection=Server=mssql_identitydb;Database=IdentityService;User Id=sa;Password=123456789Aa;Trusted_Connection=True;TrustServerCertificate=True;Integrated Security=False
       - MessageBroker__Host=amqp://rabbitmq:5672
@@ -45,7 +45,7 @@ services:
   #     - ASPNETCORE_URLS=https://+;http://+
   #     - ASPNETCORE_HTTPS_PORTS=15000
   #     - ASPNETCORE_HTTP_PORTS=17002
-  #     - ASPNETCORE_Kestrel__Certificates__Default__Password=ProGCoder
+  #     - ASPNETCORE_Kestrel__Certificates__Default__Password=progcoder.com
   #     - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnet.pfx
   #     - DatabaseConfig__DatabaseType=POSTGRESQL
   #     - DatabaseConfig__ConnectionString=Server=postgresql_catalogdb;Port=5432;Database=Catalog_DB;User Id=postgres;Password=123456789Aa;Include Error Detail=true;

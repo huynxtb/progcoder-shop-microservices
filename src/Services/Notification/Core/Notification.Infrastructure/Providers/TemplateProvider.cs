@@ -11,7 +11,7 @@ public sealed class TemplateProvider : ITemplateProvider
 {
     #region Fields, Properties and Indexers
 
-    private static readonly Regex Pattern = new(@"\{\{(\w+)\}\}", RegexOptions.Compiled);
+    private static readonly Regex Pattern = new(@"#(\w+)#", RegexOptions.Compiled);
 
     #endregion
 

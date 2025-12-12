@@ -26,12 +26,6 @@ public sealed class MessagePayloadEntity
 
     #endregion
 
-    #region Ctors
-
-    private MessagePayloadEntity() { }
-
-    #endregion
-
     #region Methods
 
     public static MessagePayloadEntity Create(

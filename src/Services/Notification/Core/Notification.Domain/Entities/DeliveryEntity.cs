@@ -34,12 +34,6 @@ public sealed class DeliveryEntity : Aggregate<Guid>
 
     #endregion
 
-    #region Ctors
-
-    private DeliveryEntity() { }
-
-    #endregion
-
     #region Methods
 
     public static DeliveryEntity Create(

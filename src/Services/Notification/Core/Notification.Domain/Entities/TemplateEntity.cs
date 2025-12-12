@@ -24,12 +24,6 @@ public sealed class TemplateEntity : Entity<Guid>
 
     #endregion
 
-    #region Ctors
-
-    private TemplateEntity() { }
-
-    #endregion
-
     #region Methods
 
     public static TemplateEntity Create(

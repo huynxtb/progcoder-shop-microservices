@@ -74,8 +74,8 @@ public sealed class CreateDeliveryCommandHandler(
         if (template == null) throw new NotFoundException(MessageCode.TemplateNotFound);
 
         // Render template body with data
-        var templateData = dto.TemplateData ?? new Dictionary<string, object>();
-        var renderedBody = templateProvider.Render(template.Body!, templateData);
+        var templateVariables = dto.TemplateVariables ?? new Dictionary<string, object>();
+        var renderedBody = templateProvider.Render(template.Body!, templateVariables);
 
         // Create delivery entity
         var deliveryId = Guid.NewGuid();

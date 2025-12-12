@@ -18,7 +18,7 @@ public sealed class CreateDeliveryDto
 
     public List<string> To { get; set; } = [];
 
-    public Dictionary<string, object>? TemplateData { get; set; }
+    public Dictionary<string, object>? TemplateVariables { get; set; }
 
     public DeliveryPriority Priority { get; set; } = DeliveryPriority.Medium;
 
