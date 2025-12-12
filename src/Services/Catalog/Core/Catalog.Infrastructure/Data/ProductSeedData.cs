@@ -225,7 +225,7 @@ public static class ProductSeedData
             "samsung galaxy s24 ultra" => "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=800&h=800&fit=crop",
             "macbook pro 16-inch m3 pro" => "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=800&h=800&fit=crop",
             "dell xps 15" => "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=800&fit=crop",
-            "áo sơ mi nam cổ điển" => "https://images.unsplash.com/photo-1594938291221-94f18b6fa0e1?w=800&h=800&fit=crop",
+            "áo sơ mi nam cổ điển" => "https://images.unsplash.com/photo-1617662408044-cda3ab7134c9?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             "quần jeans nữ skinny" => "https://images.unsplash.com/photo-1542272604-787c3835535d?w=800&h=800&fit=crop",
             "áo khoác nam bomber" => "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&h=800&fit=crop",
             "giày thể thao nữ" => "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&h=800&fit=crop",

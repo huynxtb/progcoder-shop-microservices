@@ -1,0 +1,28 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Order.Grpc";
+
+package order;
+
+// ==== Definition ====
+service OrderGrpc {
+	rpc GetOrdersByMonth (GetOrdersByMonthRequest) returns (GetOrdersByMonthResponse);
+}
+
+// ==== Messages ====
+
+message Order {
+	string id = 1;
+	string name = 2;
+	double price = 3;
+	string thumbnail = 4;
+}
+
+message GetOrdersByMonthRequest {
+	string search_text = 1;
+	repeated string ids = 2;
+}
+
+message GetOrdersByMonthResponse {
+  repeated Product products = 1;
+}

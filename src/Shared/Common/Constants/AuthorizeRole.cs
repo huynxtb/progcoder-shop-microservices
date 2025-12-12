@@ -4,9 +4,9 @@ public sealed class AuthorizeRole
 {
     #region Constants
 
-    public const string SupperAdmin = "supper_admin";
+    public const string SystemAdmin = "system:admin";
 
-    public const string GeneralUser = "general_user";
+    public const string User = "app:user";
 
     #endregion
 }

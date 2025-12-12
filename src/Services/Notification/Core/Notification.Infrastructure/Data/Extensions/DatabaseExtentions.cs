@@ -22,11 +22,6 @@ public static class DatabaseExtentions
         var db = app.Services.GetRequiredService<IMongoDatabase>();
         var collection = db.GetCollection<TemplateEntity>(MongoCollection.Template);
 
-        if (await collection.CountDocumentsAsync(FilterDefinition<TemplateEntity>.Empty) > 0)
-        {
-            return;
-        }
-
         var models = new List<WriteModel<TemplateEntity>>();
         var docs = new List<TemplateEntity>()
         {
@@ -34,17 +29,27 @@ public static class DatabaseExtentions
                 id: Guid.Parse("c63f5f8d-daba-409f-88f9-fc3a9eb3e7e1"),
                 key: TemplateKey.ProductUpserted,
                 channel: Domain.Enums.ChannelType.InApp,
-                subject: "Product Updated",
+                subject: "Product Have Updated",
                 isHtml: false,
                 body: "The product #PRODUCT_NAME# has updated by #PERFORM_BY#",
                 performedBy: Actor.System(AppConstants.Service.Notification).ToString()),
+
             TemplateEntity.Create(
                 id: Guid.Parse("c63f5f8d-daba-409f-88f9-fc3a9eb3e7e2"),
                 key: TemplateKey.ProductUpserted,
                 channel: Domain.Enums.ChannelType.Discord,
-                subject: "Product Updated",
+                subject: "Product Have Updated",
                 isHtml: false,
                 body: "The product #PRODUCT_NAME# has updated by #PERFORM_BY#",
+                performedBy: Actor.System(AppConstants.Service.Notification).ToString()),
+
+            TemplateEntity.Create(
+                id: Guid.Parse("c63f5f8d-daba-409f-88f9-fc3a9eb3e7e3"),
+                key: TemplateKey.ProductUpserted,
+                channel: Domain.Enums.ChannelType.Email,
+                subject: "Product Have Updated",
+                isHtml: true,
+                body: "<p>Dear #USERNAME#</p>, <p>The product #PRODUCT_NAME# has updated by #PERFORM_BY#</p> <p>Best Regards,</p> <p>ProG Coder</p>",
                 performedBy: Actor.System(AppConstants.Service.Notification).ToString()),
         };
 

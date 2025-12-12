@@ -30,7 +30,7 @@ public static class DependencyInjection
         services.Scan(s => s
             .FromAssemblyOf<InfrastructureMarker>()
             .AddClasses(c => c.Where(t => t.Name.EndsWith("NotificationSender")))
-            .UsingRegistrationStrategy(Scrutor.RegistrationStrategy.Skip)
+            .UsingRegistrationStrategy(Scrutor.RegistrationStrategy.Append)
             .AsImplementedInterfaces()
             .WithTransientLifetime());
 

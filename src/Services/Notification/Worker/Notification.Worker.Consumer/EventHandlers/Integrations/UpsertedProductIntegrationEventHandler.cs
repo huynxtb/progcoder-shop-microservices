@@ -9,6 +9,8 @@ using Notification.Application.Constants;
 using Notification.Domain.Enums;
 using BuildingBlocks.Abstractions.ValueObjects;
 using Common.Constants;
+using Common.Extensions;
+using Notification.Application.Services;
 
 #endregion
 
@@ -16,6 +18,7 @@ namespace Notification.Worker.Consumer.EventHandlers.Integrations;
 
 public sealed class UpsertedProductIntegrationEventHandler(
     ISender sender,
+    IKeycloakService keycloak,
     ILogger<UpsertedProductIntegrationEventHandler> logger)
     : IConsumer<UpsertedProductIntegrationEvent>
 {
@@ -37,7 +40,7 @@ public sealed class UpsertedProductIntegrationEventHandler(
             EventId = integrationEvent.Id,
             TemplateKey = TemplateKey.ProductUpserted,
             ChannelType = ChannelType.Discord,
-            To = [],
+            To = [ChannelType.Discord.GetDescription()],
             TemplateVariables = templateVariables,
             Priority = DeliveryPriority.Medium,
             MaxAttempts = AppConstants.MaxAttempts
@@ -46,6 +49,30 @@ public sealed class UpsertedProductIntegrationEventHandler(
         var deliveryCommand = new CreateDeliveryCommand(deliveryDto, Actor.Worker(AppConstants.Service.Notification));
 
         await sender.Send(deliveryCommand, context.CancellationToken);
+
+        var adminUsers = await keycloak.GetUsersByRoleAsync(AuthorizeRole.SystemAdmin, context.CancellationToken);
+        
+        if (!adminUsers.Any())
+        {
+            logger.LogWarning("No admin users found to notify for product upserted event: {ProductId}", integrationEvent.ProductId);
+            return;
+        }
+
+        deliveryDto.To.Clear();
+        deliveryDto.EventId = Guid.NewGuid().ToString();
+        deliveryDto.ChannelType = ChannelType.Email;
+        deliveryDto.To.AddRange(adminUsers.Select(x => x.Email!));
+
+        var adminDeliveryEmailCommand = new CreateDeliveryCommand(deliveryDto, Actor.Worker(AppConstants.Service.Notification));
+        await sender.Send(adminDeliveryEmailCommand, context.CancellationToken);
+
+        deliveryDto.To.Clear();
+        deliveryDto.EventId = Guid.NewGuid().ToString();
+        deliveryDto.ChannelType = ChannelType.InApp;
+        deliveryDto.To.AddRange(adminUsers.Select(x => x.Id!));
+
+        var adminDeliveryInAppCommand = new CreateDeliveryCommand(deliveryDto, Actor.Worker(AppConstants.Service.Notification));
+        await sender.Send(adminDeliveryInAppCommand, context.CancellationToken);
     }
 
     #endregion
