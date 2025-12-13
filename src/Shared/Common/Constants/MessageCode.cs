@@ -226,5 +226,9 @@ public sealed class MessageCode
 
     public const string OrderStatusCannotBeUpdated = "ORDER_STATUS_CANNOT_BE_UPDATED";
 
+    public const string TitleIsRequired = "TITLE_IS_REQUIRED";
+
+    public const string CountIsRequired = "COUNT_IS_REQUIRED";
+
     #endregion
 }

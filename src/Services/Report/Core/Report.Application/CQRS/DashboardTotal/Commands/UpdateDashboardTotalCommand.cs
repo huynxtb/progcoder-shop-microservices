@@ -1,17 +1,15 @@
 #region using
 
-using FluentValidation;
 using Report.Application.Data.Repositories;
 using BuildingBlocks.Abstractions.ValueObjects;
-using Common.Models.Reponses;
-using Common.Constants;
 using MediatR;
+using Report.Application.Dtos.DashboardTotals;
 
 #endregion
 
 namespace Report.Application.CQRS.DashboardTotal.Commands;
 
-public sealed record UpdateDashboardTotalCommand(Actor Actor) : ICommand<Unit>;
+public sealed record UpdateDashboardTotalCommand(UpdateDashboardTotalDto Dto, Actor Actor) : ICommand<Unit>;
 
 public sealed class UpdateDashboardTotalCommandValidator : AbstractValidator<UpdateDashboardTotalCommand>
 {
@@ -19,14 +17,25 @@ public sealed class UpdateDashboardTotalCommandValidator : AbstractValidator<Upd
 
     public UpdateDashboardTotalCommandValidator()
     {
+        RuleFor(x => x.Dto)
+            .NotNull()
+            .WithMessage(MessageCode.BadRequest)
+            .DependentRules(() =>
+            {
+                RuleFor(x => x.Dto.Title)
+                    .NotEmpty()
+                    .WithMessage(MessageCode.TitleIsRequired);
+
+                RuleFor(x => x.Dto.Count)
+                    .NotEmpty()
+                    .WithMessage(MessageCode.CountIsRequired);
+            });
     }
 
     #endregion
 }
 
-public sealed class UpdateDashboardTotalCommandHandler(
-    IDashboardTotalRepository repository)
-    : ICommandHandler<UpdateDashboardTotalCommand, Unit>
+public sealed class UpdateDashboardTotalCommandHandler(IDashboardTotalRepository repository) : ICommandHandler<UpdateDashboardTotalCommand, Unit>
 {
     #region Implementations
 
@@ -37,8 +46,13 @@ public sealed class UpdateDashboardTotalCommandHandler(
 
         foreach (var entity in entities)
         {
-
+            if (entity.Title == command.Dto.Title)
+            {
+                entity.UpdateCount(command.Dto.Count!, command.Actor.ToString());
+            }
         }
+
+        await repository.BulkUpsertAsync(entities, cancellationToken);
 
         return Unit.Value;
     }

@@ -18,8 +18,8 @@ public sealed class GetOrderGrowthLineChart : ICarterModule
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet(ApiRoutes.OrderGrowthLineChart.GetOrderGrowthLineChart, HandleGetOrderGrowthLineChartAsync)
-            .WithTags(ApiRoutes.OrderGrowthLineChart.Tags)
+        app.MapGet(ApiRoutes.ReportStatistics.GetOrderGrowthStatistics, HandleGetOrderGrowthLineChartAsync)
+            .WithTags(ApiRoutes.ReportStatistics.Tags)
             .WithName(nameof(GetOrderGrowthLineChart))
             .Produces<ApiGetResponse<OrderGrowthLineChartResult>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)

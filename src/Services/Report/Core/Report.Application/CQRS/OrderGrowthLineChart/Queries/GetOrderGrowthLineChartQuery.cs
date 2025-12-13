@@ -27,7 +27,6 @@ public sealed class GetOrderGrowthLineChartQueryHandler(
         }
         else
         {
-            // Default to current month
             var now = DateTime.UtcNow;
             result = await repository.GetByMonthAsync(now.Year, now.Month, cancellationToken);
         }

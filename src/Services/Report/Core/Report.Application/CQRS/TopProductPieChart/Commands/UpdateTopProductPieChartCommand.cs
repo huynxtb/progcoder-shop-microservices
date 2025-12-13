@@ -25,8 +25,7 @@ public sealed class CreateTopProductPieChartCommandValidator : AbstractValidator
     #endregion
 }
 
-public sealed class CreateTopProductPieChartCommandHandler(
-    ITopProductPieChartRepository repository)
+public sealed class CreateTopProductPieChartCommandHandler(ITopProductPieChartRepository repository)
     : ICommandHandler<UpdateTopProductPieChartCommand, Unit>
 {
     #region Implementations

@@ -2,41 +2,17 @@
 
 public sealed class ApiRoutes
 {
-    public static class DashboardTotal
+    public static class ReportStatistics
     {
         #region Constants
 
-        public const string Tags = "Dashboard Totals";
+        public const string Tags = "Report Statistics";
 
-        private const string Base = "/dashboard-totals";
+        public const string GetDashboardStatistics = "/dashboard-statistics";
 
-        public const string GetDashboardTotals = Base;
+        public const string GetOrderGrowthStatistics = "/order-growth-statistics";
 
-        #endregion
-    }
-
-    public static class OrderGrowthLineChart
-    {
-        #region Constants
-
-        public const string Tags = "Order Growth Line Chart";
-
-        private const string Base = "/order-growth-line-chart";
-
-        public const string GetOrderGrowthLineChart = Base;
-
-        #endregion
-    }
-
-    public static class TopProductPieChart
-    {
-        #region Constants
-
-        public const string Tags = "Top Product Pie Chart";
-
-        private const string Base = "/top-product-pie-chart";
-
-        public const string GetTopProductPieChart = Base;
+        public const string GetTopProductStatistics = "/top-product-statistics";
 
         #endregion
     }

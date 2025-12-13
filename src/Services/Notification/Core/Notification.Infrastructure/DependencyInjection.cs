@@ -66,7 +66,25 @@ public static class DependencyInjection
 
         services.AddSingleton<ITemplateProvider, TemplateProvider>();
         services.AddScoped<INotificationSenderResolver, NotificationChannelResolver>();
+        services.AddRefitClients(cfg);
 
+        return services;
+    }
+
+    public static WebApplication UseInfrastructure(this WebApplication app)
+    {
+        app.EnsureIndexesAsync().GetAwaiter();
+        app.InitialiseDatabaseAsync().GetAwaiter();
+
+        return app;
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    public static IServiceCollection AddRefitClients(this IServiceCollection services, IConfiguration cfg)
+    {
         services.AddRefitClient<IKeycloakApi>()
                 .ConfigureHttpClient(c =>
                 {
@@ -84,13 +102,5 @@ public static class DependencyInjection
         return services;
     }
 
-    public static WebApplication UseInfrastructure(this WebApplication app)
-    {
-        app.EnsureIndexesAsync().GetAwaiter();
-        app.InitialiseDatabaseAsync().GetAwaiter();
-
-        return app;
-    }
-
-    #endregion
+    #endregion 
 }

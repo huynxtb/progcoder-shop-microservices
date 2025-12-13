@@ -25,8 +25,7 @@ public sealed class CreateOrderGrowthLineChartCommandValidator : AbstractValidat
     #endregion
 }
 
-public sealed class CreateOrderGrowthLineChartCommandHandler(
-    IOrderGrowthLineChartRepository repository)
+public sealed class CreateOrderGrowthLineChartCommandHandler(IOrderGrowthLineChartRepository repository) 
     : ICommandHandler<UpdateOrderGrowthLineChartCommand, Unit>
 {
     #region Implementations

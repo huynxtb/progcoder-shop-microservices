@@ -13,7 +13,7 @@ public static class ApiClientExtension
 {
     #region Methods
 
-    public static IServiceCollection AddApiClients(this IServiceCollection services, IConfiguration cfg)
+    public static IServiceCollection AddRefitClients(this IServiceCollection services, IConfiguration cfg)
     {
         services.AddRefitClient<IKeycloakApi>()
                 .ConfigureHttpClient(c =>
@@ -33,4 +33,5 @@ public static class ApiClientExtension
     }
 
     #endregion
+
 }

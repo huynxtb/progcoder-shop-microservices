@@ -62,7 +62,7 @@ public static class DependencyInjection
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
         }
         
-        services.AddApiClients(cfg);
+        services.AddRefitClients(cfg);
         services.AddGrpcClients(cfg);
 
         return services;

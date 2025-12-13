@@ -16,8 +16,8 @@ public sealed class GetDashboardTotals : ICarterModule
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet(ApiRoutes.DashboardTotal.GetDashboardTotals, HandleGetDashboardTotalsAsync)
-            .WithTags(ApiRoutes.DashboardTotal.Tags)
+        app.MapGet(ApiRoutes.ReportStatistics.GetDashboardStatistics, HandleGetDashboardTotalsAsync)
+            .WithTags(ApiRoutes.ReportStatistics.Tags)
             .WithName(nameof(GetDashboardTotals))
             .Produces<ApiGetResponse<DashboardTotalsResult>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)

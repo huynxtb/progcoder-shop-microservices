@@ -18,8 +18,8 @@ public sealed class GetTopProductPieChart : ICarterModule
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet(ApiRoutes.TopProductPieChart.GetTopProductPieChart, HandleGetTopProductPieChartAsync)
-            .WithTags(ApiRoutes.TopProductPieChart.Tags)
+        app.MapGet(ApiRoutes.ReportStatistics.GetTopProductStatistics, HandleGetTopProductPieChartAsync)
+            .WithTags(ApiRoutes.ReportStatistics.Tags)
             .WithName(nameof(GetTopProductPieChart))
             .Produces<ApiGetResponse<TopProductPieChartResult>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)

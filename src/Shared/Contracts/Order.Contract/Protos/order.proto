@@ -13,16 +13,27 @@ service OrderGrpc {
 
 message Order {
 	string id = 1;
+	repeated OrderItem order_items = 2;
+	double total_price = 3;
+	double final_price = 4;
+}
+
+message OrderItem {
+	Product product = 1;
+	int32 quantity = 2;
+}
+
+message Product {
+	string id = 1;
 	string name = 2;
 	double price = 3;
-	string thumbnail = 4;
 }
 
 message GetOrdersByMonthRequest {
-	string search_text = 1;
-	repeated string ids = 2;
+	int32 year = 1;
+	int32 month = 2;
 }
 
 message GetOrdersByMonthResponse {
-  repeated Product products = 1;
+	repeated Order orders = 1;
 }
