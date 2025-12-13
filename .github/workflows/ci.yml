@@ -109,7 +109,7 @@ jobs:
     name: Build Summary
     runs-on: ubuntu-latest
     needs: [detect-changes, build-services, build-react-apps]
-    if: always()
+    if: '!cancelled()'
     steps:
       - name: Print build summary
         run: |
@@ -131,6 +131,6 @@ jobs:
           echo "- App.Admin: ${{ needs.detect-changes.outputs.app-admin }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Build Status:" >> $GITHUB_STEP_SUMMARY
-          echo "- Services Build: ${{ needs.build-services.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- React Apps Build: ${{ needs.build-react-apps.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Services Build: ${{ needs.build-services.result || 'skipped' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- React Apps Build: ${{ needs.build-react-apps.result || 'skipped' }}" >> $GITHUB_STEP_SUMMARY
 
