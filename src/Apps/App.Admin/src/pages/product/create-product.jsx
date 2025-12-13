@@ -12,8 +12,7 @@ import Textarea from "@/components/ui/Textarea";
 import Select from "@/components/ui/Select";
 import ReactSelect from "react-select";
 import Fileinput from "@/components/ui/Fileinput";
-import { api } from "@/api";
-import { API_ENDPOINTS } from "@/api/endpoints";
+import { catalogService } from "@/services/catalogService";
 
 const CreateProduct = () => {
   const { t } = useTranslation();
@@ -34,7 +33,7 @@ const CreateProduct = () => {
     const fetchCategories = async () => {
       try {
         setLoadingCategories(true);
-        const response = await api.get(API_ENDPOINTS.CATALOG.GET_CATEGORIES);
+        const response = await catalogService.getCategories();
         const categoryOptions = response.data.result.items.map(item => ({
           value: item.id,
           label: item.name
@@ -55,7 +54,7 @@ const CreateProduct = () => {
     const fetchBrands = async () => {
       try {
         setLoadingBrands(true);
-        const response = await api.get(API_ENDPOINTS.CATALOG.GET_BRANDS);
+        const response = await catalogService.getBrands();
         const brandOptions = response.data.result.items.map(item => ({
           value: item.id,
           label: item.name
@@ -213,11 +212,7 @@ const CreateProduct = () => {
         }
 
         // Send to API
-        const response = await api.post(API_ENDPOINTS.CATALOG.CREATE_PRODUCT, submitFormData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        const response = await catalogService.createProduct(submitFormData);
 
         if (response && response.status >= 200 && response.status < 300) {
           toast.success(t("createProduct.successMessage"), {

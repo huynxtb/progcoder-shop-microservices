@@ -28,8 +28,7 @@ import { addToCart, updateQuantity } from "@/store/api/shop/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Alert from "@/components/ui/Alert";
 import LoaderCircle from "@/components/Loader-circle";
-import { api } from "@/api";
-import { API_ENDPOINTS } from "@/api/endpoints";
+import { catalogService } from "@/services/catalogService";
 import { formatCurrency, calculateDiscount, formatDate } from "@/utils/format";
 import { toast } from "react-toastify";
 
@@ -91,7 +90,7 @@ export const ProductDetails = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await api.get(API_ENDPOINTS.CATALOG.GET_PRODUCT_DETAIL(id));
+        const response = await catalogService.getProductById(id);
         
         if (response.data && response.data.result && response.data.result.product) {
           const productData = response.data.result.product;
@@ -126,11 +125,11 @@ export const ProductDetails = () => {
     try {
       setIsUpdating(true);
       const isCurrentlyPublished = product.published;
-      const endpoint = isCurrentlyPublished 
-        ? API_ENDPOINTS.CATALOG.UNPUBLISH_PRODUCT(id)
-        : API_ENDPOINTS.CATALOG.PUBLISH_PRODUCT(id);
+      const publishPromise = isCurrentlyPublished 
+        ? catalogService.unpublishProduct(id)
+        : catalogService.publishProduct(id);
       
-      const response = await api.post(endpoint);
+      const response = await publishPromise;
 
       if (response && response.status >= 200 && response.status < 300) {
         setProduct((prev) => ({

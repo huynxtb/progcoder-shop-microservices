@@ -6,7 +6,7 @@ import {
 import { createContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useKeycloak } from "../contexts/KeycloakContext";
-import { searchProducts, getCategories, getBrands } from "../api/services/productService";
+import { searchProducts, getCategories, getBrands } from "../services/productService";
 
 const FarzaaContext = createContext();
 

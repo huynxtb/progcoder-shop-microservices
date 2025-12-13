@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Layout from '../components/layout/Layout'
 import ShopDetailsMain from '../components/main/ShopDetailsMain'
-import { getProductDetail } from '../api/services/productService'
+import { getProductDetail } from '../services/productService'
 import { toast } from 'react-toastify'
 
 const ProductDetail = () => {

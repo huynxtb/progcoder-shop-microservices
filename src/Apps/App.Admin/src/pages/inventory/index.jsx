@@ -7,8 +7,8 @@ import Tooltip from "@/components/ui/Tooltip";
 import Textinput from "@/components/ui/Textinput";
 import Select from "@/components/ui/Select";
 import Modal from "@/components/ui/Modal";
-import { api } from "@/api";
-import { API_ENDPOINTS } from "@/api/endpoints";
+import { inventoryService } from "@/services/inventoryService";
+import { catalogService } from "@/services/catalogService";
 import {
   useTable,
   useRowSelect,
@@ -90,7 +90,7 @@ const InventoryPage = () => {
     const fetchInventoryItems = async () => {
       try {
         setLoading(true);
-        const response = await api.get(API_ENDPOINTS.INVENTORY.GET_ALL);
+        const response = await inventoryService.getAllInventoryItems();
         
         if (response.data && response.data.result && response.data.result.items) {
           const mappedItems = response.data.result.items.map((item) => ({
@@ -123,7 +123,7 @@ const InventoryPage = () => {
     const fetchProducts = async () => {
       try {
         setLoadingProducts(true);
-        const response = await api.get(API_ENDPOINTS.CATALOG.GET_ALL_PRODUCTS);
+        const response = await catalogService.getAllProducts();
         if (response.data && response.data.result && response.data.result.items) {
           const productOptions = response.data.result.items.map((item) => ({
             value: item.id,
@@ -146,7 +146,7 @@ const InventoryPage = () => {
     const fetchLocations = async () => {
       try {
         setLoadingLocations(true);
-        const response = await api.get(API_ENDPOINTS.INVENTORY.GET_LOCATIONS);
+        const response = await inventoryService.getLocations();
         if (response.data && response.data.result && response.data.result.items) {
           const locationOptions = response.data.result.items.map((item) => ({
             value: item.id,
@@ -174,7 +174,7 @@ const InventoryPage = () => {
 
     try {
       setDeleting(true);
-      const response = await api.delete(API_ENDPOINTS.INVENTORY.DELETE(itemToDelete.id));
+      const response = await inventoryService.deleteInventoryItem(itemToDelete.id);
 
       if (response && response.status >= 200 && response.status < 300) {
         toast.success(t("inventory.deleteSuccess"), {
@@ -227,7 +227,7 @@ const InventoryPage = () => {
         quantity: parseInt(addFormData.quantity) || 0,
       };
 
-      const response = await api.post(API_ENDPOINTS.INVENTORY.CREATE, requestBody);
+      const response = await inventoryService.createInventoryItem(requestBody);
 
       if (response && response.status >= 200 && response.status < 300) {
         toast.success(t("inventory.createSuccess"), {
@@ -236,7 +236,7 @@ const InventoryPage = () => {
         });
 
         // Refresh inventory items
-        const refreshResponse = await api.get(API_ENDPOINTS.INVENTORY.GET_ALL);
+        const refreshResponse = await inventoryService.getAllInventoryItems();
         if (refreshResponse.data && refreshResponse.data.result && refreshResponse.data.result.items) {
           const mappedItems = refreshResponse.data.result.items.map((item) => ({
             id: item.id,
@@ -290,8 +290,8 @@ const InventoryPage = () => {
         amount: parseInt(stockQuantity),
       };
 
-      const response = await api.put(
-        API_ENDPOINTS.INVENTORY.INCREASE_STOCK(stockItem.id),
+      const response = await inventoryService.increaseStock(
+        stockItem.id,
         requestBody
       );
 
@@ -302,7 +302,7 @@ const InventoryPage = () => {
         });
 
         // Refresh inventory items
-        const refreshResponse = await api.get(API_ENDPOINTS.INVENTORY.GET_ALL);
+        const refreshResponse = await inventoryService.getAllInventoryItems();
         if (refreshResponse.data && refreshResponse.data.result && refreshResponse.data.result.items) {
           const mappedItems = refreshResponse.data.result.items.map((item) => ({
             id: item.id,
@@ -353,8 +353,8 @@ const InventoryPage = () => {
         amount: parseInt(stockQuantity),
       };
 
-      const response = await api.put(
-        API_ENDPOINTS.INVENTORY.DECREASE_STOCK(stockItem.id),
+      const response = await inventoryService.decreaseStock(
+        stockItem.id,
         requestBody
       );
 
@@ -365,7 +365,7 @@ const InventoryPage = () => {
         });
 
         // Refresh inventory items
-        const refreshResponse = await api.get(API_ENDPOINTS.INVENTORY.GET_ALL);
+        const refreshResponse = await inventoryService.getAllInventoryItems();
         if (refreshResponse.data && refreshResponse.data.result && refreshResponse.data.result.items) {
           const mappedItems = refreshResponse.data.result.items.map((item) => ({
             id: item.id,
@@ -422,8 +422,8 @@ const InventoryPage = () => {
         locationId: editFormData.locationId,
       };
 
-      const response = await api.put(
-        API_ENDPOINTS.INVENTORY.UPDATE(editingItem.id),
+      const response = await inventoryService.updateInventoryItem(
+        editingItem.id,
         requestBody
       );
 
@@ -434,7 +434,7 @@ const InventoryPage = () => {
         });
 
         // Refresh inventory items
-        const refreshResponse = await api.get(API_ENDPOINTS.INVENTORY.GET_ALL);
+        const refreshResponse = await inventoryService.getAllInventoryItems();
         if (refreshResponse.data && refreshResponse.data.result && refreshResponse.data.result.items) {
           const mappedItems = refreshResponse.data.result.items.map((item) => ({
             id: item.id,

@@ -10,8 +10,7 @@ import Select from "@/components/ui/Select";
 import Switch from "@/components/ui/Switch";
 import Flatpickr from "react-flatpickr";
 import Icon from "@/components/ui/Icon";
-import { api } from "@/api";
-import { API_ENDPOINTS } from "@/api/endpoints";
+import { discountService } from "@/services/discountService";
 
 const CreateCoupon = () => {
   const { t } = useTranslation();
@@ -127,7 +126,7 @@ const CreateCoupon = () => {
           validTo: values.endDate.toISOString(),
         };
 
-        const response = await api.post(API_ENDPOINTS.DISCOUNT.CREATE, dto);
+        const response = await discountService.createCoupon(dto);
 
         if (response && response.status >= 200 && response.status < 300) {
           toast.success(t("createCoupon.createSuccess"), {

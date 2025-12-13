@@ -7,8 +7,7 @@ import Icon from "@/components/ui/Icon";
 import Tooltip from "@/components/ui/Tooltip";
 import Textinput from "@/components/ui/Textinput";
 import Modal from "@/components/ui/Modal";
-import { api } from "@/api";
-import { API_ENDPOINTS } from "@/api/endpoints";
+import { catalogService } from "@/services/catalogService";
 import { formatCurrency } from "@/utils/format";
 import {
   useTable,
@@ -56,7 +55,7 @@ const Ecommerce = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await api.get(API_ENDPOINTS.CATALOG.GET_ALL_PRODUCTS);
+        const response = await catalogService.getAllProducts();
         
         // Map API response to component format
         const mappedProducts = response.data.result.items.map((item) => ({
@@ -99,7 +98,7 @@ const Ecommerce = () => {
 
     try {
       setDeleting(true);
-      const response = await api.delete(API_ENDPOINTS.CATALOG.DELETE_PRODUCT(itemToDelete.id));
+      const response = await catalogService.deleteProduct(itemToDelete.id);
 
       if (response && response.status >= 200 && response.status < 300) {
         toast.success(t("products.deleteSuccess"), {
@@ -133,11 +132,11 @@ const Ecommerce = () => {
     try {
       setPublishing(true);
       const isCurrentlyPublished = itemToPublish.published;
-      const endpoint = isCurrentlyPublished
-        ? API_ENDPOINTS.CATALOG.UNPUBLISH_PRODUCT(itemToPublish.id)
-        : API_ENDPOINTS.CATALOG.PUBLISH_PRODUCT(itemToPublish.id);
+      const publishPromise = isCurrentlyPublished
+        ? catalogService.unpublishProduct(itemToPublish.id)
+        : catalogService.publishProduct(itemToPublish.id);
 
-      const response = await api.post(endpoint);
+      const response = await publishPromise;
 
       if (response && response.status >= 200 && response.status < 300) {
         toast.success(

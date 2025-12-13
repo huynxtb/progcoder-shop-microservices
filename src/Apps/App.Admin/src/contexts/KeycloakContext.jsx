@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { initKeycloak, getKeycloak, isAuthenticated, getUserInfo, updateToken, login as keycloakLogin, logout as keycloakLogout, loadUserProfile } from '@/services/keycloak/keycloakService';
+import { initKeycloak, getKeycloak, isAuthenticated, getUserInfo, updateToken, login as keycloakLogin, logout as keycloakLogout, loadUserProfile } from '@/services/keycloakService';
 import { setUser, logOut } from '@/store/api/auth/authSlice';
 import Loading from '@/components/Loading';
 

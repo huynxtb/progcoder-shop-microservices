@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { initKeycloak, getKeycloak, isAuthenticated, getUserInfo, updateToken, login as keycloakLogin, logout as keycloakLogout, loadUserProfile } from '../services/keycloak/keycloakService';
+import { initKeycloak, getKeycloak, isAuthenticated, getUserInfo, updateToken, login as keycloakLogin, logout as keycloakLogout, loadUserProfile } from '../services/keycloakService';
 
 const KeycloakContext = createContext(null);
 

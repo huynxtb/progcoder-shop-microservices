@@ -3,8 +3,8 @@
  * Handles all product-related API calls
  */
 
-import { api } from '../axiosInstance';
-import { API_ENDPOINTS } from '../endpoints';
+import { api } from '../api/axiosInstance';
+import { API_ENDPOINTS } from '../api/endpoints';
 
 /**
  * Search products with filters

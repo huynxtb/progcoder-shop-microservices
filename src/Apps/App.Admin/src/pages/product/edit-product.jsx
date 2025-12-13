@@ -11,8 +11,7 @@ import Textinput from "@/components/ui/Textinput";
 import Textarea from "@/components/ui/Textarea";
 import ReactSelect from "react-select";
 import Fileinput from "@/components/ui/Fileinput";
-import { api } from "@/api";
-import { API_ENDPOINTS } from "@/api/endpoints";
+import { catalogService } from "@/services/catalogService";
 import LoaderCircle from "@/components/Loader-circle";
 
 const EditProduct = () => {
@@ -37,7 +36,7 @@ const EditProduct = () => {
     const fetchCategories = async () => {
       try {
         setLoadingCategories(true);
-        const response = await api.get(API_ENDPOINTS.CATALOG.GET_CATEGORIES);
+        const response = await catalogService.getCategories();
         const categoryOptions = response.data.result.items.map(item => ({
           value: item.id,
           label: item.name
@@ -62,7 +61,7 @@ const EditProduct = () => {
     const fetchBrands = async () => {
       try {
         setLoadingBrands(true);
-        const response = await api.get(API_ENDPOINTS.CATALOG.GET_BRANDS);
+        const response = await catalogService.getBrands();
         const brandOptions = response.data.result.items.map(item => ({
           value: item.id,
           label: item.name
@@ -89,7 +88,7 @@ const EditProduct = () => {
       
       try {
         setLoading(true);
-        const response = await api.get(API_ENDPOINTS.CATALOG.GET_PRODUCT_DETAIL(id));
+        const response = await catalogService.getProductById(id);
         
         if (response.data && response.data.result && response.data.result.product) {
           const product = response.data.result.product;
@@ -285,11 +284,7 @@ const EditProduct = () => {
         }
 
         // Send to API
-        const response = await api.put(API_ENDPOINTS.CATALOG.UPDATE_PRODUCT(id), submitFormData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        const response = await catalogService.updateProduct(id, submitFormData);
 
         if (response && response.status >= 200 && response.status < 300) {
           toast.success(t("editProduct.updateSuccess"), {

@@ -10,8 +10,7 @@ import Select from "@/components/ui/Select";
 import Switch from "@/components/ui/Switch";
 import Flatpickr from "react-flatpickr";
 import Icon from "@/components/ui/Icon";
-import { api } from "@/api";
-import { API_ENDPOINTS } from "@/api/endpoints";
+import { discountService } from "@/services/discountService";
 import LoaderCircle from "@/components/Loader-circle";
 
 const EditCoupon = () => {
@@ -102,7 +101,7 @@ const EditCoupon = () => {
           minPurchaseAmount: values.minOrder ? parseFloat(values.minOrder) : null,
         };
 
-        const response = await api.put(API_ENDPOINTS.DISCOUNT.UPDATE(id), dto);
+        const response = await discountService.updateCoupon(id, dto);
 
         if (response && response.status >= 200 && response.status < 300) {
           toast.success(t("editCoupon.updateSuccess"), {
@@ -134,7 +133,7 @@ const EditCoupon = () => {
 
       try {
         setLoading(true);
-        const response = await api.get(API_ENDPOINTS.DISCOUNT.GET_DETAIL(id));
+        const response = await discountService.getCouponById(id);
         const couponData = response.data.result.coupon;
 
         // Map API response to form values

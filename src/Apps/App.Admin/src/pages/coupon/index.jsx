@@ -9,8 +9,7 @@ import Textinput from "@/components/ui/Textinput";
 import Modal from "@/components/ui/Modal";
 import Flatpickr from "react-flatpickr";
 import { formatCurrency } from "@/utils/format";
-import { api } from "@/api";
-import { API_ENDPOINTS } from "@/api/endpoints";
+import { discountService } from "@/services/discountService";
 import {
   useTable,
   useRowSelect,
@@ -56,7 +55,7 @@ const CouponPage = () => {
     const fetchCoupons = async () => {
       try {
         setLoading(true);
-        const response = await api.get(API_ENDPOINTS.DISCOUNT.GET_ALL_COUPONS);
+        const response = await discountService.getAllCoupons();
         
         // Map API response to component format
         const mappedCoupons = response.data.result.coupons.map((item) => ({
@@ -115,7 +114,7 @@ const CouponPage = () => {
 
     try {
       setDeleting(true);
-      const response = await api.delete(API_ENDPOINTS.DISCOUNT.DELETE(itemToDelete.id));
+      const response = await discountService.deleteCoupon(itemToDelete.id);
 
       if (response && response.status >= 200 && response.status < 300) {
         toast.success(t("coupon.deleteSuccess"), {
@@ -145,7 +144,7 @@ const CouponPage = () => {
   const handleViewClick = async (coupon) => {
     try {
       // Fetch full coupon details
-      const response = await api.get(API_ENDPOINTS.DISCOUNT.GET_DETAIL(coupon.id));
+      const response = await discountService.getCouponById(coupon.id);
       const couponData = response.data.result.coupon;
       
       const mappedCoupon = {
@@ -184,7 +183,7 @@ const CouponPage = () => {
 
     try {
       setApproving(true);
-      const response = await api.post(API_ENDPOINTS.DISCOUNT.APPROVE_COUPON(viewingCoupon.id));
+      const response = await discountService.approveCoupon(viewingCoupon.id);
 
       if (response && response.status >= 200 && response.status < 300) {
         toast.success(t("coupon.approveSuccess"), {
@@ -193,7 +192,7 @@ const CouponPage = () => {
         });
 
         // Refresh the coupon list
-        const refreshResponse = await api.get(API_ENDPOINTS.DISCOUNT.GET_ALL_COUPONS);
+        const refreshResponse = await discountService.getAllCoupons();
         const mappedCoupons = refreshResponse.data.result.coupons.map((item) => ({
           id: item.id,
           code: item.code,
@@ -217,7 +216,7 @@ const CouponPage = () => {
 
         // Update viewing coupon
         if (viewingCoupon.id) {
-          const detailResponse = await api.get(API_ENDPOINTS.DISCOUNT.GET_DETAIL(viewingCoupon.id));
+          const detailResponse = await discountService.getCouponById(viewingCoupon.id);
           const couponData = detailResponse.data.result.coupon;
           const mappedCoupon = {
             id: couponData.id,
@@ -257,7 +256,7 @@ const CouponPage = () => {
 
     try {
       setRejecting(true);
-      const response = await api.post(API_ENDPOINTS.DISCOUNT.REJECT_COUPON(viewingCoupon.id));
+      const response = await discountService.rejectCoupon(viewingCoupon.id);
 
       if (response && response.status >= 200 && response.status < 300) {
         toast.success(t("coupon.rejectSuccess"), {
@@ -266,7 +265,7 @@ const CouponPage = () => {
         });
 
         // Refresh the coupon list
-        const refreshResponse = await api.get(API_ENDPOINTS.DISCOUNT.GET_ALL_COUPONS);
+        const refreshResponse = await discountService.getAllCoupons();
         const mappedCoupons = refreshResponse.data.result.coupons.map((item) => ({
           id: item.id,
           code: item.code,
@@ -290,7 +289,7 @@ const CouponPage = () => {
 
         // Update viewing coupon
         if (viewingCoupon.id) {
-          const detailResponse = await api.get(API_ENDPOINTS.DISCOUNT.GET_DETAIL(viewingCoupon.id));
+          const detailResponse = await discountService.getCouponById(viewingCoupon.id);
           const couponData = detailResponse.data.result.coupon;
           const mappedCoupon = {
             id: couponData.id,
@@ -346,8 +345,8 @@ const CouponPage = () => {
 
     try {
       setUpdatingValidity(true);
-      const response = await api.put(
-        API_ENDPOINTS.DISCOUNT.UPDATE_VALIDITY_PERIOD(couponForValidity.id),
+      const response = await discountService.updateValidityPeriod(
+        couponForValidity.id,
         {
           validFrom: validityStartDate.toISOString(),
           validTo: validityEndDate.toISOString(),
@@ -361,7 +360,7 @@ const CouponPage = () => {
         });
 
         // Refresh the coupon list
-        const refreshResponse = await api.get(API_ENDPOINTS.DISCOUNT.GET_ALL_COUPONS);
+        const refreshResponse = await discountService.getAllCoupons();
         const mappedCoupons = refreshResponse.data.result.coupons.map((item) => ({
           id: item.id,
           code: item.code,
