@@ -1,0 +1,180 @@
+<Project>
+  
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <!-- ============================================ -->
+  <!-- Core CQRS & Validation Packages -->
+  <!-- ============================================ -->
+  <ItemGroup Label="CQRS and Validation">
+    <PackageVersion Include="MediatR" Version="12.3.0" />
+    <PackageVersion Include="FluentValidation" Version="11.9.2" />
+    <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.2" />
+  </ItemGroup>
+
+  <!-- ============================================ -->
+  <!-- Mapping & DI Packages -->
+  <!-- ============================================ -->
+  <ItemGroup Label="Mapping and Dependency Injection">
+    <PackageVersion Include="AutoMapper" Version="12.0.1" />
+    <PackageVersion Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageVersion Include="Mapster" Version="7.4.0" />
+    <PackageVersion Include="Scrutor" Version="6.1.0" />
+  </ItemGroup>
+
+  <!-- ============================================ -->
+  <!-- Database - Entity Framework Core -->
+  <!-- ============================================ -->
+  <ItemGroup Label="Entity Framework Core">
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.6" />
+    <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
+    <PackageVersion Include="MySql.EntityFrameworkCore" Version="8.0.5" />
+  </ItemGroup>
+
+  <!-- ============================================ -->
+  <!-- Database - NoSQL & Document DB -->
+  <!-- ============================================ -->
+  <ItemGroup Label="NoSQL and Document Databases">
+    <PackageVersion Include="Marten" Version="7.26.4" />
+    <PackageVersion Include="MongoDB.Driver" Version="3.4.2" />
+    <PackageVersion Include="MongoDB.Bson" Version="3.4.2" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.8" />
+  </ItemGroup>
+
+  <!-- ============================================ -->
+  <!-- Database - Other -->
+  <!-- ============================================ -->
+  <ItemGroup Label="Other Database Tools">
+    <PackageVersion Include="Dapper" Version="2.1.66" />
+    <PackageVersion Include="MySql.Data" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Data.SqlClient" Version="6.1.1" />
+    <PackageVersion Include="Npgsql" Version="8.0.3" />
+  </ItemGroup>
+
+  <!-- ============================================ -->
+  <!-- Search & Indexing -->
+  <!-- ============================================ -->
+  <ItemGroup Label="Search and Indexing">
+    <PackageVersion Include="Elasticsearch.Net" Version="7.17.5" />
+    <PackageVersion Include="NEST" Version="7.17.5" />
+  </ItemGroup>
+
+  <!-- ============================================ -->
+  <!-- Messaging & Event Bus -->
+  <!-- ============================================ -->
+  <ItemGroup Label="Messaging and Event Bus">
+    <PackageVersion Include="MassTransit.RabbitMQ" Version="8.5.1" />
+  </ItemGroup>
+
+  <!-- ============================================ -->
+  <!-- API & Web Frameworks -->
+  <!-- ============================================ -->
+  <ItemGroup Label="API and Web">
+    <PackageVersion Include="Carter" Version="8.1.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
+  </ItemGroup>
+
+  <!-- ============================================ -->
+  <!-- Health Checks -->
+  <!-- ============================================ -->
+  <ItemGroup Label="Health Checks">
+    <PackageVersion Include="AspNetCore.HealthChecks.MongoDb" Version="9.0.0" />
+    <PackageVersion Include="AspNetCore.HealthChecks.MySql" Version="8.0.0" />
+    <PackageVersion Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.0" />
+    <PackageVersion Include="AspNetCore.HealthChecks.Redis" Version="8.0.1" />
+    <PackageVersion Include="AspNetCore.HealthChecks.SqlServer" Version="8.0.0" />
+    <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.0" />
+  </ItemGroup>
+
+  <!-- ============================================ -->
+  <!-- gRPC -->
+  <!-- ============================================ -->
+  <ItemGroup Label="gRPC">
+    <PackageVersion Include="Grpc.AspNetCore" Version="2.65.0" />
+    <PackageVersion Include="Grpc.Net.Client" Version="2.65.0" />
+    <PackageVersion Include="Grpc.Tools" Version="2.66.0" />
+    <PackageVersion Include="Google.Protobuf" Version="3.28.0" />
+    <PackageVersion Include="microsoft.aspnetcore.grpc.jsontranscoding" Version="8.0.8" />
+  </ItemGroup>
+
+  <!-- ============================================ -->
+  <!-- HTTP Client & Resilience -->
+  <!-- ============================================ -->
+  <ItemGroup Label="HTTP Client and Resilience">
+    <PackageVersion Include="Refit.HttpClientFactory" Version="8.0.0" />
+    <PackageVersion Include="Polly" Version="8.6.2" />
+    <PackageVersion Include="Polly.Extensions.Http" Version="3.0.0" />
+  </ItemGroup>
+
+  <!-- ============================================ -->
+  <!-- Logging & Observability -->
+  <!-- ============================================ -->
+  <ItemGroup Label="Logging">
+    <PackageVersion Include="Serilog" Version="4.0.1" />
+    <PackageVersion Include="Serilog.AspNetCore" Version="8.0.2" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageVersion Include="Serilog.Sinks.OpenTelemetry" Version="4.1.0" />
+    <PackageVersion Include="Serilog.Sinks.Seq" Version="8.0.0" />
+  </ItemGroup>
+
+  <!-- ============================================ -->
+  <!-- OpenTelemetry -->
+  <!-- ============================================ -->
+  <ItemGroup Label="OpenTelemetry">
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.9.0" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.9.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.9.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.9.0" />
+    <PackageVersion Include="SharpAbp.Abp.OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="3.1.0" />
+  </ItemGroup>
+
+  <!-- ============================================ -->
+  <!-- Job Scheduling -->
+  <!-- ============================================ -->
+  <ItemGroup Label="Job Scheduling">
+    <PackageVersion Include="Quartz" Version="3.13.1" />
+    <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.13.1" />
+  </ItemGroup>
+
+  <!-- ============================================ -->
+  <!-- API Gateway -->
+  <!-- ============================================ -->
+  <ItemGroup Label="API Gateway">
+    <PackageVersion Include="Yarp.ReverseProxy" Version="2.1.0" />
+  </ItemGroup>
+
+  <!-- ============================================ -->
+  <!-- Storage & File Management -->
+  <!-- ============================================ -->
+  <ItemGroup Label="Storage and File Management">
+    <PackageVersion Include="Minio" Version="6.0.3" />
+    <PackageVersion Include="EPPlus" Version="7.7.1" />
+  </ItemGroup>
+
+  <!-- ============================================ -->
+  <!-- Microsoft Extensions -->
+  <!-- ============================================ -->
+  <ItemGroup Label="Microsoft Extensions">
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
+    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.FeatureManagement.AspNetCore" Version="3.4.0" />
+  </ItemGroup>
+
+  <!-- ============================================ -->
+  <!-- Utilities & Helpers -->
+  <!-- ============================================ -->
+  <ItemGroup Label="Utilities and Helpers">
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+</Project>
+

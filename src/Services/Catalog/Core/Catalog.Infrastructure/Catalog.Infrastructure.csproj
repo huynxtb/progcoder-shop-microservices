@@ -1,18 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Marten" Version="7.26.4" />
-    <PackageReference Include="Minio" Version="6.0.3" />
-    <PackageReference Include="Polly" Version="8.6.2" />
-    <PackageReference Include="Polly.Extensions.Http" Version="3.0.0" />
-    <PackageReference Include="Refit.HttpClientFactory" Version="8.0.0" />
-    <PackageReference Include="Scrutor" Version="6.1.0" />
+    <PackageReference Include="Marten" />
+    <PackageReference Include="Minio" />
+    <PackageReference Include="Polly" />
+    <PackageReference Include="Polly.Extensions.Http" />
+    <PackageReference Include="Refit.HttpClientFactory" />
+    <PackageReference Include="Scrutor" />
   </ItemGroup>
 
   <ItemGroup>
