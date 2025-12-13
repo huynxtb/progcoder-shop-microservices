@@ -22,6 +22,7 @@ app.UseSerilogReqLogging();
 app.UsePrometheusEndpoint();
 
 app.MapGrpcService<Report.Grpc.Services.ReportGrpcService>();
+app.MapGet("/", () => "Report gRPC is running...");
 
 app.Run();
 

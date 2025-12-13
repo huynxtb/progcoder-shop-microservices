@@ -43,11 +43,21 @@ public sealed class TopProductPieChartRepository : ITopProductPieChartRepository
         foreach (var entity in entities)
         {
             var filter = Builders<TopProductPieChartEntity>.Filter.Eq(x => x.Name, entity.Name);
-            var replace = new ReplaceOneModel<TopProductPieChartEntity>(filter, entity)
+            
+            var update = Builders<TopProductPieChartEntity>.Update
+                .Set(x => x.Name, entity.Name)
+                .Set(x => x.Value, entity.Value)
+                .Set(x => x.LastModifiedBy, entity.LastModifiedBy)
+                .Set(x => x.LastModifiedOnUtc, entity.LastModifiedOnUtc)
+                .SetOnInsert(x => x.Id, entity.Id == Guid.Empty ? Guid.NewGuid() : entity.Id)
+                .SetOnInsert(x => x.CreatedBy, entity.CreatedBy)
+                .SetOnInsert(x => x.CreatedOnUtc, entity.CreatedOnUtc);
+            
+            var updateModel = new UpdateOneModel<TopProductPieChartEntity>(filter, update)
             {
                 IsUpsert = true
             };
-            models.Add(replace);
+            models.Add(updateModel);
         }
 
         if (models.Any())

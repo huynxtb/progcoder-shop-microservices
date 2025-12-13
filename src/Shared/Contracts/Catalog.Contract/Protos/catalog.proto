@@ -12,7 +12,6 @@ service CatalogGrpc {
 }
 
 // ==== Messages ====
-
 message Product {
 	string id = 1;
 	string name = 2;
@@ -37,9 +36,7 @@ message GetProductByIdResponse {
   Product product = 1;
 }
 
-message GetCountProductRequest {
-
-}
+message GetCountProductRequest { }
 
 message GetCountProductResponse {
   int32 count = 1;

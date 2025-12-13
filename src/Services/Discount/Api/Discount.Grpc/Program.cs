@@ -24,5 +24,6 @@ app.UseSerilogReqLogging();
 app.UsePrometheusEndpoint();
 
 app.MapGrpcService<DiscountGrpcService>();
+app.MapGet("/", () => "Discount gRPC is running...");
 
 app.Run();

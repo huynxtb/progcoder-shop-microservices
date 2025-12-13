@@ -4,18 +4,21 @@ option csharp_namespace = "Order.Grpc";
 
 package order;
 
+import "google/protobuf/timestamp.proto";
+
 // ==== Definition ====
 service OrderGrpc {
 	rpc GetOrdersByMonth (GetOrdersByMonthRequest) returns (GetOrdersByMonthResponse);
+	rpc GetAllOrders (GetAllOrdersRequest) returns (GetAllOrdersResponse);
 }
 
 // ==== Messages ====
-
 message Order {
 	string id = 1;
 	repeated OrderItem order_items = 2;
 	double total_price = 3;
 	double final_price = 4;
+	google.protobuf.Timestamp created_on_utc = 5;
 }
 
 message OrderItem {
@@ -35,5 +38,11 @@ message GetOrdersByMonthRequest {
 }
 
 message GetOrdersByMonthResponse {
+	repeated Order orders = 1;
+}
+
+message GetAllOrdersRequest { }
+
+message GetAllOrdersResponse {
 	repeated Order orders = 1;
 }

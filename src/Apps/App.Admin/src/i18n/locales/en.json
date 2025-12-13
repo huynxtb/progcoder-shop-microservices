@@ -79,7 +79,19 @@
     "mostSales": "Most Sales",
     "global": "Global",
     "usa": "USA",
-    "investedAmount": "Invested Amount"
+    "investedAmount": "Invested Amount",
+    "totalOrders": "Total orders",
+    "totalUsers": "Total users",
+    "totalProducts": "Total products",
+    "totalRevenue": "Total revenue",
+    "orderGrowthReport": "Order Growth Report",
+    "numberOfOrders": "Number of Orders",
+    "dayOfMonth": "Day of Month",
+    "orders": "orders",
+    "topBestSellingProducts": "Top Best Selling Products",
+    "unitsSold": "units sold",
+    "loadingChartData": "Loading chart data...",
+    "noDataAvailable": "No data available"
   },
   "menu": {
     "menu": "Menu",

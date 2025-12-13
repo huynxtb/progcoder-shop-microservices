@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <Protobuf Include="..\..\Shared\Contracts\Catalog.Contract\Protos\catalog.proto" GrpcServices="Client" />
+    <Protobuf Include="..\..\Shared\Contracts\Report.Contract\Protos\report.proto" GrpcServices="Client" />
+    <Protobuf Include="..\..\Shared\Contracts\Order.Contract\Protos\order.proto" GrpcServices="Client" />
   </ItemGroup>
   
   <ItemGroup>

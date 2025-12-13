@@ -23,5 +23,6 @@ app.UseSerilogReqLogging();
 app.UsePrometheusEndpoint();
 
 app.MapGrpcService<CatalogGrpcService>();
+app.MapGet("/", () => "Catalog gRPC is running...");
 
 app.Run();

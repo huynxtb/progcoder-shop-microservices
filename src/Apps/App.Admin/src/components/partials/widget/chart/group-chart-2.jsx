@@ -1,251 +1,63 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Card from "@/components/ui/Card";
 import Icon from "@/components/ui/Icon";
-import Chart from "react-apexcharts";
-
-const shapeLine1 = {
-  series: [
-    {
-      data: [800, 600, 1000, 800, 600, 1000, 800, 900],
-    },
-  ],
-  options: {
-    chart: {
-      toolbar: {
-        autoSelected: "pan",
-        show: false,
-      },
-      offsetX: 0,
-      offsetY: 0,
-      zoom: {
-        enabled: false,
-      },
-      sparkline: {
-        enabled: true,
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "smooth",
-      width: 2,
-    },
-    colors: ["#00EBFF"],
-    tooltip: {
-      theme: "light",
-    },
-    grid: {
-      show: false,
-      padding: {
-        left: 0,
-        right: 0,
-      },
-    },
-    yaxis: {
-      show: false,
-    },
-    fill: {
-      type: "solid",
-      opacity: [0.1],
-    },
-    legend: {
-      show: false,
-    },
-    xaxis: {
-      low: 0,
-      offsetX: 0,
-      offsetY: 0,
-      show: false,
-      labels: {
-        low: 0,
-        offsetX: 0,
-        show: false,
-      },
-      axisBorder: {
-        low: 0,
-        offsetX: 0,
-        show: false,
-      },
-    },
-  },
-};
-const shapeLine2 = {
-  series: [
-    {
-      data: [800, 600, 1000, 800, 600, 1000, 800, 900],
-    },
-  ],
-  options: {
-    chart: {
-      toolbar: {
-        autoSelected: "pan",
-        show: false,
-      },
-      offsetX: 0,
-      offsetY: 0,
-      zoom: {
-        enabled: false,
-      },
-      sparkline: {
-        enabled: true,
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "smooth",
-      width: 2,
-    },
-    colors: ["#FB8F65"],
-    tooltip: {
-      theme: "light",
-    },
-    grid: {
-      show: false,
-      padding: {
-        left: 0,
-        right: 0,
-      },
-    },
-    yaxis: {
-      show: false,
-    },
-    fill: {
-      type: "solid",
-      opacity: [0.1],
-    },
-    legend: {
-      show: false,
-    },
-    xaxis: {
-      low: 0,
-      offsetX: 0,
-      offsetY: 0,
-      show: false,
-      labels: {
-        low: 0,
-        offsetX: 0,
-        show: false,
-      },
-      axisBorder: {
-        low: 0,
-        offsetX: 0,
-        show: false,
-      },
-    },
-  },
-};
-const shapeLine3 = {
-  series: [
-    {
-      data: [800, 600, 1000, 800, 600, 1000, 800, 900],
-    },
-  ],
-  options: {
-    chart: {
-      toolbar: {
-        autoSelected: "pan",
-        show: false,
-      },
-      offsetX: 0,
-      offsetY: 0,
-      zoom: {
-        enabled: false,
-      },
-      sparkline: {
-        enabled: true,
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "smooth",
-      width: 2,
-    },
-    colors: ["#5743BE"],
-    tooltip: {
-      theme: "light",
-    },
-    grid: {
-      show: false,
-      padding: {
-        left: 0,
-        right: 0,
-      },
-    },
-    yaxis: {
-      show: false,
-    },
-    fill: {
-      type: "solid",
-      opacity: [0.1],
-    },
-    legend: {
-      show: false,
-    },
-    xaxis: {
-      low: 0,
-      offsetX: 0,
-      offsetY: 0,
-      show: false,
-      labels: {
-        low: 0,
-        offsetX: 0,
-        show: false,
-      },
-      axisBorder: {
-        low: 0,
-        offsetX: 0,
-        show: false,
-      },
-    },
-  },
-};
-
-const statistics = [
-  {
-    name: shapeLine1,
-    title: "Totel revenue",
-    count: "3,564",
-    bg: "bg-[#E5F9FF] dark:bg-slate-900	",
-    text: "text-info-500",
-    icon: "heroicons:shopping-cart",
-  },
-  {
-    name: shapeLine1,
-    title: "Totel users",
-    count: "100",
-    bg: "bg-[#A5F9FD] dark:bg-slate-900/50",
-    text: "text-primary-500",
-    icon: "heroicons:user-group",
-  },
-  {
-    name: shapeLine2,
-    title: "Products sold",
-    count: "564",
-    bg: "bg-[#FFEDE6] dark:bg-slate-900	",
-    text: "text-warning-500",
-    icon: "heroicons:cube",
-  },
-  {
-    name: shapeLine3,
-    title: "Growth",
-    count: "+5.0%",
-    bg: "bg-[#EAE6FF] dark:bg-slate-900	",
-    text: "text-[#5743BE]",
-    icon: "heroicons:arrow-trending-up-solid",
-  },
-];
+import { reportService } from "@/services/reportService";
+import { useTranslation } from "react-i18next";
 
 const GroupChart2 = () => {
+  const { t } = useTranslation();
+  const [statistics, setStatistics] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboardStatistics = async () => {
+      try {
+        setIsLoading(true);
+        const response = await reportService.getDashboardStatistics();
+        
+        // API returns { result: { items: [...] } }
+        if (response?.result?.items) {
+          setStatistics(response.result.items);
+        }
+      } catch (error) {
+        console.error("Failed to fetch dashboard statistics:", error);
+        // Set empty array on error to prevent UI breaks
+        setStatistics([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDashboardStatistics();
+  }, []);
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <>
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i}>
+            <Card bodyClass="pt-4 pb-3 px-4">
+              <div className="flex space-x-3 rtl:space-x-reverse animate-pulse">
+                <div className="flex-none">
+                  <div className="bg-slate-200 dark:bg-slate-700 h-12 w-12 rounded-full"></div>
+                </div>
+                <div className="flex-1 space-y-2">
+                  <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
+                  <div className="h-5 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
+                </div>
+              </div>
+            </Card>
+          </div>
+        ))}
+      </>
+    );
+  }
+
   return (
     <>
-      {" "}
       {statistics.map((item, i) => (
-        <div key={i}>
+        <div key={item.id || i}>
           <Card bodyClass="pt-4 pb-3 px-4">
             <div className="flex space-x-3 rtl:space-x-reverse">
               <div className="flex-none">

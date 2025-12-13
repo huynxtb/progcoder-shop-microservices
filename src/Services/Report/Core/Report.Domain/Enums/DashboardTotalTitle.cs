@@ -8,15 +8,19 @@ namespace Report.Domain.Enums;
 
 public enum DashboardTotalTitle
 {
-    [Description("Total Revenue")]
-    TotalRevenue,
+    #region Fields, Properties and Indexers
+
+    [Description("Total Orders")]
+    TotalOrders,
 
     [Description("Total Users")]
     TotalUsers,
 
-    [Description("Products Sold")]
-    ProductsSold,
+    [Description("Total Products")]
+    TotalProducts,
 
-    [Description("Growth")]
-    Growth
+    [Description("Total Revenue")]
+    TotalRevenue
+
+    #endregion
 }

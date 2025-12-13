@@ -1,18 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Chart from "react-apexcharts";
 import useDarkMode from "@/hooks/useDarkMode";
+import { reportService } from "@/services/reportService";
+import { useTranslation } from "react-i18next";
 
 const TopProductsPieChart = ({ height = 420 }) => {
+  const { t } = useTranslation();
   const [isDark] = useDarkMode();
+  const [topProducts, setTopProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Mock data: Top 5 best selling products
-  const topProducts = [
-    { name: "Laptop Pro 15", value: 245 },
-    { name: "Wireless Headphones", value: 189 },
-    { name: "Smart Watch Series 8", value: 156 },
-    { name: "Gaming Mouse RGB", value: 134 },
-    { name: "USB-C Hub", value: 98 },
-  ];
+  useEffect(() => {
+    const fetchTopProductsData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await reportService.getTopProductStatistics();
+        
+        // API returns { result: { items: [...] } }
+        if (response?.result?.items) {
+          setTopProducts(response.result.items);
+        }
+      } catch (error) {
+        console.error("Failed to fetch top products statistics:", error);
+        // Set empty data on error
+        setTopProducts([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTopProductsData();
+  }, []);
 
   const series = topProducts.map((product) => product.value);
   const labels = topProducts.map((product) => product.name);
@@ -47,7 +65,7 @@ const TopProductsPieChart = ({ height = 420 }) => {
       },
     },
     title: {
-      text: "Top 5 Best Selling Products",
+      text: t("dashboard.topBestSellingProducts"),
       align: "left",
       offsetY: 13,
       floating: false,
@@ -62,7 +80,7 @@ const TopProductsPieChart = ({ height = 420 }) => {
       theme: isDark ? "dark" : "light",
       y: {
         formatter: function (val, { seriesIndex }) {
-          return topProducts[seriesIndex].value + " units sold";
+          return new Intl.NumberFormat().format(topProducts[seriesIndex].value) + " " + t("dashboard.unitsSold");
         },
       },
     },
@@ -77,6 +95,28 @@ const TopProductsPieChart = ({ height = 420 }) => {
       },
     ],
   };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center" style={{ height: `${height}px` }}>
+        <div className="animate-pulse text-slate-500 dark:text-slate-400">
+          {t("dashboard.loadingChartData")}
+        </div>
+      </div>
+    );
+  }
+
+  // Show empty state if no data
+  if (topProducts.length === 0) {
+    return (
+      <div className="flex items-center justify-center" style={{ height: `${height}px` }}>
+        <div className="text-slate-500 dark:text-slate-400">
+          {t("dashboard.noDataAvailable")}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

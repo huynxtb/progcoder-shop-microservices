@@ -8,11 +8,11 @@ public sealed class ApiRoutes
 
         public const string Tags = "Report Statistics";
 
-        public const string GetDashboardStatistics = "/dashboard-statistics";
+        public const string GetDashboardStatistics = "/admin/dashboard-statistics";
 
-        public const string GetOrderGrowthStatistics = "/order-growth-statistics";
+        public const string GetOrderGrowthStatistics = "/admin/order-growth-statistics";
 
-        public const string GetTopProductStatistics = "/top-product-statistics";
+        public const string GetTopProductStatistics = "/admin/top-product-statistics";
 
         #endregion
     }

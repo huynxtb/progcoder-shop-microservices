@@ -1,11 +1,15 @@
 #region using
 
 using App.Job.ApiClients;
+using App.Job.GrpcClients.Interceptors;
 using App.Job.Quartz;
 using BuildingBlocks.Logging;
+using Catalog.Grpc;
 using Common.Configurations;
+using Order.Grpc;
 using Quartz;
 using Refit;
+using Report.Grpc;
 
 #endregion
 
@@ -35,6 +39,7 @@ public static class DependencyInjection
         services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
         services.AddQuartzJobs();
         services.AddRefitClients(cfg);
+        services.AddGrpcClients(cfg);
 
         return services;
     }
@@ -62,6 +67,70 @@ public static class DependencyInjection
                     c.BaseAddress = new Uri(cfg[$"{KeycloakApiCfg.Section}:{KeycloakApiCfg.BaseUrl}"]!);
                     c.Timeout = TimeSpan.FromSeconds(30);
                 });
+
+        return services;
+    }
+
+    public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration cfg)
+    {
+        // Catalog Grpc
+        {
+            var catalogServiceUrl = cfg.GetValue<string>($"{GrpcClientCfg.Catalog.Section}:{GrpcClientCfg.Catalog.Url}")
+            ?? throw new InvalidOperationException("Catalog service URL is not configured.");
+
+            services.AddGrpcClient<CatalogGrpc.CatalogGrpcClient>(options =>
+            {
+                options.Address = new Uri(catalogServiceUrl);
+            })
+            .AddInterceptor<GrpcApiKeyInterceptor>()
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                return new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                };
+            });
+        }
+
+        // Order Grpc
+        {
+            var orderServiceUrl = cfg.GetValue<string>($"{GrpcClientCfg.Order.Section}:{GrpcClientCfg.Order.Url}")
+            ?? throw new InvalidOperationException("Order service URL is not configured.");
+
+            services.AddGrpcClient<OrderGrpc.OrderGrpcClient>(options =>
+            {
+                options.Address = new Uri(orderServiceUrl);
+            })
+            .AddInterceptor<GrpcApiKeyInterceptor>()
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                return new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                };
+            });
+        }
+
+        // Report Grpc
+        {
+            var reportServiceUrl = cfg.GetValue<string>($"{GrpcClientCfg.Report.Section}:{GrpcClientCfg.Report.Url}")
+            ?? throw new InvalidOperationException("Report service URL is not configured.");
+
+            services.AddGrpcClient<ReportGrpc.ReportGrpcClient>(options =>
+            {
+                options.Address = new Uri(reportServiceUrl);
+            })
+            .AddInterceptor<GrpcApiKeyInterceptor>()
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                return new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                };
+            });
+        }
+
+        services.AddSingleton<GrpcApiKeyInterceptor>();
 
         return services;
     }

@@ -29,8 +29,11 @@ public static class DatabaseExtentions
     private static async Task SeedDashboardTotalAsync(IMongoDatabase db, string performedBy)
     {
         var collection = db.GetCollection<DashboardTotalEntity>(MongoCollection.DashboardTotal);
+        var count = await collection.CountDocumentsAsync(FilterDefinition<DashboardTotalEntity>.Empty);
+
+        if (count > 0) return;
+
         var models = new List<WriteModel<DashboardTotalEntity>>();
-        
         var docs = new List<DashboardTotalEntity>()
         {
             DashboardTotalEntity.Create(
@@ -38,7 +41,7 @@ public static class DatabaseExtentions
                 count: "0",
                 bg: "bg-[#E5F9FF] dark:bg-slate-900",
                 text: "text-info-500",
-                icon: "heroicons:shopping-cart",
+                icon: "heroicons:cube",
                 performedBy: performedBy),
             DashboardTotalEntity.Create(
                 title: DashboardTotalTitle.TotalUsers.GetDescription(),
@@ -48,18 +51,18 @@ public static class DatabaseExtentions
                 icon: "heroicons:user-group",
                 performedBy: performedBy),
             DashboardTotalEntity.Create(
-                title: DashboardTotalTitle.ProductsSold.GetDescription(),
+                title: DashboardTotalTitle.TotalProducts.GetDescription(),
                 count: "0",
                 bg: "bg-[#FFEDE6] dark:bg-slate-900",
                 text: "text-warning-500",
-                icon: "heroicons:cube",
+                icon: "heroicons:circle-stack",
                 performedBy: performedBy),
             DashboardTotalEntity.Create(
-                title: DashboardTotalTitle.Growth.GetDescription(),
-                count: "+0.0%",
+                title: DashboardTotalTitle.TotalOrders.GetDescription(),
+                count: "0",
                 bg: "bg-[#EAE6FF] dark:bg-slate-900",
                 text: "text-[#5743BE]",
-                icon: "heroicons:arrow-trending-up-solid",
+                icon: "heroicons:shopping-cart",
                 performedBy: performedBy)
         };
 

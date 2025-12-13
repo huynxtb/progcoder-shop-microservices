@@ -79,7 +79,19 @@
     "mostSales": "Bán hàng nhiều nhất",
     "global": "Toàn cầu",
     "usa": "Hoa Kỳ",
-    "investedAmount": "Số tiền đầu tư"
+    "investedAmount": "Số tiền đầu tư",
+    "totalOrders": "Tổng số đơn hàng",
+    "totalUsers": "Tổng số người dùng",
+    "totalProducts": "Tổng số sản phẩm",
+    "totalRevenue": "Tổng doanh thu",
+    "orderGrowthReport": "Báo cáo Tăng trưởng Đơn hàng",
+    "numberOfOrders": "Số lượng Đơn hàng",
+    "dayOfMonth": "Ngày trong Tháng",
+    "orders": "đơn hàng",
+    "topBestSellingProducts": "Top Sản phẩm Bán chạy nhất",
+    "unitsSold": "đã bán",
+    "loadingChartData": "Đang tải dữ liệu biểu đồ...",
+    "noDataAvailable": "Không có dữ liệu"
   },
   "menu": {
     "menu": "Menu",

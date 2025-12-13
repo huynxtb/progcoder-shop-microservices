@@ -14,8 +14,6 @@ service ReportGrpc {
 }
 
 // ==== Messages ====
-
-// Dashboard Total
 message PutDashboardTotalRequest {
 	string title = 1;
 	string count = 2;
@@ -25,7 +23,6 @@ message PutDashboardTotalResponse {
 	bool success = 1;
 }
 
-// Order Growth Line Chart
 message OrderGrowthLineChartItem {
 	int32 day = 1;
 	double value = 2;
@@ -40,7 +37,6 @@ message PutOrderGrowthLineChartResponse {
 	bool success = 1;
 }
 
-// Top Product Pie Chart
 message TopProductPieChartItem {
 	string name = 1;
 	double value = 2;

@@ -60,11 +60,22 @@ public sealed class OrderGrowthLineChartRepository : IOrderGrowthLineChartReposi
         foreach (var entity in entities)
         {
             var filter = Builders<OrderGrowthLineChartEntity>.Filter.Eq(x => x.Date, entity.Date);
-            var replace = new ReplaceOneModel<OrderGrowthLineChartEntity>(filter, entity)
+            
+            var update = Builders<OrderGrowthLineChartEntity>.Update
+                .Set(x => x.Day, entity.Day)
+                .Set(x => x.Value, entity.Value)
+                .Set(x => x.Date, entity.Date)
+                .Set(x => x.LastModifiedBy, entity.LastModifiedBy)
+                .Set(x => x.LastModifiedOnUtc, entity.LastModifiedOnUtc)
+                .SetOnInsert(x => x.Id, entity.Id == Guid.Empty ? Guid.NewGuid() : entity.Id)
+                .SetOnInsert(x => x.CreatedBy, entity.CreatedBy)
+                .SetOnInsert(x => x.CreatedOnUtc, entity.CreatedOnUtc);
+            
+            var updateModel = new UpdateOneModel<OrderGrowthLineChartEntity>(filter, update)
             {
                 IsUpsert = true
             };
-            models.Add(replace);
+            models.Add(updateModel);
         }
 
         if (models.Any())

@@ -23,5 +23,6 @@ app.UseSerilogReqLogging();
 app.UsePrometheusEndpoint();
 
 app.MapGrpcService<OrderGrpcService>();
+app.MapGet("/", () => "Order gRPC is running...");
 
 app.Run();

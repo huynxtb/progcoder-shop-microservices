@@ -71,53 +71,11 @@ export const API_ENDPOINTS = {
     GET_BY_CURRENT_USER: "/order-service/orders/me",
   },
 
-  // Customers
-  CUSTOMER: {
-    GET_LIST: "/customers",
-    GET_DETAIL: (id) => `/customers/${id}`,
-    CREATE: "/customers",
-    UPDATE: (id) => `/customers/${id}`,
-    DELETE: (id) => `/customers/${id}`,
-    GET_ORDERS: (id) => `/customers/${id}/orders`,
-    SEARCH: "/customers/search",
-  },
-
-  // Invoice
-  INVOICE: {
-    GET_LIST: "/invoices",
-    GET_DETAIL: (id) => `/invoices/${id}`,
-    CREATE: "/invoices",
-    UPDATE: (id) => `/invoices/${id}`,
-    DELETE: (id) => `/invoices/${id}`,
-    PRINT: (id) => `/invoices/${id}/print`,
-    SEND: (id) => `/invoices/${id}/send`,
-  },
-
   // Dashboard & Reports
   REPORT: {
-    DASHBOARD: "/dashboard",
-    SALES_SUMMARY: "/reports/sales-summary",
-    REVENUE: "/reports/revenue",
-    TOP_PRODUCTS: "/reports/top-products",
-    ORDERS_STATS: "/reports/orders-stats",
-    CUSTOMERS_STATS: "/reports/customers-stats",
-    INVENTORY_ALERTS: "/reports/inventory-alerts",
-  },
-
-  // Settings
-  SETTINGS: {
-    GET: "/settings",
-    UPDATE: "/settings",
-    GET_PROFILE: "/settings/profile",
-    UPDATE_PROFILE: "/settings/profile",
-    UPLOAD_AVATAR: "/settings/avatar",
-  },
-
-  // Upload
-  UPLOAD: {
-    IMAGE: "/upload/image",
-    FILE: "/upload/file",
-    BULK: "/upload/bulk",
+    DASHBOARD_STATISTICS: "/report-service/admin/dashboard-statistics",
+    ORDER_GROWTH_LINE_CHART: "/report-service/admin/order-growth-statistics",
+    TOP_PRODUCT_PIE_CHART: "/report-service/admin/top-product-statistics",
   },
 
   // Keycloak
