@@ -1,0 +1,83 @@
+name: Build React Apps
+
+on:
+  workflow_call:
+    inputs:
+      build-app-store:
+        required: true
+        type: boolean
+      build-app-admin:
+        required: true
+        type: boolean
+
+jobs:
+  build-app-store:
+    name: Build App.Store (React)
+    if: inputs.build-app-store == true
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/Apps/App.Store
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: src/Apps/App.Store/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint code
+        run: npm run lint --if-present
+        continue-on-error: true
+
+      - name: Build App.Store
+        run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-store-build
+          path: src/Apps/App.Store/dist
+          retention-days: 7
+
+  build-app-admin:
+    name: Build App.Admin (React)
+    if: inputs.build-app-admin == true
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/Apps/App.Admin
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: src/Apps/App.Admin/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint code
+        run: npm run lint --if-present
+        continue-on-error: true
+
+      - name: Build App.Admin
+        run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-admin-build
+          path: src/Apps/App.Admin/dist
+          retention-days: 7
+

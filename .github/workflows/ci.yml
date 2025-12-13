@@ -1,0 +1,136 @@
+name: CI - Main Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  detect-changes:
+    name: Detect Changed Files
+    runs-on: ubuntu-latest
+    outputs:
+      # Services
+      catalog: ${{ steps.filter.outputs.catalog }}
+      basket: ${{ steps.filter.outputs.basket }}
+      order: ${{ steps.filter.outputs.order }}
+      discount: ${{ steps.filter.outputs.discount }}
+      inventory: ${{ steps.filter.outputs.inventory }}
+      notification: ${{ steps.filter.outputs.notification }}
+      search: ${{ steps.filter.outputs.search }}
+      report: ${{ steps.filter.outputs.report }}
+      # Infrastructure
+      api-gateway: ${{ steps.filter.outputs.api-gateway }}
+      job-orchestrator: ${{ steps.filter.outputs.job-orchestrator }}
+      # Shared
+      shared: ${{ steps.filter.outputs.shared }}
+      # Apps
+      app-store: ${{ steps.filter.outputs.app-store }}
+      app-admin: ${{ steps.filter.outputs.app-admin }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Detect changed paths
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            catalog:
+              - 'src/Services/Catalog/**'
+            basket:
+              - 'src/Services/Basket/**'
+            order:
+              - 'src/Services/Order/**'
+            discount:
+              - 'src/Services/Discount/**'
+            inventory:
+              - 'src/Services/Inventory/**'
+            notification:
+              - 'src/Services/Notification/**'
+            search:
+              - 'src/Services/Search/**'
+            report:
+              - 'src/Services/Report/**'
+            api-gateway:
+              - 'src/ApiGateway/**'
+            job-orchestrator:
+              - 'src/JobOrchestrator/**'
+            shared:
+              - 'src/Shared/**'
+            app-store:
+              - 'src/Apps/App.Store/**'
+            app-admin:
+              - 'src/Apps/App.Admin/**'
+
+  build-services:
+    name: Build .NET Services
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.catalog == 'true' ||
+      needs.detect-changes.outputs.basket == 'true' ||
+      needs.detect-changes.outputs.order == 'true' ||
+      needs.detect-changes.outputs.discount == 'true' ||
+      needs.detect-changes.outputs.inventory == 'true' ||
+      needs.detect-changes.outputs.notification == 'true' ||
+      needs.detect-changes.outputs.search == 'true' ||
+      needs.detect-changes.outputs.report == 'true' ||
+      needs.detect-changes.outputs.api-gateway == 'true' ||
+      needs.detect-changes.outputs.job-orchestrator == 'true' ||
+      needs.detect-changes.outputs.shared == 'true'
+    uses: ./.github/workflows/build-services.yml
+    with:
+      build-catalog: ${{ needs.detect-changes.outputs.catalog == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-basket: ${{ needs.detect-changes.outputs.basket == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-order: ${{ needs.detect-changes.outputs.order == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-discount: ${{ needs.detect-changes.outputs.discount == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-inventory: ${{ needs.detect-changes.outputs.inventory == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-notification: ${{ needs.detect-changes.outputs.notification == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-search: ${{ needs.detect-changes.outputs.search == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-report: ${{ needs.detect-changes.outputs.report == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-api-gateway: ${{ needs.detect-changes.outputs.api-gateway == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-job-orchestrator: ${{ needs.detect-changes.outputs.job-orchestrator == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+
+  build-react-apps:
+    name: Build React Apps
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.app-store == 'true' ||
+      needs.detect-changes.outputs.app-admin == 'true'
+    uses: ./.github/workflows/build-react-apps.yml
+    with:
+      build-app-store: ${{ needs.detect-changes.outputs.app-store == 'true' }}
+      build-app-admin: ${{ needs.detect-changes.outputs.app-admin == 'true' }}
+
+  summary:
+    name: Build Summary
+    runs-on: ubuntu-latest
+    needs: [detect-changes, build-services, build-react-apps]
+    if: always()
+    steps:
+      - name: Print build summary
+        run: |
+          echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Changes Detected:" >> $GITHUB_STEP_SUMMARY
+          echo "- Catalog: ${{ needs.detect-changes.outputs.catalog }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Basket: ${{ needs.detect-changes.outputs.basket }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Order: ${{ needs.detect-changes.outputs.order }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Discount: ${{ needs.detect-changes.outputs.discount }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Inventory: ${{ needs.detect-changes.outputs.inventory }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Notification: ${{ needs.detect-changes.outputs.notification }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Search: ${{ needs.detect-changes.outputs.search }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Report: ${{ needs.detect-changes.outputs.report }}" >> $GITHUB_STEP_SUMMARY
+          echo "- API Gateway: ${{ needs.detect-changes.outputs.api-gateway }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Job Orchestrator: ${{ needs.detect-changes.outputs.job-orchestrator }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Shared: ${{ needs.detect-changes.outputs.shared }}" >> $GITHUB_STEP_SUMMARY
+          echo "- App.Store: ${{ needs.detect-changes.outputs.app-store }}" >> $GITHUB_STEP_SUMMARY
+          echo "- App.Admin: ${{ needs.detect-changes.outputs.app-admin }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Build Status:" >> $GITHUB_STEP_SUMMARY
+          echo "- Services Build: ${{ needs.build-services.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- React Apps Build: ${{ needs.build-react-apps.result }}" >> $GITHUB_STEP_SUMMARY
+

@@ -1,0 +1,337 @@
+name: Build .NET Services
+
+on:
+  workflow_call:
+    inputs:
+      build-catalog:
+        required: true
+        type: boolean
+      build-basket:
+        required: true
+        type: boolean
+      build-order:
+        required: true
+        type: boolean
+      build-discount:
+        required: true
+        type: boolean
+      build-inventory:
+        required: true
+        type: boolean
+      build-notification:
+        required: true
+        type: boolean
+      build-search:
+        required: true
+        type: boolean
+      build-report:
+        required: true
+        type: boolean
+      build-api-gateway:
+        required: true
+        type: boolean
+      build-job-orchestrator:
+        required: true
+        type: boolean
+
+jobs:
+  build-catalog-service:
+    name: Build Catalog Service
+    if: inputs.build-catalog == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Catalog/Api/Catalog.Api/Catalog.Api.csproj
+
+      - name: Build Catalog.Api
+        run: dotnet build src/Services/Catalog/Api/Catalog.Api/Catalog.Api.csproj --configuration Release --no-restore
+
+      - name: Build Catalog.Grpc
+        run: dotnet build src/Services/Catalog/Api/Catalog.Grpc/Catalog.Grpc.csproj --configuration Release --no-restore
+
+      - name: Build Catalog Workers
+        run: |
+          dotnet build src/Services/Catalog/Worker/Catalog.Worker.Outbox/Catalog.Worker.Outbox.csproj --configuration Release --no-restore
+          dotnet build src/Services/Catalog/Worker/Catalog.Worker.Consumer/Catalog.Worker.Consumer.csproj --configuration Release --no-restore
+
+  build-basket-service:
+    name: Build Basket Service
+    if: inputs.build-basket == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Basket/Api/Basket.Api/Basket.Api.csproj
+
+      - name: Build Basket.Api
+        run: dotnet build src/Services/Basket/Api/Basket.Api/Basket.Api.csproj --configuration Release --no-restore
+
+      - name: Build Basket Worker
+        run: dotnet build src/Services/Basket/Worker/Basket.Worker.Outbox/Basket.Worker.Outbox.csproj --configuration Release --no-restore
+
+  build-order-service:
+    name: Build Order Service
+    if: inputs.build-order == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Order/Api/Order.Api/Order.Api.csproj
+
+      - name: Build Order.Api
+        run: dotnet build src/Services/Order/Api/Order.Api/Order.Api.csproj --configuration Release --no-restore
+
+      - name: Build Order Workers
+        run: |
+          dotnet build src/Services/Order/Worker/Order.Worker.Outbox/Order.Worker.Outbox.csproj --configuration Release --no-restore
+          dotnet build src/Services/Order/Worker/Order.Worker.Consumer/Order.Worker.Consumer.csproj --configuration Release --no-restore
+
+  build-discount-service:
+    name: Build Discount Service
+    if: inputs.build-discount == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Discount/Api/Discount.Api/Discount.Api.csproj
+
+      - name: Build Discount.Api
+        run: dotnet build src/Services/Discount/Api/Discount.Api/Discount.Api.csproj --configuration Release --no-restore
+
+      - name: Build Discount.Grpc
+        run: dotnet build src/Services/Discount/Api/Discount.Grpc/Discount.Grpc.csproj --configuration Release --no-restore
+
+  build-inventory-service:
+    name: Build Inventory Service
+    if: inputs.build-inventory == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Inventory/Api/Inventory.Api/Inventory.Api.csproj
+
+      - name: Build Inventory.Api
+        run: dotnet build src/Services/Inventory/Api/Inventory.Api/Inventory.Api.csproj --configuration Release --no-restore
+
+      - name: Build Inventory Worker
+        run: dotnet build src/Services/Inventory/Worker/Inventory.Worker.Outbox/Inventory.Worker.Outbox.csproj --configuration Release --no-restore
+
+  build-notification-service:
+    name: Build Notification Service
+    if: inputs.build-notification == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Notification/Api/Notification.Api/Notification.Api.csproj
+
+      - name: Build Notification.Api
+        run: dotnet build src/Services/Notification/Api/Notification.Api/Notification.Api.csproj --configuration Release --no-restore
+
+      - name: Build Notification Workers
+        run: |
+          dotnet build src/Services/Notification/Worker/Notification.Worker.Consumer/Notification.Worker.Consumer.csproj --configuration Release --no-restore
+          dotnet build src/Services/Notification/Worker/Notification.Worker.Processor/Notification.Worker.Processor.csproj --configuration Release --no-restore
+
+  build-search-service:
+    name: Build Search Service
+    if: inputs.build-search == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Search/Api/Search.Api/Search.Api.csproj
+
+      - name: Build Search.Api
+        run: dotnet build src/Services/Search/Api/Search.Api/Search.Api.csproj --configuration Release --no-restore
+
+      - name: Build Search Worker
+        run: dotnet build src/Services/Search/Worker/Search.Worker.Consumer/Search.Worker.Consumer.csproj --configuration Release --no-restore
+
+  build-report-service:
+    name: Build Report Service
+    if: inputs.build-report == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Report/Api/Report.Api/Report.Api.csproj
+
+      - name: Build Report.Api
+        run: dotnet build src/Services/Report/Api/Report.Api/Report.Api.csproj --configuration Release --no-restore
+
+  build-api-gateway:
+    name: Build API Gateway
+    if: inputs.build-api-gateway == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/ApiGateway/YarpApiGateway/YarpApiGateway.csproj
+
+      - name: Build YARP API Gateway
+        run: dotnet build src/ApiGateway/YarpApiGateway/YarpApiGateway.csproj --configuration Release --no-restore
+
+  build-job-orchestrator:
+    name: Build Job Orchestrator
+    if: inputs.build-job-orchestrator == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/JobOrchestrator/App.Job/App.Job.csproj
+
+      - name: Build Job Orchestrator
+        run: dotnet build src/JobOrchestrator/App.Job/App.Job.csproj --configuration Release --no-restore
+
