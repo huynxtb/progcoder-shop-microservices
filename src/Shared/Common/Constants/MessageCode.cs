@@ -230,5 +230,9 @@ public sealed class MessageCode
 
     public const string CountIsRequired = "COUNT_IS_REQUIRED";
 
+    public const string InvalidDayRange = "INVALID_DAY_RANGE";
+
+    public const string ValueCannotBeNegative = "VALUE_CANNOT_BE_NEGATIVE";
+
     #endregion
 }

@@ -29,6 +29,8 @@ public sealed class AppConstants
 
         public const string Report = "report";
 
+        public const string ReportGrpc = "report.grpc";
+
         public const string Coupon = "coupon";
     }
 

@@ -777,6 +777,7 @@ public static class MessageCode
 - [ ] **NotFoundException**: All `NotFoundException` instances use `MessageCode` constants
 - [ ] **MessageCode Class**: All message codes are defined as `public const string` in `MessageCode` class
 - [ ] **Naming Convention**: Message code constants use UPPER_SNAKE_CASE format
+- [ ] **MessageCode Exists**: ALWAYS verify MessageCode constant exists in `Common.Constants.MessageCode` before using it
 
 ### Where MessageCode Should Be Used
 1. **Exception Constructors**: `throw new XxxException(MessageCode.Xxx, ...)`
@@ -785,6 +786,211 @@ public static class MessageCode
 4. **Domain Rule Violations**: `throw new DomainException(MessageCode.Xxx)`
 5. **Argument Validation**: `throw new ArgumentException(MessageCode.Xxx, nameof(param))`
 6. **Business Logic Errors**: Any error message returned to clients
+
+### CRITICAL: MessageCode Verification Process
+
+**BEFORE using any MessageCode constant, you MUST:**
+
+1. **Check if the constant exists** in `src/Shared/Common/Constants/MessageCode.cs`
+2. **If it does NOT exist**, you MUST create it first with proper naming convention
+3. **Never use a MessageCode that doesn't exist** - this will cause compilation errors
+
+**Workflow:**
+```
+Step 1: Write code that needs MessageCode
+Step 2: Search for the constant in MessageCode.cs
+Step 3a: If EXISTS → Use it
+Step 3b: If NOT EXISTS → Add it to MessageCode.cs first, then use it
+```
+
+**Example - WRONG Approach:**
+```csharp
+// ❌ DON'T DO THIS - Using MessageCode without checking if it exists
+RuleFor(x => x.Dto.Day)
+    .InclusiveBetween(1, 31)
+    .WithMessage(MessageCode.InvalidDayRange); // May not exist!
+```
+
+**Example - CORRECT Approach:**
+```csharp
+// ✅ STEP 1: First, check MessageCode.cs
+// If MessageCode.InvalidDayRange doesn't exist, add it:
+
+// In MessageCode.cs:
+public const string InvalidDayRange = "INVALID_DAY_RANGE";
+
+// ✅ STEP 2: Then use it
+RuleFor(x => x.Dto.Day)
+    .InclusiveBetween(1, 31)
+    .WithMessage(MessageCode.InvalidDayRange);
+```
+
+**Common New MessageCodes to Check:**
+- When adding new validators → Check if validation message code exists
+- When adding new exceptions → Check if error message code exists
+- When adding new business rules → Check if rule violation message code exists
+
+---
+
+## Exception Handling Convention
+
+### Rule: ONLY Use Standard Exceptions in Application Layer
+
+**CRITICAL: In Application Layer (Command/Query Handlers), you MUST ONLY use these exceptions:**
+
+1. **`ClientValidationException`** - For client input validation errors and bad requests
+2. **`NotFoundException`** - For resource not found errors
+3. **`DomainException`** - For domain rule violations (from Domain layer)
+
+**❌ NEVER create custom exceptions in Application layer**
+**❌ NEVER use `BadRequestException` - use `ClientValidationException` instead**
+**❌ NEVER use other exception types like `ArgumentException`, `InvalidOperationException`, etc.**
+
+### Standard Exceptions Location
+```
+src/Shared/BuildingBlocks/Exceptions/
+├── ClientValidationException.cs
+├── NotFoundException.cs
+└── DomainException.cs
+```
+
+### Usage Examples
+
+**✅ CORRECT - Using standard exceptions:**
+```csharp
+public sealed class UpdateProductCommandHandler(IProductRepository repository) 
+    : ICommandHandler<UpdateProductCommand, Unit>
+{
+    public async Task<Unit> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
+    {
+        // ✅ Use NotFoundException for missing resources
+        var product = await repository.GetByIdAsync(command.Id, cancellationToken)
+            ?? throw new NotFoundException(MessageCode.ProductNotFound);
+
+        // ✅ Use ClientValidationException for invalid input/bad request
+        if (string.IsNullOrEmpty(command.Dto.Name))
+        {
+            throw new ClientValidationException(MessageCode.ProductNameIsRequired);
+        }
+
+        // ✅ Use ClientValidationException for business validation
+        if (command.Dto.Price < 0)
+        {
+            throw new ClientValidationException(MessageCode.PriceCannotBeNegative);
+        }
+
+        // ✅ DomainException is thrown from Domain layer
+        product.UpdatePrice(command.Dto.Price); // May throw DomainException internally
+
+        await repository.UpdateAsync(product, cancellationToken);
+        return Unit.Value;
+    }
+}
+```
+
+**❌ WRONG - Creating or using non-standard exceptions:**
+```csharp
+// ❌ DON'T create custom exception
+public class ProductValidationException : Exception { }
+
+// ❌ DON'T use BadRequestException - use ClientValidationException instead
+throw new BadRequestException(MessageCode.InvalidInput);
+
+// ❌ DON'T use ArgumentException
+throw new ArgumentException(MessageCode.InvalidInput, nameof(command));
+
+// ❌ DON'T use InvalidOperationException
+throw new InvalidOperationException(MessageCode.CannotProcess);
+
+// ❌ DON'T use generic Exception
+throw new Exception(MessageCode.SomethingWrong);
+```
+
+### Exception Guidelines by Layer
+
+| Layer | Allowed Exceptions | Notes |
+|-------|-------------------|-------|
+| **Application** | `ClientValidationException`, `NotFoundException` | Command/Query handlers |
+| **Domain** | `DomainException` | Business rule violations |
+| **Infrastructure** | Can throw any, but prefer standard ones | External service errors |
+| **API** | Should NOT throw - handled by middleware | Return responses only |
+
+### When to Use Each Exception
+
+**ClientValidationException:**
+- Invalid input from client
+- Business validation failures
+- Required field missing
+- Format validation errors
+- Range validation errors
+- Any client-side error (400 Bad Request)
+
+**NotFoundException:**
+- Resource not found by ID
+- Entity does not exist in database
+- Returns 404 Not Found to client
+
+**DomainException:**
+- Business rule violations in Domain layer
+- Thrown from Entity/Aggregate methods
+- Domain invariant violations
+- Should NOT be thrown directly in handlers
+
+### Validation Exceptions - Two Approaches
+
+**Approach 1: FluentValidation (Recommended)**
+- Define validators using `AbstractValidator<T>`
+- ValidationBehavior automatically converts to `ClientValidationException`
+- Preferred for standard field validations
+
+```csharp
+// ✅ CORRECT - Define validator, ValidationBehavior handles exception
+public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
+{
+    public CreateProductCommandValidator()
+    {
+        RuleFor(x => x.Dto.Name)
+            .NotEmpty()
+            .WithMessage(MessageCode.ProductNameIsRequired);
+        
+        RuleFor(x => x.Dto.Price)
+            .GreaterThanOrEqualTo(0)
+            .WithMessage(MessageCode.PriceCannotBeNegative);
+    }
+}
+```
+
+**Approach 2: Manual throw in Handler (For complex business validations)**
+- Throw `ClientValidationException` directly in handler
+- Use for validations requiring repository/database checks
+- Use for complex business logic validations
+
+```csharp
+// ✅ CORRECT - Manual ClientValidationException for business logic
+public async Task<Unit> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
+{
+    var product = await repository.GetByIdAsync(command.ProductId, cancellationToken)
+        ?? throw new NotFoundException(MessageCode.ProductNotFound);
+    
+    // Manual validation for business logic
+    if (product.Stock < command.Quantity)
+    {
+        throw new ClientValidationException(MessageCode.InsufficientStock);
+    }
+    
+    return Unit.Value;
+}
+```
+
+### Checklist
+- [ ] **Only Standard Exceptions**: Use only `ClientValidationException`, `NotFoundException`, `DomainException`
+- [ ] **No BadRequestException**: Use `ClientValidationException` instead of `BadRequestException`
+- [ ] **No Custom Exceptions**: Never create custom exception classes in Application layer
+- [ ] **No ArgumentException**: Don't use `ArgumentException` in handlers
+- [ ] **No Generic Exception**: Don't use base `Exception` class
+- [ ] **MessageCode Required**: All exceptions must use `MessageCode` constants
+- [ ] **Domain Exceptions**: `DomainException` should only be thrown from Domain layer entities/value objects
+- [ ] **Choose Right Exception**: Use `ClientValidationException` for client errors, `NotFoundException` for missing resources
 
 ---
 
@@ -802,4 +1008,6 @@ public static class MessageCode
 10. **Structured Logging**: Use ILogger with structured log messages
 11. **Configuration Classes**: Use XxxCfg classes for strongly-typed configuration
 12. **Scrutor for DI**: Auto-register services by naming convention
-12. **Commentary**: Do not use comments for Method/Class/Property definitions
+13. **Commentary**: Do not use comments for Method/Class/Property definitions
+14. **Standard Exceptions Only**: Use only `ClientValidationException`, `NotFoundException`, `DomainException` in Application layer
+15. **No BadRequestException**: Always use `ClientValidationException` instead of `BadRequestException`
