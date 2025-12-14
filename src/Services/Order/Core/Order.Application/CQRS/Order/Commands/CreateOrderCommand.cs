@@ -134,17 +134,17 @@ public sealed class CreateOrderCommandHandler(IApplicationDbContext dbContext, I
             performedBy: command.Actor.ToString());
         var productIds = dto.OrderItems.Select(x => x.ProductId.ToString()).ToArray();
         
-        var productsResponse = await catalogGrpc.GetProductsAsync(ids: productIds, cancellationToken: cancellationToken);
+        var productsResponse = await catalogGrpc.GetAllAvailableProductsAsync(cancellationToken: cancellationToken);
 
         if(productsResponse == null || productsResponse.Items == null || productsResponse.Items.Count == 0)
         {
-            throw new ClientValidationException(MessageCode.ProductIsNotExists);
+            throw new ClientValidationException(MessageCode.ProductsIsNotExistsOrNotInStock);
         }
 
         foreach (var item in dto.OrderItems)
         {
             var productInfo = productsResponse.Items.FirstOrDefault(x => x.Id == item.ProductId)
-                ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, item.ProductId);
+                ?? throw new ClientValidationException(MessageCode.ProductIsNotExistsOrNotInStock, item.ProductId);
 
             var product = Product.Of(
                 productInfo.Id,
@@ -182,6 +182,7 @@ public sealed class CreateOrderCommandHandler(IApplicationDbContext dbContext, I
 
         var discount = Discount.Of(couponCode, discountAmt);
         order.ApplyDiscount(discount);
+        order.OrderCreated();
 
         await dbContext.Orders.AddAsync(order, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);

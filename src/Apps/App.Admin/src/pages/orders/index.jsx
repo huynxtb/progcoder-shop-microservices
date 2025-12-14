@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import Card from "@/components/ui/Card";
 import Icon from "@/components/ui/Icon";
 import Tooltip from "@/components/ui/Tooltip";
@@ -10,6 +11,7 @@ import Select from "@/components/ui/Select";
 import Textarea from "@/components/ui/Textarea";
 import { formatCurrency } from "@/utils/format";
 import { orderService } from "@/services/orderService";
+import signalRService from "@/services/signalRService";
 import {
   useTable,
   useRowSelect,
@@ -100,8 +102,7 @@ const Orders = () => {
   const [selectedReasonType, setSelectedReasonType] = useState(null);
 
   // Fetch orders from API
-  useEffect(() => {
-    const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
       try {
         setLoading(true);
         const response = await orderService.getAllOrders();
@@ -116,10 +117,73 @@ const Orders = () => {
       } finally {
         setLoading(false);
       }
+  }, []);
+
+  // Initial fetch on mount
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
+
+  // SignalR connection for real-time notifications
+  useEffect(() => {
+    const setupSignalR = async () => {
+      try {
+        // Connect to SignalR hub
+        await signalRService.connect();
+
+        // Register notification handler with unique key - will replace old callback if exists
+        signalRService.onNotificationByKey("orders-page", (notification) => {
+          console.log("Orders page: Received notification:", notification);
+
+          // Check if it's an OrderCreated notification (type = 1)
+          if (notification.type === 1) {
+            const orderData = notification.data;
+            // Handle both camelCase and PascalCase property names
+            const orderId = orderData?.orderId || orderData?.OrderId;
+            const finalPrice = orderData?.finalPrice || orderData?.FinalPrice;
+
+            // Show toast notification
+            toast.success(
+              <div>
+                <div className="font-semibold">{notification.title || "New Order Created"}</div>
+                <div className="text-sm">
+                  {notification.message || (orderId && `Order #${orderId}`)}
+                  {finalPrice && ` - ${formatCurrency(finalPrice)}`}
+                </div>
+              </div>,
+              {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+              }
+            );
+
+            // Refresh orders list - call directly without dependency
+            orderService.getAllOrders().then((response) => {
+              if (response.data && response.data.result) {
+                const ordersData = response.data.result.items || response.data.result;
+                setOrders(Array.isArray(ordersData) ? ordersData : []);
+              }
+            }).catch((error) => {
+              console.error("Failed to fetch orders after notification:", error);
+            });
+          }
+        });
+      } catch (error) {
+        console.error("Failed to setup SignalR connection:", error);
+      }
     };
 
-    fetchOrders();
-  }, []);
+    setupSignalR();
+
+    // Cleanup: unregister callback by key when component unmounts
+    return () => {
+      signalRService.offNotificationByKey("orders-page");
+    };
+  }, []); // Empty dependencies - only run once on mount
 
   const handleStatusUpdateClick = useCallback((order) => {
     if (!order) return;

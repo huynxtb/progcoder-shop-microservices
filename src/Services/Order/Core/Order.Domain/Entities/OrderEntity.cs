@@ -3,6 +3,7 @@
 using Common.Constants;
 using Order.Domain.Abstractions;
 using Order.Domain.Enums;
+using Order.Domain.Events;
 using Order.Domain.ValueObjects;
 
 #endregion
@@ -151,6 +152,11 @@ public sealed class OrderEntity : Aggregate<Guid>
         RefundReason = reason;
         LastModifiedBy = performBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
+    }
+
+    public void OrderCreated()
+    {
+        AddDomainEvent(new OrderCreatedDomainEvent(this));
     }
 
     #endregion

@@ -124,7 +124,7 @@ public class CreateProductCommandHandler(IMapper mapper,
 
     private async Task UploadThumbnailAsync(UploadFileBytes? image, ProductEntity entity, CancellationToken cancellationToken)
     {
-        var result = await minIO.UploadFilesAsync([image], AppConstants.Bucket.Products, true, cancellationToken);
+        var result = await minIO.UploadFilesAsync([image!], AppConstants.Bucket.Products, true, cancellationToken);
         var thumbnail = result.FirstOrDefault();
         entity.AddOrUpdateThumbnail(mapper.Map<ProductImageEntity>(thumbnail));
     }

@@ -75,10 +75,6 @@ const Ecommerce = () => {
         setProducts(mappedProducts);
       } catch (error) {
         console.error("Failed to fetch products:", error);
-        toast.error(t("products.fetchError"), {
-          position: "top-right",
-          autoClose: 5000,
-        });
         setProducts([]);
       } finally {
         setLoading(false);

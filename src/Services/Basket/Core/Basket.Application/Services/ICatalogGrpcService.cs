@@ -12,7 +12,9 @@ public interface ICatalogGrpcService
 
     Task<ProductReponse?> GetProductByIdAsync(string productId, CancellationToken cancellationToken = default);
 
-    Task<GetAllProductsResponse?> GetProductsAsync(string[] ids, string searchText = "", CancellationToken cancellationToken = default);
+    Task<GetAllProductsResponse?> GetProductsAsync(string[]? ids = null, string searchText = "", CancellationToken cancellationToken = default);
+
+    Task<GetAllProductsResponse?> GetAllAvailableProductsAsync(string[]? ids = null, string searchText = "", CancellationToken cancellationToken = default);
 
     #endregion
 }

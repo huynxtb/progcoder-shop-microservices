@@ -62,10 +62,6 @@ const CreateProduct = () => {
         setBrands(brandOptions);
       } catch (error) {
         console.error("Failed to fetch brands:", error);
-        toast.error(t("createProduct.fetchBrandsError"), {
-          position: "top-right",
-          autoClose: 5000,
-        });
       } finally {
         setLoadingBrands(false);
       }

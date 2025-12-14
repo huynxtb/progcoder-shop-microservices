@@ -50,16 +50,6 @@ const RegForm = () => {
       toast.success("Add Successfully");
     } catch (error) {
       console.log(error.response); // Log the error response to the console for debugging
-
-      const errorMessage =
-        error.response?.data?.message ||
-        "An error occurred. Please try again later.";
-
-      if (errorMessage === "Email is already registered") {
-        toast.error(errorMessage);
-      } else {
-        toast.warning(errorMessage);
-      }
     }
   };
 

@@ -234,5 +234,9 @@ public sealed class MessageCode
 
     public const string ValueCannotBeNegative = "VALUE_CANNOT_BE_NEGATIVE";
 
+    public const string ProductsIsNotExistsOrNotInStock = "PRODUCTS_IS_NOT_EXISTS_OR_NOT_IN_STOCK";
+
+    public const string ProductIsNotExistsOrNotInStock = "PRODUCT_IS_NOT_EXISTS_OR_NOT_IN_STOCK";
+
     #endregion
 }

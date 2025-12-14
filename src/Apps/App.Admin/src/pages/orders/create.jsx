@@ -117,7 +117,6 @@ const CreateOrder = () => {
         }
       } catch (error) {
         console.error("Failed to create order:", error);
-        toast.error(t("orders.createError"));
       } finally {
         setIsSubmitting(false);
       }

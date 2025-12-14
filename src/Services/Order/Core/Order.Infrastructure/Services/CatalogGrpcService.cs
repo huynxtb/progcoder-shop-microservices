@@ -4,6 +4,7 @@ using Catalog.Grpc;
 using Microsoft.Extensions.Logging;
 using Order.Application.Models.Responses.Externals;
 using Order.Application.Services;
+using Org.BouncyCastle.Crypto;
 
 #endregion
 
@@ -37,7 +38,7 @@ public sealed class CatalogGrpcService(CatalogGrpc.CatalogGrpcClient grpcClient,
         }
     }
 
-    public async Task<GetAllProductsResponse?> GetProductsAsync(string[] ids, string searchText = "", CancellationToken cancellationToken = default)
+    public async Task<GetAllProductsResponse?> GetProductsAsync(string[]? ids = null, string searchText = "", CancellationToken cancellationToken = default)
     {
         try
         {
@@ -65,6 +66,39 @@ public sealed class CatalogGrpcService(CatalogGrpc.CatalogGrpcClient grpcClient,
         catch (Exception ex)
         {
             logger.LogWarning(ex, "Failed to get products from Catalog Grpc service");
+            return null;
+        }
+    }
+
+    public async Task<GetAllProductsResponse?> GetAllAvailableProductsAsync(string[]? ids = null, string searchText = "", CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var request = new GetAllAvailableProductsRequest { SearchText = searchText };
+
+            if (ids is not null && ids.Length > 0)
+                request.Ids.AddRange(ids);
+
+            var result = await grpcClient.GetAllAvailableProductsAsync(request, cancellationToken: cancellationToken);
+
+            var response = new GetAllProductsResponse
+            {
+                Items = result.Products
+                    .Select(p => new ProductReponse
+                    {
+                        Id = Guid.Parse(p.Id),
+                        Name = p.Name,
+                        Price = (decimal)p.Price,
+                        Thumbnail = p.Thumbnail
+                    })
+                    .ToList()
+            };
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Failed to get all available products from Catalog Grpc service");
             return null;
         }
     }

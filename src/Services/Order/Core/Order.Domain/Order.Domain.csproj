@@ -9,8 +9,4 @@
     <ProjectReference Include="..\..\..\..\Shared\Common\Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Events\" />
-  </ItemGroup>
-
 </Project>

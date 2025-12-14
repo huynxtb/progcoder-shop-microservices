@@ -30,7 +30,7 @@ const toastConfig = {
  * Show error toast with i18n translation
  * @param {string} errorKey - The error key from API response
  */
-const showErrorToast = (errorKey) => {
+const showErrorToast = (errorKey, details) => {
   const translationKey = `error_response.${errorKey}`;
   const defaultKey = "error_response.DEFAULT_ERROR";
   
@@ -39,7 +39,8 @@ const showErrorToast = (errorKey) => {
     ? i18n.t(translationKey)
     : i18n.t(defaultKey);
   
-  toast.error(translatedMessage, toastConfig);
+  const message = details ? `${translatedMessage}: ${details}` : translatedMessage;
+  toast.error(message, toastConfig);
 };
 
 /**
@@ -54,7 +55,7 @@ const handleErrorResponse = (response) => {
     // Show toast for each error message
     data.errors.forEach((error) => {
       if (error.errorMessage) {
-        showErrorToast(error.errorMessage);
+        showErrorToast(error.errorMessage, error.details);
       }
     });
   } else if (data?.message) {

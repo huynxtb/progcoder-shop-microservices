@@ -84,7 +84,6 @@ const EditOrder = () => {
         }
       } catch (error) {
         console.error("Failed to fetch order:", error);
-        toast.error(t("orders.fetchError"));
       } finally {
         setLoadingOrder(false);
       }
@@ -169,7 +168,6 @@ const EditOrder = () => {
         }
       } catch (error) {
         console.error("Failed to update order:", error);
-        toast.error(t("orders.updateError"));
       } finally {
         setIsSubmitting(false);
       }

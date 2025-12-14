@@ -16,7 +16,8 @@ builder.Services.AddCors(options =>
         b => b
             .WithOrigins(builder.Configuration.GetSection("CorsConfig:Domains").Get<string[]>()!)
             .AllowAnyHeader()
-            .AllowAnyMethod());
+            .AllowAnyMethod()
+            .AllowCredentials()); // Required for SignalR to send cookies/tokens
 });
 
 builder.Services.AddReverseProxy()

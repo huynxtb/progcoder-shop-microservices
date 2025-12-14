@@ -81,10 +81,6 @@ const CouponPage = () => {
         setCoupons(mappedCoupons);
       } catch (error) {
         console.error("Failed to fetch coupons:", error);
-        toast.error(t("coupon.fetchError"), {
-          position: "top-right",
-          autoClose: 5000,
-        });
         setCoupons([]);
       } finally {
         setLoading(false);
@@ -132,10 +128,6 @@ const CouponPage = () => {
       }
     } catch (error) {
       console.error("Failed to delete coupon:", error);
-      toast.error(t("coupon.deleteError"), {
-        position: "top-right",
-        autoClose: 5000,
-      });
     } finally {
       setDeleting(false);
     }
@@ -171,10 +163,6 @@ const CouponPage = () => {
       setViewModalOpen(true);
     } catch (error) {
       console.error("Failed to fetch coupon details:", error);
-      toast.error(t("coupon.fetchDetailError"), {
-        position: "top-right",
-        autoClose: 5000,
-      });
     }
   };
 
@@ -242,10 +230,6 @@ const CouponPage = () => {
       }
     } catch (error) {
       console.error("Failed to approve coupon:", error);
-      toast.error(t("coupon.approveError"), {
-        position: "top-right",
-        autoClose: 5000,
-      });
     } finally {
       setApproving(false);
     }
@@ -315,10 +299,6 @@ const CouponPage = () => {
       }
     } catch (error) {
       console.error("Failed to reject coupon:", error);
-      toast.error(t("coupon.rejectError"), {
-        position: "top-right",
-        autoClose: 5000,
-      });
     } finally {
       setRejecting(false);
     }
@@ -387,10 +367,6 @@ const CouponPage = () => {
       }
     } catch (error) {
       console.error("Failed to update validity period:", error);
-      toast.error(t("coupon.updateValidityError"), {
-        position: "top-right",
-        autoClose: 5000,
-      });
     } finally {
       setUpdatingValidity(false);
     }

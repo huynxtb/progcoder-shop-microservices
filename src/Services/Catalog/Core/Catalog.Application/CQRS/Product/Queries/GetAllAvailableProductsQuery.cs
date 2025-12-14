@@ -1,0 +1,86 @@
+﻿#region using
+
+using AutoMapper;
+using Catalog.Application.Dtos.Products;
+using Catalog.Application.Models.Filters;
+using Catalog.Application.Models.Results;
+using Catalog.Domain.Entities;
+using Marten;
+
+#endregion
+
+namespace Catalog.Application.CQRS.Product.Queries;
+
+public sealed record GetAllAvailableProductsQuery(GetAllProductsFilter Filter) : IQuery<GetAllAvailableProductsResult>;
+
+public sealed class GetAllAvailableProductsQueryHandler(IDocumentSession session, IMapper mapper)
+    : IQueryHandler<GetAllAvailableProductsQuery, GetAllAvailableProductsResult>
+{
+    #region Implementations
+
+    public async Task<GetAllAvailableProductsResult> Handle(GetAllAvailableProductsQuery query, CancellationToken cancellationToken)
+    {
+        var filter = query.Filter;
+        var productQuery = session.Query<ProductEntity>().Where(x => x.Published && x.Status == Domain.Enums.ProductStatus.InStock);
+
+        if (!filter.SearchText.IsNullOrWhiteSpace())
+        {
+            var search = filter.SearchText.Trim();
+            productQuery = productQuery.Where(x => x.Name != null && x.Name.Contains(search));
+        }
+        if (filter.Ids?.Length > 0)
+        {
+            productQuery = productQuery.Where(x => filter.Ids.Contains(x.Id));
+        }
+
+        var result = await productQuery
+            .OrderByDescending(x => x.CreatedOnUtc)
+            .ToListAsync(cancellationToken);
+
+        var products = result.ToList();
+        var items = mapper.Map<List<ProductDto>>(products);
+
+        if (items.Count > 0)
+        {
+            var categories = await session.Query<CategoryEntity>()
+            .ToListAsync(cancellationToken);
+            var brands = await session.Query<BrandEntity>()
+                .ToListAsync(cancellationToken);
+
+            foreach (var item in items)
+            {
+                var product = result.FirstOrDefault(p => p.Id == item.Id);
+
+                if (product == null) continue;
+
+                if (product.CategoryIds != null && product.CategoryIds.Count > 0)
+                {
+                    foreach (var categoryId in product.CategoryIds)
+                    {
+                        var category = categories.FirstOrDefault(c => c.Id == categoryId);
+                        if (category != null)
+                        {
+                            item.CategoryNames ??= [];
+                            item.CategoryNames.Add(category.Name!);
+                        }
+                    }
+                }
+
+                if (product.BrandId.HasValue)
+                {
+                    var brand = brands.FirstOrDefault(b => b.Id == product.BrandId.Value);
+                    if (brand != null)
+                    {
+                        item.BrandName = brand.Name;
+                    }
+                }
+            }
+        }
+
+        var reponse = new GetAllAvailableProductsResult(items);
+
+        return reponse;
+    }
+
+    #endregion
+}

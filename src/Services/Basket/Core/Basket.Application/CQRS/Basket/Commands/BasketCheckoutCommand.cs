@@ -134,12 +134,11 @@ public sealed class BasketCheckoutCommandHandler(
 
         if (!string.IsNullOrWhiteSpace(dto.CouponCode))
         {
-            var productIds = basket.Items.Select(x => x.ProductId.ToString()).ToArray();
-            var productsResponse = await catalogGrpc.GetProductsAsync(ids: productIds, cancellationToken: cancellationToken);
+            var productsResponse = await catalogGrpc.GetAllAvailableProductsAsync(cancellationToken: cancellationToken);
 
             if (productsResponse == null || productsResponse.Items == null || productsResponse.Items.Count == 0)
             {
-                throw new ClientValidationException(MessageCode.ProductIsNotExists);
+                throw new ClientValidationException(MessageCode.ProductsIsNotExistsOrNotInStock);
             }
 
             decimal amount = 0m;
@@ -147,7 +146,7 @@ public sealed class BasketCheckoutCommandHandler(
             foreach (var item in basket.Items)
             {
                 var productInfo = productsResponse.Items.FirstOrDefault(x => x.Id == item.ProductId)
-                    ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, item.ProductId);
+                    ?? throw new ClientValidationException(MessageCode.ProductIsNotExistsOrNotInStock, item.ProductId);
 
                 amount += item.Quantity * productInfo.Price;
             }

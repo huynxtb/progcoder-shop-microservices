@@ -113,13 +113,6 @@ const EditCoupon = () => {
         }
       } catch (error) {
         console.error("Failed to update coupon:", error);
-        toast.error(
-          error.response?.data?.message || t("editCoupon.updateError"),
-          {
-            position: "top-right",
-            autoClose: 5000,
-          }
-        );
       } finally {
         setIsSubmitting(false);
       }
@@ -157,10 +150,6 @@ const EditCoupon = () => {
         });
       } catch (error) {
         console.error("Failed to fetch coupon:", error);
-        toast.error(t("editCoupon.fetchError"), {
-          position: "top-right",
-          autoClose: 5000,
-        });
       } finally {
         setLoading(false);
       }

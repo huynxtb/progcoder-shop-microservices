@@ -44,10 +44,6 @@ const EditProduct = () => {
         setCategories(categoryOptions);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
-        toast.error(t("createProduct.fetchCategoriesError"), {
-          position: "top-right",
-          autoClose: 5000,
-        });
       } finally {
         setLoadingCategories(false);
       }
@@ -69,10 +65,6 @@ const EditProduct = () => {
         setBrands(brandOptions);
       } catch (error) {
         console.error("Failed to fetch brands:", error);
-        toast.error(t("createProduct.fetchBrandsError"), {
-          position: "top-right",
-          autoClose: 5000,
-        });
       } finally {
         setLoadingBrands(false);
       }
@@ -100,10 +92,6 @@ const EditProduct = () => {
         }
       } catch (error) {
         console.error("Failed to fetch product:", error);
-        toast.error(t("editProduct.fetchError"), {
-          position: "top-right",
-          autoClose: 5000,
-        });
       } finally {
         setLoading(false);
       }

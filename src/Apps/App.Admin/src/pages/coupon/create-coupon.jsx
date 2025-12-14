@@ -138,13 +138,6 @@ const CreateCoupon = () => {
         }
       } catch (error) {
         console.error("Failed to create coupon:", error);
-        toast.error(
-          error.response?.data?.message || t("createCoupon.createError"),
-          {
-            position: "top-right",
-            autoClose: 5000,
-          }
-        );
       } finally {
         setIsSubmitting(false);
       }

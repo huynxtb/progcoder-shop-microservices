@@ -9,6 +9,7 @@ service CatalogGrpc {
 	rpc GetProducts (GetProductsRequest) returns (GetProductsResponse);
 	rpc GetProductById (GetProductByIdRequest) returns (GetProductByIdResponse);
 	rpc GetCountProduct (GetCountProductRequest) returns (GetCountProductResponse);
+	rpc GetAllAvailableProducts (GetAllAvailableProductsRequest) returns (GetAllAvailableProductsResponse);
 }
 
 // ==== Messages ====
@@ -40,4 +41,13 @@ message GetCountProductRequest { }
 
 message GetCountProductResponse {
   int32 count = 1;
+}
+
+message GetAllAvailableProductsRequest {
+	string search_text = 1;
+	repeated string ids = 2;
+}
+
+message GetAllAvailableProductsResponse {
+  repeated Product products = 1;
 }

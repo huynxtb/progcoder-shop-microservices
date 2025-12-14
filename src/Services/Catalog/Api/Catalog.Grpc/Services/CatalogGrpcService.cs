@@ -62,5 +62,26 @@ public sealed class CatalogGrpcService(ISender sender) : CatalogGrpc.CatalogGrpc
         return response;
     }
 
+    public override async Task<GetAllAvailableProductsResponse> GetAllAvailableProducts(GetAllAvailableProductsRequest request, ServerCallContext context)
+    {
+        var filter = new GetAllProductsFilter(request.SearchText, request.Ids?.Select(Guid.Parse).ToArray() ?? Array.Empty<Guid>());
+        var query = new GetAllAvailableProductsQuery(filter);
+        var result = await sender.Send(query);
+
+        var response = new GetAllAvailableProductsResponse();
+
+        if (result.Items != null)
+        {
+            response.Products.AddRange(result.Items.Select(p => new Product
+            {
+                Id = p.Id.ToString(),
+                Name = p.Name ?? string.Empty,
+                Thumbnail = p.Thumbnail?.PublicURL!,
+                Price = p.SalePrice != null ? (double)p.SalePrice : (double)p.Price
+            }));
+        }
+
+        return response;
+    }
     #endregion
 }

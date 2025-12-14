@@ -82,6 +82,11 @@ export const API_ENDPOINTS = {
   KEYCLOAK: {
     GET_ME: "/account/me",
   },
+
+  // Communication Service
+  COMMUNICATION: {
+    NOTIFICATION_HUB: "/communication-service/hubs/notifications",
+  },
 };
 
 export default API_ENDPOINTS;
