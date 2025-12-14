@@ -15,4 +15,6 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseApi();
 
+app.MapGet("/", () => "Communication Real-time is running...");
+
 app.Run();

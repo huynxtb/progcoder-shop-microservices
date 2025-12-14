@@ -36,7 +36,6 @@ public static class DependencyInjection
 
     public static WebApplication UseApi(this WebApplication app)
     {
-        app.MapGet("/", () => "Communication Real-time is running...");
         app.UseSerilogReqLogging();
         app.UsePrometheusEndpoint();
         app.UseExceptionHandler(options => { });

@@ -41,6 +41,8 @@ app.UseRateLimiter();
 
 app.MapReverseProxy();
 
+app.MapGet("/", () => "API Gateway is running...");
+
 app.Run();
 
 #endregion
