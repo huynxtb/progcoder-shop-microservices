@@ -113,7 +113,7 @@ const CreateOrder = () => {
         console.log("Create order API response:", response);
         if (response.data && (response.data.value || response.data)) {
           toast.success(t("orders.createSuccess"));
-          navigate("/orders");
+          navigate(`/orders/${response.data.value}`);
         }
       } catch (error) {
         console.error("Failed to create order:", error);
