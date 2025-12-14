@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import useDarkMode from "@/hooks/useDarkMode";
 // image import
 import LogoWhite from "@/assets/images/logo/logo-white.svg";
-import Logo from "@/assets/images/logo/logo.svg";
+import Logo from "@/assets/images/logo/logo.png";
 import bgImage from "@/assets/images/all-img/login-bg.png";
 import UserImage from "@/assets/images/all-img/user-big.png";
 const LockScreen3 = () => {

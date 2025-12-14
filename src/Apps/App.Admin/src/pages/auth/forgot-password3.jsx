@@ -4,7 +4,7 @@ import ForgotPass from "./common/forgot-pass";
 import useDarkMode from "@/hooks/useDarkMode";
 
 import LogoWhite from "@/assets/images/logo/logo-white.svg";
-import Logo from "@/assets/images/logo/logo.svg";
+import Logo from "@/assets/images/logo/logo.png";
 import bgImage from "@/assets/images/all-img/login-bg.png";
 const ForgotPass3 = () => {
   const [isDark] = useDarkMode();

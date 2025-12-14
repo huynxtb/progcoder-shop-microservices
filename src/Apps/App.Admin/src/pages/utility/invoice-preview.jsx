@@ -5,7 +5,7 @@ import TotalTable from "./TotalTable";
 import userDarkMode from "@/hooks/useDarkMode";
 
 // import images
-import MainLogo from "@/assets/images/logo/logo.svg";
+import MainLogo from "@/assets/images/logo/logo.png";
 import LogoWhite from "@/assets/images/logo/logo-white.svg";
 
 const InvoicePreviewPage = () => {

@@ -7,7 +7,7 @@ import useDarkMode from "@/hooks/useDarkMode";
 // image import
 import bgImage from "@/assets/images/all-img/page-bg.png";
 import LogoWhite from "@/assets/images/logo/logo-white.svg";
-import Logo from "@/assets/images/logo/logo.svg";
+import Logo from "@/assets/images/logo/logo.png";
 const login3 = () => {
   const [isDark] = useDarkMode();
   return (

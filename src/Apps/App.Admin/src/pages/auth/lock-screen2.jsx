@@ -5,7 +5,7 @@ import useDarkMode from "@/hooks/useDarkMode";
 
 // image import
 import LogoWhite from "@/assets/images/logo/logo-white.svg";
-import Logo from "@/assets/images/logo/logo.svg";
+import Logo from "@/assets/images/logo/logo.png";
 import bgImage from "@/assets/images/all-img/login-bg.png";
 const LockScreen2 = () => {
   const [isDark] = useDarkMode();

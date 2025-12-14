@@ -7,7 +7,7 @@ import { useKeycloak } from "@/contexts/KeycloakContext";
 
 // image import
 import LogoWhite from "@/assets/images/logo/logo-white.svg";
-import Logo from "@/assets/images/logo/logo.svg";
+import Logo from "@/assets/images/logo/logo.png";
 
 const login = () => {
   const [isDark] = useDarkMode();

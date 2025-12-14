@@ -5,7 +5,7 @@ import useDarkMode from "@/hooks/useDarkMode";
 
 // image import
 import LogoWhite from "@/assets/images/logo/logo-white.svg";
-import Logo from "@/assets/images/logo/logo.svg";
+import Logo from "@/assets/images/logo/logo.png";
 import Illustration from "@/assets/images/auth/ils1.svg";
 import UserImage from "@/assets/images/all-img/user-big.png";
 const LockScreen = () => {

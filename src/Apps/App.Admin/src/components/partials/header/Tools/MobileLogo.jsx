@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import useDarkMode from "@/hooks/useDarkMode";
 
-import MainLogo from "@/assets/images/logo/logo.svg";
+import MainLogo from "@/assets/images/logo/logo.png";
 import LogoWhite from "@/assets/images/logo/logo-white.svg";
 const MobileLogo = () => {
   const [isDark] = useDarkMode();

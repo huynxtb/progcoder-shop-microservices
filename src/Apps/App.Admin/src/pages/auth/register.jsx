@@ -6,7 +6,7 @@ import Social from "./common/social";
 import { ToastContainer } from "react-toastify";
 // image import
 import LogoWhite from "@/assets/images/logo/logo-white.svg";
-import Logo from "@/assets/images/logo/logo.svg";
+import Logo from "@/assets/images/logo/logo.png";
 import Illustration from "@/assets/images/auth/ils1.svg";
 
 const register = () => {
