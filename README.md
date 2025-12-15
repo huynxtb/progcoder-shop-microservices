@@ -1,4 +1,4 @@
-# ProG Coder Shopping Cart
+# ProG Coder Shop Microservices
 
 This project was created by ProG Coder. Visit [ProG Coder](https://www.progcoder.com) for more information.
 

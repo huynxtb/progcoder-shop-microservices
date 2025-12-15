@@ -8,8 +8,8 @@ services:
     restart: unless-stopped
     user: root
     volumes:
-      - ./local-data/sql-server/data:/var/opt/mssql/data
-      - ./local-data/sql-server/log:/var/opt/mssql/log
+      - ./docker-volumes/sql-server/data:/var/opt/mssql/data
+      - ./docker-volumes/sql-server/log:/var/opt/mssql/log
     ports:
       - ${MSSQL_PORT}:1433
     environment:
@@ -35,7 +35,7 @@ services:
     ports:
       - ${POSTGRES_PORT}:5432
     volumes:
-      - ./local-data/postgres-sql:/var/lib/postgresql/data
+      - ./docker-volumes/postgres-sql:/var/lib/postgresql/data
       - ./config/postgres-sql:/docker-entrypoint-initdb.d
     entrypoint: ["/bin/bash", "-c", "chmod +x /docker-entrypoint-initdb.d/*.sh && docker-entrypoint.sh postgres"]
     networks:
@@ -56,7 +56,7 @@ services:
     ports:
       - ${MONGO_PORT}:27017
     volumes:
-      - ./local-data/mongodb:/data/db
+      - ./docker-volumes/mongodb:/data/db
     networks:
       - progcoder_network
 
@@ -69,7 +69,7 @@ services:
     ports:
       - ${MYSQL_PORT}:3306
     volumes:
-      - ./local-data/mysql:/var/lib/mysql
+      - ./docker-volumes/mysql:/var/lib/mysql
     networks:
       - progcoder_network
 
@@ -90,7 +90,7 @@ services:
       - ${MINIO_API_PORT}:9000
       - ${MINIO_UI_PORT}:9001
     volumes:
-      - ./local-data/minio:/data
+      - ./docker-volumes/minio:/data
     networks:
       - progcoder_network
     healthcheck:
@@ -142,7 +142,7 @@ services:
       - ${REDIS_PORT}:6379
     command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
     volumes: 
-      - ./local-data/redis:/data
+      - ./docker-volumes/redis:/data
     networks:
       - progcoder_network
 
@@ -153,7 +153,7 @@ services:
     ports:
       - ${REDISINSIGHT_PORT:-5540}:5540
     volumes:
-      - ./local-data/redisinsight:/data
+      - ./docker-volumes/redisinsight:/data
     networks:
       - progcoder_network
     depends_on:
@@ -171,7 +171,7 @@ services:
       - ${RABBITMQ_UI_PORT}:15672
       - ${RABBITMQ_METRICS_PORT}:15692
     volumes:
-      - ./local-data/rabbitmq:/var/lib/rabbitmq
+      - ./docker-volumes/rabbitmq:/var/lib/rabbitmq
       - ./config/rabbitmq/rabbitmq_enabled_plugins:/etc/rabbitmq/enabled_plugins
     networks:
       - progcoder_network
@@ -201,7 +201,7 @@ services:
     ports:
       - ${ELASTIC_PORT}:9200
     volumes:
-      - ./local-data/elasticsearch:/usr/share/elasticsearch/data
+      - ./docker-volumes/elasticsearch:/usr/share/elasticsearch/data
     environment:
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
       xpack.security.enabled: true
@@ -219,8 +219,8 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "curl -s -o /dev/null -w '%{http_code}' http://localhost:9200 | grep -qE '(200|401|403)' || exit 1"]
       interval: 30s
-      timeout: 10s
-      retries: 5
+      timeout: 30s
+      retries: 10
       start_period: 60s
 
   # Elasticsearch Init - Configure disk watermark settings automatically
@@ -240,10 +240,10 @@ services:
       - -c
       - |
         echo "Waiting for Elasticsearch to be ready...";
-        sleep 5;
+        sleep 30;
         until curl -s -u elastic:$$ELASTIC_PASSWORD http://elasticsearch:9200/_cluster/health | grep -q '"status"'; do
           echo "Elasticsearch is not ready yet, waiting...";
-          sleep 2;
+          sleep 10;
         done;
         echo "Configuring Elasticsearch disk watermark settings...";
         RESPONSE=$$(curl -s -w "\n%{http_code}" -u elastic:$$ELASTIC_PASSWORD -X PUT "http://elasticsearch:9200/_cluster/settings" -H "Content-Type: application/json" -d '{"persistent":{"cluster.routing.allocation.disk.watermark.low":"95%","cluster.routing.allocation.disk.watermark.high":"98%","cluster.routing.allocation.disk.watermark.flood_stage":"99%"}}');
@@ -268,7 +268,7 @@ services:
       - ${PORTAINER_PORT3}:8000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./local-data/portainer:/data
+      - ./docker-volumes/portainer:/data
     networks:
       - progcoder_network
 
@@ -286,7 +286,7 @@ services:
       - ${PROMETHEUS_PORT}:9090
     volumes:
       - ./config/prometheus:/etc/prometheus
-      - ./local-data/prometheus:/prometheus"
+      - ./docker-volumes/prometheus:/prometheus"
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--web.config.file=/etc/prometheus/web.yml"
@@ -301,7 +301,7 @@ services:
     ports:
       - ${GRAFANA_PORT}:3000
     volumes:
-      - ./local-data/grafana:/var/lib/grafana
+      - ./docker-volumes/grafana:/var/lib/grafana
       - ./config/grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./config/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./config/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
@@ -357,7 +357,7 @@ services:
     ports:
       - ${LOKI_PORT}:3100
     volumes:
-      - ./local-data/loki:/loki
+      - ./docker-volumes/loki:/loki
       - ./config/loki/loki-config.yml:/etc/loki/loki-config.yaml
     networks:
       - progcoder_network
@@ -385,7 +385,7 @@ services:
       # - ${TEMPO_OLTP_HTTP_PORT}:4318   # OTLP HTTP (ingest)
     volumes:
       - ./config/tempo/tempo.yaml:/etc/tempo/tempo.yaml
-      - ./local-data/tempo:/var/tempo
+      - ./docker-volumes/tempo:/var/tempo
     command: [ "-config.file=/etc/tempo/tempo.yaml" ]
     networks:
       - progcoder_network

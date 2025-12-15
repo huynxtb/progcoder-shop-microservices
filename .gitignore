@@ -60,3 +60,7 @@ yarn-error.log*
 # local data
 /local-data
 local-data/
+
+# docker volumes mount
+/docker-volumes
+docker-volumes/
