@@ -145,6 +145,19 @@ services:
       - ./local-data/redis:/data
     networks:
       - progcoder_network
+
+  redisinsight:
+    image: ${REDISINSIGHT_IMAGE_NAME:-redis/redisinsight:latest}
+    container_name: redisinsight
+    restart: unless-stopped
+    ports:
+      - ${REDISINSIGHT_PORT:-5540}:5540
+    volumes:
+      - ./local-data/redisinsight:/data
+    networks:
+      - progcoder_network
+    depends_on:
+      - redis
   
   rabbitmq:
     image: ${RABBITMQ_IMAGE_NAME}
