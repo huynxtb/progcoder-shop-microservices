@@ -63,7 +63,7 @@ Overall picture of **microservices implementation with .NET tools** in a real-wo
 
 - Implementation of **DDD, CQRS, and Clean Architecture** following best practices.
 
-!7[ProGCoder.Com](assets/imgs/ProGCoder.ComCleanArchitecture.png)
+![ProGCoder.Com](assets/imgs/ProGCoder.ComCleanArchitecture.png)
 
 ## Microservices Overview
 
@@ -106,16 +106,16 @@ Overall picture of **microservices implementation with .NET tools** in a real-wo
 
 | Application | Port | Technology Stack | Purpose | Access URL |
 |-------------|------|------------------|---------|------------|
-| **Admin Dashboard** | 3001 | React + Vite + TailwindCSS | Admin management interface | http://localhost:3001 |
+| **App.Admin** | 3001 | React + Vite + TailwindCSS | Admin management interface | http://localhost:3001 |
 | **Store Frontend** | 3002 | React + Vite + Bootstrap | Customer shopping interface | http://localhost:3002 |
 | **YARP API Gateway** | 5000 | ASP.NET Core + YARP | API Gateway and reverse proxy | https://localhost:5000 |
 
 ## Web UI Screenshots
 
-### Admin Dashboard
+### App.Admin
 ![Admin](assets/imgs/screenshots/admin/home.JPG)
 
-### Customer Store
+### App.Store
 ![User](assets/imgs/screenshots/user/home.JPG)
 
 All screenshots are stored in [assets/imgs/screenshots](assets/imgs/screenshots).
@@ -142,7 +142,7 @@ progcoder-shop-microservices/
 │   │   ├── Report/                  # Analytics and reporting
 │   │   └── Search/                  # Product search (Elasticsearch)
 │   ├── Apps/
-│   │   ├── App.Admin/               # Admin dashboard (React)
+│   │   ├── App.Admin/               # App.Admin (React)
 │   │   └── App.Store/               # E-commerce storefront (React)
 │   ├── ApiGateway/
 │   │   └── YarpApiGateway/          # YARP reverse proxy
@@ -324,8 +324,8 @@ docker-compose down -v
 ```
 
 After starting, access:
-- **Admin Dashboard**: http://localhost:3001
-- **Customer Store**: http://localhost:3002
+- **App.Admin**: http://localhost:3001
+- **App.Store**: http://localhost:3002
 - **API Gateway**: https://localhost:5000
 - **Keycloak**: http://localhost:8080
 - **Grafana**: http://localhost:3000
@@ -350,13 +350,43 @@ docker-compose -f docker-compose.dev.yml logs -f [service-name]
 
 #### 2. Setup Databases
 
-```bash
-# On Linux/Mac
-./setup-db.sh
+**Option A: Apply Existing Migrations (Recommended for first-time setup)**
 
-# On Windows
+Use this to apply all existing migrations to your databases without creating new ones:
+
+```bash
+# On Linux/Mac/WSL
+chmod +x run-migration.sh
+./run-migration.sh
+
+# On Windows (PowerShell/CMD)
+run-migration.bat
+```
+
+This script will automatically:
+- Install dotnet-ef tool if needed
+- Apply all pending migrations for Inventory service (MySQL)
+- Apply all pending migrations for Order service (SQL Server)
+- Show a summary of results
+
+**Option B: Create New Migrations (For developers making schema changes)**
+
+Use this when you need to create a new migration after modifying entities:
+
+```bash
+# On Linux/Mac/WSL
+chmod +x add-migration.sh
+./add-migration.sh
+
+# On Windows (PowerShell/CMD)
 add-migration.bat
 ```
+
+This script will:
+- Prompt you to select a service
+- Ask for a migration name
+- Create the migration
+- Automatically apply it to the database
 
 #### 3. Configure Keycloak
 
@@ -444,13 +474,13 @@ dotnet run
 #### 6. Start Frontend Applications
 
 ```bash
-# Admin Dashboard
+# App Admin
 cd src/Apps/App.Admin
 npm install
 npm run dev
 # Access at: http://localhost:3001
 
-# Customer Store
+# App Store
 cd src/Apps/App.Store
 npm install
 npm run dev
@@ -469,8 +499,8 @@ dotnet run
 After starting all services, you can access:
 
 #### Frontend Applications
-- **Admin Dashboard**: http://localhost:3001
-- **Customer Store**: http://localhost:3002
+- **App.Admin**: http://localhost:3001
+- **App.Store**: http://localhost:3002
 - **API Gateway**: https://localhost:5000
 
 #### Backend Services (Swagger)
