@@ -1,6 +1,6 @@
-# Contributing to PG Shop Microservices
+# Contributing to ProG Coder Shop Microservices
 
-We welcome contributions to the PG Shop Microservices project! This document provides guidelines for contributing.
+We welcome contributions to the ProG Coder Shop Microservices project! This document provides guidelines for contributing.
 
 ## How to Report Bugs
 

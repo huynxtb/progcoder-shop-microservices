@@ -1,12 +1,12 @@
 # ProG Coder
 
-This project was created by ProG Coder. Visit [ProG Coder](https://www.progcoder.com) and search for the keyword `PG Shop Microservices` to see how to install it.
+This project was created by ProG Coder. Visit [ProG Coder](https://www.progcoder.com) and search for the keyword `ProG Coder Shop Microservices` to see how to install it.
 
-# PG Shop Microservices
+# ProG Coder Shop Microservices
 
 This repository contains a suite of microservices implementing various **e-commerce** modules, including **Identity, Catalog, Basket, Discount, Order, Feedback, Search, Notification, User, Information**, and **Communicate**. These services utilize **NoSQL (DocumentDb, MongoDB, Redis)** and **Relational databases (PostgreSQL, SQL Server, MySQL)**, communicating via **RabbitMQ Event Driven Communication** and leveraging **YARP API Gateway**.
 
-Overall picture of **implementations on microservices with .NET tools** on real-world **PG Shop microservices** project.
+Overall picture of **implementations on microservices with .NET tools** on real-world **ProG Coder Shop Microservices** project.
 
 ![PGShopMicroservices](assets/imgs/PGShopMicroservices.png)
 
@@ -129,7 +129,7 @@ Overall picture of **implementations on microservices with .NET tools** on real-
 - RabbitMQ Publish/Subscribe Topic Exchange Model
 - MassTransit for abstraction over RabbitMQ Message-Broker system
 
-### WebUI PG Shop Microservices
+### WebUI ProG Coder Shop Microservices
 - React JS, TailwindCSS, Vite
 - API calls to YARP with Axios
 
@@ -161,7 +161,7 @@ Overall picture of **implementations on microservices with .NET tools** on real-
 - Facilitates complex data engineering and ETL processes
 
 ## Running the Project
-For detailed instructions on running and installing the project, visit [ProG Coder](https://www.progcoder.com) and search for the keyword `PG Shop Microservices` to see how to install it.
+For detailed instructions on running and installing the project, visit [ProG Coder](https://www.progcoder.com) and search for the keyword `ProG Coder Shop Microservices` to see how to install it.
 
 ## Detailed Service Flow
 For an in-depth look at each service, please navigate to the `src/Services` directory and read `Readme.md`.

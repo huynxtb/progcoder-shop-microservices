@@ -2,11 +2,11 @@
 
 This project was created by ProG Coder. Visit [ProG Coder](https://www.progcoder.com) for more information.
 
-# PG Shop Microservices - E-Commerce Platform
+# ProG Coder Shop Microservices - E-Commerce Platform
 
 This repository contains a comprehensive suite of microservices implementing a complete **e-commerce platform**, including **Catalog, Basket, Order, Inventory, Discount, Notification, Search, Report, and Communication** services. The platform utilizes **NoSQL (MongoDB, Redis)** and **Relational databases (PostgreSQL, SQL Server, MySQL)**, with services communicating via **RabbitMQ Event-Driven Architecture** and routing through **YARP API Gateway**.
 
-Overall picture of **microservices implementation with .NET tools** in a real-world **PG Shop microservices** project.
+Overall picture of **microservices implementation with .NET tools** in a real-world **ProG Coder Shop Microservices** project.
 
 ![ProGCoder.Com](assets/imgs/ProGCoder.Com.Diagram.png)
 
