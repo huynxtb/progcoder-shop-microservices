@@ -16,9 +16,62 @@ If you find a bug, please create an issue on GitHub with:
 2. Create a new branch for your feature or bugfix (`git checkout -b feature/your-feature-name`)
 3. Make your changes
 4. Test your changes thoroughly
-5. Commit your changes with clear commit messages
+5. Commit your changes with clear commit messages (see Commit Style below)
 6. Push to your fork
 7. Submit a pull request to the main repository
+
+## Commit Style
+
+We follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
+
+### Format
+
+```
+<type>(<scope>): <subject>
+```
+
+### Types
+
+- **feat**: New feature
+- **fix**: Bug fix
+- **docs**: Documentation changes
+- **style**: Code formatting (no logic change)
+- **refactor**: Code restructuring
+- **perf**: Performance improvements
+- **test**: Test changes
+- **build**: Build system changes
+- **ci**: CI/CD changes
+- **chore**: Miscellaneous changes
+
+### Scope (Optional)
+
+Service or component name: `catalog`, `basket`, `order`, `inventory`, `discount`, `notification`, `search`, `report`, `api-gateway`, `frontend`, etc.
+
+### Examples
+
+```bash
+# Feature
+feat(catalog): add MinIO image upload
+
+# Bug fix
+fix(order): correct discount calculation
+
+# Documentation
+docs(readme): update setup instructions
+
+# Multiple services
+refactor(catalog,inventory): extract common validation
+
+# No scope
+chore: update dependencies
+```
+
+### Rules
+
+- Use imperative mood: "add" not "added"
+- Keep subject under 50 characters
+- No period at the end
+- Reference issues: `Closes #123`, `Fixes #456`
 
 ## Code Style
 
@@ -26,6 +79,7 @@ If you find a bug, please create an issue on GitHub with:
 - Use meaningful variable and method names
 - Add comments for complex logic
 - Ensure your code builds without warnings
+- Run code formatter before committing (if available)
 
 ## Questions?
 
