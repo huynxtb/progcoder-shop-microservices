@@ -8,12 +8,12 @@ This repository contains a comprehensive suite of microservices implementing a c
 
 Overall picture of **microservices implementation with .NET tools** in a real-world **PG Shop microservices** project.
 
-![PGShopMicroservices](assets/imgs/PGShopMicroservices.png)
+![ProGCoder.Com](assets/imgs/ProGCoder.Com.Diagram.png)
 
 ## Technology Stack, Design Patterns, Infrastructure & Architecture
 
 ### Infrastructure
-7
+
 - **`Windows 11`** - The OS for developing and building this application.
 - **[`WSL2 - Ubuntu OS`](https://docs.microsoft.com/en-us/windows/wsl/install-win10)** - The subsystem that helps to run the bash shell on Windows OS.
 - **[`Docker for Desktop (Kubernetes enabled)`](https://www.docker.com/products/docker-desktop)** - The easiest tool to run Docker, Docker Swarm, and Kubernetes on Mac and Windows.
@@ -41,6 +41,7 @@ Overall picture of **microservices implementation with .NET tools** in a real-wo
 - **[`Polly`](https://github.com/App-vNext/Polly)** - Polly is a .NET resilience and transient-fault-handling library.
 - **[`OpenTelemetry`](https://opentelemetry.io)** - OpenTelemetry provides observability frameworks for cloud-native software.
 - **[`Quartz.NET`](https://www.quartz-scheduler.net)** - Job scheduling library for .NET.
+- **[`NEST`](https://github.com/elastic/elasticsearch-net)** - Official Elasticsearch .NET client for full-text search and analytics.
 
 ### Front-end
 
@@ -62,7 +63,7 @@ Overall picture of **microservices implementation with .NET tools** in a real-wo
 
 - Implementation of **DDD, CQRS, and Clean Architecture** following best practices.
 
-!7[CleanArchitecture](assets/imgs/CleanArchitecture.png)
+!7[ProGCoder.Com](assets/imgs/ProGCoder.ComCleanArchitecture.png)
 
 ## Microservices Overview
 
@@ -122,7 +123,7 @@ All screenshots are stored in [assets/imgs/screenshots](assets/imgs/screenshots)
 ## Project Structure
 
 ```
-prog-coder-shopping-cart/
+progcoder-shop-microservices/
 ├── src/
 │   ├── Services/                    # Backend Microservices
 │   │   ├── Basket/                  # Shopping cart service
@@ -301,7 +302,7 @@ cp .env.example .env
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd prog-coder-shopping-cart
+cd progcoder-shop-microservices
 
 # Copy and configure environment variables
 cp .env.example .env
@@ -609,10 +610,6 @@ docker-compose -f docker-compose.dev.yml down -v
 
 We welcome community contributions! We use GitHub issues to track bugs and feature requests, and pull requests to manage contributions. See the [contribution information](.github/CONTRIBUTING.md) for more details.
 
-## Detailed Service Documentation
-
-For an in-depth look at each service's architecture, domain models, and implementation details, please navigate to the `src/Services/[ServiceName]` directory and read the service-specific documentation.
-
 ## License
 
 Code released under [the MIT License](LICENSE)
@@ -621,7 +618,7 @@ Code released under [the MIT License](LICENSE)
 
 - **Huy Nguyen** - *Initial work* - [huynxtb](https://github.com/huynxtb)
 
-See also the list of [contributors](https://github.com/huynxtb/prog-coder-shopping-cart/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/huynxtb/progcoder-shop-microservices/contributors) who participated in this project.
 
 ## Video Tutorials
 
@@ -631,7 +628,7 @@ See also the list of [contributors](https://github.com/huynxtb/prog-coder-shoppi
 
 ### Course Series: .NET Microservices - Shopping Cart (Beginner to Pro)
 
-This is a comprehensive course series covering everything from basics to advanced topics. See the complete course outline in [`Youtube Series.md`](Youtube Series.md).
+This is a comprehensive course series covering everything from basics to advanced topics. See the complete course outline in [`YOUTUBE_SERIES.md`](YOUTUBE_SERIES.md).
 
 **What you'll learn**:
 - Building microservices with .NET 8 and Clean Architecture
@@ -653,43 +650,6 @@ If you liked the project or if it helped you, please **give a star** ⭐
 Your support helps create more high-quality content and maintain this project!
 
 For donation methods and details, please see [DONATE.md](DONATE.md).
-
-## Youtube Series
-
-### 🎬 Complete Video Tutorial Series
-
-Learn to build this entire microservices platform from scratch with our comprehensive video series on YouTube!
-
-**📺 Channel**: [ProG Coder](https://www.youtube.com/@prog-coder)
-
-#### 📖 Course: .NET Microservices - Shopping Cart (Beginner to Pro)
-
-A **complete video series** covering everything from fundamentals to advanced microservices concepts. Perfect for developers who want to learn by building a real-world e-commerce platform.
-
-**What's Covered:**
-- 🏗️ **90+ episodes** of hands-on coding (15 minutes each)
-- 🎯 **Practice-focused** approach with clear explanations
-- 🔄 **Step-by-step** implementation of all services
-- 💡 **Best practices** and design patterns
-- 🚀 **Production-ready** code and deployment
-
-**Topics Include:**
-- Clean Architecture & DDD with .NET 8
-- CQRS pattern with MediatR
-- Event-driven architecture with RabbitMQ
-- gRPC inter-service communication
-- Keycloak authentication & authorization
-- Multiple database technologies
-- Redis caching strategies
-- Elasticsearch full-text search
-- API Gateway with YARP
-- React frontends (Admin & Store)
-- Monitoring with Prometheus & Grafana
-- Docker & Kubernetes deployment
-
-📋 **Full Course Outline**: See [`YOUTUBE_SERIES.md`](YOUTUBE_SERIES.md) for detailed episode breakdown
-
-🔔 **Subscribe** to get notified when new episodes are released: [https://www.youtube.com/@prog-coder](https://www.youtube.com/@prog-coder)
 
 ## Community
 
