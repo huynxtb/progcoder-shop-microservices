@@ -18,6 +18,8 @@ Overall picture of **microservices implementation with .NET tools** in a real-wo
 - **[`WSL2 - Ubuntu OS`](https://docs.microsoft.com/en-us/windows/wsl/install-win10)** - The subsystem that helps to run the bash shell on Windows OS.
 - **[`Docker for Desktop (Kubernetes enabled)`](https://www.docker.com/products/docker-desktop)** - The easiest tool to run Docker, Docker Swarm, and Kubernetes on Mac and Windows.
 - **[`Kubernetes`](https://kubernetes.io) / [`AKS`](https://docs.microsoft.com/en-us/azure/aks)** - The app is designed to run on Kubernetes (both locally on "Docker for Desktop" as well as on the cloud with AKS).
+- **[`Jenkins`](https://www.jenkins.io)** - ⚠️ **Under Development** - CI/CD automation server for building, testing, and deploying applications.
+- **[`Helm`](https://helm.sh)** - ⚠️ **Under Development** - Package manager for Kubernetes applications.
 
 ### Back-end
 
@@ -205,6 +207,14 @@ The project follows Clean Architecture principles with clear separation of conce
 ### Saga Pattern
 
 Distributed transaction management across multiple services using choreography-based sagas with event-driven coordination.
+
+## CI/CD Pipeline
+
+> ⚠️ **Status: Under Development**
+>
+> CI/CD pipeline with Jenkins and Kubernetes deployment is currently under development. Detailed documentation will be updated soon.
+
+![ProGCoder.Com CI/CD](assets/imgs/ProGCoder.Com.CICD.png)
 
 ## Observability & Monitoring
 
