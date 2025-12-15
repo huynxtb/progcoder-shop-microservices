@@ -687,13 +687,20 @@ A **complete video series** covering everything from fundamentals to advanced mi
 - Monitoring with Prometheus & Grafana
 - Docker & Kubernetes deployment
 
-📋 **Full Course Outline**: See [`YouTube Series.md`](Youtube Series.md) for detailed episode breakdown
+📋 **Full Course Outline**: See [`YOUTUBE_SERIES.md`](YOUTUBE_SERIES.md) for detailed episode breakdown
 
 🔔 **Subscribe** to get notified when new episodes are released: [https://www.youtube.com/@prog-coder](https://www.youtube.com/@prog-coder)
 
+## Community
+
+Join our community to stay updated and connect with other developers:
+
+- 💬 **Facebook Group**: [ProG Coder Community](https://www.facebook.com/groups/1331222145420361) - Get the latest updates, ask questions, and share your experience
+- 📺 **YouTube Channel**: [ProG Coder](https://www.youtube.com/@prog-coder) - Video tutorials and coding sessions
+- 🌐 **Website**: [https://www.progcoder.com](https://www.progcoder.com) - Articles, resources, and more
+
 ## Additional Resources
 
-- **ProG Coder Website**: [https://www.progcoder.com](https://www.progcoder.com)
 - **Postman Collection**: See `assets/postman collections/` for API testing
 - **Architecture Diagrams**: See `assets/imgs/` for visual references
 
