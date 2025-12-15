@@ -228,7 +228,7 @@ services:
       - |
         echo "Waiting for Elasticsearch to be ready...";
         sleep 5;
-        until curl -s -u elastic:$$ELASTIC_PASSWORD http://elasticsearch:9200/_cluster/health | grep -q '"status":"green"\|"status":"yellow"'; do
+        until curl -s -u elastic:$$ELASTIC_PASSWORD http://elasticsearch:9200/_cluster/health | grep -q '"status"'; do
           echo "Elasticsearch is not ready yet, waiting...";
           sleep 2;
         done;
