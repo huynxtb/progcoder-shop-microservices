@@ -1,0 +1,67 @@
+name: CodeRabbit AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+      - master
+      - develop
+  pull_request_review_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  coderabbit-review:
+    name: CodeRabbit AI Review
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for better context
+
+      - name: CodeRabbit Review
+        uses: coderabbitai/coderabbit-action@v1
+        with:
+          # CodeRabbit will automatically use .coderabbit.yaml configuration
+          # No additional configuration needed here
+          debug: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Optional: Add OPENAI_API_KEY if you want to use your own API key
+          # OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+  review-summary:
+    name: Post Review Summary
+    runs-on: ubuntu-latest
+    needs: coderabbit-review
+    if: always()
+    
+    steps:
+      - name: Post summary comment
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const coderabbitComments = comments.filter(c => 
+              c.user.login === 'coderabbitai[bot]'
+            );
+            
+            if (coderabbitComments.length > 0) {
+              console.log(`✅ CodeRabbit posted ${coderabbitComments.length} review comment(s)`);
+            } else {
+              console.log('ℹ️ No CodeRabbit comments found (might be clean code!)');
+            }
+
