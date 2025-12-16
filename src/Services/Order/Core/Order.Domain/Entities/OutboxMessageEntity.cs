@@ -33,8 +33,6 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
 
     #region Ctors
 
-    public OutboxMessageEntity() { }
-
     public OutboxMessageEntity(Guid id, string eventType, string content, DateTimeOffset occurredOnUtc)
     {
         Id = id;

@@ -16,15 +16,17 @@ public sealed class NotificationEntity : Entity<Guid>
     #region Fields, Properties and Indexers
 
     [BsonRepresentation(BsonType.String)]
-    public Guid? UserId { get; private set; }
+    public Guid? UserId { get; set; }
 
-    public string? Title { get; private set; }
+    public string? Title { get; set; }
 
-    public string? Message { get; private set; }
+    public string? Message { get; set; }
 
-    public bool IsRead { get; private set; }
+    public bool IsRead { get; set; }
 
-    public DateTimeOffset? ReadAt { get; private set; }
+    public DateTimeOffset? ReadAt { get; set; }
+
+    public string? RedirectUrl { get; set; }
 
     #endregion
 

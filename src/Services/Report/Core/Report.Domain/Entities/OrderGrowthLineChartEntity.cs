@@ -10,11 +10,11 @@ public sealed class OrderGrowthLineChartEntity : Entity<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public int Day { get; private set; }
+    public int Day { get; set; }
 
-    public double Value { get; private set; }
+    public double Value { get; set; }
 
-    public DateTime Date { get; private set; }
+    public DateTime Date { get; set; }
 
     #endregion
 

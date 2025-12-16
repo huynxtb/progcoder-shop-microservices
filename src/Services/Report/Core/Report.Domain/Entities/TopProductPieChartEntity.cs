@@ -10,9 +10,9 @@ public sealed class TopProductPieChartEntity : Entity<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public string Name { get; private set; } = default!;
+    public string Name { get; set; } = default!;
 
-    public double Value { get; private set; }
+    public double Value { get; set; }
 
     #endregion
 

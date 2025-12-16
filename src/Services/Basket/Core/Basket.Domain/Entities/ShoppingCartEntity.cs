@@ -22,8 +22,6 @@ public sealed class ShoppingCartEntity : Aggregate<Guid>
 
     #region Ctors
 
-    public ShoppingCartEntity() { }
-
     private ShoppingCartEntity(string userId)
     {
         Id = Guid.NewGuid();

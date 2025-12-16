@@ -12,25 +12,25 @@ public sealed class DeliveryEntity : Aggregate<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public string? EventId { get; private set; }
+    public string? EventId { get; set; }
 
-    public MessagePayloadEntity? Payload { get; private set; }
+    public MessagePayloadEntity? Payload { get; set; }
 
-    public DeliveryStatus Status { get; private set; }
+    public DeliveryStatus Status { get; set; }
 
-    public DeliveryPriority Priority { get; private set; }
+    public DeliveryPriority Priority { get; set; }
 
-    public int AttemptCount { get; private set; }
+    public int AttemptCount { get; set; }
 
-    public int MaxAttempts { get; private set; }
+    public int MaxAttempts { get; set; }
 
-    public string? LastErrorMessage { get; private set; }
+    public string? LastErrorMessage { get; set; }
 
-    public DateTimeOffset? SentOnUtc { get; private set; }
+    public DateTimeOffset? SentOnUtc { get; set; }
 
-    public DateTimeOffset? ProcessedOnUtc { get; private set; }
+    public DateTimeOffset? ProcessedOnUtc { get; set; }
 
-    public DateTimeOffset? NextAttemptUtc { get; private set; }
+    public DateTimeOffset? NextAttemptUtc { get; set; }
 
     #endregion
 

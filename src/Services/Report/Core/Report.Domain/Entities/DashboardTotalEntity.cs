@@ -10,15 +10,15 @@ public sealed class DashboardTotalEntity : Entity<Guid>
 {
     #region Fields Properties and Indexers
 
-    public string? Bg { get; private set; }
+    public string? Bg { get; set; }
 
-    public string? Text { get; private set; }
+    public string? Text { get; set; }
 
-    public string? Icon { get; private set; }
+    public string? Icon { get; set; }
 
-    public string? Title { get; private set; }
+    public string? Title { get; set; }
 
-    public string? Count { get; private set; }
+    public string? Count { get; set; }
 
     #endregion
 
