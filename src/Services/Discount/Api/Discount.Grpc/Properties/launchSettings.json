@@ -1,11 +1,11 @@
 ﻿{
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "https": {
+    "Discount.Grpc": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:6004",
+      "applicationUrl": "http://localhost:6004",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

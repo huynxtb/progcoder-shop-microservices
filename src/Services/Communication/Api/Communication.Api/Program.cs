@@ -1,5 +1,6 @@
 #region using
 
+using Common.Models.Reponses;
 using Communication.Api;
 
 #endregion
@@ -15,6 +16,17 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseApi();
 
-app.MapGet("/", () => "Communication Real-time is running...");
+app.MapGet("/", (IWebHostEnvironment env) => new ApiDefaultPathResponse
+{
+    Service = "Communication.Api",
+    Status = "Running",
+    Timestamp = DateTimeOffset.UtcNow,
+    Environment = env.EnvironmentName,
+    Endpoints = new Dictionary<string, string>
+    {
+        { "health", "/health" }
+    },
+    Message = "API is running..."
+});
 
 app.Run();

@@ -7,6 +7,7 @@ using BuildingBlocks.Swagger.Extensions;
 using Catalog.Api.Mappings;
 using Common.Configurations;
 using Common.Constants;
+using Common.Models.Reponses;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using System.Reflection;
@@ -76,6 +77,19 @@ public static class DependencyInjection
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseSwaggerApi();
+
+        app.MapGet("/", (IWebHostEnvironment env) => new ApiDefaultPathResponse
+        {
+            Service = "Catalog.Api",
+            Status = "Running",
+            Timestamp = DateTimeOffset.UtcNow,
+            Environment = env.EnvironmentName,
+            Endpoints = new Dictionary<string, string>
+            {
+                { "health", "/health" }
+            },
+            Message = "API is running..."
+        });
 
         return app;
     }

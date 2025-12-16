@@ -2,7 +2,7 @@
 
 public sealed class AppConstants
 {
-    #region Fields, Properties and Indexers
+    #region Common
 
     public const int MaxAttempts = 3;
 
@@ -21,17 +21,23 @@ public sealed class AppConstants
 
     public static class Service
     {
+        public const string Basket = "basket";
+
         public const string Catalog = "catalog";
 
-        public const string Notification = "notification";
+        public const string Communication = "communication";
+
+        public const string Discount = "discount";
 
         public const string Inventory = "inventory";
 
+        public const string Notification = "notification";
+
+        public const string Order = "order";
+
         public const string Report = "report";
 
-        public const string ReportGrpc = "report.grpc";
-
-        public const string Coupon = "coupon";
+        public const string Search = "search";
     }
 
     #endregion

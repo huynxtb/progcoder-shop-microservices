@@ -100,7 +100,7 @@ Overall picture of **microservices implementation with .NET tools** in a real-wo
 | **Loki** | 3100 | Log aggregation system | http://localhost:3100 | - |
 | **Promtail** | 1514, 9080 | Log collection agent | - | - |
 | **OpenTelemetry Collector** | 4317, 8888 | Telemetry data collection | http://localhost:8888 | - |
-| **Portainer** | 9000, 9443 | Container management UI | https://localhost:9443 | admin / (set on first run) |
+| **Portainer** | 9000, 9443 | Container management UI | http://localhost:9443 | admin / (set on first run) |
 | **MailHog** | 1025, 8025 | Email testing tool | http://localhost:8025 | - |
 | **cAdvisor** | - | Container metrics | - | - |
 
@@ -110,7 +110,7 @@ Overall picture of **microservices implementation with .NET tools** in a real-wo
 |-------------|------|------------------|---------|------------|
 | **App.Admin** | 3001 | React + Vite + TailwindCSS | Admin management interface | http://localhost:3001 |
 | **Store Frontend** | 3002 | React + Vite + Bootstrap | Customer shopping interface | http://localhost:3002 |
-| **YARP API Gateway** | 5000 | ASP.NET Core + YARP | API Gateway and reverse proxy | https://localhost:5000 |
+| **YARP API Gateway** | 5000 | ASP.NET Core + YARP | API Gateway and reverse proxy | http://localhost:5000 |
 
 ## Web UI Screenshots
 
@@ -336,7 +336,7 @@ docker-compose down -v
 After starting, access:
 - **App.Admin**: http://localhost:3001
 - **App.Store**: http://localhost:3002
-- **API Gateway**: https://localhost:5000
+- **API Gateway**: http://localhost:5000
 - **Keycloak**: http://localhost:8080
 - **Grafana**: http://localhost:3000
 - **RabbitMQ Management**: http://localhost:15673
@@ -511,18 +511,18 @@ After starting all services, you can access:
 #### Frontend Applications
 - **App.Admin**: http://localhost:3001
 - **App.Store**: http://localhost:3002
-- **API Gateway**: https://localhost:5000
+- **API Gateway**: http://localhost:5000
 
 #### Backend Services (Swagger)
-- **Catalog API**: https://localhost:5001/swagger
-- **Basket API**: https://localhost:5006/swagger
-- **Order API**: https://localhost:5005/swagger
-- **Inventory API**: https://localhost:5002/swagger
-- **Discount API**: https://localhost:5004/swagger
-- **Notification API**: https://localhost:5003/swagger
-- **Report API**: https://localhost:5007/swagger
-- **Search API**: https://localhost:5008/swagger
-- **Communication API**: https://localhost:5009/swagger
+- **Catalog API**: http://localhost:5001/swagger
+- **Basket API**: http://localhost:5006/swagger
+- **Order API**: http://localhost:5005/swagger
+- **Inventory API**: http://localhost:5002/swagger
+- **Discount API**: http://localhost:5004/swagger
+- **Notification API**: http://localhost:5003/swagger
+- **Report API**: http://localhost:5007/swagger
+- **Search API**: http://localhost:5008/swagger
+- **Communication API**: http://localhost:5009/swagger
 
 #### Infrastructure & Monitoring
 - **Keycloak**: http://localhost:8080 (admin / admin)
@@ -530,7 +530,7 @@ After starting all services, you can access:
 - **MinIO Console**: http://localhost:9001 (minioadmin / minioadmin)
 - **Grafana**: http://localhost:3000 (admin / admin)
 - **Prometheus**: http://localhost:9090
-- **Portainer**: https://localhost:9443
+- **Portainer**: http://localhost:9443
 - **MailHog**: http://localhost:8025
 - **Elasticsearch**: http://localhost:9200 (elastic / elastic123)
 
