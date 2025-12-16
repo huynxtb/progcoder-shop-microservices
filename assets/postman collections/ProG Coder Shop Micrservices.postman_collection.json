@@ -1,0 +1,3079 @@
+{
+	"info": {
+		"_postman_id": "a7fc5d87-6f2f-45d8-8c6e-b96def38b67f",
+		"name": "ProG Coder Shop Micrservices",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17282638"
+	},
+	"item": [
+		{
+			"name": "API Gateway",
+			"item": [
+				{
+					"name": "Inventory Service",
+					"item": [
+						{
+							"name": "Decrease Stock",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"amount\": 435,\n  \"source\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/inventory-service/inventory-items/:inventoryItemId/stock/decrease",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"inventory-service",
+										"inventory-items",
+										":inventoryItemId",
+										"stock",
+										"decrease"
+									],
+									"variable": [
+										{
+											"key": "inventoryItemId",
+											"value": "a057a700-a347-507f-6c5a-5508b18e7c25"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Increase Stock",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"amount\": 435,\n  \"source\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/inventory-service/inventory-items/:inventoryItemId/stock/increase",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"inventory-service",
+										"inventory-items",
+										":inventoryItemId",
+										"stock",
+										"increase"
+									],
+									"variable": [
+										{
+											"key": "inventoryItemId",
+											"value": "a057a700-a347-507f-6c5a-5508b18e7c25"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Inventory Item",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/inventory-service/inventory-items/:inventoryItemId",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"inventory-service",
+										"inventory-items",
+										":inventoryItemId"
+									],
+									"variable": [
+										{
+											"key": "inventoryItemId",
+											"value": "a057a700-a347-507f-6c5a-5508b18e7c25"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Inventory Item",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"productId\": \"2238ac55-c187-ce22-86e3-e162a6b7b5e3\",\n  \"locationId\": \"4226ec63-157d-2505-bebb-7f663aa8f7f4\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/inventory-service/inventory-items/:inventoryItemId",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"inventory-service",
+										"inventory-items",
+										":inventoryItemId"
+									],
+									"variable": [
+										{
+											"key": "inventoryItemId",
+											"value": "a057a700-a347-507f-6c5a-5508b18e7c25"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Inventory Items",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/inventory-service/inventory-items/all",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"inventory-service",
+										"inventory-items",
+										"all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Inventory Item",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"productId\": \"f6654529-c3f4-a6f7-408b-3364582b5738\",\n  \"quantity\": 564,\n  \"locationId\": \"e4a7ea89-a051-35e2-d142-5fc88e2c0f64\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/inventory-service/inventory-items",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"inventory-service",
+										"inventory-items"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Inventory Items",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/inventory-service/inventory-items?SearchText=string&PageNumber=1&PageSize=1000",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"inventory-service",
+										"inventory-items"
+									],
+									"query": [
+										{
+											"key": "SearchText",
+											"value": "string"
+										},
+										{
+											"key": "PageNumber",
+											"value": "1"
+										},
+										{
+											"key": "PageSize",
+											"value": "1000"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/inventory-service",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"inventory-service"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Location",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/inventory-service/locations/:locationId",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"inventory-service",
+										"locations",
+										":locationId"
+									],
+									"variable": [
+										{
+											"key": "locationId",
+											"value": "a057a700-a347-507f-6c5a-5508b18e7c25"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Location By Id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/inventory-service/locations/:locationId",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"inventory-service",
+										"locations",
+										":locationId"
+									],
+									"variable": [
+										{
+											"key": "locationId",
+											"value": "a057a700-a347-507f-6c5a-5508b18e7c25"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Location",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"location\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/inventory-service/locations",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"inventory-service",
+										"locations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Locations",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/inventory-service/locations",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"inventory-service",
+										"locations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Location",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"location\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/inventory-service/locations/:locationId",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"inventory-service",
+										"locations",
+										":locationId"
+									],
+									"variable": [
+										{
+											"key": "locationId",
+											"value": "a057a700-a347-507f-6c5a-5508b18e7c25"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Order Service",
+					"item": [
+						{
+							"name": "/",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/order-service",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"order-service"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Orders",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/order-service/admin/orders/all?SearchText=string&Ids=2692277a-cd4c-7b11-4498-a858521423ce&Ids=f0983312-2a13-add6-99f9-545db463f392&CustomerId=f783ab53-22ee-e814-3bb1-d16bf2fb936b&Status=string&FromDate=2014-08-15T06:14:47.579Z&ToDate=2014-08-15T06:14:47.579Z",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"order-service",
+										"admin",
+										"orders",
+										"all"
+									],
+									"query": [
+										{
+											"key": "SearchText",
+											"value": "string"
+										},
+										{
+											"key": "Ids",
+											"value": "2692277a-cd4c-7b11-4498-a858521423ce"
+										},
+										{
+											"key": "Ids",
+											"value": "f0983312-2a13-add6-99f9-545db463f392"
+										},
+										{
+											"key": "CustomerId",
+											"value": "f783ab53-22ee-e814-3bb1-d16bf2fb936b"
+										},
+										{
+											"key": "Status",
+											"value": "string"
+										},
+										{
+											"key": "FromDate",
+											"value": "2014-08-15T06:14:47.579Z"
+										},
+										{
+											"key": "ToDate",
+											"value": "2014-08-15T06:14:47.579Z"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Order By Id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/order-service/admin/orders/:orderId",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"order-service",
+										"admin",
+										"orders",
+										":orderId"
+									],
+									"variable": [
+										{
+											"key": "orderId",
+											"value": "f783ab53-22ee-e814-3bb1-d16bf2fb936b"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Order Status",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"status\": 5,\n  \"reason\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/order-service/admin/orders/:orderId/status",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"order-service",
+										"admin",
+										"orders",
+										":orderId",
+										"status"
+									],
+									"variable": [
+										{
+											"key": "orderId",
+											"value": "f783ab53-22ee-e814-3bb1-d16bf2fb936b"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Order",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"basketId\": \"691586e3-cdb9-12b7-21be-d5dd3315d1a4\",\n  \"customer\": {\n    \"id\": \"be9692a8-012e-f092-c11e-a209f526a2b2\",\n    \"phoneNumber\": \"string\",\n    \"name\": \"string\",\n    \"email\": \"string\"\n  },\n  \"shippingAddress\": {\n    \"name\": \"string\",\n    \"emailAddress\": \"string\",\n    \"addressLine\": \"string\",\n    \"country\": \"string\",\n    \"state\": \"string\",\n    \"zipCode\": \"string\"\n  },\n  \"orderItems\": [\n    {\n      \"productId\": \"cdf42aba-5fbb-48b7-3f0b-cca5e4cb8d32\",\n      \"quantity\": 1076\n    },\n    {\n      \"productId\": \"9b35e301-4444-4e14-1b46-6c89a45f8ba3\",\n      \"quantity\": 9862\n    }\n  ],\n  \"couponCode\": \"string\",\n  \"notes\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/order-service/admin/orders/:orderId",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"order-service",
+										"admin",
+										"orders",
+										":orderId"
+									],
+									"variable": [
+										{
+											"key": "orderId",
+											"value": "f783ab53-22ee-e814-3bb1-d16bf2fb936b"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Order",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"basketId\": \"691586e3-cdb9-12b7-21be-d5dd3315d1a4\",\n  \"customer\": {\n    \"id\": \"be9692a8-012e-f092-c11e-a209f526a2b2\",\n    \"phoneNumber\": \"string\",\n    \"name\": \"string\",\n    \"email\": \"string\"\n  },\n  \"shippingAddress\": {\n    \"name\": \"string\",\n    \"emailAddress\": \"string\",\n    \"addressLine\": \"string\",\n    \"country\": \"string\",\n    \"state\": \"string\",\n    \"zipCode\": \"string\"\n  },\n  \"orderItems\": [\n    {\n      \"productId\": \"cdf42aba-5fbb-48b7-3f0b-cca5e4cb8d32\",\n      \"quantity\": 1076\n    },\n    {\n      \"productId\": \"9b35e301-4444-4e14-1b46-6c89a45f8ba3\",\n      \"quantity\": 9862\n    }\n  ],\n  \"couponCode\": \"string\",\n  \"notes\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/order-service/admin/orders",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"order-service",
+										"admin",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Order By Order No",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/order-service/orders/order-no/:orderNo",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"order-service",
+										"orders",
+										"order-no",
+										":orderNo"
+									],
+									"variable": [
+										{
+											"key": "orderNo",
+											"value": "string"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Orders By Current User",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/order-service/orders/me?SearchText=string&FromDate=2014-08-15T06:14:47.579Z&ToDate=2014-08-15T06:14:47.579Z&PageNumber=1&PageSize=1000",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"order-service",
+										"orders",
+										"me"
+									],
+									"query": [
+										{
+											"key": "SearchText",
+											"value": "string"
+										},
+										{
+											"key": "FromDate",
+											"value": "2014-08-15T06:14:47.579Z"
+										},
+										{
+											"key": "ToDate",
+											"value": "2014-08-15T06:14:47.579Z"
+										},
+										{
+											"key": "PageNumber",
+											"value": "1"
+										},
+										{
+											"key": "PageSize",
+											"value": "1000"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Orders",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/order-service/admin/orders?SearchText=string&Ids=2692277a-cd4c-7b11-4498-a858521423ce&Ids=f0983312-2a13-add6-99f9-545db463f392&CustomerId=f783ab53-22ee-e814-3bb1-d16bf2fb936b&Status=string&FromDate=2014-08-15T06:14:47.579Z&ToDate=2014-08-15T06:14:47.579Z&PageNumber=1&PageSize=1000",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"order-service",
+										"admin",
+										"orders"
+									],
+									"query": [
+										{
+											"key": "SearchText",
+											"value": "string"
+										},
+										{
+											"key": "Ids",
+											"value": "2692277a-cd4c-7b11-4498-a858521423ce"
+										},
+										{
+											"key": "Ids",
+											"value": "f0983312-2a13-add6-99f9-545db463f392"
+										},
+										{
+											"key": "CustomerId",
+											"value": "f783ab53-22ee-e814-3bb1-d16bf2fb936b"
+										},
+										{
+											"key": "Status",
+											"value": "string"
+										},
+										{
+											"key": "FromDate",
+											"value": "2014-08-15T06:14:47.579Z"
+										},
+										{
+											"key": "ToDate",
+											"value": "2014-08-15T06:14:47.579Z"
+										},
+										{
+											"key": "PageNumber",
+											"value": "1"
+										},
+										{
+											"key": "PageSize",
+											"value": "1000"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Search Service",
+					"item": [
+						{
+							"name": "Search Product",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/search-service/products?PageNumber=1&PageSize=1000&searchText=string&categories=string&minPrice=6694.401002608166&maxPrice=6694.401002608166&status=string&sortBy=string&sortType=string",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"search-service",
+										"products"
+									],
+									"query": [
+										{
+											"key": "PageNumber",
+											"value": "1"
+										},
+										{
+											"key": "PageSize",
+											"value": "1000"
+										},
+										{
+											"key": "searchText",
+											"value": "string"
+										},
+										{
+											"key": "categories",
+											"value": "string"
+										},
+										{
+											"key": "minPrice",
+											"value": "6694.401002608166"
+										},
+										{
+											"key": "maxPrice",
+											"value": "6694.401002608166"
+										},
+										{
+											"key": "status",
+											"value": "string"
+										},
+										{
+											"key": "sortBy",
+											"value": "string"
+										},
+										{
+											"key": "sortType",
+											"value": "string"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/search-service",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"search-service"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Catalog Service",
+					"item": [
+						{
+							"name": "Get Publish Product By Id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/products/:productId",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"products",
+										":productId"
+									],
+									"variable": [
+										{
+											"key": "productId",
+											"value": "00495199-f6b2-92e8-ff57-ba2bdde992ad"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Publish Products",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/products?SearchText=string&PageNumber=1&PageSize=1000",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"products"
+									],
+									"query": [
+										{
+											"key": "SearchText",
+											"value": "string"
+										},
+										{
+											"key": "PageNumber",
+											"value": "1"
+										},
+										{
+											"key": "PageSize",
+											"value": "1000"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Tree Categories",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/categories/tree",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"categories",
+										"tree"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Categories",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/categories?ParentId=00495199-f6b2-92e8-ff57-ba2bdde992ad",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"categories"
+									],
+									"query": [
+										{
+											"key": "ParentId",
+											"value": "00495199-f6b2-92e8-ff57-ba2bdde992ad"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Brands",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/brands",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"brands"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Initialize Data",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/admin/system/initialize-data",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"admin",
+										"system",
+										"initialize-data"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Product",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "multipart/form-data"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "sku",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "shortDescription",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "longDescription",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "price",
+											"value": "8768.305496457155",
+											"type": "text"
+										},
+										{
+											"key": "salePrice",
+											"value": "9766.376885892698",
+											"type": "text"
+										},
+										{
+											"key": "categoryIds",
+											"value": "string,string",
+											"type": "text"
+										},
+										{
+											"key": "imageFiles",
+											"value": "string,string",
+											"type": "text"
+										},
+										{
+											"key": "thumbnailFile",
+											"type": "file",
+											"src": []
+										},
+										{
+											"key": "brandId",
+											"value": "c077c13a-bb0d-0eff-b698-5d12693a1943",
+											"type": "text"
+										},
+										{
+											"key": "colors",
+											"value": "string,string",
+											"type": "text"
+										},
+										{
+											"key": "sizes",
+											"value": "string,string",
+											"type": "text"
+										},
+										{
+											"key": "tags",
+											"value": "string,string",
+											"type": "text"
+										},
+										{
+											"key": "published",
+											"value": "true",
+											"type": "text"
+										},
+										{
+											"key": "featured",
+											"value": "true",
+											"type": "text"
+										},
+										{
+											"key": "seoTitle",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "seoDescription",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "barcode",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "unit",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "weight",
+											"value": "6109.663499804056",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/admin/products",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"admin",
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Products",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/admin/products/all?SearchText=string&Ids=635c905a-117d-42d8-e30d-b3ab1952bcc9&Ids=34a5c619-ee80-15d1-ac7b-4fdbf6ed0718",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"admin",
+										"products",
+										"all"
+									],
+									"query": [
+										{
+											"key": "SearchText",
+											"value": "string"
+										},
+										{
+											"key": "Ids",
+											"value": "635c905a-117d-42d8-e30d-b3ab1952bcc9"
+										},
+										{
+											"key": "Ids",
+											"value": "34a5c619-ee80-15d1-ac7b-4fdbf6ed0718"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Products",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/admin/products?SearchText=string&Ids=635c905a-117d-42d8-e30d-b3ab1952bcc9&Ids=34a5c619-ee80-15d1-ac7b-4fdbf6ed0718&PageNumber=1&PageSize=1000",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"admin",
+										"products"
+									],
+									"query": [
+										{
+											"key": "SearchText",
+											"value": "string"
+										},
+										{
+											"key": "Ids",
+											"value": "635c905a-117d-42d8-e30d-b3ab1952bcc9"
+										},
+										{
+											"key": "Ids",
+											"value": "34a5c619-ee80-15d1-ac7b-4fdbf6ed0718"
+										},
+										{
+											"key": "PageNumber",
+											"value": "1"
+										},
+										{
+											"key": "PageSize",
+											"value": "1000"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Product",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/admin/products/:productId",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"admin",
+										"products",
+										":productId"
+									],
+									"variable": [
+										{
+											"key": "productId",
+											"value": "00495199-f6b2-92e8-ff57-ba2bdde992ad"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Unpublish Product",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/admin/products/:productId/unpublish",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"admin",
+										"products",
+										":productId",
+										"unpublish"
+									],
+									"variable": [
+										{
+											"key": "productId",
+											"value": "00495199-f6b2-92e8-ff57-ba2bdde992ad"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Product By Id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/admin/products/:productId",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"admin",
+										"products",
+										":productId"
+									],
+									"variable": [
+										{
+											"key": "productId",
+											"value": "00495199-f6b2-92e8-ff57-ba2bdde992ad"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Product",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "multipart/form-data"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "sku",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "shortDescription",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "longDescription",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "price",
+											"value": "3541.131117281935",
+											"type": "text"
+										},
+										{
+											"key": "salePrice",
+											"value": "4220.451953898878",
+											"type": "text"
+										},
+										{
+											"key": "categoryIds",
+											"value": "string,string",
+											"type": "text"
+										},
+										{
+											"key": "currentImageUrls",
+											"value": "string,string",
+											"type": "text"
+										},
+										{
+											"key": "imageFiles",
+											"value": "string,string",
+											"type": "text"
+										},
+										{
+											"key": "thumbnailFile",
+											"type": "file",
+											"src": []
+										},
+										{
+											"key": "brandId",
+											"value": "7541dfb5-c80e-c836-5c37-ceed1c74abd2",
+											"type": "text"
+										},
+										{
+											"key": "colors",
+											"value": "string,string",
+											"type": "text"
+										},
+										{
+											"key": "sizes",
+											"value": "string,string",
+											"type": "text"
+										},
+										{
+											"key": "tags",
+											"value": "string,string",
+											"type": "text"
+										},
+										{
+											"key": "published",
+											"value": "false",
+											"type": "text"
+										},
+										{
+											"key": "featured",
+											"value": "false",
+											"type": "text"
+										},
+										{
+											"key": "seoTitle",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "seoDescription",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "barcode",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "unit",
+											"value": "string",
+											"type": "text"
+										},
+										{
+											"key": "weight",
+											"value": "1679.890466177043",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/admin/products/:productId",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"admin",
+										"products",
+										":productId"
+									],
+									"variable": [
+										{
+											"key": "productId",
+											"value": "00495199-f6b2-92e8-ff57-ba2bdde992ad"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Publish Product",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/admin/products/:productId/publish",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"admin",
+										"products",
+										":productId",
+										"publish"
+									],
+									"variable": [
+										{
+											"key": "productId",
+											"value": "00495199-f6b2-92e8-ff57-ba2bdde992ad"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Category",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/admin/categories/:categoryId",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"admin",
+										"categories",
+										":categoryId"
+									],
+									"variable": [
+										{
+											"key": "categoryId",
+											"value": "00495199-f6b2-92e8-ff57-ba2bdde992ad"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Category",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"parentId\": \"4fc7d6b7-217b-69cd-5c48-396a772def44\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/admin/categories/:categoryId",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"admin",
+										"categories",
+										":categoryId"
+									],
+									"variable": [
+										{
+											"key": "categoryId",
+											"value": "00495199-f6b2-92e8-ff57-ba2bdde992ad"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Category",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"parentId\": \"4fc7d6b7-217b-69cd-5c48-396a772def44\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/admin/categories",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"admin",
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Brand",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/admin/brands",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"admin",
+										"brands"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Brand",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/admin/brands/:brandId",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"admin",
+										"brands",
+										":brandId"
+									],
+									"variable": [
+										{
+											"key": "brandId",
+											"value": "00495199-f6b2-92e8-ff57-ba2bdde992ad"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Brand",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/catalog-service/admin/brands/:brandId",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"catalog-service",
+										"admin",
+										"brands",
+										":brandId"
+									],
+									"variable": [
+										{
+											"key": "brandId",
+											"value": "00495199-f6b2-92e8-ff57-ba2bdde992ad"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Basket Service",
+					"item": [
+						{
+							"name": "Basket Checkout",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"customer\": {\n    \"name\": \"string\",\n    \"email\": \"string\",\n    \"phoneNumber\": \"string\"\n  },\n  \"shippingAddress\": {\n    \"name\": \"string\",\n    \"emailAddress\": \"string\",\n    \"addressLine\": \"string\",\n    \"country\": \"string\",\n    \"state\": \"string\",\n    \"zipCode\": \"string\"\n  },\n  \"couponCode\": \"string\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/basket-service/basket/checkout",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"basket-service",
+										"basket",
+										"checkout"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Basket",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/basket-service/basket",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"basket-service",
+										"basket"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Basket",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/basket-service/basket",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"basket-service",
+										"basket"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Store Basket",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"items\": [\n    {\n      \"productId\": \"ace7ba83-0f00-390b-c9fd-1d0e5339fe17\",\n      \"quantity\": 9074\n    },\n    {\n      \"productId\": \"f623911b-ff79-9eb8-e8eb-6418a7591194\",\n      \"quantity\": 7140\n    }\n  ]\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/basket-service/basket",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"basket-service",
+										"basket"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/basket-service",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"basket-service"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Discount Service",
+					"item": [
+						{
+							"name": "/",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/discount-service",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"discount-service"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Coupon By Code",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/discount-service/coupons/code/:code",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"discount-service",
+										"coupons",
+										"code",
+										":code"
+									],
+									"variable": [
+										{
+											"key": "code",
+											"value": "string"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Evaluate Coupon",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"string\",\n  \"amount\": 3566.8948483553954\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/discount-service/coupons/evaluate",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"discount-service",
+										"coupons",
+										"evaluate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Coupon",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"string\",\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"type\": 2,\n  \"value\": 232.61422504646134,\n  \"maxUsage\": 9577,\n  \"maxDiscountAmount\": 472.0283347517751,\n  \"minPurchaseAmount\": 9285.31302298942,\n  \"validFrom\": \"1997-11-25T23:57:26.851Z\",\n  \"validTo\": \"1950-03-26T04:13:42.714Z\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/discount-service/admin/coupons",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"discount-service",
+										"admin",
+										"coupons"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Coupons",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/discount-service/admin/coupons?status=string&type=string&validOnly=true",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"discount-service",
+										"admin",
+										"coupons"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "string"
+										},
+										{
+											"key": "type",
+											"value": "string"
+										},
+										{
+											"key": "validOnly",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Coupons Approved",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/discount-service/admin/coupons/approved",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"discount-service",
+										"admin",
+										"coupons",
+										"approved"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Coupons",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/discount-service/admin/coupons/all",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"discount-service",
+										"admin",
+										"coupons",
+										"all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Coupon",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/discount-service/admin/coupons/:id",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"discount-service",
+										"admin",
+										"coupons",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "18930ff9-40ee-15fc-106f-4774c7e0371c"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Coupon",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/discount-service/admin/coupons/:id",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"discount-service",
+										"admin",
+										"coupons",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "18930ff9-40ee-15fc-106f-4774c7e0371c"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Validity Period",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"validFrom\": \"1989-04-16T21:14:04.880Z\",\n  \"validTo\": \"2010-05-20T12:59:54.897Z\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/discount-service/admin/coupons/:id/validity-period",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"discount-service",
+										"admin",
+										"coupons",
+										":id",
+										"validity-period"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "18930ff9-40ee-15fc-106f-4774c7e0371c"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Coupon",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"value\": 9025.431416395191,\n  \"maxUsage\": 289,\n  \"maxDiscountAmount\": 7491.087224031119,\n  \"minPurchaseAmount\": 5325.1311204747,\n  \"type\": 1\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_gateway_base_url}}/discount-service/admin/coupons/:id",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"discount-service",
+										"admin",
+										"coupons",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "18930ff9-40ee-15fc-106f-4774c7e0371c"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Approve Coupon",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/discount-service/admin/coupons/:id/approve",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"discount-service",
+										"admin",
+										"coupons",
+										":id",
+										"approve"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "18930ff9-40ee-15fc-106f-4774c7e0371c"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Reject Coupon",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/discount-service/admin/coupons/:id/reject",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"discount-service",
+										"admin",
+										"coupons",
+										":id",
+										"reject"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "18930ff9-40ee-15fc-106f-4774c7e0371c"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Report Service",
+					"item": [
+						{
+							"name": "Get Dashboard Totals",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/report-service/admin/dashboard-statistics",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"report-service",
+										"admin",
+										"dashboard-statistics"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Order Growth Line Chart",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/report-service/admin/order-growth-statistics?Year=4436&Month=4436",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"report-service",
+										"admin",
+										"order-growth-statistics"
+									],
+									"query": [
+										{
+											"key": "Year",
+											"value": "4436"
+										},
+										{
+											"key": "Month",
+											"value": "4436"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Top Product Pie Chart",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/report-service/admin/top-product-statistics?Limit=5",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"report-service",
+										"admin",
+										"top-product-statistics"
+									],
+									"query": [
+										{
+											"key": "Limit",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/report-service",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"report-service"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Notification Service",
+					"item": [
+						{
+							"name": "/",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/notification-service",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"notification-service"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mark As Read",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/notification-service/notifications/:notificationId/read",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"notification-service",
+										"notifications",
+										":notificationId",
+										"read"
+									],
+									"variable": [
+										{
+											"key": "notificationId",
+											"value": "27d04e9d-e40c-23bc-23ba-7df0e09a5211"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Notifications",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/notification-service/notifications?PageNumber=1&PageSize=1000",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"notification-service",
+										"notifications"
+									],
+									"query": [
+										{
+											"key": "PageNumber",
+											"value": "1"
+										},
+										{
+											"key": "PageSize",
+											"value": "1000"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Communication Service",
+					"item": [
+						{
+							"name": "/",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{api_gateway_base_url}}/comunication-service",
+									"host": [
+										"{{api_gateway_base_url}}"
+									],
+									"path": [
+										"comunication-service"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get Orders By Current User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{api_gateway_base_url}}/order-service/orders/me?SearchText=string&FromDate=2014-08-15T06:14:47.579Z&ToDate=2014-08-15T06:14:47.579Z&PageNumber=1&PageSize=1000",
+							"host": [
+								"{{api_gateway_base_url}}"
+							],
+							"path": [
+								"order-service",
+								"orders",
+								"me"
+							],
+							"query": [
+								{
+									"key": "SearchText",
+									"value": "string"
+								},
+								{
+									"key": "FromDate",
+									"value": "2014-08-15T06:14:47.579Z"
+								},
+								{
+									"key": "ToDate",
+									"value": "2014-08-15T06:14:47.579Z"
+								},
+								{
+									"key": "PageNumber",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "1000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Orders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{api_gateway_base_url}}/order-service/admin/orders?SearchText=string&Ids=2692277a-cd4c-7b11-4498-a858521423ce&Ids=f0983312-2a13-add6-99f9-545db463f392&CustomerId=f783ab53-22ee-e814-3bb1-d16bf2fb936b&Status=string&FromDate=2014-08-15T06:14:47.579Z&ToDate=2014-08-15T06:14:47.579Z&PageNumber=1&PageSize=1000",
+							"host": [
+								"{{api_gateway_base_url}}"
+							],
+							"path": [
+								"order-service",
+								"admin",
+								"orders"
+							],
+							"query": [
+								{
+									"key": "SearchText",
+									"value": "string"
+								},
+								{
+									"key": "Ids",
+									"value": "2692277a-cd4c-7b11-4498-a858521423ce"
+								},
+								{
+									"key": "Ids",
+									"value": "f0983312-2a13-add6-99f9-545db463f392"
+								},
+								{
+									"key": "CustomerId",
+									"value": "f783ab53-22ee-e814-3bb1-d16bf2fb936b"
+								},
+								{
+									"key": "Status",
+									"value": "string"
+								},
+								{
+									"key": "FromDate",
+									"value": "2014-08-15T06:14:47.579Z"
+								},
+								{
+									"key": "ToDate",
+									"value": "2014-08-15T06:14:47.579Z"
+								},
+								{
+									"key": "PageNumber",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "1000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order Status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": 5,\n  \"reason\": \"string\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_gateway_base_url}}/order-service/admin/orders/:orderId/status",
+							"host": [
+								"{{api_gateway_base_url}}"
+							],
+							"path": [
+								"order-service",
+								"admin",
+								"orders",
+								":orderId",
+								"status"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "f783ab53-22ee-e814-3bb1-d16bf2fb936b"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "OAuth2 Keycloak",
+			"item": [
+				{
+					"name": "GET Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{oauth2_keycloak_base_url}}/admin/realms/{{realm_name}}/users",
+							"host": [
+								"{{oauth2_keycloak_base_url}}"
+							],
+							"path": [
+								"admin",
+								"realms",
+								"{{realm_name}}",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Me",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{oauth2_keycloak_base_url}}/auth/realms/{{realm_name}}/protocol/openid-connect/userinfo",
+							"host": [
+								"{{oauth2_keycloak_base_url}}"
+							],
+							"path": [
+								"auth",
+								"realms",
+								"{{realm_name}}",
+								"protocol",
+								"openid-connect",
+								"userinfo"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ElasticSearch",
+			"item": [
+				{
+					"name": "GET Settings",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{elasticsearch_password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{elasticsearch_username}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{elasticsearch_base_url}}/_cluster/settings",
+							"host": [
+								"{{elasticsearch_base_url}}"
+							],
+							"path": [
+								"_cluster",
+								"settings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Mapping",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{elasticsearch_password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{elasticsearch_username}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{elasticsearch_base_url}}/:index/_mapping",
+							"host": [
+								"{{elasticsearch_base_url}}"
+							],
+							"path": [
+								":index",
+								"_mapping"
+							],
+							"variable": [
+								{
+									"key": "index",
+									"value": "{{elasticsearch_product_index}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "scope",
+				"value": "openid",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "{{oauth2_keycloak_base_url}}/realms/{{realm_name}}/protocol/openid-connect/token",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "{{oauth2_keycloak_base_url}}/realms/{{realm_name}}/protocol/openid-connect/auth",
+				"type": "string"
+			},
+			{
+				"key": "clientSecret",
+				"value": "{{client_secret}}",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "{{client_id}}",
+				"type": "string"
+			},
+			{
+				"key": "useBrowser",
+				"value": true,
+				"type": "boolean"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "oauth2_keycloak_base_url",
+			"value": ""
+		},
+		{
+			"key": "realm_name",
+			"value": ""
+		},
+		{
+			"key": "client_id",
+			"value": ""
+		},
+		{
+			"key": "client_secret",
+			"value": ""
+		},
+		{
+			"key": "api_gateway_base_url",
+			"value": ""
+		},
+		{
+			"key": "catalog_service_base_url",
+			"value": ""
+		},
+		{
+			"key": "discount_service_base_url",
+			"value": ""
+		},
+		{
+			"key": "order_service_base_url",
+			"value": ""
+		},
+		{
+			"key": "inventory_service_base_url",
+			"value": ""
+		},
+		{
+			"key": "search_service_base_url",
+			"value": ""
+		},
+		{
+			"key": "elasticsearch_base_url",
+			"value": ""
+		},
+		{
+			"key": "elasticsearch_product_index",
+			"value": ""
+		},
+		{
+			"key": "elasticsearch_username",
+			"value": ""
+		},
+		{
+			"key": "elasticsearch_password",
+			"value": ""
+		},
+		{
+			"key": "notification_service_base_url",
+			"value": ""
+		},
+		{
+			"key": "report_service_base_url",
+			"value": ""
+		}
+	]
+}

@@ -90,8 +90,8 @@ public static class DatabaseExtentions
                 maxDiscountAmount: null,
                 validFrom: now,
                 validTo: now.AddDays(3),
-                performBy: Actor.System(AppConstants.Service.Coupon).ToString());
-            randomFixedCoupon.Approve(Actor.System(AppConstants.Service.Coupon).ToString());
+                performBy: Actor.System(AppConstants.Service.Discount).ToString());
+            randomFixedCoupon.Approve(Actor.System(AppConstants.Service.Discount).ToString());
 
             var percentageId = Guid.NewGuid();
             var randomPercentageCoupon = CouponEntity.Create(id: percentageId,
@@ -105,8 +105,8 @@ public static class DatabaseExtentions
                 maxDiscountAmount: 25000,
                 validFrom: now,
                 validTo: now.AddDays(3),
-                performBy: Actor.System(AppConstants.Service.Coupon).ToString());
-            randomPercentageCoupon.Approve(Actor.System(AppConstants.Service.Coupon).ToString());
+                performBy: Actor.System(AppConstants.Service.Discount).ToString());
+            randomPercentageCoupon.Approve(Actor.System(AppConstants.Service.Discount).ToString());
 
             await couponCollection.InsertManyAsync(new[] { randomFixedCoupon, randomPercentageCoupon });
         }

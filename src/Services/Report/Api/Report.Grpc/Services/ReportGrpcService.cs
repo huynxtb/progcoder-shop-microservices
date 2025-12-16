@@ -27,7 +27,7 @@ public sealed class ReportGrpcService(ISender sender) : ReportGrpc.ReportGrpcBas
             Count = request.Count
         };
 
-        var command = new UpdateDashboardTotalCommand(dto, Actor.System(AppConstants.Service.ReportGrpc));
+        var command = new UpdateDashboardTotalCommand(dto, Actor.System(AppConstants.Service.Report));
         await sender.Send(command, context.CancellationToken);
 
         return new PutDashboardTotalResponse { Success = true };
@@ -47,7 +47,7 @@ public sealed class ReportGrpcService(ISender sender) : ReportGrpc.ReportGrpcBas
             Items = items
         };
 
-        var command = new UpdateOrderGrowthLineChartCommand(dto, Actor.System(AppConstants.Service.ReportGrpc));
+        var command = new UpdateOrderGrowthLineChartCommand(dto, Actor.System(AppConstants.Service.Report));
         await sender.Send(command, context.CancellationToken);
 
         return new PutOrderGrowthLineChartResponse { Success = true };
@@ -66,7 +66,7 @@ public sealed class ReportGrpcService(ISender sender) : ReportGrpc.ReportGrpcBas
             Items = items
         };
 
-        var command = new UpdateTopProductPieChartCommand(dto, Actor.System(AppConstants.Service.ReportGrpc));
+        var command = new UpdateTopProductPieChartCommand(dto, Actor.System(AppConstants.Service.Report));
         await sender.Send(command, context.CancellationToken);
 
         return new PutTopProductPieChartResponse { Success = true };
