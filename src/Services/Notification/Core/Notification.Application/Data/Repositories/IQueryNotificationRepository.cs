@@ -14,5 +14,11 @@ public interface IQueryNotificationRepository
 
     Task<NotificationEntity> GetNotificationByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken = default);
 
+    Task<List<NotificationEntity>> GetAllNotificationsAsync(Guid userId, CancellationToken cancellationToken = default);
+
+    Task<long> GetCountNotificationUnreadAsync(Guid userId, CancellationToken cancellationToken = default);
+
+    Task<List<NotificationEntity>> GetTop10NotificationsUnreadAsync(Guid userId, CancellationToken cancellationToken = default);
+
     #endregion
 }

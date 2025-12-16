@@ -952,5 +952,28 @@
     "VALUE_CANNOT_BE_NEGATIVE": "Value cannot be negative",
     "PRODUCTS_IS_NOT_EXISTS_OR_NOT_IN_STOCK": "Products do not exist or are not in stock",
     "PRODUCT_IS_NOT_EXISTS_OR_NOT_IN_STOCK": "Product does not exist or is not in stock"
+  },
+  "notification": {
+    "title": "Notifications",
+    "viewAll": "View all",
+    "noNotifications": "No notifications",
+    "markAsRead": "Mark as read",
+    "markSelectedAsRead": "Mark selected as read",
+    "selectAll": "Select all",
+    "markAllAsRead": "Mark all as read",
+    "read": "Read",
+    "unread": "Unread",
+    "ago": "ago",
+    "justNow": "Just now",
+    "minutesAgo": "{{count}} minutes ago",
+    "hoursAgo": "{{count}} hours ago",
+    "daysAgo": "{{count}} days ago",
+    "search": "Search notifications...",
+    "fetchError": "Failed to load notifications",
+    "markAsReadSuccess": "Notifications marked as read successfully",
+    "markAsReadError": "Failed to mark notifications as read",
+    "message": "Message",
+    "time": "Time",
+    "noNotificationsFound": "No notifications found"
   }
 }

@@ -18,5 +18,7 @@ public class NotificationDto : DtoId<Guid>
 
     public DateTimeOffset? ReadAt { get; set; }
 
+    public string? TargetUrl { get; set; }
+
     #endregion
 }

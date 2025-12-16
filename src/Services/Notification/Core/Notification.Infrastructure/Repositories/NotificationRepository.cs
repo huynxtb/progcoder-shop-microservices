@@ -1,5 +1,7 @@
 ﻿#region using
 
+using BuildingBlocks.Pagination;
+using BuildingBlocks.Pagination.Extensions;
 using MongoDB.Driver;
 using Notification.Application.Data.Repositories;
 using Notification.Domain.Entities;
@@ -64,6 +66,44 @@ public sealed class NotificationRepository : ICommandNotificationRepository, IQu
             options: new ReplaceOptions { IsUpsert = true },
             cancellationToken: cancellationToken
         );
+    }
+
+    public async Task<List<NotificationEntity>> GetAllNotificationsAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        var filter = Builders<NotificationEntity>.Filter.Eq(x => x.UserId, (Guid?)userId);
+        var sort = Builders<NotificationEntity>.Sort
+            .Descending(x => x.CreatedOnUtc);
+
+        return await _collection.Find(filter)
+            .Sort(sort)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<long> GetCountNotificationUnreadAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        var filterBuilder = Builders<NotificationEntity>.Filter;
+        var filter = filterBuilder.And(
+            filterBuilder.Eq(x => x.UserId, (Guid?)userId),
+            filterBuilder.Eq(x => x.IsRead, false)
+        );
+
+        return await _collection.CountDocumentsAsync(filter, cancellationToken: cancellationToken);
+    }
+
+    public async Task<List<NotificationEntity>> GetTop10NotificationsUnreadAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        var filterBuilder = Builders<NotificationEntity>.Filter;
+        var filter = filterBuilder.And(
+            filterBuilder.Eq(x => x.UserId, (Guid?)userId),
+            filterBuilder.Eq(x => x.IsRead, false)
+        );
+        var sort = Builders<NotificationEntity>.Sort
+            .Descending(x => x.CreatedOnUtc);
+
+        return await _collection.Find(filter)
+            .Sort(sort)
+            .Limit(10)
+            .ToListAsync(cancellationToken);
     }
 
     #endregion

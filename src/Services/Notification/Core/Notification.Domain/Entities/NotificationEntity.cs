@@ -26,7 +26,7 @@ public sealed class NotificationEntity : Entity<Guid>
 
     public DateTimeOffset? ReadAt { get; set; }
 
-    public string? RedirectUrl { get; set; }
+    public string? TargetUrl { get; set; }
 
     #endregion
 
@@ -56,6 +56,13 @@ public sealed class NotificationEntity : Entity<Guid>
     {
         IsRead = true;
         ReadAt = DateTimeOffset.UtcNow;
+        LastModifiedBy = modifiedBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+    }
+
+    public void UpdateTargetUrl(string targetUrl, string modifiedBy)
+    {
+        TargetUrl = targetUrl;
         LastModifiedBy = modifiedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
     }

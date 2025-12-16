@@ -952,5 +952,28 @@
     "VALUE_CANNOT_BE_NEGATIVE": "Giá trị không thể âm",
     "PRODUCTS_IS_NOT_EXISTS_OR_NOT_IN_STOCK": "Sản phẩm không tồn tại hoặc không còn trong kho",
     "PRODUCT_IS_NOT_EXISTS_OR_NOT_IN_STOCK": "Sản phẩm không tồn tại hoặc không còn trong kho"
+  },
+  "notification": {
+    "title": "Thông báo",
+    "viewAll": "Xem tất cả",
+    "noNotifications": "Không có thông báo",
+    "markAsRead": "Đánh dấu đã đọc",
+    "markSelectedAsRead": "Đánh dấu đã đọc",
+    "selectAll": "Chọn tất cả",
+    "markAllAsRead": "Đánh dấu tất cả đã đọc",
+    "read": "Đã đọc",
+    "unread": "Chưa đọc",
+    "ago": "trước",
+    "justNow": "Vừa xong",
+    "minutesAgo": "{{count}} phút trước",
+    "hoursAgo": "{{count}} giờ trước",
+    "daysAgo": "{{count}} ngày trước",
+    "search": "Tìm kiếm thông báo...",
+    "fetchError": "Không thể tải thông báo",
+    "markAsReadSuccess": "Đã đánh dấu thông báo đã đọc",
+    "markAsReadError": "Không thể đánh dấu thông báo đã đọc",
+    "message": "Nội dung",
+    "time": "Thời gian",
+    "noNotificationsFound": "Không tìm thấy thông báo"
   }
 }

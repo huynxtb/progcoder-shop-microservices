@@ -28,6 +28,8 @@ public sealed class CreateDeliveryDto
 
     public int MaxAttempts { get; set; } = AppConstants.MaxAttempts;
 
+    public string? TargetUrl { get; set; }
+
     #endregion
 }
 

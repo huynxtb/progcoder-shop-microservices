@@ -44,7 +44,7 @@ export const API_ENDPOINTS = {
     DELETE_LOCATION: (id) => `/inventory-service/locations/${id}`,
   },
 
-  // Discount
+  // Discount Service
   DISCOUNT: {
     GET_LIST: "/discount-service/admin/coupons",
     GET_ALL_COUPONS: "/discount-service/admin/coupons/all",
@@ -59,7 +59,7 @@ export const API_ENDPOINTS = {
     APPLY: "/discount-service/coupons/apply",
   },
 
-  // Orders
+  // Order Service
   ORDER: {
     GET_LIST: "/order-service/admin/orders",
     GET_ALL: "/order-service/admin/orders/all",
@@ -71,21 +71,30 @@ export const API_ENDPOINTS = {
     GET_BY_CURRENT_USER: "/order-service/orders/me",
   },
 
-  // Dashboard & Reports
+  // Report Service
   REPORT: {
     DASHBOARD_STATISTICS: "/report-service/admin/dashboard-statistics",
     ORDER_GROWTH_LINE_CHART: "/report-service/admin/order-growth-statistics",
     TOP_PRODUCT_PIE_CHART: "/report-service/admin/top-product-statistics",
   },
 
-  // Keycloak
-  KEYCLOAK: {
-    GET_ME: "/account/me",
+  // Notification Service
+  NOTIFICATION: {
+    GET_LIST: "/notification-service/notifications",
+    MARK_AS_READ: "/notification-service/notifications/read",
+    GET_ALL: "/notification-service/notifications/all",
+    GET_COUNT_UNREAD: "/notification-service/notifications/unread/count",
+    GET_TOP_10_UNREAD: "/notification-service/notifications/unread/top10"
   },
 
   // Communication Service
   COMMUNICATION: {
     NOTIFICATION_HUB: "/communication-service/hubs/notifications",
+  },
+
+  // Keycloak
+  KEYCLOAK: {
+    GET_ME: "/account/me",
   },
 };
 

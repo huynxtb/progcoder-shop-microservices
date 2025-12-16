@@ -24,6 +24,8 @@ public sealed class MessagePayloadEntity
 
     public bool IsHtml { get; set; }
 
+    public string? TargetUrl { get; set; }
+
     #endregion
 
     #region Methods
@@ -34,6 +36,7 @@ public sealed class MessagePayloadEntity
         string subject,
         string body,
         bool isHtml = false,
+        string? targetUrl = null,
         List<string>? cc = null,
         List<string>? bcc = null)
     {
@@ -46,6 +49,7 @@ public sealed class MessagePayloadEntity
             Subject = subject,
             Body = body,
             IsHtml = isHtml,
+            TargetUrl = targetUrl
         };
     }
 

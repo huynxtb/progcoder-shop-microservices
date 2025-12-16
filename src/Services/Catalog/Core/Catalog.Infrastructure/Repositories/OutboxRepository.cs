@@ -47,7 +47,7 @@ public class OutboxRepository(IDocumentSession session, ILogger<OutboxRepository
 
         logger.LogDebug("Attempting to claim up to {BatchSize} unprocessed outbox messages", batchSize);
 
-        await session.BeginTransactionAsync(cancellationToken);
+        //await session.BeginTransactionAsync(cancellationToken);
 
         try
         {
@@ -93,7 +93,7 @@ public class OutboxRepository(IDocumentSession session, ILogger<OutboxRepository
 
         logger.LogDebug("Attempting to claim up to {BatchSize} retry outbox messages", batchSize);
 
-        await session.BeginTransactionAsync(cancellationToken);
+        //await session.BeginTransactionAsync(cancellationToken);
 
         try
         {

@@ -47,6 +47,7 @@ public sealed class DeliveryEntity : Aggregate<Guid>
         string eventId,
         string performedBy,
         int maxAttempts,
+        string? targetUrl = null,
         List<string>? cc = null,
         List<string>? bcc = null)
     {
@@ -57,7 +58,8 @@ public sealed class DeliveryEntity : Aggregate<Guid>
             to: to,
             cc: cc,
             bcc: bcc,
-            body: body);
+            body: body,
+            targetUrl: targetUrl);
 
         return new DeliveryEntity()
         {

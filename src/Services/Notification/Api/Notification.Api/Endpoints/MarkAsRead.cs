@@ -6,6 +6,7 @@ using Notification.Application.CQRS.Notification.Commands;
 using Common.Models.Reponses;
 using BuildingBlocks.Abstractions.ValueObjects;
 using BuildingBlocks.Authentication.Extensions;
+using Notification.Application.Dtos.Notifications;
 
 #endregion
 
@@ -20,7 +21,7 @@ public sealed class MarkAsRead : ICarterModule
         app.MapPost(ApiRoutes.Notification.MarkAsRead, HandleMarkAsReadAsync)
             .WithTags(ApiRoutes.Notification.Tags)
             .WithName(nameof(MarkAsRead))
-            .Produces<ApiUpdatedResponse<Guid>>(StatusCodes.Status200OK)
+            .Produces<ApiUpdatedResponse<Unit>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .RequireAuthorization();
@@ -30,16 +31,16 @@ public sealed class MarkAsRead : ICarterModule
 
     #region Methods
 
-    private async Task<ApiUpdatedResponse<Guid>> HandleMarkAsReadAsync(
+    private async Task<ApiUpdatedResponse<Unit>> HandleMarkAsReadAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
-        [FromRoute] Guid notificationId)
+        [FromBody] MarkAsReadNotificationDto req)
     {
         var currentUser = httpContext.GetCurrentUser();
-        var command = new MarkAsReadNotificationCommand(notificationId, Actor.User(currentUser.Id));
+        var command = new MarkAsReadNotificationCommand(req, Actor.User(currentUser.Id));
         var result = await sender.Send(command);
 
-        return new ApiUpdatedResponse<Guid>(result);
+        return new ApiUpdatedResponse<Unit>(result);
     }
 
     #endregion

@@ -11,6 +11,7 @@ using BuildingBlocks.Abstractions.ValueObjects;
 using Common.Constants;
 using Common.Extensions;
 using Notification.Application.Services;
+using Common.Configurations;
 
 #endregion
 
@@ -19,6 +20,7 @@ namespace Notification.Worker.Consumer.EventHandlers.Integrations;
 public sealed class UpsertedProductIntegrationEventHandler(
     ISender sender,
     IKeycloakService keycloak,
+    IConfiguration cfg,
     ILogger<UpsertedProductIntegrationEventHandler> logger)
     : IConsumer<UpsertedProductIntegrationEvent>
 {
@@ -28,6 +30,7 @@ public sealed class UpsertedProductIntegrationEventHandler(
     {
         logger.LogInformation("Integration Event handled: {IntegrationEvent}", context.Message.GetType().Name);
 
+        var webAdminUrl = cfg.GetValue<string>($"{AppDomainCfg.Section}:{AppDomainCfg.WebAdminUrl}");
         var integrationEvent = context.Message;
         var templateVariables = new Dictionary<string, object>
         {
@@ -43,7 +46,8 @@ public sealed class UpsertedProductIntegrationEventHandler(
             To = [ChannelType.Discord.GetDescription()],
             TemplateVariables = templateVariables,
             Priority = DeliveryPriority.Medium,
-            MaxAttempts = AppConstants.MaxAttempts
+            MaxAttempts = AppConstants.MaxAttempts,
+            TargetUrl = $"/products/{integrationEvent.ProductId}"
         };
 
         var deliveryCommand = new CreateDeliveryCommand(deliveryDto, Actor.Worker(AppConstants.Service.Notification));

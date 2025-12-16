@@ -34,6 +34,11 @@ public sealed class InAppNotificationSender(ICommandNotificationRepository repos
                     message: context.Body!,
                     performedBy: Actor.Worker(AppConstants.Service.Notification).ToString());
 
+                if (!string.IsNullOrWhiteSpace(context.TargetUrl))
+                {
+                    notification.UpdateTargetUrl(context.TargetUrl!, Actor.Worker(AppConstants.Service.Notification).ToString());
+                }
+
                 await repository.UpsertAsync(notification, cancellationToken);
             }
 

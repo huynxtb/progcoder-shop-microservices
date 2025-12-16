@@ -10,7 +10,7 @@ const HomePage1 = () => {
       <HeaderSection />
       <DoorShopMain />
       <RightSideBar />
-      <FooterSection logo="assets/images/logo-1.png" />
+      <FooterSection logo="assets/images/logo/logo.png" />
     </div>
   );
 };

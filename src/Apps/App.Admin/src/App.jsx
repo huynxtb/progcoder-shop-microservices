@@ -31,6 +31,7 @@ const CouponPage = lazy(() => import("./pages/coupon"));
 const CreateCoupon = lazy(() => import("./pages/coupon/create-coupon"));
 const EditCoupon = lazy(() => import("./pages/coupon/edit-coupon"));
 const EditInventory = lazy(() => import("./pages/inventory/edit-inventory"));
+const NotificationPage = lazy(() => import("./pages/notification"));
 
 import Loading from "@/components/Loading";
 import { ProductDetails } from "./pages/product/productDetails";
@@ -94,6 +95,9 @@ function App() {
           <Route path="orders/create" element={<CreateOrder />} />
           <Route path="orders/:id" element={<OrderDetails />} />
           <Route path="orders/:id/edit" element={<EditOrder />} />
+
+          {/* Notifications */}
+          <Route path="notifications" element={<NotificationPage />} />
 
           {/* Customers */}
           <Route path="customers" element={<Customers />} />

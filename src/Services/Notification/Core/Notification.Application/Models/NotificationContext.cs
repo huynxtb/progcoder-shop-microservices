@@ -20,6 +20,8 @@ public sealed class NotificationContext
 
     public IReadOnlyDictionary<string, object> Data { get; init; } = new Dictionary<string, object>();
 
+    public string? TargetUrl { get; set; }
+
     #endregion
 
 }

@@ -21,23 +21,29 @@ public sealed class CreateDeliveryCommandValidator : AbstractValidator<CreateDel
 
     public CreateDeliveryCommandValidator()
     {
-        RuleFor(x => x.Dto.EventId)
-            .NotEmpty()
-            .WithMessage(MessageCode.EventIdIsRequired);
+        RuleFor(x => x.Dto)
+            .NotNull()
+            .WithMessage(MessageCode.BadRequest)
+            .DependentRules(() =>
+            {
+                RuleFor(x => x.Dto.EventId)
+                    .NotEmpty()
+                    .WithMessage(MessageCode.EventIdIsRequired);
 
-        RuleFor(x => x.Dto.TemplateKey)
-            .NotEmpty()
-            .WithMessage(MessageCode.TemplateKeyIsRequired);
+                RuleFor(x => x.Dto.TemplateKey)
+                    .NotEmpty()
+                    .WithMessage(MessageCode.TemplateKeyIsRequired);
 
-        RuleFor(x => x.Dto.To)
-            .NotEmpty()
-            .WithMessage(MessageCode.ToRecipientsIsRequired)
-            .Must(to => to != null && to.Count > 0)
-            .WithMessage(MessageCode.AtLeastOneRecipientIsRequired);
+                RuleFor(x => x.Dto.To)
+                    .NotEmpty()
+                    .WithMessage(MessageCode.ToRecipientsIsRequired)
+                    .Must(to => to != null && to.Count > 0)
+                    .WithMessage(MessageCode.AtLeastOneRecipientIsRequired);
 
-        RuleFor(x => x.Dto.MaxAttempts)
-            .GreaterThan(0)
-            .WithMessage(MessageCode.MaxAttemptsMustBeGreaterThanZero);
+                RuleFor(x => x.Dto.MaxAttempts)
+                    .GreaterThan(0)
+                    .WithMessage(MessageCode.MaxAttemptsMustBeGreaterThanZero);
+            });
     }
 
     #endregion
@@ -90,6 +96,7 @@ public sealed class CreateDeliveryCommandHandler(
             eventId: dto.EventId,
             performedBy: command.Actor.ToString(),
             maxAttempts: dto.MaxAttempts,
+            targetUrl: dto.TargetUrl,
             cc: dto.Cc,
             bcc: dto.Bcc);
 
