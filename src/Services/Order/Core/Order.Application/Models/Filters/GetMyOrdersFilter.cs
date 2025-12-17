@@ -1,6 +1,6 @@
 namespace Order.Application.Models.Filters;
 
-public class GetOrdersByCurrentUserFilter
+public class GetMyOrdersFilter
 {
     #region Fields, Properties and Indexers
 

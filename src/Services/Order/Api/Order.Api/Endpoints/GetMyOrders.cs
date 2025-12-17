@@ -13,16 +13,16 @@ using Order.Application.Models.Results;
 
 namespace Order.Api.Endpoints;
 
-public sealed class GetOrdersByCurrentUser : ICarterModule
+public sealed class GetMyOrders : ICarterModule
 {
     #region Implementations
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet(ApiRoutes.Order.GetOrdersByCurrentUser, HandleGetOrdersByCurrentUserAsync)
+        app.MapGet(ApiRoutes.Order.GetOrdersByCurrentUser, HandleGetMyOrdersAsync)
             .WithTags(ApiRoutes.Order.Tags)
-            .WithName(nameof(GetOrdersByCurrentUser))
-            .Produces<ApiGetResponse<GetOrdersByCurrentUserResult>>(StatusCodes.Status200OK)
+            .WithName(nameof(GetMyOrders))
+            .Produces<ApiGetResponse<GetMyOrdersResult>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .RequireAuthorization();
@@ -32,17 +32,17 @@ public sealed class GetOrdersByCurrentUser : ICarterModule
 
     #region Methods
 
-    private async Task<ApiGetResponse<GetOrdersByCurrentUserResult>> HandleGetOrdersByCurrentUserAsync(
+    private async Task<ApiGetResponse<GetMyOrdersResult>> HandleGetMyOrdersAsync(
         ISender sender,
         IHttpContextAccessor httpContext,
-        [AsParameters] GetOrdersByCurrentUserFilter filter,
+        [AsParameters] GetMyOrdersFilter filter,
         [AsParameters] PaginationRequest paging)
     {
         var currentUser = httpContext.GetCurrentUser();
-        var query = new GetOrdersByCurrentUserQuery(filter, paging, Actor.User(currentUser.Id));
+        var query = new GetMyOrdersQuery(filter, paging, Actor.User(currentUser.Id));
         var result = await sender.Send(query);
 
-        return new ApiGetResponse<GetOrdersByCurrentUserResult>(result);
+        return new ApiGetResponse<GetMyOrdersResult>(result);
     }
 
     #endregion

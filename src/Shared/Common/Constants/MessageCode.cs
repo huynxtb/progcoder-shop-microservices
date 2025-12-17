@@ -238,5 +238,7 @@ public sealed class MessageCode
 
     public const string ProductIsNotExistsOrNotInStock = "PRODUCT_IS_NOT_EXISTS_OR_NOT_IN_STOCK";
 
+    public const string OrderNotFound = "ORDER_NOT_FOUND";
+
     #endregion
 }

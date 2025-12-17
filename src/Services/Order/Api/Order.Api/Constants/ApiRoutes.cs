@@ -24,9 +24,13 @@ public sealed class ApiRoutes
         
         public const string UpdateOrderStatus = $"{BaseAdmin}/{{orderId}}/status";
 
-        public const string GetOrderByOrderNo = $"{Base}/order-no/{{orderNo}}";
+        public const string GetOrderByOrderNo = $"{Base}/by-order-no/{{orderNo}}";
 
         public const string GetOrdersByCurrentUser = $"{Base}/me";
+
+        public const string GetAllMyOrders = $"{Base}/me/all";
+
+        public const string GetMyOrderById = $"{Base}/me/{{orderId}}";
 
         #endregion
     }

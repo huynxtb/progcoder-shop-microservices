@@ -7,7 +7,7 @@ using Common.Models.Reponses;
 
 namespace Order.Application.Models.Results;
 
-public sealed class GetOrdersByCurrentUserResult
+public sealed class GetMyOrdersResult
 {
     #region Fields, Properties and Indexers
 
@@ -19,7 +19,7 @@ public sealed class GetOrdersByCurrentUserResult
 
     #region Ctors
 
-    public GetOrdersByCurrentUserResult(
+    public GetMyOrdersResult(
         List<OrderDto> items,
         long totalItems,
         PaginationRequest pagination)
