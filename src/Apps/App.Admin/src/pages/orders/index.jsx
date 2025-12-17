@@ -511,17 +511,6 @@ const Orders = () => {
     return counts;
   }, [orders]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <Icon icon="heroicons:arrow-path" className="w-8 h-8 animate-spin mx-auto mb-2" />
-          <p className="text-slate-600 dark:text-slate-300">{t("common.loading")}</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
       <div className="space-y-5">
@@ -597,6 +586,14 @@ const Orders = () => {
             <div className="md:flex md:space-x-4 md:space-y-0 space-y-2 mt-4 md:mt-0">
               <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} t={t} />
               <button
+                className="btn btn-outline-dark btn-sm inline-flex items-center"
+                onClick={fetchOrders}
+                disabled={loading}
+              >
+                <Icon icon="heroicons:arrow-path" className={`ltr:mr-2 rtl:ml-2 ${loading ? 'animate-spin' : ''}`} />
+                {loading ? t("common.refreshing") : t("common.refresh")}
+              </button>
+              <button
                 className="btn btn-primary btn-sm inline-flex items-center"
                 onClick={() => navigate("/orders/create")}
               >
@@ -647,12 +644,21 @@ const Orders = () => {
                     className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700!"
                     {...getTableBodyProps()}
                   >
-                    {page.length === 0 ? (
+                    {loading ? (
                       <tr>
                         <td colSpan={COLUMNS.length} className="table-td text-center py-8">
-                          <p className="text-slate-500 dark:text-slate-400">
+                          <div className="flex flex-col items-center justify-center">
+                            <Icon icon="heroicons:arrow-path" className="animate-spin text-2xl text-slate-400 mb-2" />
+                            <span className="text-slate-500 dark:text-slate-400">{t("common.loading")}</span>
+                          </div>
+                        </td>
+                      </tr>
+                    ) : page.length === 0 ? (
+                      <tr>
+                        <td colSpan={COLUMNS.length} className="table-td text-center py-8">
+                          <span className="text-slate-500 dark:text-slate-400">
                             {t("orders.noOrders")}
-                          </p>
+                          </span>
                         </td>
                       </tr>
                     ) : (

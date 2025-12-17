@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import Card from "@/components/ui/Card";
@@ -86,37 +86,37 @@ const InventoryPage = () => {
   const [editingItem, setEditingItem] = useState(null);
 
   // Fetch inventory items
-  useEffect(() => {
-    const fetchInventoryItems = async () => {
-      try {
-        setLoading(true);
-        const response = await inventoryService.getAllInventoryItems();
-        
-        if (response.data && response.data.result && response.data.result.items) {
-          const mappedItems = response.data.result.items.map((item) => ({
-            id: item.id,
-            productId: item.productId,
-            productName: item.product?.name || "N/A",
-            sku: item.product?.sku || "N/A",
-            quantity: item.quantity || 0,
-            available: item.available || 0,
-            locationId: item.locationId,
-            location: item.location?.location || "N/A",
-            status: getStatusFromQuantity(item.quantity, item.available),
-            lastUpdated: item.lastModifiedOnUtc || item.createdOnUtc,
-          }));
-          setInventoryItems(mappedItems);
-        }
-      } catch (error) {
-        console.error("Failed to fetch inventory items:", error);
-        setInventoryItems([]);
-      } finally {
-        setLoading(false);
+  const fetchInventoryItems = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await inventoryService.getAllInventoryItems();
+      
+      if (response.data && response.data.result && response.data.result.items) {
+        const mappedItems = response.data.result.items.map((item) => ({
+          id: item.id,
+          productId: item.productId,
+          productName: item.product?.name || "N/A",
+          sku: item.product?.sku || "N/A",
+          quantity: item.quantity || 0,
+          available: item.available || 0,
+          locationId: item.locationId,
+          location: item.location?.location || "N/A",
+          status: getStatusFromQuantity(item.quantity, item.available),
+          lastUpdated: item.lastModifiedOnUtc || item.createdOnUtc,
+        }));
+        setInventoryItems(mappedItems);
       }
-    };
-
-    fetchInventoryItems();
+    } catch (error) {
+      console.error("Failed to fetch inventory items:", error);
+      setInventoryItems([]);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchInventoryItems();
+  }, [fetchInventoryItems]);
 
   // Fetch products for dropdown
   useEffect(() => {
@@ -633,6 +633,14 @@ const InventoryPage = () => {
           <h4 className="card-title">{t("inventory.title")}</h4>
           <div className="md:flex md:space-x-4 md:space-y-0 space-y-2">
             <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} t={t} />
+            <button
+              className="btn btn-outline-dark btn-sm inline-flex items-center"
+              onClick={fetchInventoryItems}
+              disabled={loading}
+            >
+              <Icon icon="heroicons:arrow-path" className={`ltr:mr-2 rtl:ml-2 ${loading ? 'animate-spin' : ''}`} />
+              {loading ? t("common.refreshing") : t("common.refresh")}
+            </button>
             <button 
               className="btn btn-dark btn-sm inline-flex items-center"
               onClick={handleAddClick}

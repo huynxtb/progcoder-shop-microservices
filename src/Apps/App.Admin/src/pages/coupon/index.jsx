@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -51,44 +51,44 @@ const CouponPage = () => {
   const [updatingValidity, setUpdatingValidity] = useState(false);
 
   // Fetch coupons from API
-  useEffect(() => {
-    const fetchCoupons = async () => {
-      try {
-        setLoading(true);
-        const response = await discountService.getAllCoupons();
-        
-        // Map API response to component format
-        const mappedCoupons = response.data.result.coupons.map((item) => ({
-          id: item.id,
-          code: item.code,
-          name: item.name || item.description || "",
-          discount: item.value,
-          type: item.type === 1 ? "fixed" : "percent", // 1=Fixed, 2=Percentage
-          displayType: item.displayType,
-          minOrder: item.minPurchaseAmount || 0,
-          maxDiscount: item.maxDiscountAmount,
-          usageLimit: item.maxUsage,
-          usedCount: item.usageCount || 0,
-          startDate: item.validFrom,
-          expiryDate: item.validTo,
-          status: mapStatus(item.displayStatus, item.isExpired, item.isOutOfUses),
-          displayStatus: item.displayStatus,
-          isValid: item.isValid,
-          isExpired: item.isExpired,
-          isOutOfUses: item.isOutOfUses,
-        }));
-        
-        setCoupons(mappedCoupons);
-      } catch (error) {
-        console.error("Failed to fetch coupons:", error);
-        setCoupons([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchCoupons = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await discountService.getAllCoupons();
+      
+      // Map API response to component format
+      const mappedCoupons = response.data.result.coupons.map((item) => ({
+        id: item.id,
+        code: item.code,
+        name: item.name || item.description || "",
+        discount: item.value,
+        type: item.type === 1 ? "fixed" : "percent", // 1=Fixed, 2=Percentage
+        displayType: item.displayType,
+        minOrder: item.minPurchaseAmount || 0,
+        maxDiscount: item.maxDiscountAmount,
+        usageLimit: item.maxUsage,
+        usedCount: item.usageCount || 0,
+        startDate: item.validFrom,
+        expiryDate: item.validTo,
+        status: mapStatus(item.displayStatus, item.isExpired, item.isOutOfUses),
+        displayStatus: item.displayStatus,
+        isValid: item.isValid,
+        isExpired: item.isExpired,
+        isOutOfUses: item.isOutOfUses,
+      }));
+      
+      setCoupons(mappedCoupons);
+    } catch (error) {
+      console.error("Failed to fetch coupons:", error);
+      setCoupons([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
+  useEffect(() => {
     fetchCoupons();
-  }, [t]);
+  }, [fetchCoupons]);
 
   // Helper function to map API status to component status
   const mapStatus = (displayStatus, isExpired, isOutOfUses) => {
@@ -579,6 +579,14 @@ const CouponPage = () => {
           <h4 className="card-title">{t("coupon.title")}</h4>
           <div className="md:flex md:space-x-4 md:space-y-0 space-y-2">
             <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} t={t} />
+            <button
+              className="btn btn-outline-dark btn-sm inline-flex items-center"
+              onClick={fetchCoupons}
+              disabled={loading}
+            >
+              <Icon icon="heroicons:arrow-path" className={`ltr:mr-2 rtl:ml-2 ${loading ? 'animate-spin' : ''}`} />
+              {loading ? t("common.refreshing") : t("common.refresh")}
+            </button>
             <Link to="/create-coupon" className="btn btn-dark btn-sm inline-flex items-center">
               <Icon icon="heroicons:plus" className="ltr:mr-2 rtl:ml-2" />
               {t("coupon.createNew")}

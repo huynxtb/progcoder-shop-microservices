@@ -42,6 +42,8 @@
     "exportExcel": "Xuất Excel",
     "print": "In",
     "confirm": "Xác nhận",
+    "refresh": "Làm mới",
+    "refreshing": "Đang làm mới...",
     "deleteConfirmTitle": "Xác nhận xóa",
     "deleteConfirmMessage": "Bạn có chắc chắn muốn xóa mục này? Hành động này không thể hoàn tác.",
     "deleteProductMessage": "Bạn có chắc chắn muốn xóa sản phẩm này?",

@@ -1,41 +1,48 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Chart from "react-apexcharts";
 import useDarkMode from "@/hooks/useDarkMode";
 import useRtl from "@/hooks/useRtl";
 import { reportService } from "@/services/reportService";
 import { useTranslation } from "react-i18next";
 
-const OrderGrowthLineChart = ({ height = 420 }) => {
+const OrderGrowthLineChart = ({ height = 420, onRefresh }) => {
   const { t } = useTranslation();
   const [isDark] = useDarkMode();
   const [isRtl] = useRtl();
   const [chartData, setChartData] = useState({ days: [], values: [] });
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchOrderGrowthData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await reportService.getOrderGrowthStatistics();
-        
-        // API returns { result: { items: [...] } }
-        if (response?.result?.items) {
-          const items = response.result.items;
-          const days = items.map(item => item.day);
-          const values = items.map(item => item.value);
-          setChartData({ days, values });
-        }
-      } catch (error) {
-        console.error("Failed to fetch order growth statistics:", error);
-        // Set empty data on error
-        setChartData({ days: [], values: [] });
-      } finally {
-        setIsLoading(false);
+  const fetchOrderGrowthData = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await reportService.getOrderGrowthStatistics();
+      
+      // API returns { result: { items: [...] } }
+      if (response?.result?.items) {
+        const items = response.result.items;
+        const days = items.map(item => item.day);
+        const values = items.map(item => item.value);
+        setChartData({ days, values });
       }
-    };
-
-    fetchOrderGrowthData();
+    } catch (error) {
+      console.error("Failed to fetch order growth statistics:", error);
+      // Set empty data on error
+      setChartData({ days: [], values: [] });
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchOrderGrowthData();
+  }, [fetchOrderGrowthData]);
+
+  // Expose refresh function to parent
+  useEffect(() => {
+    if (onRefresh) {
+      onRefresh(fetchOrderGrowthData);
+    }
+  }, [onRefresh, fetchOrderGrowthData]);
 
   const series = [
     {

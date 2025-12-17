@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import Card from "@/components/ui/Card";
@@ -53,30 +53,30 @@ const BrandPage = () => {
   });
 
   // Fetch brands from API
-  useEffect(() => {
-    const fetchBrands = async () => {
-      try {
-        setLoading(true);
-        const response = await api.get(API_ENDPOINTS.CATALOG.GET_BRANDS);
-        
-        // Map API response to component format
-        const mappedBrands = response.data.result.items.map((item) => ({
-          id: item.id,
-          name: item.name,
-          slug: item.slug || "",
-        }));
-        
-        setBrands(mappedBrands);
-      } catch (error) {
-        console.error("Failed to fetch brands:", error);
-        setBrands([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBrands();
+  const fetchBrands = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await api.get(API_ENDPOINTS.CATALOG.GET_BRANDS);
+      
+      // Map API response to component format
+      const mappedBrands = response.data.result.items.map((item) => ({
+        id: item.id,
+        name: item.name,
+        slug: item.slug || "",
+      }));
+      
+      setBrands(mappedBrands);
+    } catch (error) {
+      console.error("Failed to fetch brands:", error);
+      setBrands([]);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchBrands();
+  }, [fetchBrands]);
 
   const handleViewClick = (brand) => {
     setViewingBrand(brand);
@@ -311,6 +311,14 @@ const BrandPage = () => {
           <h4 className="card-title">{t("brand.title")}</h4>
           <div className="md:flex md:space-x-4 md:space-y-0 space-y-2">
             <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} t={t} />
+            <button
+              className="btn btn-outline-dark btn-sm inline-flex items-center"
+              onClick={fetchBrands}
+              disabled={loading}
+            >
+              <Icon icon="heroicons:arrow-path" className={`ltr:mr-2 rtl:ml-2 ${loading ? 'animate-spin' : ''}`} />
+              {loading ? t("common.refreshing") : t("common.refresh")}
+            </button>
             <button
               className="btn btn-dark btn-sm inline-flex items-center"
               onClick={() => setShowAddModal(true)}

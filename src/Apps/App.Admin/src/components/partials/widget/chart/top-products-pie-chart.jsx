@@ -1,36 +1,43 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Chart from "react-apexcharts";
 import useDarkMode from "@/hooks/useDarkMode";
 import { reportService } from "@/services/reportService";
 import { useTranslation } from "react-i18next";
 
-const TopProductsPieChart = ({ height = 420 }) => {
+const TopProductsPieChart = ({ height = 420, onRefresh }) => {
   const { t } = useTranslation();
   const [isDark] = useDarkMode();
   const [topProducts, setTopProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchTopProductsData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await reportService.getTopProductStatistics();
-        
-        // API returns { result: { items: [...] } }
-        if (response?.result?.items) {
-          setTopProducts(response.result.items);
-        }
-      } catch (error) {
-        console.error("Failed to fetch top products statistics:", error);
-        // Set empty data on error
-        setTopProducts([]);
-      } finally {
-        setIsLoading(false);
+  const fetchTopProductsData = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await reportService.getTopProductStatistics();
+      
+      // API returns { result: { items: [...] } }
+      if (response?.result?.items) {
+        setTopProducts(response.result.items);
       }
-    };
-
-    fetchTopProductsData();
+    } catch (error) {
+      console.error("Failed to fetch top products statistics:", error);
+      // Set empty data on error
+      setTopProducts([]);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchTopProductsData();
+  }, [fetchTopProductsData]);
+
+  // Expose refresh function to parent
+  useEffect(() => {
+    if (onRefresh) {
+      onRefresh(fetchTopProductsData);
+    }
+  }, [onRefresh, fetchTopProductsData]);
 
   const series = topProducts.map((product) => product.value);
   const labels = topProducts.map((product) => product.name);

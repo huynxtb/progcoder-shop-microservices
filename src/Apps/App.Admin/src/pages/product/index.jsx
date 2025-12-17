@@ -51,38 +51,38 @@ const Ecommerce = () => {
   const [publishing, setPublishing] = useState(false);
 
   // Fetch products from API
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        const response = await catalogService.getAllProducts();
-        
-        // Map API response to component format
-        const mappedProducts = response.data.result.items.map((item) => ({
-          id: item.id,
-          name: item.name,
-          sku: item.sku,
-          categories: item.categoryNames && item.categoryNames.length > 0 ? item.categoryNames.join(", ") : "",
-          brand: item.brandName,
-          price: item.price,
-          salePrice: item.salePrice || null,
-          published: item.published,
-          featured: item.featured,
-          image: item.thumbnail?.publicURL || "https://placehold.co/60x60/e2e8f0/475569?text=No+Img",
-          status: mapStatus(item.displayStatus),
-        }));
-        
-        setProducts(mappedProducts);
-      } catch (error) {
-        console.error("Failed to fetch products:", error);
-        setProducts([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const response = await catalogService.getAllProducts();
+      
+      // Map API response to component format
+      const mappedProducts = response.data.result.items.map((item) => ({
+        id: item.id,
+        name: item.name,
+        sku: item.sku,
+        categories: item.categoryNames && item.categoryNames.length > 0 ? item.categoryNames.join(", ") : "",
+        brand: item.brandName,
+        price: item.price,
+        salePrice: item.salePrice || null,
+        published: item.published,
+        featured: item.featured,
+        image: item.thumbnail?.publicURL || "https://placehold.co/60x60/e2e8f0/475569?text=No+Img",
+        status: mapStatus(item.displayStatus),
+      }));
+      
+      setProducts(mappedProducts);
+    } catch (error) {
+      console.error("Failed to fetch products:", error);
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchProducts();
-  }, [t]);
+  }, []);
 
   const handleDeleteClick = (product) => {
     setItemToDelete(product);
@@ -424,6 +424,14 @@ const Ecommerce = () => {
             <h4 className="card-title">{t("products.title")}</h4>
             <div className="md:flex md:space-x-4 md:space-y-0 space-y-2 mt-4 md:mt-0">
               <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} t={t} />
+              <button 
+                className="btn btn-outline-dark btn-sm inline-flex items-center"
+                onClick={fetchProducts}
+                disabled={loading}
+              >
+                <Icon icon="heroicons:arrow-path" className={`ltr:mr-2 rtl:ml-2 ${loading ? 'animate-spin' : ''}`} />
+                {loading ? t("common.refreshing") : t("common.refresh")}
+              </button>
               <button className="btn btn-outline-dark btn-sm inline-flex items-center">
                 <Icon icon="heroicons:arrow-down-tray" className="ltr:mr-2 rtl:ml-2" />
                 {t("products.exportExcel")}

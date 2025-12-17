@@ -1,35 +1,42 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Card from "@/components/ui/Card";
 import Icon from "@/components/ui/Icon";
 import { reportService } from "@/services/reportService";
 import { useTranslation } from "react-i18next";
 
-const GroupChart2 = () => {
+const GroupChart2 = ({ onRefresh }) => {
   const { t } = useTranslation();
   const [statistics, setStatistics] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchDashboardStatistics = async () => {
-      try {
-        setIsLoading(true);
-        const response = await reportService.getDashboardStatistics();
-        
-        // API returns { result: { items: [...] } }
-        if (response?.result?.items) {
-          setStatistics(response.result.items);
-        }
-      } catch (error) {
-        console.error("Failed to fetch dashboard statistics:", error);
-        // Set empty array on error to prevent UI breaks
-        setStatistics([]);
-      } finally {
-        setIsLoading(false);
+  const fetchDashboardStatistics = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await reportService.getDashboardStatistics();
+      
+      // API returns { result: { items: [...] } }
+      if (response?.result?.items) {
+        setStatistics(response.result.items);
       }
-    };
-
-    fetchDashboardStatistics();
+    } catch (error) {
+      console.error("Failed to fetch dashboard statistics:", error);
+      // Set empty array on error to prevent UI breaks
+      setStatistics([]);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchDashboardStatistics();
+  }, [fetchDashboardStatistics]);
+
+  // Expose refresh function to parent
+  useEffect(() => {
+    if (onRefresh) {
+      onRefresh(fetchDashboardStatistics);
+    }
+  }, [onRefresh, fetchDashboardStatistics]);
 
   // Show loading state
   if (isLoading) {
