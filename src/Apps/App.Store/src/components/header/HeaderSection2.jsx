@@ -22,12 +22,12 @@ const HeaderSection2 = () => {
           <div className="row gy-3 align-items-center">
             <div className="col-4 d-none d-md-block">
               <span className="mail-address">
-                <Link to="mailto:info@webmail.com">
+                <Link to="mailto:progcoder.com@gmail.com">
                   <i
                     className="fa-regular fa-envelope-open"
                     style={{ paddingRight: 5 }}
                   ></i>
-                  info@webmail.com
+                  progcoder.com@gmail.com
                 </Link>
               </span>
             </div>

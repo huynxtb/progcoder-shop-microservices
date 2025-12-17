@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import WishlistModal from "../modal/WishlistModal";
 import CartModal from "../modal/CartModal";
+import Notification from "./Notification";
 import { FarzaaContext } from "../../context/FarzaaContext";
 import { useKeycloak } from "../../contexts/KeycloakContext";
 
@@ -31,15 +32,20 @@ const HeaderRightContent = () => {
             </button>
           </li>
           {authenticated && (
-            <li>
-              <button
-                className="fz-header-cart-btn d-none d-lg-block"
-                onClick={handleCartShow}
-              >
-                <i className="fa-light fa-shopping-bag"></i>
-                <span className="count">{cartItemAmount}</span>
-              </button>
-            </li>
+            <>
+              <li>
+                <Notification />
+              </li>
+              <li>
+                <button
+                  className="fz-header-cart-btn d-none d-lg-block"
+                  onClick={handleCartShow}
+                >
+                  <i className="fa-light fa-shopping-bag"></i>
+                  <span className="count">{cartItemAmount}</span>
+                </button>
+              </li>
+            </>
           )}
           <li className="d-block d-lg-none">
             <a

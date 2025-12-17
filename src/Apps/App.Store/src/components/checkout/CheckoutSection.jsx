@@ -1,134 +1,481 @@
-import React, { useContext } from 'react'
-import { Form } from 'react-bootstrap'
-import { FarzaaContext } from '../../context/FarzaaContext'
-import { Link } from 'react-router-dom'
+import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { Form } from 'react-bootstrap';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import { Link } from 'react-router-dom';
+import { FarzaaContext } from '../../context/FarzaaContext';
+import { discountService } from '../../services/discountService';
+import { basketService } from '../../services/basketService';
+import { formatCurrency } from '../../utils/format';
+import { COUNTRIES, STATES } from '../../constants/countries';
+import OrderSuccessModal from '../modal/OrderSuccessModal';
 
 const CheckoutSection = () => {
-    const {subTotal, shipping, coupon, finalPrice} = useContext(FarzaaContext)
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { subTotal, shipping, cartItems } = useContext(FarzaaContext);
+
+  // Coupon state
+  const [couponCode, setCouponCode] = useState('');
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [couponData, setCouponData] = useState(null);
+  const [couponError, setCouponError] = useState('');
+  const [applyingCoupon, setApplyingCoupon] = useState(false);
+
+  // Success modal state
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [orderNo, setOrderNo] = useState('');
+
+  // Calculate prices
+  const originalAmount = subTotal;
+  const discountAmount = couponData?.discountAmount || 0;
+  const finalAmount = couponData?.finalAmount || (originalAmount + shipping);
+
+  // Validation schema with Yup
+  const validationSchema = Yup.object({
+    firstName: Yup.string()
+      .required(t('validation.required'))
+      .min(2, t('validation.minLength', { min: 2 })),
+    lastName: Yup.string()
+      .required(t('validation.required'))
+      .min(2, t('validation.minLength', { min: 2 })),
+    email: Yup.string()
+      .required(t('validation.required'))
+      .email(t('validation.invalidEmail')),
+    phoneNumber: Yup.string()
+      .required(t('validation.required'))
+      .matches(/^[0-9]{10,11}$/, t('validation.invalidPhone')),
+    addressLine: Yup.string()
+      .required(t('validation.required'))
+      .min(5, t('validation.minLength', { min: 5 })),
+    city: Yup.string()
+      .required(t('validation.required')),
+    country: Yup.string()
+      .required(t('validation.required')),
+    state: Yup.string()
+      .required(t('validation.required')),
+    zipCode: Yup.string()
+      .required(t('validation.required')),
+  });
+
+  // Initial values
+  const initialValues = {
+    firstName: '',
+    lastName: '',
+    companyName: '',
+    email: '',
+    phoneNumber: '',
+    addressLine: '',
+    apartment: '',
+    city: '',
+    country: 'Vietnam',
+    state: '',
+    zipCode: '',
+    additionalInfo: '',
+  };
+
+  // Handle apply coupon
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) {
+      setCouponError(t('checkout.couponRequired'));
+      return;
+    }
+
+    try {
+      setApplyingCoupon(true);
+      setCouponError('');
+
+      const response = await discountService.evaluateCoupon(couponCode, originalAmount);
+
+      if (response?.data?.result) {
+        setCouponData(response.data.result);
+        setCouponApplied(true);
+      }
+    } catch (error) {
+      console.error('Failed to apply coupon:', error);
+      setCouponError(t('checkout.invalidCoupon'));
+      setCouponData(null);
+      setCouponApplied(false);
+    } finally {
+      setApplyingCoupon(false);
+    }
+  };
+
+  // Handle remove coupon
+  const handleRemoveCoupon = () => {
+    setCouponCode('');
+    setCouponApplied(false);
+    setCouponData(null);
+    setCouponError('');
+  };
+
+  // Handle form submission
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const checkoutData = {
+        customer: {
+          name: `${values.firstName} ${values.lastName}`,
+          email: values.email,
+          phoneNumber: values.phoneNumber,
+        },
+        shippingAddress: {
+          name: `${values.firstName} ${values.lastName}`,
+          emailAddress: values.email,
+          addressLine: values.addressLine + (values.apartment ? `, ${values.apartment}` : ''),
+          country: values.country,
+          state: values.state,
+          zipCode: values.zipCode,
+        },
+        couponCode: couponApplied && couponData ? couponData.couponCode : null,
+      };
+
+      const response = await basketService.checkoutBasket(checkoutData);
+
+      if (response) {
+        // Success - show success modal with order number
+        setOrderNo(response.data.result.orderNo || '');
+        setShowSuccessModal(true);
+      }
+    } catch (error) {
+      console.error('Failed to checkout:', error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleCloseSuccessModal = () => {
+    setShowSuccessModal(false);
+  };
+
   return (
     <div className="container">
-        <div className="fz-checkout">
-            <form action="#" className="checkout-form">
-                <div className="fz-billing-details">
-                    <div className="row gy-0 gx-3 gx-md-4">
-                        <h3 className="fz-checkout-title">Billing Details</h3>
-                        <div className="col-6 col-xxs-12">
-                            <input type="text" name="first-name" id="checkout-first-name" placeholder="First Name"/>
-                        </div>
-                        <div className="col-6 col-xxs-12">
-                            <input type="text" name="last-name" id="checkout-last-name" placeholder="Last Name"/>
-                        </div>
-                        <div className="col-12">
-                            <input type="text" name="company-name" id="checkout-company-name" placeholder="Company Name"/>
-                        </div>
+      <div className="fz-checkout">
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
+            <Form onSubmit={handleSubmit} className="checkout-form">
+              <div className="fz-billing-details">
+                <div className="row gy-0 gx-3 gx-md-4">
+                  <h3 className="fz-checkout-title">{t('checkout.billingDetails')}</h3>
 
-                        <div className="col-12">
-                            <Form.Select className='country-select' name="country" id="checkout-country">
-                                <option value="United States">United States (US)</option>
-                                <option value="United Kingdom">United Kingdom (UK)</option>
-                                <option value="France">France</option>
-                                <option value="Russia">Russia</option>
-                                <option value="Iran">Iran</option>
-                                <option value="Bangladesh">Bangladesh</option>
-                                <option value="Bhutan">Bhutan</option>
-                                <option value="Nepal">Nepal</option>
-                            </Form.Select>
-                        </div>
+                  <div className="col-6 col-xxs-12">
+                    <input
+                      type="text"
+                      name="firstName"
+                      id="checkout-first-name"
+                      placeholder={t('common.firstName')}
+                      value={values.firstName}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={touched.firstName && errors.firstName ? 'error' : ''}
+                    />
+                    {touched.firstName && errors.firstName && (
+                      <div className="error-message text-danger small mt-1">{errors.firstName}</div>
+                    )}
+                  </div>
 
-                        <div className="col-12">
-                            <input type="text" name="house-street-number" id="checkout-house-street-number" placeholder="House Number & Street Name"/>
-                        </div>
+                  <div className="col-6 col-xxs-12">
+                    <input
+                      type="text"
+                      name="lastName"
+                      id="checkout-last-name"
+                      placeholder={t('common.lastName')}
+                      value={values.lastName}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={touched.lastName && errors.lastName ? 'error' : ''}
+                    />
+                    {touched.lastName && errors.lastName && (
+                      <div className="error-message text-danger small mt-1">{errors.lastName}</div>
+                    )}
+                  </div>
 
-                        <div className="col-12">
-                            <input type="text" name="apartment-name" id="checkout-apartment-name" placeholder="Apartment, Suite, Unit, etc. (optional)"/>
-                        </div>
+                  <div className="col-12">
+                    <input
+                      type="text"
+                      name="companyName"
+                      id="checkout-company-name"
+                      placeholder={t('checkout.companyName')}
+                      value={values.companyName}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                  </div>
 
-                        <div className="col-12">
-                            <input type="text" name="city-name" id="checkout-city-name" placeholder="Town / City"/>
-                        </div>
+                  <div className="col-12">
+                    <Form.Select
+                      className="country-select"
+                      name="country"
+                      id="checkout-country"
+                      value={values.country}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    >
+                      {COUNTRIES.map((country) => (
+                        <option key={country.value} value={country.value}>
+                          {t(`countries.${country.key}`)}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </div>
 
-                        <div className="col-6 col-xxs-12">
-                            <Form.Select className='state-select' name="states" id="checkout-states">
-                                <option value="Alabama">Alabama</option>
-                                <option value="Alaska">Alaska</option>
-                                <option value="California">California</option>
-                                <option value="Delaware">Delaware</option>
-                                <option value="Florida">Florida</option>
-                                <option value="Georgia">Georgia</option>
-                                <option value="Hawaii">Hawaii</option>
-                                <option value="Idaho">Idaho</option>
-                            </Form.Select>
-                        </div>
+                  <div className="col-12" style={{ marginTop: '20px' }}>
+                    <input
+                      type="text"
+                      name="addressLine"
+                      id="checkout-house-street-number"
+                      placeholder={t('checkout.houseStreetName')}
+                      value={values.addressLine}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={touched.addressLine && errors.addressLine ? 'error' : ''}
+                    />
+                    {touched.addressLine && errors.addressLine && (
+                      <div className="error-message text-danger small mt-1">{errors.addressLine}</div>
+                    )}
+                  </div>
 
-                        <div className="col-6 col-xxs-12">
-                            <input type="text" name="zip-code" id="checkout-zip-code" placeholder="Zip Code"/>
-                        </div>
+                  <div className="col-12">
+                    <input
+                      type="text"
+                      name="apartment"
+                      id="checkout-apartment-name"
+                      placeholder={t('checkout.apartment')}
+                      value={values.apartment}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                  </div>
 
-                        <div className="col-6 col-xxs-12">
-                            <input type="number" name="phone-number" id="checkout-phone-number" placeholder="Phone Number"/>
-                        </div>
+                  <div className="col-6 col-xxs-12">
+                    <input
+                      type="text"
+                      name="city"
+                      id="checkout-city-name"
+                      placeholder={t('common.city')}
+                      value={values.city}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={touched.city && errors.city ? 'error' : ''}
+                    />
+                    {touched.city && errors.city && (
+                      <div className="error-message text-danger small mt-1">{errors.city}</div>
+                    )}
+                  </div>
 
-                        <div className="col-6 col-xxs-12">
-                            <input type="email" name="email-address" id="checkout-email-address" placeholder="Email Address"/>
-                        </div>
+                  <div className="col-6 col-xxs-12">
+                    <input
+                      type="text"
+                      name="zipCode"
+                      id="checkout-zip-code"
+                      placeholder={t('common.zipCode')}
+                      value={values.zipCode}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={touched.zipCode && errors.zipCode ? 'error' : ''}
+                    />
+                    {touched.zipCode && errors.zipCode && (
+                      <div className="error-message text-danger small mt-1">{errors.zipCode}</div>
+                    )}
+                  </div>
 
-                        <div className="col">
-                            <input type="checkbox" name="create-account" id="checkout-create-account"/>
-                            <label className='create-acc-lebel' htmlFor="checkout-create-account">Create an Account</label>
-                        </div>
+                  <div className="col-6 col-xxs-12">
+                    <input
+                      type="tel"
+                      name="phoneNumber"
+                      id="checkout-phone-number"
+                      placeholder={t('common.phone')}
+                      value={values.phoneNumber}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={touched.phoneNumber && errors.phoneNumber ? 'error' : ''}
+                    />
+                    {touched.phoneNumber && errors.phoneNumber && (
+                      <div className="error-message text-danger small mt-1">{errors.phoneNumber}</div>
+                    )}
+                  </div>
 
-                        <div className="col-12 additional-info">
-                            <label htmlFor="checkout-additional-info" className="fz-checkout-title">Additional Information</label>
-                            <textarea name="additional-info" id="checkout-additional-info" placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
-                        </div>
-                    </div>
+                  <div className="col-6 col-xxs-12">
+                    <input
+                      type="email"
+                      name="email"
+                      id="checkout-email-address"
+                      placeholder={t('common.email')}
+                      value={values.email}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={touched.email && errors.email ? 'error' : ''}
+                    />
+                    {touched.email && errors.email && (
+                      <div className="error-message text-danger small mt-1">{errors.email}</div>
+                    )}
+                  </div>
+
+                  <div className="col-12 additional-info">
+                    <label htmlFor="checkout-additional-info" className="fz-checkout-title">
+                      {t('checkout.additionalInformation')}
+                    </label>
+                    <textarea
+                      name="additionalInfo"
+                      id="checkout-additional-info"
+                      placeholder={t('checkout.notesPlaceholder')}
+                      value={values.additionalInfo}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div className="fz-checkout-sidebar">
+                <div className="billing-summery">
+                  <h4 className="fz-checkout-title">{t('checkout.billingSummary')}</h4>
+                  <div className="cart-checkout-area">
+                    <ul className="checkout-summary">
+                      <li>
+                        <span className="checkout-summary__key">{t('common.subtotal')}</span>
+                        <span className="checkout-summary__value">
+                          {formatCurrency(originalAmount)}
+                        </span>
+                      </li>
+
+                      <li>
+                        <span className="checkout-summary__key">{t('common.shipping')}</span>
+                        <span className="checkout-summary__value">
+                          {formatCurrency(shipping)}
+                        </span>
+                      </li>
+
+                      {/* Coupon Section */}
+                      <li className="border-top pt-3" style={{ display: 'block' }}>
+                        <span className="checkout-summary__key d-block mb-2">
+                          {t('checkout.couponCode')}
+                        </span>
+                      </li>
+
+                      <li style={{ display: 'block' }}>
+                        <input
+                          type="text"
+                          className="w-100"
+                          placeholder={t('checkout.enterCoupon')}
+                          value={couponCode}
+                          onChange={(e) => setCouponCode(e.target.value)}
+                          disabled={couponApplied}
+                          style={{
+                            padding: '10px 15px',
+                            border: '1px solid #ddd',
+                            borderRadius: '0',
+                            fontSize: '14px'
+                          }}
+                        />
+                      </li>
+
+                      {couponError && (
+                        <li style={{ display: 'block' }}>
+                          <div className="text-danger small">{couponError}</div>
+                        </li>
+                      )}
+
+                      {couponApplied && couponData && (
+                        <li style={{ display: 'block' }}>
+                          <div className="text-success small">
+                            <i className="fa-regular fa-check-circle me-1"></i>
+                            {t('checkout.couponApplied')}
+                          </div>
+                        </li>
+                      )}
+
+                      <li style={{ display: 'block' }}>
+                        {!couponApplied ? (
+                          <button
+                            type="button"
+                            className="fz-1-banner-btn cart-checkout-btn"
+                            onClick={handleApplyCoupon}
+                            disabled={applyingCoupon || !couponCode.trim()}
+                          >
+                            {applyingCoupon ? t('common.loading') : t('checkout.apply')}
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            className="fz-1-banner-btn cart-checkout-btn"
+                            onClick={handleRemoveCoupon}
+                            style={{ backgroundColor: '#dc3545' }}
+                          >
+                            {t('common.remove')}
+                          </button>
+                        )}
+                      </li>
+
+                      
+
+                      {/* Discount display */}
+                      {couponApplied && discountAmount > 0 && (
+                        <li>
+                          <span className="checkout-summary__key text-success">
+                            {t('checkout.discountAmount')}
+                          </span>
+                          <span className="checkout-summary__value text-success">
+                            -{formatCurrency(discountAmount)}
+                          </span>
+                        </li>
+                      )}
+
+                      <li className="cart-checkout-total">
+                        <span className="checkout-summary__key">{t('common.total')}</span>
+                        <span className="checkout-summary__value">
+                          {formatCurrency(finalAmount)}
+                        </span>
+                      </li>
+                    </ul>
+
+                    <Link to="/cart" className="fz-1-banner-btn cart-checkout-btn">
+                      {t('checkout.editOrder')}
+                    </Link>
+                  </div>
                 </div>
 
-                <div className="fz-checkout-sidebar">
-                    <div className="billing-summery">
-                        <h4 className="fz-checkout-title">Billing Summary</h4>
-                        <div className="cart-checkout-area">
-                            <ul className="checkout-summary">
-                                <li>
-                                    <span className="checkout-summary__key">Subtotal</span>
-                                    <span className="checkout-summary__value"><span>$</span>{subTotal}</span>
-                                </li>
-
-                                <li>
-                                    <span className="checkout-summary__key">Shipping</span>
-                                    <span className="checkout-summary__value"><span>$</span>{shipping}</span>
-                                </li>
-
-                                <li>
-                                    <span className="checkout-summary__key">Coupon discount</span>
-                                    <span className="checkout-summary__value">-<span>$</span>{coupon}</span>
-                                </li>
-
-                                <li className="cart-checkout-total">
-                                    <span className="checkout-summary__key">Total</span>
-                                    <span className="checkout-summary__value"><span>$</span>{finalPrice}</span>
-                                </li>
-                            </ul>
-
-
-                            <Link to="/cart" className="fz-1-banner-btn cart-checkout-btn">Edit Order</Link>
-                        </div>
-                    </div>
-
-                    <div className="payment-info">
-                        <h4 className="fz-checkout-title">Payment Information</h4>
-                        <div className="d-flex payment-area align-items-center">
-                            <input type="number" name="Pyament-option" id="checkout-payment-option" placeholder="xxxx xxxx xxxx xxxx"/>
-                            <i className="fa-light fa-credit-card"></i>
-                        </div>
-                        <p className="checkout-payment-descr">Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our <a href="#">privacy policy</a></p>
-                        <button type="submit" className="fz-1-banner-btn cart-checkout-btn checkout-form-btn">Place Order</button>
-                    </div>
+                <div className="payment-info">
+                  {/* <h4 className="fz-checkout-title">{t('checkout.paymentInformation')}</h4>
+                  <div className="d-flex payment-area align-items-center">
+                    <input
+                      type="text"
+                      name="payment-option"
+                      id="checkout-payment-option"
+                      placeholder="xxxx xxxx xxxx xxxx"
+                    />
+                    <i className="fa-light fa-credit-card"></i>
+                  </div>
+                  <p className="checkout-payment-descr">
+                    {t('checkout.privacyPolicy')}
+                  </p> */}
+                  <button
+                    type="submit"
+                    className="fz-1-banner-btn cart-checkout-btn checkout-form-btn"
+                    disabled={isSubmitting || cartItems.length === 0}
+                  >
+                    {isSubmitting ? t('common.loading') : t('checkout.placeOrder')}
+                  </button>
                 </div>
-            </form>
-        </div>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
+
+      {/* Success Modal */}
+      <OrderSuccessModal 
+        show={showSuccessModal}
+        onClose={handleCloseSuccessModal}
+        orderNo={orderNo}
+      />
     </div>
-  )
-}
+  );
+};
 
-export default CheckoutSection
+export default CheckoutSection;

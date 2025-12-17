@@ -39,6 +39,11 @@ export const menuItems = [
         isBlank: true
       },
       {
+        childtitle: "Redi Insight",
+        childlink: "http://localhost:5540",
+        isBlank: true
+      },
+      {
         childtitle: "Github",
         childlink: "https://github.com/aspnetrun/run-aspnetcore-microservices",
         isBlank: true

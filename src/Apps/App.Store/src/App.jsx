@@ -25,6 +25,8 @@ import BagShop from "./pages/BagShop";
 import CcTvShop from "./pages/CcTvShop";
 import BagShop2 from "./pages/BagShop2";
 import Shop2 from "./pages/Shop2";
+import MyOrders from "./pages/MyOrders";
+import Notifications from "./pages/Notifications";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 function App() {
@@ -77,6 +79,22 @@ function App() {
         element={
           <ProtectedRoute>
             <Checkout />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/my-orders" 
+        element={
+          <ProtectedRoute>
+            <MyOrders />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/notifications" 
+        element={
+          <ProtectedRoute>
+            <Notifications />
           </ProtectedRoute>
         } 
       />

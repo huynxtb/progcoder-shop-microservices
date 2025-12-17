@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { formatCurrency } from '../../utils/format';
 
 const CartItemTable = ({ cartArray, remove, quantity }) => {
   const { t } = useTranslation();
@@ -32,7 +33,7 @@ const CartItemTable = ({ cartArray, remove, quantity }) => {
                   </div>
                 </div>
               </td>
-              <td>${item.price}</td>
+              <td>{formatCurrency(item.price)}</td>
               <td>
                 <div className="cart-product__quantity">
                   <div className="cart-product__quantity-btns">
@@ -62,7 +63,7 @@ const CartItemTable = ({ cartArray, remove, quantity }) => {
                   />
                 </div>
               </td>
-              <td>${item.total ? item.total : item.quantity * item.price}</td>
+              <td>{formatCurrency(item.total ? item.total : item.quantity * item.price)}</td>
               <td>
                 <button
                   className="item-remove-btn"

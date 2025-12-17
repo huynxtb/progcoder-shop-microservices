@@ -17,6 +17,11 @@ const HeaderNav = ({ position, downArrow }) => {
             {t("common.shop", "Shop")}
           </Link>
         </li>
+        <li className="fz-nav-item">
+          <Link to="/my-orders" className="fz-nav-link">
+            {t("orders.myOrders")}
+          </Link>
+        </li>
         <li className="fz-dropdown fz-nav-item">
           <a role="button" className="fz-nav-link">
             <span>{t("common.pages", "Pages")}</span>{" "}

@@ -842,6 +842,25 @@
             text-align: center;
         }
     }
+
+    &-notification-btn {
+        position: relative;
+
+        .count {
+            position: absolute;
+            top: calc(0% - 10px);
+            right: calc(0% - 10px);
+            background: $color-3;
+            line-height: 1.7;
+            border-radius: 30px;
+            font-size: 12px;
+            font-family: $futuraPT;
+            color: $white;
+            min-width: 20px;
+            min-height: 20px;
+            text-align: center;
+        }
+    }
 }
 
 .fz-logo-container img {

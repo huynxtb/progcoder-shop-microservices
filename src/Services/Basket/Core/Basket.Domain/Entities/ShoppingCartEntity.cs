@@ -20,19 +20,16 @@ public sealed class ShoppingCartEntity : Aggregate<Guid>
 
     #endregion
 
-    #region Ctors
-
-    private ShoppingCartEntity(string userId)
-    {
-        Id = Guid.NewGuid();
-        UserId = userId;
-    }
-
-    #endregion
-
     #region Factories
 
-    public static ShoppingCartEntity Create(string userId) => new(userId);
+    public static ShoppingCartEntity Create(string userId)
+    {
+        return new ShoppingCartEntity()
+        {
+            Id = Guid.NewGuid(),
+            UserId = userId
+        };
+    }
 
     #endregion
 

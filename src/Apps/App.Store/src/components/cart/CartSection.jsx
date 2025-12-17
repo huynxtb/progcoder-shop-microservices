@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import CartItemTable from './CartItemTable'
 import { FarzaaContext } from '../../context/FarzaaContext'
 import { Link } from 'react-router-dom'
+import { formatCurrency } from '../../utils/format'
 
 const CartSection = () => {
     const { t } = useTranslation();
@@ -45,22 +46,22 @@ const CartSection = () => {
                 <ul className="checkout-summary">
                     <li>
                         <span className="checkout-summary__key">{t("common.subtotal")}</span>
-                        <span className="checkout-summary__value"><span>$</span>{subTotal}</span>
+                        <span className="checkout-summary__value">{formatCurrency(subTotal)}</span>
                     </li>
 
                     <li>
                         <span className="checkout-summary__key">{t("common.shipping")}</span>
-                        <span className="checkout-summary__value"><span>$</span>{shipping}</span>
+                        <span className="checkout-summary__value">{formatCurrency(shipping)}</span>
                     </li>
 
                     <li>
                         <span className="checkout-summary__key">{t("cart.couponDiscount", "Coupon discount")}</span>
-                        <span className="checkout-summary__value">-<span>$</span>{coupon}</span>
+                        <span className="checkout-summary__value">-{formatCurrency(coupon)}</span>
                     </li>
 
                     <li className="cart-checkout-total">
                         <span className="checkout-summary__key">{t("common.total")}</span>
-                        <span className="checkout-summary__value"><span>$</span>{finalPrice}</span>
+                        <span className="checkout-summary__value">{formatCurrency(finalPrice)}</span>
                     </li>
                 </ul>
 

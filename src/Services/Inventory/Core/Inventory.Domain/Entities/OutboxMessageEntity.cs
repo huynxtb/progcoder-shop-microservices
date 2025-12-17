@@ -31,20 +31,6 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
 
     #endregion
 
-    #region Ctors
-
-    public OutboxMessageEntity(Guid id, string eventType, string content, DateTimeOffset occurredOnUtc)
-    {
-        Id = id;
-        EventType = eventType;
-        Content = content;
-        OccurredOnUtc = occurredOnUtc;
-        MaxAttempts = AppConstants.MaxAttempts;
-        AttemptCount = 0;
-    }
-
-    #endregion
-
     #region Factories
 
     public static OutboxMessageEntity Create(
@@ -53,7 +39,15 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
         string content, 
         DateTimeOffset occurredOnUtc)
     {
-        return new OutboxMessageEntity(id, eventType, content, occurredOnUtc);
+        return new OutboxMessageEntity()
+        {
+            Id = id,
+            EventType = eventType,
+            Content = content,
+            OccurredOnUtc = occurredOnUtc,
+            MaxAttempts = AppConstants.MaxAttempts,
+            AttemptCount = 0
+        };
     }
 
     #endregion

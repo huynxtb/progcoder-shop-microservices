@@ -7,6 +7,7 @@ import { createContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useKeycloak } from "../contexts/KeycloakContext";
 import { searchProducts, getCategories, getBrands } from "../services/productService";
+import { basketService } from "../services/basketService";
 
 const FarzaaContext = createContext();
 
@@ -430,11 +431,66 @@ const FarzaaContextProvider = ({ children }) => {
     0
   );
 
+  // Sync cart with basket API
+  const syncCartWithBasket = async () => {
+    if (!authenticated) return;
+    
+    try {
+      const response = await basketService.getBasket();
+      if (response?.data?.result?.basket?.items) {
+        const basketItems = response.data.result.basket.items;
+        
+        // Map basket items to cart format
+        const mappedItems = basketItems.map((item) => ({
+          id: item.productId,
+          quantity: item.quantity,
+          price: item.price || 0,
+          total: (item.price || 0) * item.quantity,
+          name: item.productName || '',
+          imgSrc: item.productImage || '', // Fix: API returns productImage, not imageUrl
+        }));
+        
+        setCartItems(mappedItems);
+      }
+    } catch (error) {
+      console.error('Failed to sync cart with basket:', error);
+    }
+  };
+
+  // Sync cart to API
+  const syncCartToAPI = async (items) => {
+    if (!authenticated) return;
+    
+    try {
+      const basketItems = items.map((item) => ({
+        productId: item.id,
+        quantity: item.quantity,
+      }));
+      
+      await basketService.storeBasket(basketItems);
+    } catch (error) {
+      console.error('Failed to sync cart to API:', error);
+    }
+  };
+
+  // Load basket when user is authenticated
+  useEffect(() => {
+    if (authenticated) {
+      syncCartWithBasket();
+    }
+  }, [authenticated]);
+
   const handleRemoveItem = (itemId) => {
     const updatedItems = cartItems.filter((item) => item.id !== itemId);
     setCartItems(updatedItems);
     toast.error("Item deleted from cart!");
+    
+    // Sync to API
+    if (authenticated) {
+      syncCartToAPI(updatedItems);
+    }
   };
+  
   const handleQuantityChange = (itemId, newQuantity) => {
     if (newQuantity >= 0) {
       if (newQuantity === 0) {
@@ -450,6 +506,11 @@ const FarzaaContextProvider = ({ children }) => {
             : item
         );
         setCartItems(updatedItems);
+        
+        // Sync to API
+        if (authenticated) {
+          syncCartToAPI(updatedItems);
+        }
       }
     }
   };
@@ -470,6 +531,9 @@ const FarzaaContextProvider = ({ children }) => {
       const existingItemIndex = cartItems.findIndex(
         (item) => item.id === itemId
       );
+      
+      let updatedCartItems;
+      
       // Check if the item is already in the cart
       if (!cartItems.some((item) => item.id === itemId)) {
         // Set initial quantity to 1 and total to item's price
@@ -479,17 +543,23 @@ const FarzaaContextProvider = ({ children }) => {
           total: itemToAdd.price,
         };
 
-        setCartItems((prevCartItems) => [...prevCartItems, newItem]);
+        updatedCartItems = [...cartItems, newItem];
+        setCartItems(updatedCartItems);
         toast.success("Item added in cart!");
       } else if (existingItemIndex !== -1) {
         // Increment quantity and update total
-        const updatedCartItems = [...cartItems];
+        updatedCartItems = [...cartItems];
         updatedCartItems[existingItemIndex].quantity += 1;
         updatedCartItems[existingItemIndex].total =
           updatedCartItems[existingItemIndex].quantity * itemToAdd.price;
 
         setCartItems(updatedCartItems);
         toast.success("Item list updated in cart!");
+      }
+      
+      // Sync to API
+      if (authenticated && updatedCartItems) {
+        syncCartToAPI(updatedCartItems);
       }
     } else {
       toast.warning("Item not found.");

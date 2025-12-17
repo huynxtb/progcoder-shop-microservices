@@ -115,7 +115,7 @@ public sealed class PostgreSqlDatabaseProvider : IDatabaseProvider
         // All messages were successfully claimed
         var claimedMessages = messagesList.Select(m => 
         {
-            var message = new OutboxMessageEntity(m.Id, m.EventType!, m.Content!, m.OccurredOnUtc);
+            var message = OutboxMessageEntity.Create(m.Id, m.EventType!, m.Content!, m.OccurredOnUtc);
             message.Claim(now);
             return message;
         }).ToList();
@@ -208,7 +208,7 @@ public sealed class PostgreSqlDatabaseProvider : IDatabaseProvider
         // All messages were successfully claimed
         var claimedMessages = messagesList.Select(m => 
         {
-            var message = new OutboxMessageEntity(m.Id, m.EventType!, m.Content!, m.OccurredOnUtc);
+            var message = OutboxMessageEntity.Create(m.Id, m.EventType!, m.Content!, m.OccurredOnUtc);
             message.SetRetryProperties(m.AttemptCount, m.MaxAttempts, m.NextAttemptOnUtc, m.LastErrorMessage);
             message.Claim(now);
             return message;
