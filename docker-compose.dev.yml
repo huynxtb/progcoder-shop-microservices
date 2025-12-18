@@ -158,6 +158,23 @@ services:
       - progcoder_network
     depends_on:
       - redis
+
+  redisinsight-init:
+    image: curlimages/curl:latest
+    container_name: redisinsight-init
+    restart: "no"
+    depends_on:
+      - redisinsight
+      - redis
+    networks:
+      - progcoder_network
+    volumes:
+      - ./config/redisinsight/add_datasources.sh:/scripts/add_datasources.sh
+    environment:
+      REDISINSIGHT_HOST: redisinsight
+      REDISINSIGHT_PORT: 5540
+    user: root
+    entrypoint: ["/bin/sh", "-c", "chmod +x /scripts/add_datasources.sh && /scripts/add_datasources.sh"]
   
   rabbitmq:
     image: ${RABBITMQ_IMAGE_NAME}
@@ -233,27 +250,15 @@ services:
         condition: service_healthy
     networks:
       - progcoder_network
+    volumes:
+      - ./config/elasticsearch/watermark_settings.sh:/scripts/watermark_settings.sh
     environment:
+      ELASTICSEARCH_HOST: elasticsearch
+      ELASTICSEARCH_PORT: 9200
+      ELASTICSEARCH_USER: elastic
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
-    command:
-      - sh
-      - -c
-      - |
-        echo "Waiting for Elasticsearch to be ready...";
-        sleep 30;
-        until curl -s -u elastic:$$ELASTIC_PASSWORD http://elasticsearch:9200/_cluster/health | grep -q '"status"'; do
-          echo "Elasticsearch is not ready yet, waiting...";
-          sleep 10;
-        done;
-        echo "Configuring Elasticsearch disk watermark settings...";
-        RESPONSE=$$(curl -s -w "\n%{http_code}" -u elastic:$$ELASTIC_PASSWORD -X PUT "http://elasticsearch:9200/_cluster/settings" -H "Content-Type: application/json" -d '{"persistent":{"cluster.routing.allocation.disk.watermark.low":"95%","cluster.routing.allocation.disk.watermark.high":"98%","cluster.routing.allocation.disk.watermark.flood_stage":"99%"}}');
-        HTTP_CODE=$$(echo "$$RESPONSE" | tail -n1);
-        if [ "$$HTTP_CODE" -eq 200 ]; then
-          echo "Elasticsearch disk watermark settings configured successfully";
-        else
-          echo "Warning: Failed to configure disk watermark settings (HTTP $$HTTP_CODE)";
-          exit 1;
-        fi
+    user: root
+    entrypoint: ["/bin/sh", "-c", "chmod +x /scripts/watermark_settings.sh && /scripts/watermark_settings.sh"]
 
   # =========================
   # Admin / Ops
