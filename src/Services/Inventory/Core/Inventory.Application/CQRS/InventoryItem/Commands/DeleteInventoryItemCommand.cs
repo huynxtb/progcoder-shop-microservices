@@ -36,6 +36,8 @@ public sealed class DeleteInventoryItemCommandHandler(IApplicationDbContext dbCo
             .SingleOrDefaultAsync(x => x.Id == command.InventoryItemId, cancellationToken)
             ?? throw new NotFoundException(MessageCode.ResourceNotFound);
 
+        entity.Delete();
+
         dbContext.InventoryItems.Remove(entity);
         await dbContext.SaveChangesAsync(cancellationToken);
 

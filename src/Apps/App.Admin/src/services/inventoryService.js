@@ -129,6 +129,16 @@ export const inventoryService = {
   deleteLocation: (locationId) => {
     return api.delete(API_ENDPOINTS.INVENTORY.DELETE_LOCATION(locationId));
   },
+
+  // ==================== Histories ====================
+
+  /**
+   * Get inventory change histories
+   * @returns {Promise} API response
+   */
+  getHistories: () => {
+    return api.get(API_ENDPOINTS.INVENTORY.GET_HISTORIES);
+  },
 };
 
 export default inventoryService;

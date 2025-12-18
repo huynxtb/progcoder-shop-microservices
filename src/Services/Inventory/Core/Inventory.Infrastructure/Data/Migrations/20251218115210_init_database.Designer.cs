@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Inventory.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251209110005_init_database")]
+    [Migration("20251218115210_init_database")]
     partial class init_database
     {
         /// <inheritdoc />
@@ -30,31 +30,31 @@ namespace Inventory.Infrastructure.Data.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("id");
 
-                    b.Property<int>("ChangeAmount")
-                        .HasColumnType("int")
-                        .HasColumnName("change_amount");
-
-                    b.Property<DateTimeOffset>("ChangedAt")
-                        .HasColumnType("datetime")
-                        .HasColumnName("changed_at");
-
-                    b.Property<Guid>("InventoryItemId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("inventory_item_id");
-
-                    b.Property<int>("QuantityAfterChange")
-                        .HasColumnType("int")
-                        .HasColumnName("quantity_after_change");
-
-                    b.Property<string>("Source")
+                    b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("source");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTimeOffset>("CreatedOnUtc")
+                        .HasColumnType("datetime")
+                        .HasColumnName("created_on_utc");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("last_modified_by");
+
+                    b.Property<DateTimeOffset?>("LastModifiedOnUtc")
+                        .HasColumnType("datetime")
+                        .HasColumnName("last_modified_on_utc");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("message");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("InventoryItemId", "ChangedAt");
 
                     b.ToTable("inventory_histories", (string)null);
                 });
@@ -154,8 +154,8 @@ namespace Inventory.Infrastructure.Data.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("location_id");
 
-                    b.Property<long>("Quantity")
-                        .HasColumnType("bigint")
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int")
                         .HasColumnName("quantity");
 
                     b.Property<Guid>("ReferenceId")

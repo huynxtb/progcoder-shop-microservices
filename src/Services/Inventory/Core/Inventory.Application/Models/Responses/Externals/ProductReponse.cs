@@ -1,6 +1,6 @@
 ﻿namespace Inventory.Application.Models.Responses.Externals;
 
-public class ProductInfoReponse
+public class ProductReponse
 {
     #region Fields, Properties and Indexers
 

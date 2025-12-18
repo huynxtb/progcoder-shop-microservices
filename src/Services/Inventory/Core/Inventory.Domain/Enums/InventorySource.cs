@@ -27,5 +27,11 @@ public enum InventorySource
     Return = 5,
 
     [Description("system")]
-    System = 6
+    System = 6,
+
+    [Description("manual-delete")]
+    ManualDelete = 7,
+
+    [Description("merge")]
+    Merge = 8,
 }

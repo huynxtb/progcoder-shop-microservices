@@ -47,4 +47,17 @@ public sealed class ApiRoutes
 
         #endregion
     }
+
+    public static class History
+    {
+        #region Constants
+
+        public const string Tags = "Inventory History";
+
+        private const string Base = "/histories";
+
+        public const string GetAll = Base;
+
+        #endregion
+    }
 }

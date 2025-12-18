@@ -2,6 +2,7 @@
 
 using AutoMapper;
 using Inventory.Application.Dtos.InventoryItems;
+using Inventory.Application.Dtos.InventoryReservations;
 using Inventory.Domain.Entities;
 using Inventory.Domain.ValueObjects;
 
@@ -18,6 +19,8 @@ public sealed class InventoryMappingProfile : Profile
         CreateInventoryItemMappings();
         CreateLocationMappings();
         CreateProductMappings();
+        CreateReservationMappings();
+        CreateHistoryMappings();
     }
 
     #endregion
@@ -44,6 +47,21 @@ public sealed class InventoryMappingProfile : Profile
         CreateMap<Product, ProductDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
+    }
+
+    private void CreateReservationMappings()
+    {
+        // InventoryReservationEntity -> ReservationDto
+        CreateMap<InventoryReservationEntity, ReservationDto>()
+            .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.Product.Id))
+            .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.Name))
+            .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => (int)src.Quantity));
+    }
+
+    private void CreateHistoryMappings()
+    {
+        // InventoryHistoryEntity -> InventoryHistoryDto
+        CreateMap<InventoryHistoryEntity, InventoryHistoryDto>();
     }
 
     #endregion

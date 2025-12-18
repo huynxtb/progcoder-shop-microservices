@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Shared\EventSourcing\EventSourcing.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\Common\Common.csproj" />
+    <ProjectReference Include="..\..\Core\Inventory.Application\Inventory.Application.csproj" />
+    <ProjectReference Include="..\..\Core\Inventory.Infrastructure\Inventory.Infrastructure.csproj" />
+  </ItemGroup>
+  
+</Project>

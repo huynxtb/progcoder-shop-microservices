@@ -133,7 +133,6 @@ public sealed class OrderEntity : Aggregate<Guid>
         Status = status;
         LastModifiedBy = performBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
-        //AddDomainEvent(new OrderStatusChangedEvent(this));
     }
 
     public void CancelOrder(string reason, string performBy)
@@ -143,6 +142,8 @@ public sealed class OrderEntity : Aggregate<Guid>
         CancelReason = reason;
         LastModifiedBy = performBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
+
+        AddDomainEvent(new OrderCancelledDomainEvent(this));
     }
 
     public void RefundOrder(string reason, string performBy)
@@ -152,11 +153,19 @@ public sealed class OrderEntity : Aggregate<Guid>
         RefundReason = reason;
         LastModifiedBy = performBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
+
+        AddDomainEvent(new OrderCancelledDomainEvent(this));
     }
 
     public void OrderCreated()
     {
         AddDomainEvent(new OrderCreatedDomainEvent(this));
+    }
+
+    public void OrderDelivered(string performBy)
+    {
+        UpdateStatus(OrderStatus.Delivered, performBy!);
+        AddDomainEvent(new OrderDeliveredDomainEvent(this));
     }
 
     #endregion

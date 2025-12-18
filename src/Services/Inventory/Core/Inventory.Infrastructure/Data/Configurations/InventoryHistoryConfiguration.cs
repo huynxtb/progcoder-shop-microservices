@@ -21,28 +21,24 @@ public sealed class InventoryHistoryConfiguration : IEntityTypeConfiguration<Inv
         builder.Property(x => x.Id)
             .HasColumnName("id");
 
-        builder.Property(x => x.InventoryItemId)
-            .HasColumnName("inventory_item_id")
+        builder.Property(x => x.Message)
+            .HasColumnName("message");
+
+        builder.Property(x => x.CreatedOnUtc)
+            .HasColumnName("created_on_utc")
             .IsRequired();
 
-        builder.Property(x => x.ChangedAt)
-            .HasColumnName("changed_at")
+        builder.Property(x => x.CreatedBy)
+            .HasColumnName("created_by")
+            .HasMaxLength(50)
             .IsRequired();
 
-        builder.Property(x => x.ChangeAmount)
-            .HasColumnName("change_amount")
-            .IsRequired();
+        builder.Property(x => x.LastModifiedOnUtc)
+            .HasColumnName("last_modified_on_utc");
 
-        builder.Property(x => x.QuantityAfterChange)
-            .HasColumnName("quantity_after_change")
-            .IsRequired();
-
-        builder.Property(x => x.Source)
-            .HasColumnName("source")
-            .HasMaxLength(255)
-            .IsRequired();
-
-        builder.HasIndex(x => new { x.InventoryItemId, x.ChangedAt });
+        builder.Property(x => x.LastModifiedBy)
+            .HasColumnName("last_modified_by")
+            .HasMaxLength(50);
     }
 
     #endregion

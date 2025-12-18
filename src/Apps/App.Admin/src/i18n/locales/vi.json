@@ -70,6 +70,7 @@
   },
   "dashboard": {
     "title": "Bảng điều khiển",
+    "statistics": "Thống kê",
     "analyticsDashboard": "Bảng điều khiển Phân tích",
     "ecommerceDashboard": "Bảng điều khiển Thương mại điện tử",
     "projectDashboard": "Bảng điều khiển Dự án",
@@ -475,7 +476,13 @@
     "noItems": "Không tìm thấy mục kho nào",
     "editItem": "Chỉnh sửa mục kho",
     "currentProduct": "Sản phẩm hiện tại",
-    "currentLocation": "Vị trí hiện tại"
+    "currentLocation": "Vị trí hiện tại",
+    "viewHistory": "Lịch sử thay đổi",
+    "historyTitle": "Lịch sử thay đổi kho",
+    "message": "Thông điệp",
+    "createdDate": "Ngày tạo",
+    "createdBy": "Người tạo",
+    "noHistory": "Không có lịch sử"
   },
   "category": {
     "title": "Quản lý danh mục",

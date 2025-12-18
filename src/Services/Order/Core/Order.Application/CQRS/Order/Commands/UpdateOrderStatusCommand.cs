@@ -92,6 +92,10 @@ public sealed class UpdateOrderStatusCommandHandler(IApplicationDbContext dbCont
                 }
                 order.RefundOrder(command.Reason!, performedBy);
                 break;
+            
+            case OrderStatus.Delivered:
+                order.OrderDelivered(performedBy);
+                break;
 
             default:
                 order.UpdateStatus(command.Status, performedBy);

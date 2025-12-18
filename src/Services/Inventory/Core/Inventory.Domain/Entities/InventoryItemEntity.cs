@@ -55,10 +55,13 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
         
         entity.AddDomainEvent(new StockChangedDomainEvent(id,
             productId,
+            productName,
             quantity,
+            0,
             quantity,
             InventoryChangeType.Init,
-            InventorySource.ManualAdjustment.GetDescription()));
+            InventorySource.ManualAdjustment.GetDescription(),
+            entity.Available));
 
         return entity;
     }
@@ -67,30 +70,55 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
 
     #region Methods
 
-    public void Update(Guid locationId, 
+    public void Update(Guid locationId,
+        string? oldLocationName,
+        string? newLocationName,
         string performedBy, 
         Guid productId,
         string productName)
     {
         if (locationId == Guid.Empty) throw new ArgumentException(nameof(locationId));
 
+        var oldLocationId = LocationId;
+        var locationChanged = oldLocationId != locationId;
+
         Product = Product.Of(productId, productName);
         LocationId = locationId;
         LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
+
+        if (locationChanged)
+        {
+            AddDomainEvent(new LocationChangedDomainEvent(
+                Id,
+                Product.Id,
+                Product.Name!,
+                oldLocationName!,
+                newLocationName!));
+        }
     }
 
     public void Increase(
         int amount,
-        string source, // order-service
+        string source,
         string performedBy)
     {
         if (amount <= 0) throw new DomainException(MessageCode.OutOfRange);
 
+        var oldQuantity = Quantity;
+
         Quantity += amount;
         LastModifiedBy = performedBy;
 
-        AddDomainEvent(new StockChangedDomainEvent(Id, Product.Id, amount, Available, InventoryChangeType.Increase, source));
+        AddDomainEvent(new StockChangedDomainEvent(Id, 
+            Product.Id, 
+            Product.Name!,
+            amount,
+            oldQuantity,
+            Quantity, 
+            InventoryChangeType.Increase, 
+            source,
+            Available));
     }
 
     public void Decrease(
@@ -101,62 +129,83 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
         if (amount <= 0) throw new DomainException(MessageCode.OutOfRange);
         if (Quantity - amount < 0) throw new DomainException(MessageCode.InsufficientStock);
 
+        var oldQuantity = Quantity;
+
         Quantity -= amount;
         LastModifiedBy = performedBy;
 
-        AddDomainEvent(new StockChangedDomainEvent(Id, Product.Id, amount, Available, InventoryChangeType.Decrease, source));
+        AddDomainEvent(new StockChangedDomainEvent(Id, 
+            Product.Id,
+            Product.Name!,
+            amount,
+            oldQuantity,
+            Quantity, 
+            InventoryChangeType.Decrease, 
+            source,
+            Available));
     }
-
-    //public void Reserve(
-    //    int amount, 
-    //    Guid reservationId, 
-    //    string modifiedBy = SystemConst.CreatedBySystem)
-    //{
-    //    if (amount <= 0) throw new DomainException(MessageCode.OutOfRange);
-    //    if (Available < amount) throw new InvalidOperationException(MessageCode.NotEnoughAvailable);
-
-    //    Reserved += amount;
-    //    LastModifiedBy = modifiedBy;
-
-    //    AddDomainEvent(new ReservedDomainEvent(Id, Product.Id, reservationId, amount));
-    //    AddDomainEvent(new StockChangedDomainEvent(Id, Product.Id, 0, InventoryChangeType.Reserve, $"reservation:{reservationId}"));
-    //}
-
-    //public void Release(
-    //    int amount, 
-    //    Guid reservationId, 
-    //    string modifiedBy = SystemConst.CreatedBySystem)
-    //{
-    //    if (amount <= 0) throw new DomainException(MessageCode.OutOfRange);
-    //    if (Reserved - amount < 0) throw new InvalidOperationException(MessageCode.ReleaseExceedsReserved);
-
-    //    Reserved -= amount;
-    //    LastModifiedBy = modifiedBy;
-
-    //    AddDomainEvent(new UnreservedDomainEvent(Id, Product.Id, reservationId, amount));
-    //    AddDomainEvent(new StockChangedDomainEvent(Id, Product.Id, 0, InventoryChangeType.Release, $"reservation:{reservationId}"));
-    //}
-
-    //public void Commit(
-    //    int amount, 
-    //    Guid reservationId, 
-    //    string modifiedBy = SystemConst.CreatedBySystem)
-    //{
-    //    if (amount <= 0) throw new DomainException(MessageCode.OutOfRange);
-    //    if (Reserved - amount < 0) throw new InvalidOperationException(MessageCode.CommitExceedsReserved);
-    //    if (Quantity - amount < 0) throw new InvalidOperationException(MessageCode.CommitExceedsQuantity);
-
-    //    Reserved -= amount;
-    //    Quantity -= amount;
-    //    LastModifiedBy = modifiedBy;
-
-    //    AddDomainEvent(new StockChangedDomainEvent(Id, Product.Id, amount, InventoryChangeType.Commit, $"reservation:{reservationId}"));
-    //}
 
     public bool HasAvailable(int amount)
     {
         if (amount <= 0) throw new DomainException(MessageCode.OutOfRange);
         return Available >= amount;
+    }
+
+    public bool IsLocationChanged(Guid newLocationId)
+    {
+        if (newLocationId == Guid.Empty) throw new ArgumentException(nameof(newLocationId));
+        return LocationId != newLocationId;
+    }
+
+    public void Delete()
+    {
+        AddDomainEvent(new InventoryItemDeletedDomainEvent(this));
+    }
+
+    public void Reserve(int amount, Guid reservationId, string performedBy)
+    {
+        if (amount <= 0) throw new DomainException(MessageCode.OutOfRange);
+        if (!HasAvailable(amount)) throw new DomainException(MessageCode.InsufficientStock);
+
+        Reserved += amount;
+        LastModifiedBy = performedBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+
+        AddDomainEvent(new ReservedDomainEvent(Id, Product.Id, reservationId, amount));
+    }
+
+    public void Unreserve(int amount, Guid reservationId, string performedBy)
+    {
+        if (amount <= 0) throw new DomainException(MessageCode.OutOfRange);
+        if (Reserved < amount) throw new DomainException(MessageCode.InvalidReservationAmount);
+
+        Reserved -= amount;
+        LastModifiedBy = performedBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+
+        AddDomainEvent(new UnreservedDomainEvent(Id, Product.Id, reservationId, amount));
+    }
+
+    public void CommitReservation(int amount, string performedBy)
+    {
+        if (amount <= 0) throw new DomainException(MessageCode.OutOfRange);
+        if (Reserved < amount) throw new DomainException(MessageCode.InvalidReservationAmount);
+
+        Reserved -= amount;
+        Quantity -= amount;
+        LastModifiedBy = performedBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
+
+        AddDomainEvent(new StockChangedDomainEvent(
+            Id,
+            Product.Id,
+            Product.Name!,
+            amount,
+            Quantity + amount,
+            Available,
+            InventoryChangeType.Commit,
+            InventorySource.OrderService.GetDescription(),
+            Available));
     }
 
     #endregion

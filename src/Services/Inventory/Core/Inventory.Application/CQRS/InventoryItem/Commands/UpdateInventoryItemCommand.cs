@@ -6,6 +6,7 @@ using Inventory.Application.Services;
 using Inventory.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using BuildingBlocks.Abstractions.ValueObjects;
+using Inventory.Domain.Enums;
 
 #endregion
 
@@ -65,11 +66,32 @@ public sealed class UpdateInventoryItemCommandHandler(
         var productByGrpc = await catalogGrpc.GetProductByIdAsync(dto.ProductId.ToString(), cancellationToken)
             ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, dto.ProductId);
 
+        var locations = await dbContext.Locations.ToListAsync(cancellationToken);
+        
+        var requestLocation = locations.FirstOrDefault(x => x.Id == dto.LocationId)
+            ?? throw new ClientValidationException(MessageCode.LocationIsNotExists, dto.LocationId);
+
+        var currentLocation = locations.FirstOrDefault(x => x.Id == entity.LocationId);
+
+        if (entity.IsLocationChanged(dto.LocationId))
+        {
+            var existsingInventoryItem = await dbContext.InventoryItems
+                .FirstOrDefaultAsync(x => x.Product.Id == productByGrpc.Product.Id && x.LocationId == dto.LocationId, cancellationToken);
+
+            if (existsingInventoryItem is not null)
+            {
+                entity.Increase(entity.Quantity, InventorySource.Merge.GetDescription(), command.Actor.ToString());
+                dbContext.InventoryItems.Remove(existsingInventoryItem);
+            }
+        }
+
         entity.Update(
             locationId: dto.LocationId,
             performedBy: command.Actor.ToString(),
             productId: productByGrpc.Product.Id,
-            productName: productByGrpc.Product.Name!);
+            productName: productByGrpc.Product.Name!,
+            oldLocationName: currentLocation?.Location,
+            newLocationName: requestLocation.Location);
 
         dbContext.InventoryItems.Update(entity);
         await dbContext.SaveChangesAsync(cancellationToken);

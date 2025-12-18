@@ -206,6 +206,111 @@ public sealed class SearchProductQueryHandler(
 }
 ```
 
+### CRITICAL: Query/Command Return Type Rules
+
+**❌ WRONG - Never return DTOs directly or use nullable:**
+```csharp
+// DON'T return DTO directly
+public sealed record GetProductQuery(Guid Id) : IQuery<ProductDto>;
+
+// DON'T use nullable return types
+public sealed record GetProductQuery(Guid Id) : IQuery<ProductDto?>;
+
+// DON'T return List<Dto> directly
+public sealed record GetProductsQuery : IQuery<List<ProductDto>>;
+```
+
+**✅ CORRECT - Always use Result classes:**
+```csharp
+// Single item query - use Result class
+public sealed record GetProductQuery(Guid Id) : IQuery<GetProductResult>;
+
+public sealed class GetProductResult
+{
+    public ProductDto Item { get; init; }
+    
+    public GetProductResult(ProductDto item)
+    {
+        Item = item;
+    }
+}
+
+// Multiple items query - use Result class
+public sealed record GetProductsQuery : IQuery<GetProductsResult>;
+
+public sealed class GetProductsResult
+{
+    public List<ProductDto> Items { get; init; }
+    
+    public GetProductsResult(List<ProductDto> items)
+    {
+        Items = items;
+    }
+}
+
+// Handler throws NotFoundException instead of returning null
+public async Task<GetProductResult> Handle(GetProductQuery query, CancellationToken cancellationToken)
+{
+    var product = await repository.GetByIdAsync(query.Id, cancellationToken);
+    
+    if (product == null)
+    {
+        throw new NotFoundException(MessageCode.ResourceNotFound);
+    }
+    
+    var dto = mapper.Map<ProductDto>(product);
+    return new GetProductResult(dto);
+}
+```
+
+### Result Class Guidelines
+
+1. **Always create Result classes** in `Application/Models/Results/`
+2. **Never return DTOs directly** from queries/commands
+3. **Never use nullable return types** (`?`) - throw `NotFoundException` instead
+4. **Result class structure:**
+   - For single item: Property named `Item`
+   - For collections: Property named `Items`
+   - Constructor that takes the data
+   - Place in `sealed class` with `init` properties
+
+5. **Example Result classes:**
+```csharp
+// Single item result
+public sealed class GetProductByIdResult
+{
+    public ProductDto Item { get; init; }
+    
+    public GetProductByIdResult(ProductDto item)
+    {
+        Item = item;
+    }
+}
+
+// Collection result (without pagination)
+public sealed class GetAllProductsResult
+{
+    public List<ProductDto> Items { get; init; }
+    
+    public GetAllProductsResult(List<ProductDto> items)
+    {
+        Items = items;
+    }
+}
+
+// Collection result (with pagination)
+public sealed class SearchProductsResult : PaginationResult<ProductDto>
+{
+    public SearchProductsResult(
+        List<ProductDto> items, 
+        int totalCount, 
+        PaginationRequest paging) 
+        : base(items, totalCount, paging)
+    {
+    }
+}
+```
+
 ---
 
 ## Domain Modeling

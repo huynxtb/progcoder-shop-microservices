@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useKeycloak } from "@/contexts/KeycloakContext";
 import Dropdown from "@/components/ui/Dropdown";
 import Icon from "@/components/ui/Icon";
 import { Link } from "react-router-dom";
@@ -10,12 +12,23 @@ import { notificationService } from "@/services/notificationService";
 const Notification = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { authenticated } = useKeycloak();
+  const isAuth = useSelector((state) => state.auth.isAuth);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  // Check if user is logged in (either via Keycloak or Redux state)
+  const isLoggedIn = authenticated || isAuth;
+
   // Fetch notifications and unread count
   const fetchNotifications = async () => {
+    // Only fetch if user is logged in
+    if (!isLoggedIn) {
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       const [notificationsRes, countRes] = await Promise.all([
@@ -40,8 +53,13 @@ const Notification = () => {
   };
 
   useEffect(() => {
-    fetchNotifications();
-  }, []);
+    // Only fetch notifications if user is logged in
+    if (isLoggedIn) {
+      fetchNotifications();
+    } else {
+      setLoading(false);
+    }
+  }, [isLoggedIn]);
 
   // Format time ago
   const formatTimeAgo = (dateString) => {
@@ -71,6 +89,8 @@ const Notification = () => {
 
   // Handle notification click
   const handleNotificationClick = async (notification) => {
+    if (!isLoggedIn) return;
+
     try {
       // Mark as read
       await notificationService.markAsRead([notification.id]);
@@ -99,6 +119,11 @@ const Notification = () => {
       </span>
     );
   };
+
+  // Don't render if not logged in
+  if (!isLoggedIn) {
+    return null;
+  }
 
   return (
     <Dropdown classMenuItems="md:w-[300px] top-[58px]" label={notifyLabel()}>

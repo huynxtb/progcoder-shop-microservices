@@ -4,7 +4,7 @@ public sealed class ReqHeaderName
 {
     #region Constants
 
-    public const string GrpcKey = "x-grpc-key";
+    public const string GrpcKey = "X-Grpc-Key";
 
     #endregion
 

@@ -2,7 +2,6 @@
 
 using BuildingBlocks.Abstractions.ValueObjects;
 using EventSourcing.Events.Baskets;
-using Mapster;
 using MassTransit;
 using MediatR;
 using Order.Application.CQRS.Order.Commands;
@@ -26,15 +25,33 @@ public sealed class BasketCheckoutIntegrationEventHandler(IMediator sender, ILog
 
         var dto = new CreateOrUpdateOrderDto
         {
-            Customer = message.Customer.Adapt<CustomerDto>(),
-            ShippingAddress = message.ShippingAddress.Adapt<AddressDto>(),
-            OrderItems = message.Items.Adapt<List<CreateOrderItemDto>>(),
+            Customer = new CustomerDto
+            {
+                Id = message.Customer.Id,
+                Name = message.Customer.Name,
+                Email = message.Customer.Email,
+                PhoneNumber = message.Customer.PhoneNumber
+            },
+            ShippingAddress = new AddressDto
+            {
+                Name = message.ShippingAddress.Name,
+                EmailAddress = message.ShippingAddress.EmailAddress,
+                AddressLine = message.ShippingAddress.AddressLine,
+                Country = message.ShippingAddress.Country,
+                State = message.ShippingAddress.State,
+                ZipCode = message.ShippingAddress.ZipCode
+            },
+            OrderItems = message.Items.Select(item => new CreateOrderItemDto
+            {
+                ProductId = item.ProductId,
+                Quantity = item.Quantity
+            }).ToList(),
             CouponCode = message.Discount.CouponCode
         };
         
         var command = new CreateOrderCommand(dto, Actor.User(dto.Customer.Id.ToString()!));
 
-        await sender.Send(command);
+        await sender.Send(command, context.CancellationToken);
     }
 
     #endregion

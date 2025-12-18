@@ -18,7 +18,7 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
 
     public Guid ReferenceId { get; set; }
 
-    public long Quantity { get; set; }
+    public int Quantity { get; set; }
 
     public DateTimeOffset? ExpiresAt { get; set; }
 
@@ -38,7 +38,7 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
         string productName,
         Guid referenceId,
         Guid locationId,
-        long quantity,
+        int quantity,
         DateTimeOffset? expiresAt,
         string performedBy)
     {
@@ -53,11 +53,12 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
             LocationId = locationId,
             Quantity = quantity,
             ExpiresAt = expiresAt,
+            Status = ReservationStatus.Pending,
             CreatedBy = performedBy,
             LastModifiedBy = performedBy
         };
 
-        //entity.AddDomainEvent(new ReservationCreatedDomainEvent(id, Product.Id, location.ToString(), referenceId, quantity, expiresAt));
+        //entity.AddDomainEvent(new ReservationCreatedDomainEvent(id, productId, productName, referenceId, locationId, quantity, expiresAt));
 
         return entity;
     }
@@ -68,13 +69,13 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
 
     public void MarkCommitted(string performedBy)
     {
-        if (Status != ReservationStatus.Pending) throw new InvalidOperationException("Only pending reservations can be committed.");
+        if (Status != ReservationStatus.Pending) throw new InvalidOperationException(MessageCode.CannotCommitNonPendingReservation);
 
         Status = ReservationStatus.Committed;
         LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
 
-        //AddDomainEvent(new ReservationCommittedDomainEvent(Id, Product.Id, Location.ToString(), ReferenceId, Quantity));
+        //AddDomainEvent(new ReservationCommittedDomainEvent(Id, Product.Id, Product.Name!, ReferenceId, Quantity));
     }
 
     public void Release(string reason, string performedBy)
@@ -85,7 +86,7 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
         LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
 
-        //AddDomainEvent(new ReservationReleasedDomainEvent(Id, Product.Id, Location.ToString(), ReferenceId, Quantity, reason));
+        //AddDomainEvent(new ReservationReleasedDomainEvent(Id, Product.Id, Product.Name!, ReferenceId, Quantity, reason));
     }
 
     public void Expire()
@@ -94,7 +95,7 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
         {
             Status = ReservationStatus.Expired;
 
-            //AddDomainEvent(new ReservationExpiredDomainEvent(Id, Product.Id, Location.ToString(), ReferenceId, Quantity));
+            //AddDomainEvent(new ReservationExpiredDomainEvent(Id, Product.Id, Product.Name!, ReferenceId, Quantity));
         }
     }
 

@@ -140,6 +140,16 @@ public sealed class MessageCode
 
     public const string CommitExceedsQuantity = "COMMIT_EXCEEDS_QUANTITY";
 
+    public const string InvalidReservationAmount = "INVALID_RESERVATION_AMOUNT";
+
+    public const string ReservationNotFound = "RESERVATION_NOT_FOUND";
+
+    public const string ReservationAlreadyCommitted = "RESERVATION_ALREADY_COMMITTED";
+
+    public const string ReservationExpired = "RESERVATION_EXPIRED";
+
+    public const string CannotCommitNonPendingReservation = "CANNOT_COMMIT_NON_PENDING_RESERVATION";
+
     public const string InventoryItemIdIsRequired = "INVENTORY_ITEM_ID_IS_REQUIRED";
 
     public const string StatusIsRequired = "STATUS_IS_REQUIRED";
@@ -239,6 +249,12 @@ public sealed class MessageCode
     public const string ProductIsNotExistsOrNotInStock = "PRODUCT_IS_NOT_EXISTS_OR_NOT_IN_STOCK";
 
     public const string OrderNotFound = "ORDER_NOT_FOUND";
+
+    public const string InventoryItemAlreadyExists = "INVENTORY_ITEM_ALREADY_EXISTS";
+
+    public const string LocationIsNotExists = "LOCATION_IS_NOT_EXISTS";
+
+    public const string InventoryItemNotFound = "INVENTORY_ITEM_NOT_FOUND";
 
     #endregion
 }

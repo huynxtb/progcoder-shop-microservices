@@ -28,6 +28,19 @@ public sealed class GrpcClientCfg
         #endregion
     }
 
+    public static class Inventory
+    {
+        #region Constants
+
+        public const string Section = "GrpcClients:Inventory";
+
+        public const string Url = "Url";
+
+        public const string ApiKey = "ApiKey";
+
+        #endregion
+    }
+
     public static class Order
     {
         #region Constants

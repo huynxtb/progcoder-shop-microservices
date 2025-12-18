@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <Protobuf Include="..\..\..\..\Shared\Contracts\Inventory.Contract\Protos\inventory.proto" GrpcServices="Server" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" />
+    <PackageReference Include="grpc.tools">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="microsoft.aspnetcore.grpc.jsontranscoding" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Shared\Common\Common.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\Contracts\Inventory.Contract\Inventory.Contract.csproj" />
+    <ProjectReference Include="..\..\Core\Inventory.Application\Inventory.Application.csproj" />
+    <ProjectReference Include="..\..\Core\Inventory.Infrastructure\Inventory.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

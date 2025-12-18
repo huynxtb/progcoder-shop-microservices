@@ -70,6 +70,9 @@ const InventoryPage = () => {
   const [locations, setLocations] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [loadingLocations, setLoadingLocations] = useState(false);
+  const [historyModalOpen, setHistoryModalOpen] = useState(false);
+  const [historyData, setHistoryData] = useState([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
 
   // Form data for add
   const [addFormData, setAddFormData] = useState({
@@ -117,6 +120,29 @@ const InventoryPage = () => {
   useEffect(() => {
     fetchInventoryItems();
   }, [fetchInventoryItems]);
+
+  // Fetch inventory histories
+  const fetchHistories = useCallback(async () => {
+    try {
+      setLoadingHistory(true);
+      const response = await inventoryService.getHistories();
+      
+      if (response.data && response.data.result && response.data.result.items) {
+        const mappedHistories = response.data.result.items.map((item) => ({
+          id: item.id,
+          message: item.message || "-",
+          createdOnUtc: item.createdOnUtc,
+          createdBy: item.createdBy || "-",
+        }));
+        setHistoryData(mappedHistories);
+      }
+    } catch (error) {
+      console.error("Failed to fetch inventory histories:", error);
+      setHistoryData([]);
+    } finally {
+      setLoadingHistory(false);
+    }
+  }, []);
 
   // Fetch products for dropdown
   useEffect(() => {
@@ -462,6 +488,11 @@ const InventoryPage = () => {
     }
   };
 
+  const handleHistoryClick = async () => {
+    setHistoryModalOpen(true);
+    await fetchHistories();
+  };
+
   const COLUMNS = useMemo(() => [
     {
       Header: t("inventory.productName"),
@@ -640,6 +671,13 @@ const InventoryPage = () => {
             >
               <Icon icon="heroicons:arrow-path" className={`ltr:mr-2 rtl:ml-2 ${loading ? 'animate-spin' : ''}`} />
               {loading ? t("common.refreshing") : t("common.refresh")}
+            </button>
+            <button
+              className="btn btn-outline-dark btn-sm inline-flex items-center"
+              onClick={handleHistoryClick}
+            >
+              <Icon icon="heroicons:clock" className="ltr:mr-2 rtl:ml-2" />
+              {t("inventory.viewHistory")}
             </button>
             <button 
               className="btn btn-dark btn-sm inline-flex items-center"
@@ -1203,6 +1241,74 @@ const InventoryPage = () => {
               )}
             </button>
           </div>
+        </div>
+      </Modal>
+
+      {/* History Modal */}
+      <Modal
+        title={t("inventory.historyTitle")}
+        activeModal={historyModalOpen}
+        onClose={() => {
+          setHistoryModalOpen(false);
+          setHistoryData([]);
+        }}
+        className="max-w-5xl"
+      >
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-slate-100 dark:divide-slate-700">
+            <thead className="bg-slate-200 dark:bg-slate-700">
+              <tr>
+                <th className="table-th">{t("inventory.message")}</th>
+                <th className="table-th">{t("inventory.createdDate")}</th>
+                <th className="table-th">{t("inventory.createdBy")}</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
+              {loadingHistory ? (
+                <tr>
+                  <td colSpan="3" className="table-td text-center py-8">
+                    <div className="flex flex-col items-center justify-center">
+                      <Icon icon="heroicons:arrow-path" className="animate-spin text-2xl text-slate-400 mb-2" />
+                      <span className="text-slate-500 dark:text-slate-400">{t("common.loading")}</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : historyData.length === 0 ? (
+                <tr>
+                  <td colSpan="3" className="table-td text-center py-8">
+                    <span className="text-slate-500 dark:text-slate-400">{t("inventory.noHistory")}</span>
+                  </td>
+                </tr>
+              ) : (
+                historyData.map((history) => (
+                  <tr key={history.id}>
+                    <td className="table-td">
+                      <span className="text-slate-600 dark:text-slate-300">{history.message}</span>
+                    </td>
+                    <td className="table-td">
+                      <span className="text-slate-600 dark:text-slate-300">
+                        {formatDate(history.createdOnUtc)}
+                      </span>
+                    </td>
+                    <td className="table-td">
+                      <span className="text-slate-600 dark:text-slate-300">{history.createdBy}</span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+        <div className="flex justify-end mt-4">
+          <button
+            className="btn btn-outline-dark inline-flex items-center"
+            onClick={() => {
+              setHistoryModalOpen(false);
+              setHistoryData([]);
+            }}
+          >
+            {t("common.close")}
+          </button>
         </div>
       </Modal>
     </>

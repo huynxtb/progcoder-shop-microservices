@@ -6,6 +6,7 @@ using App.Job.Quartz;
 using BuildingBlocks.Logging;
 using Catalog.Grpc;
 using Common.Configurations;
+using Inventory.Grpc;
 using Order.Grpc;
 using Quartz;
 using Refit;
@@ -119,6 +120,25 @@ public static class DependencyInjection
             services.AddGrpcClient<ReportGrpc.ReportGrpcClient>(options =>
             {
                 options.Address = new Uri(reportServiceUrl);
+            })
+            .AddInterceptor<GrpcApiKeyInterceptor>()
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                return new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                };
+            });
+        }
+
+        // Inventory Grpc
+        {
+            var inventoryServiceUrl = cfg.GetValue<string>($"{GrpcClientCfg.Inventory.Section}:{GrpcClientCfg.Inventory.Url}")
+            ?? throw new InvalidOperationException("Inventory service URL is not configured.");
+
+            services.AddGrpcClient<InventoryGrpc.InventoryGrpcClient>(options =>
+            {
+                options.Address = new Uri(inventoryServiceUrl);
             })
             .AddInterceptor<GrpcApiKeyInterceptor>()
             .ConfigurePrimaryHttpMessageHandler(() =>

@@ -42,6 +42,7 @@ export const API_ENDPOINTS = {
     CREATE_LOCATION: "/inventory-service/locations",
     UPDATE_LOCATION: (id) => `/inventory-service/locations/${id}`,
     DELETE_LOCATION: (id) => `/inventory-service/locations/${id}`,
+    GET_HISTORIES: "/inventory-service/histories",
   },
 
   // Discount Service

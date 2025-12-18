@@ -2,6 +2,7 @@
 
 using Catalog.Grpc;
 using Inventory.Application.Models.Responses.Externals;
+using Inventory.Application.Models.Responses.Internals;
 using Inventory.Application.Services;
 using Microsoft.Extensions.Logging;
 
@@ -23,7 +24,7 @@ public sealed class CatalogGrpcService(CatalogGrpc.CatalogGrpcClient grpcClient,
 
             return new GetProductByIdReponse()
             {
-                Product = new ProductInfoReponse
+                Product = new ProductReponse
                 {
                     Id = Guid.Parse(product.Id),
                     Price = (decimal)product.Price,
@@ -35,6 +36,38 @@ public sealed class CatalogGrpcService(CatalogGrpc.CatalogGrpcClient grpcClient,
 		catch (Exception ex)
 		{
             logger.LogWarning(ex, "Failed to get product by ID {ProductId} from Catalog Grpc service", productId);
+            return null;
+        }
+    }
+
+    public async Task<GetAllProductsResponse?> GetProductsAsync(string[]? ids = null, string searchText = "", CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var request = new GetProductsRequest { SearchText = searchText };
+            if (ids is not null && ids.Length > 0)
+                request.Ids.AddRange(ids);
+
+            var result = await grpcClient.GetProductsAsync(request, cancellationToken: cancellationToken);
+
+            var response = new GetAllProductsResponse
+            {
+                Items = result.Products
+                    .Select(p => new ProductReponse
+                    {
+                        Id = Guid.Parse(p.Id),
+                        Name = p.Name,
+                        Price = (decimal)p.Price,
+                        Thumbnail = p.Thumbnail
+                    })
+                    .ToList()
+            };
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Failed to get products from Catalog Grpc service");
             return null;
         }
     }

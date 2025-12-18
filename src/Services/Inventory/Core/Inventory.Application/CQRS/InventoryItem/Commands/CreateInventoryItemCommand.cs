@@ -6,6 +6,7 @@ using Inventory.Application.Services;
 using Inventory.Domain.Entities;
 using Common.Models.Reponses;
 using BuildingBlocks.Abstractions.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 
 #endregion
 
@@ -60,6 +61,11 @@ public sealed class CreateInventoryItemCommandHandler(
         var productByGrpc = await catalogGrpc.GetProductByIdAsync(dto.ProductId.ToString(), cancellationToken)
             ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, dto.ProductId);
 
+        var existsingInventoryItem = await dbContext.InventoryItems
+            .FirstOrDefaultAsync(x => x.Product.Id == productByGrpc.Product.Id && x.LocationId == dto.LocationId, cancellationToken);
+
+        if (existsingInventoryItem is not null) throw new ClientValidationException(MessageCode.InventoryItemAlreadyExists, dto.ProductId);
+
         var inventoryItemId = Guid.NewGuid();
 
         await AddInventoryItemAsync(inventoryItemId,
@@ -68,6 +74,7 @@ public sealed class CreateInventoryItemCommandHandler(
             dto.LocationId, 
             dto.Quantity, 
             command.Actor);
+
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return inventoryItemId;

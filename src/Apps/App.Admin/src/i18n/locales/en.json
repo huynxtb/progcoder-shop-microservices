@@ -70,6 +70,7 @@
   },
   "dashboard": {
     "title": "Dashboard",
+    "statistics": "Statistics",
     "analyticsDashboard": "Analytics Dashboard",
     "ecommerceDashboard": "Ecommerce Dashboard",
     "projectDashboard": "Project Dashboard",
@@ -475,7 +476,13 @@
     "noItems": "No inventory items found",
     "editItem": "Edit Inventory Item",
     "currentProduct": "Current Product",
-    "currentLocation": "Current Location"
+    "currentLocation": "Current Location",
+    "viewHistory": "Change History",
+    "historyTitle": "Inventory Change History",
+    "message": "Message",
+    "createdDate": "Created Date",
+    "createdBy": "Created By",
+    "noHistory": "No history available"
   },
   "category": {
     "title": "Category Management",

@@ -20,7 +20,6 @@
   <ItemGroup Label="Mapping and Dependency Injection">
     <PackageVersion Include="AutoMapper" Version="12.0.1" />
     <PackageVersion Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-    <PackageVersion Include="Mapster" Version="7.4.0" />
     <PackageVersion Include="Scrutor" Version="6.1.0" />
   </ItemGroup>
 

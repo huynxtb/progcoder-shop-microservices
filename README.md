@@ -36,7 +36,7 @@ Overall picture of **microservices implementation with .NET tools** in a real-wo
 - **[`AspNetCore.HealthChecks`](https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks)** - Health checks for building services, such as ASP.NET Core.
 - **[`Grpc.AspNetCore`](https://github.com/grpc/grpc-dotnet)** - gRPC for .NET, a high-performance RPC framework.
 - **[`MassTransit.RabbitMQ`](https://github.com/MassTransit/MassTransit)** - Distributed application framework for .NET, supporting RabbitMQ.
-- **[`Mapster`](https://github.com/MapsterMapper/Mapster)** - A high-performance object mapper in .NET.
+- **[`AutoMapper`](https://github.com/LuckyPennySoftware/AutoMapper)** - A high-performance object mapper in .NET.
 - **[`MongoDB.Driver`](https://github.com/mongodb/mongo-csharp-driver)** - Official MongoDB .NET Driver.
 - **[`Minio`](https://github.com/minio/minio-dotnet)** - MinIO .NET Client SDK for Amazon S3 compatible cloud storage.
 - **[`StackExchangeRedis`](https://github.com/StackExchange/StackExchange.Redis)** - General purpose Redis client for .NET.

@@ -19,11 +19,11 @@ namespace Inventory.Infrastructure.Data.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "char(36)", nullable: false),
-                    inventory_item_id = table.Column<Guid>(type: "char(36)", nullable: false),
-                    changed_at = table.Column<DateTimeOffset>(type: "datetime", nullable: false),
-                    change_amount = table.Column<int>(type: "int", nullable: false),
-                    quantity_after_change = table.Column<int>(type: "int", nullable: false),
-                    source = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                    message = table.Column<string>(type: "longtext", nullable: false),
+                    created_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: false),
+                    created_by = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    last_modified_on_utc = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
+                    last_modified_by = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -102,7 +102,7 @@ namespace Inventory.Infrastructure.Data.Migrations
                 {
                     id = table.Column<Guid>(type: "char(36)", nullable: false),
                     reference_id = table.Column<Guid>(type: "char(36)", nullable: false),
-                    quantity = table.Column<long>(type: "bigint", nullable: false),
+                    quantity = table.Column<int>(type: "int", nullable: false),
                     expires_at = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
                     status = table.Column<int>(type: "int", nullable: false),
                     location_id = table.Column<Guid>(type: "char(36)", nullable: false),
@@ -124,11 +124,6 @@ namespace Inventory.Infrastructure.Data.Migrations
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_inventory_histories_inventory_item_id_changed_at",
-                table: "inventory_histories",
-                columns: new[] { "inventory_item_id", "changed_at" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_inventory_items_location_id",

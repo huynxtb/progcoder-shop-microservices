@@ -5,7 +5,6 @@
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="FluentValidation.AspNetCore" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
-    <PackageReference Include="Mapster" />
     <PackageReference Include="MediatR" />
     <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" />
     <PackageReference Include="Serilog" />

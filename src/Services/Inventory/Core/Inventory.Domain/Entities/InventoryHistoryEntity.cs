@@ -1,48 +1,34 @@
 ﻿#region using
 
 using Inventory.Domain.Abstractions;
+using Inventory.Domain.ValueObjects;
 
 #endregion
 
 namespace Inventory.Domain.Entities;
 
-public sealed class InventoryHistoryEntity : EntityId<Guid>
+public sealed class InventoryHistoryEntity : Entity<Guid>
 {
     #region Fields, Properties and Indexers
 
-    public Guid InventoryItemId { get; set; }
-
-    public DateTimeOffset ChangedAt { get; set; }
-
-    public int ChangeAmount { get; set; }
-
-    public int QuantityAfterChange { get; set; }
-
-    public string Source { get; set; } = default!;
+    public string Message { get; set; } = default!;
 
     #endregion
 
     #region Factories
 
-    public static InventoryHistoryEntity Create(
-        Guid id,
-        Guid inventoryItemId,
-        DateTimeOffset changedAt,
-        int changeAmount,
-        int quantityAfterChange,
-        string source)
+    public static InventoryHistoryEntity Create(Guid id, string message, string performBy)
     {
-        if (string.IsNullOrWhiteSpace(source)) throw new ArgumentNullException(nameof(source));
-        var entity = new InventoryHistoryEntity
+        var now = DateTimeOffset.UtcNow;
+        return new InventoryHistoryEntity
         {
             Id = id,
-            InventoryItemId = inventoryItemId,
-            ChangedAt = changedAt,
-            ChangeAmount = changeAmount,
-            QuantityAfterChange = quantityAfterChange,
-            Source = source
+            Message = message,
+            CreatedBy = performBy,
+            CreatedOnUtc = now,
+            LastModifiedBy = performBy,
+            LastModifiedOnUtc = now
         };
-        return entity;
     }
 
     #endregion
