@@ -14,4 +14,8 @@
     <ProjectReference Include="..\..\Core\Inventory.Domain\Inventory.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CQRS\InventoryReservation\Queries\" />
+  </ItemGroup>
+
 </Project>

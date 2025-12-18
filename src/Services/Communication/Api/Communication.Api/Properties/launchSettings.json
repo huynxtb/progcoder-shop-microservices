@@ -4,7 +4,7 @@
     "Communication.Api": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "",
       "applicationUrl": "http://localhost:5009",
       "environmentVariables": {

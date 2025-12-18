@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Refit;
 using Common.Configurations;
 using Inventory.Application.Models.Responses.Externals;
+using Common.Models.Reponses;
 
 #endregion
 
@@ -57,7 +58,7 @@ public sealed class CatalogApiService : ICatalogApiService
 
     #region Implementations
 
-    public async Task<GetProductByIdReponse?> GetProductByIdAsync(string productId)
+    public async Task<ApiGetResponse<GetProductByIdReponse>?> GetProductByIdAsync(string productId)
     {
         try
         {

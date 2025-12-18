@@ -29,7 +29,7 @@ public sealed class CatalogGrpcService(CatalogGrpc.CatalogGrpcClient grpcClient,
                     Id = Guid.Parse(product.Id),
                     Price = (decimal)product.Price,
                     Name = product.Name,
-                    Thumbnail = product.Thumbnail
+                    ThumbnailUrl = product.Thumbnail
                 }
             };
         }
@@ -58,7 +58,7 @@ public sealed class CatalogGrpcService(CatalogGrpc.CatalogGrpcClient grpcClient,
                         Id = Guid.Parse(p.Id),
                         Name = p.Name,
                         Price = (decimal)p.Price,
-                        Thumbnail = p.Thumbnail
+                        ThumbnailUrl = p.Thumbnail
                     })
                     .ToList()
             };

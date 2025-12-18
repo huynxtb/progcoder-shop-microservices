@@ -1,5 +1,6 @@
 ﻿#region using
 
+using Common.Models.Reponses;
 using Inventory.Application.Models.Responses.Externals;
 using Refit;
 
@@ -11,8 +12,8 @@ public interface ICatalogApi
 {
     #region Methods
 
-    [Get("/products/{productId}")]
-    Task<GetProductByIdReponse> GetProductByIdAsync([AliasAs("productId")] string productId, [Header("Authorization")] string bearerToken);
+    [Get("/admin/products/{productId}")]
+    Task<ApiGetResponse<GetProductByIdReponse>> GetProductByIdAsync([AliasAs("productId")] string productId, [Header("Authorization")] string bearerToken);
 
     #endregion
 }

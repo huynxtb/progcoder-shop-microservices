@@ -39,6 +39,8 @@ public sealed class InventoryHistoryConfiguration : IEntityTypeConfiguration<Inv
         builder.Property(x => x.LastModifiedBy)
             .HasColumnName("last_modified_by")
             .HasMaxLength(50);
+
+        //builder.HasIndex(x => x.CreatedOnUtc);
     }
 
     #endregion

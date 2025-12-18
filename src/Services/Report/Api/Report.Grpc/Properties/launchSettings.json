@@ -4,7 +4,7 @@
     "Report.Grpc": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
+      "launchBrowser": false,
       "applicationUrl": "http://localhost:6007",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
