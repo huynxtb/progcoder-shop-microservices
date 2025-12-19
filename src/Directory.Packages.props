@@ -1,9 +1,7 @@
 <Project>
-  
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
-
   <!-- ============================================ -->
   <!-- Core CQRS & Validation Packages -->
   <!-- ============================================ -->
@@ -12,8 +10,8 @@
     <PackageVersion Include="FluentValidation" Version="11.9.2" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.2" />
+    <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
   </ItemGroup>
-
   <!-- ============================================ -->
   <!-- Mapping & DI Packages -->
   <!-- ============================================ -->
@@ -22,7 +20,6 @@
     <PackageVersion Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageVersion Include="Scrutor" Version="6.1.0" />
   </ItemGroup>
-
   <!-- ============================================ -->
   <!-- Database - Entity Framework Core -->
   <!-- ============================================ -->
@@ -34,7 +31,6 @@
     <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
     <PackageVersion Include="MySql.EntityFrameworkCore" Version="8.0.5" />
   </ItemGroup>
-
   <!-- ============================================ -->
   <!-- Database - NoSQL & Document DB -->
   <!-- ============================================ -->
@@ -44,7 +40,6 @@
     <PackageVersion Include="MongoDB.Bson" Version="3.4.2" />
     <PackageVersion Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.8" />
   </ItemGroup>
-
   <!-- ============================================ -->
   <!-- Database - Other -->
   <!-- ============================================ -->
@@ -54,7 +49,6 @@
     <PackageVersion Include="Microsoft.Data.SqlClient" Version="6.1.1" />
     <PackageVersion Include="Npgsql" Version="8.0.3" />
   </ItemGroup>
-
   <!-- ============================================ -->
   <!-- Search & Indexing -->
   <!-- ============================================ -->
@@ -62,14 +56,12 @@
     <PackageVersion Include="Elasticsearch.Net" Version="7.17.5" />
     <PackageVersion Include="NEST" Version="7.17.5" />
   </ItemGroup>
-
   <!-- ============================================ -->
   <!-- Messaging & Event Bus -->
   <!-- ============================================ -->
   <ItemGroup Label="Messaging and Event Bus">
     <PackageVersion Include="MassTransit.RabbitMQ" Version="8.5.1" />
   </ItemGroup>
-
   <!-- ============================================ -->
   <!-- API & Web Frameworks -->
   <!-- ============================================ -->
@@ -80,7 +72,6 @@
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
   </ItemGroup>
-
   <!-- ============================================ -->
   <!-- Health Checks -->
   <!-- ============================================ -->
@@ -92,7 +83,6 @@
     <PackageVersion Include="AspNetCore.HealthChecks.SqlServer" Version="8.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.0" />
   </ItemGroup>
-
   <!-- ============================================ -->
   <!-- gRPC -->
   <!-- ============================================ -->
@@ -103,7 +93,6 @@
     <PackageVersion Include="Google.Protobuf" Version="3.28.0" />
     <PackageVersion Include="microsoft.aspnetcore.grpc.jsontranscoding" Version="8.0.8" />
   </ItemGroup>
-
   <!-- ============================================ -->
   <!-- HTTP Client & Resilience -->
   <!-- ============================================ -->
@@ -112,7 +101,6 @@
     <PackageVersion Include="Polly" Version="8.6.2" />
     <PackageVersion Include="Polly.Extensions.Http" Version="3.0.0" />
   </ItemGroup>
-
   <!-- ============================================ -->
   <!-- Logging & Observability -->
   <!-- ============================================ -->
@@ -123,7 +111,6 @@
     <PackageVersion Include="Serilog.Sinks.OpenTelemetry" Version="4.1.0" />
     <PackageVersion Include="Serilog.Sinks.Seq" Version="8.0.0" />
   </ItemGroup>
-
   <!-- ============================================ -->
   <!-- OpenTelemetry -->
   <!-- ============================================ -->
@@ -135,7 +122,6 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.9.0" />
     <PackageVersion Include="SharpAbp.Abp.OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="3.1.0" />
   </ItemGroup>
-
   <!-- ============================================ -->
   <!-- Job Scheduling -->
   <!-- ============================================ -->
@@ -143,14 +129,12 @@
     <PackageVersion Include="Quartz" Version="3.13.1" />
     <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.13.1" />
   </ItemGroup>
-
   <!-- ============================================ -->
   <!-- API Gateway -->
   <!-- ============================================ -->
   <ItemGroup Label="API Gateway">
     <PackageVersion Include="Yarp.ReverseProxy" Version="2.1.0" />
   </ItemGroup>
-
   <!-- ============================================ -->
   <!-- Storage & File Management -->
   <!-- ============================================ -->
@@ -158,7 +142,6 @@
     <PackageVersion Include="Minio" Version="6.0.3" />
     <PackageVersion Include="EPPlus" Version="7.7.1" />
   </ItemGroup>
-
   <!-- ============================================ -->
   <!-- Microsoft Extensions -->
   <!-- ============================================ -->
@@ -168,13 +151,10 @@
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.FeatureManagement.AspNetCore" Version="3.4.0" />
   </ItemGroup>
-
   <!-- ============================================ -->
   <!-- Utilities & Helpers -->
   <!-- ============================================ -->
   <ItemGroup Label="Utilities and Helpers">
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
-
 </Project>
-

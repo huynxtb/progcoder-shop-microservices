@@ -167,7 +167,7 @@ progcoder-shop-microservices/
 │   ├── imgs/                        # Architecture diagrams and screenshots
 │   └── postman collections/         # API testing collections
 ├── local-data/                      # Persistent data volumes
-├── docker-compose.dev.yml           # Infrastructure services
+├── docker-compose.infrastructure.yml           # Infrastructure services
 ├── docker-compose.yml               # Application services
 └── README.md                        # This file
 ```
@@ -349,13 +349,13 @@ After starting, access:
 
 ```bash
 # Start infrastructure services (databases, message broker, monitoring, etc.)
-docker-compose -f docker-compose.dev.yml up -d
+docker-compose -f docker-compose.infrastructure.yml up -d
 
 # Wait for all services to be healthy (check with)
-docker-compose -f docker-compose.dev.yml ps
+docker-compose -f docker-compose.infrastructure.yml ps
 
 # View logs if needed
-docker-compose -f docker-compose.dev.yml logs -f [service-name]
+docker-compose -f docker-compose.infrastructure.yml logs -f [service-name]
 ```
 
 #### 2. Setup Databases
@@ -631,19 +631,19 @@ docker-compose build [service-name]
 
 ```bash
 # Check container status
-docker-compose -f docker-compose.dev.yml ps
+docker-compose -f docker-compose.infrastructure.yml ps
 
 # View logs
-docker-compose -f docker-compose.dev.yml logs -f [service-name]
+docker-compose -f docker-compose.infrastructure.yml logs -f [service-name]
 
 # Restart a service
-docker-compose -f docker-compose.dev.yml restart [service-name]
+docker-compose -f docker-compose.infrastructure.yml restart [service-name]
 
 # Stop all services
-docker-compose -f docker-compose.dev.yml down
+docker-compose -f docker-compose.infrastructure.yml down
 
 # Remove volumes (clean slate)
-docker-compose -f docker-compose.dev.yml down -v
+docker-compose -f docker-compose.infrastructure.yml down -v
 ```
 
 ## Contributing
