@@ -1,12 +1,15 @@
-﻿{
-  "$schema": "http://json.schemastore.org/launchsettings.json",
+{
   "profiles": {
     "Order.Worker.Consumer": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
-      }
+      },
+      "dotnetRunMessages": true
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
     }
-  }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json"
 }

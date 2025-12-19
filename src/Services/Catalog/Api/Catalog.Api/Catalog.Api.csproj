@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <UserSecretsId>68beccec-977d-4711-a7f7-5d8d06e5c2e0</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..\..\..</DockerfileContext>
   </PropertyGroup>
   
   <ItemGroup>
@@ -22,6 +24,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
   </ItemGroup>
   
   <ItemGroup>

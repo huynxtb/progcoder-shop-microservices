@@ -78,7 +78,7 @@ internal class OutboxBackgroundService : BackgroundService
         using var scope = _serviceScopeFactory.CreateScope();
         var outboxProcessor = scope.ServiceProvider.GetRequiredService<OutboxProcessor>();
 
-        while (!cancellationToken.IsCancellationRequested)
+        while (true)
         {
             int processedMessages = await outboxProcessor.ExecuteAsync(cancellationToken);
             var totalProcessedMessages = Interlocked.Add(ref _totalProcessedMessage, processedMessages);
