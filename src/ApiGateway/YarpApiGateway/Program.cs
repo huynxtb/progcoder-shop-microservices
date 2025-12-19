@@ -1,5 +1,7 @@
 #region using
 
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.RateLimiting;
 
 #endregion
@@ -40,6 +42,12 @@ app.UseCors(policyName);
 app.UseRateLimiter();
 
 app.MapReverseProxy();
+
+app.UseHealthChecks("/health",
+    new HealthCheckOptions
+    {
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    });
 
 app.MapGet("/", () => "API Gateway is running...");
 
