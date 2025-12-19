@@ -12,25 +12,26 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/Directory.Packages.props", "src/"]
 COPY ["src/Directory.Build.props", "src/"]
-COPY ["src/Services/Order/Worker/Order.Woker.Outbox/Order.Worker.Outbox.csproj", "src/Services/Order/Worker/Order.Woker.Outbox/"]
+COPY ["src/Services/Notification/Worker/Notification.Worker.Consumer/Notification.Worker.Consumer.csproj", "src/Services/Notification/Worker/Notification.Worker.Consumer/"]
 COPY ["src/Shared/BuildingBlocks/BuildingBlocks.csproj", "src/Shared/BuildingBlocks/"]
 COPY ["src/Shared/Common/Common.csproj", "src/Shared/Common/"]
 COPY ["src/Shared/EventSourcing/EventSourcing.csproj", "src/Shared/EventSourcing/"]
-COPY ["src/Services/Order/Core/Order.Domain/Order.Domain.csproj", "src/Services/Order/Core/Order.Domain/"]
-COPY ["src/Services/Order/Core/Order.Infrastructure/Order.Infrastructure.csproj", "src/Services/Order/Core/Order.Infrastructure/"]
-COPY ["src/Services/Order/Core/Order.Application/Order.Application.csproj", "src/Services/Order/Core/Order.Application/"]
-RUN dotnet restore "./src/Services/Order/Worker/Order.Woker.Outbox/Order.Worker.Outbox.csproj"
+COPY ["src/Services/Notification/Core/Notification.Domain/Notification.Domain.csproj", "src/Services/Notification/Core/Notification.Domain/"]
+COPY ["src/Services/Notification/Core/Notification.Infrastructure/Notification.Infrastructure.csproj", "src/Services/Notification/Core/Notification.Infrastructure/"]
+COPY ["src/Services/Notification/Core/Notification.Application/Notification.Application.csproj", "src/Services/Notification/Core/Notification.Application/"]
+RUN dotnet restore "./src/Services/Notification/Worker/Notification.Worker.Consumer/Notification.Worker.Consumer.csproj"
 COPY . .
-WORKDIR "/src/src/Services/Order/Worker/Order.Woker.Outbox"
-RUN dotnet build "./Order.Worker.Outbox.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/src/Services/Notification/Worker/Notification.Worker.Consumer"
+RUN dotnet build "./Notification.Worker.Consumer.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Order.Worker.Outbox.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Notification.Worker.Consumer.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Order.Worker.Outbox.dll"]
+ENTRYPOINT ["dotnet", "Notification.Worker.Consumer.dll"]
+

@@ -34,6 +34,8 @@ builder.Services.AddRateLimiter(rateLimiterOptions =>
     });
 });
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 app.UseCors(policyName);
@@ -49,7 +51,18 @@ app.UseHealthChecks("/health",
         ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
     });
 
-app.MapGet("/", () => "API Gateway is running...");
+app.MapGet("/", (IWebHostEnvironment env) => new
+{
+    Service = "API Gateway",
+    Status = "Running",
+    Timestamp = DateTimeOffset.UtcNow,
+    Environment = env.EnvironmentName,
+    Endpoints = new Dictionary<string, string>
+            {
+                { "health", "/health" }
+            },
+    Message = "API Gateway is running..."
+});
 
 app.Run();
 

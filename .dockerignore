@@ -28,3 +28,25 @@ README.md
 !.git/config
 !.git/packed-refs
 !.git/refs/heads/**
+
+# Ignore docker volumes - không cần copy vào build context
+docker-volumes/
+**/docker-volumes/
+
+# Ignore config files - không cần trong build
+config/
+
+# Ignore assets - không cần trong build
+assets/
+
+# Ignore node_modules trong Apps
+src/Apps/**/node_modules/
+src/Apps/**/build/
+src/Apps/**/dist/
+
+# Ignore các file temporary
+**/*.sock
+**/*.pid
+**/*.log
+**/.DS_Store
+**/Thumbs.db

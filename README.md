@@ -317,8 +317,12 @@ cd progcoder-shop-microservices
 # Copy and configure environment variables
 cp .env.example .env
 
-# Start ALL services (infrastructure + microservices + frontend)
+# Option 1: Build all images in parallel, then start services
+docker-compose build --parallel
 docker-compose up -d
+
+# Option 2: Build and start services in one command
+docker-compose up --build -d
 
 # Check all services are running
 docker-compose ps
@@ -326,11 +330,20 @@ docker-compose ps
 # View logs
 docker-compose logs -f
 
+# View logs for specific service
+docker-compose logs -f [service-name]
+
 # Stop all services
 docker-compose down
 
 # Stop and remove volumes (clean slate)
 docker-compose down -v
+
+# Restart all services
+docker-compose restart
+
+# Rebuild and restart all services
+docker-compose up --build -d --force-recreate
 ```
 
 After starting, access:
@@ -600,12 +613,60 @@ dotnet ef database update -s ../Api/[ServiceName].Api
 
 ### Building Docker Images
 
-```bash
-# Build all services
-docker-compose build
+#### Method 1: Build Incrementally by Service Groups (Recommended)
 
+This approach helps avoid Docker daemon overload and makes debugging easier:
+
+```bash
+# Step 1: Start infrastructure services first
+docker-compose up -d redis postgres-sql mysql mongodb sql-server elasticsearch rabbitmq minio keycloak otel-collector
+
+# Step 2: Build and run gRPC services
+docker-compose up --build -d catalog-grpc inventory-grpc order-grpc discount-grpc report-grpc
+
+# Step 3: Build and run API services
+docker-compose up --build -d catalog-api basket-api inventory-api order-api discount-api notification-api search-api report-api communication-api
+
+# Step 4: Build and run Workers
+docker-compose up --build -d basket-worker-outbox catalog-woker-outbox catalog-worker-consumer inventory-worker-outbox inventory-worker-consumer order-woker-outbox order-worker-consumer search-worker-consumer notification-worker-consumer notification-worker-processor
+
+# Step 5: Build and run API Gateway and Apps
+docker-compose up --build -d api-gateway app-admin app-store app-job
+```
+
+#### Method 2: Build All Services at Once (For Powerful Machines)
+
+This method is faster but requires sufficient system resources:
+
+```bash
+# Build all images in parallel
+docker-compose build --parallel
+
+# Start all services
+docker-compose up -d
+
+# Or combine both steps
+docker-compose up --build -d
+```
+
+#### Method 3: Build Specific Services
+
+```bash
 # Build specific service
 docker-compose build [service-name]
+
+# Build and start specific service
+docker-compose up --build -d [service-name]
+```
+
+#### Rebuild Images and Start Services
+
+```bash
+# Force rebuild all images without cache
+docker-compose build --no-cache --parallel
+
+# Rebuild and restart all services
+docker-compose up --build -d --force-recreate
 ```
 
 ## Troubleshooting
@@ -627,7 +688,65 @@ docker-compose build [service-name]
    - Check RabbitMQ is running: http://localhost:15673
    - Verify credentials in service configurations
 
+5. **Docker Build Timeout or DNS Errors**:
+   - If you see `i/o timeout` or `failed to do request`, it's likely a Docker daemon network issue
+   - **Solution 1**: Restart Docker Desktop
+   - **Solution 2**: Check Docker Desktop proxy settings (Settings → Resources → Proxies)
+   - **Solution 3**: Clean up Docker cache: `docker system prune -af`
+   - **Solution 4**: Build services incrementally (see Method 1 in Building Docker Images section)
+
+6. **Docker Build Context Too Large**:
+   - Ensure `.dockerignore` file exists and excludes unnecessary files
+   - The `.dockerignore` should exclude: `docker-volumes/`, `config/`, `assets/`, `node_modules`, `*.log`, `*.sock`
+
+7. **Worker Services Failing to Start**:
+   - Error: `Framework 'Microsoft.AspNetCore.App' not found`
+   - **Solution**: Ensure all worker Dockerfiles use `mcr.microsoft.com/dotnet/aspnet:8.0` (not `runtime:8.0`)
+
 ### Useful Commands
+
+```bash
+# Check container status
+docker-compose ps
+
+# View logs for all services
+docker-compose logs -f
+
+# View logs for specific service
+docker-compose logs -f [service-name]
+
+# Restart a service
+docker-compose restart [service-name]
+
+# Stop all services
+docker-compose down
+
+# Stop all services and remove volumes (clean slate)
+docker-compose down -v
+
+# Remove stopped containers and unused images
+docker system prune -f
+
+# Remove all unused images, containers, networks, and volumes
+docker system prune -af --volumes
+
+# Check Docker disk usage
+docker system df
+
+# View running containers
+docker ps
+
+# View all containers (including stopped)
+docker ps -a
+
+# Execute command in running container
+docker exec -it [container-name] bash
+
+# Check container resource usage
+docker stats
+```
+
+### Infrastructure Services Only Commands
 
 ```bash
 # Check container status
