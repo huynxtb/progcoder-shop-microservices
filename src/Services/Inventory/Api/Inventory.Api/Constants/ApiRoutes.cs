@@ -60,4 +60,17 @@ public sealed class ApiRoutes
 
         #endregion
     }
+
+    public static class Reservation
+    {
+        #region Constants
+
+        public const string Tags = "Inventory Reservations";
+
+        private const string Base = "/reservations";
+
+        public const string GetAll = $"{Base}/all";
+
+        #endregion
+    }
 }

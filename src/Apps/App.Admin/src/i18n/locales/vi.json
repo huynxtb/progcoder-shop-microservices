@@ -482,7 +482,17 @@
     "message": "Thông điệp",
     "createdDate": "Ngày tạo",
     "createdBy": "Người tạo",
-    "noHistory": "Không có lịch sử"
+    "noHistory": "Không có lịch sử",
+    "viewReservations": "Xem kho giữ",
+    "reservationTitle": "Kho hàng đang giữ",
+    "referenceId": "Mã tham chiếu",
+    "reservationStatus": "Trạng thái giữ hàng",
+    "expiresAt": "Hết hạn lúc",
+    "noReservations": "Không có kho giữ nào",
+    "reservationStatus1": "Đang chờ",
+    "reservationStatus2": "Đã cam kết",
+    "reservationStatus3": "Đã giải phóng",
+    "reservationStatus4": "Hết hạn"
   },
   "category": {
     "title": "Quản lý danh mục",

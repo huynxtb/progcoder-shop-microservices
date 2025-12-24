@@ -73,6 +73,9 @@ const InventoryPage = () => {
   const [historyModalOpen, setHistoryModalOpen] = useState(false);
   const [historyData, setHistoryData] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
+  const [reservationModalOpen, setReservationModalOpen] = useState(false);
+  const [reservationData, setReservationData] = useState([]);
+  const [loadingReservations, setLoadingReservations] = useState(false);
 
   // Form data for add
   const [addFormData, setAddFormData] = useState({
@@ -141,6 +144,33 @@ const InventoryPage = () => {
       setHistoryData([]);
     } finally {
       setLoadingHistory(false);
+    }
+  }, []);
+
+  // Fetch inventory reservations
+  const fetchReservations = useCallback(async () => {
+    try {
+      setLoadingReservations(true);
+      const response = await inventoryService.getAllReservations();
+      
+      if (response.data && response.data.result && response.data.result.items) {
+        const mappedReservations = response.data.result.items.map((item) => ({
+          id: item.id,
+          productId: item.productId,
+          productName: item.productName,
+          referenceId: item.referenceId,
+          quantity: item.quantity,
+          status: item.status,
+          expiresAt: item.expiresAt,
+          createdOnUtc: item.createdOnUtc,
+        }));
+        setReservationData(mappedReservations);
+      }
+    } catch (error) {
+      console.error("Failed to fetch reservations:", error);
+      setReservationData([]);
+    } finally {
+      setLoadingReservations(false);
     }
   }, []);
 
@@ -678,6 +708,16 @@ const InventoryPage = () => {
             >
               <Icon icon="heroicons:clock" className="ltr:mr-2 rtl:ml-2" />
               {t("inventory.viewHistory")}
+            </button>
+            <button
+              className="btn btn-outline-dark btn-sm inline-flex items-center"
+              onClick={() => {
+                setReservationModalOpen(true);
+                fetchReservations();
+              }}
+            >
+              <Icon icon="heroicons:lock-closed" className="ltr:mr-2 rtl:ml-2" />
+              {t("inventory.viewReservations")}
             </button>
             <button 
               className="btn btn-dark btn-sm inline-flex items-center"
@@ -1305,6 +1345,95 @@ const InventoryPage = () => {
             onClick={() => {
               setHistoryModalOpen(false);
               setHistoryData([]);
+            }}
+          >
+            {t("common.close")}
+          </button>
+        </div>
+      </Modal>
+
+      {/* Reservation Modal */}
+      <Modal
+        title={t("inventory.reservationTitle")}
+        activeModal={reservationModalOpen}
+        onClose={() => {
+          setReservationModalOpen(false);
+          setReservationData([]);
+        }}
+        className="max-w-6xl"
+      >
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-slate-100 dark:divide-slate-700">
+            <thead className="bg-slate-200 dark:bg-slate-700">
+              <tr>
+                <th className="table-th">{t("inventory.productName")}</th>
+                <th className="table-th">{t("inventory.referenceId")}</th>
+                <th className="table-th">{t("inventory.quantity")}</th>
+                <th className="table-th">{t("inventory.reservationStatus")}</th>
+                <th className="table-th">{t("inventory.expiresAt")}</th>
+                <th className="table-th">{t("inventory.createdDate")}</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
+              {loadingReservations ? (
+                <tr>
+                  <td colSpan="6" className="table-td text-center py-8">
+                    <div className="flex flex-col items-center justify-center">
+                      <Icon icon="heroicons:arrow-path" className="animate-spin text-2xl text-slate-400 mb-2" />
+                      <span className="text-slate-500 dark:text-slate-400">{t("common.loading")}</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : reservationData.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="table-td text-center py-8">
+                    <span className="text-slate-500 dark:text-slate-400">{t("inventory.noReservations")}</span>
+                  </td>
+                </tr>
+              ) : (
+                reservationData.map((reservation) => (
+                  <tr key={reservation.id}>
+                    <td className="table-td">
+                      <span className="text-slate-600 dark:text-slate-300">{reservation.productName}</span>
+                    </td>
+                    <td className="table-td">
+                      <span className="text-slate-600 dark:text-slate-300">{reservation.referenceId}</span>
+                    </td>
+                    <td className="table-td">
+                      <span className="text-slate-600 dark:text-slate-300">{reservation.quantity}</span>
+                    </td>
+                    <td className="table-td">
+                      <span className={`inline-block px-3 py-1 rounded-full text-sm ${
+                        reservation.status === 1 ? 'text-warning-500 bg-warning-500/30' :
+                        reservation.status === 2 ? 'text-success-500 bg-success-500/30' :
+                        reservation.status === 3 ? 'text-slate-500 bg-slate-500/30' :
+                        'text-danger-500 bg-danger-500/30'
+                      }`}>
+                        {t(`inventory.reservationStatus${reservation.status}`)}
+                      </span>
+                    </td>
+                    <td className="table-td">
+                      <span className="text-slate-600 dark:text-slate-300">
+                        {reservation.expiresAt ? formatDate(reservation.expiresAt) : '-'}
+                      </span>
+                    </td>
+                    <td className="table-td">
+                      <span className="text-slate-600 dark:text-slate-300">
+                        {formatDate(reservation.createdOnUtc)}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+        <div className="flex justify-end mt-4">
+          <button
+            className="btn btn-outline-dark inline-flex items-center"
+            onClick={() => {
+              setReservationModalOpen(false);
+              setReservationData([]);
             }}
           >
             {t("common.close")}

@@ -482,7 +482,17 @@
     "message": "Message",
     "createdDate": "Created Date",
     "createdBy": "Created By",
-    "noHistory": "No history available"
+    "noHistory": "No history available",
+    "viewReservations": "View Reservations",
+    "reservationTitle": "Inventory Reservations",
+    "referenceId": "Reference ID",
+    "reservationStatus": "Reservation Status",
+    "expiresAt": "Expires At",
+    "noReservations": "No reservations found",
+    "reservationStatus1": "Pending",
+    "reservationStatus2": "Committed",
+    "reservationStatus3": "Released",
+    "reservationStatus4": "Expired"
   },
   "category": {
     "title": "Category Management",

@@ -139,6 +139,16 @@ export const inventoryService = {
   getHistories: () => {
     return api.get(API_ENDPOINTS.INVENTORY.GET_HISTORIES);
   },
+
+  // ==================== Reservations ====================
+
+  /**
+   * Get all inventory reservations
+   * @returns {Promise} API response
+   */
+  getAllReservations: () => {
+    return api.get(API_ENDPOINTS.INVENTORY.GET_ALL_RESERVATIONS);
+  },
 };
 
 export default inventoryService;
