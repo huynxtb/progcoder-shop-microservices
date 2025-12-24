@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -12,20 +12,27 @@ import { notificationService } from "@/services/notificationService";
 const Notification = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { authenticated } = useKeycloak();
-  const isAuth = useSelector((state) => state.auth.isAuth);
+  const { authenticated, keycloakReady } = useKeycloak();
+  const isAuth = useSelector((state) => state.auth?.isAuth);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   // Check if user is logged in (either via Keycloak or Redux state)
-  const isLoggedIn = authenticated || isAuth;
+  // Use strict boolean check and ensure Keycloak is ready before proceeding
+  const isLoggedIn = useMemo(() => {
+    // Only consider logged in if Keycloak is ready AND user is explicitly authenticated
+    return keycloakReady && (authenticated === true || isAuth === true);
+  }, [authenticated, isAuth, keycloakReady]);
 
   // Fetch notifications and unread count
-  const fetchNotifications = async () => {
-    // Only fetch if user is logged in
-    if (!isLoggedIn) {
+  // Use useCallback to memoize function and ensure proper dependency tracking
+  const fetchNotifications = useCallback(async () => {
+    // Strict check: only proceed if Keycloak is ready AND user is explicitly authenticated
+    if (!keycloakReady || (authenticated !== true && isAuth !== true)) {
       setLoading(false);
+      setNotifications([]);
+      setUnreadCount(0);
       return;
     }
 
@@ -50,16 +57,20 @@ const Notification = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [authenticated, isAuth, keycloakReady]);
 
   useEffect(() => {
-    // Only fetch notifications if user is logged in
-    if (isLoggedIn) {
+    // Strict check: only fetch if Keycloak is ready AND user is explicitly authenticated
+    // Don't fetch if authenticated is undefined/null/false or Keycloak is not ready
+    if (keycloakReady && (authenticated === true || isAuth === true)) {
       fetchNotifications();
     } else {
+      // Ensure we reset state when not authenticated or Keycloak not ready
       setLoading(false);
+      setNotifications([]);
+      setUnreadCount(0);
     }
-  }, [isLoggedIn]);
+  }, [authenticated, isAuth, keycloakReady, fetchNotifications]);
 
   // Format time ago
   const formatTimeAgo = (dateString) => {
@@ -120,8 +131,9 @@ const Notification = () => {
     );
   };
 
-  // Don't render if not logged in
-  if (!isLoggedIn) {
+  // Don't render if not logged in - strict check
+  // Early return to prevent any rendering when not authenticated or Keycloak not ready
+  if (!keycloakReady || (authenticated !== true && isAuth !== true)) {
     return null;
   }
 

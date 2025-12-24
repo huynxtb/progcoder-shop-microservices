@@ -1,4 +1,6 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { useKeycloak } from "@/contexts/KeycloakContext";
 import Icon from "@/components/ui/Icon";
 import SwitchDark from "./Tools/SwitchDark";
 import HorizentalMenu from "./Tools/HorizentalMenu";
@@ -22,6 +24,18 @@ const Header = ({ className = "custom-class" }) => {
   const [collapsed, setMenuCollapsed] = useSidebar();
   const { width, breakpoints } = useWidth();
   const [navbarType] = useNavbarType();
+  
+  // Check authentication state to conditionally render Notification
+  // Only render Notification component when user is authenticated to prevent API calls and redirect loops
+  // Use keycloakReady to ensure Keycloak is initialized before checking authentication
+  const { authenticated, keycloakReady } = useKeycloak();
+  const isAuth = useSelector((state) => state.auth?.isAuth);
+  
+  // Only render Notification when:
+  // 1. Keycloak is ready (initialized)
+  // 2. User is explicitly authenticated (strict check for true)
+  const isLoggedIn = keycloakReady && (authenticated === true || isAuth === true);
+  
   const navbarTypeClass = () => {
     switch (navbarType) {
       case "floating":
@@ -120,7 +134,8 @@ const Header = ({ className = "custom-class" }) => {
           <div className="nav-tools flex items-center lg:space-x-6 space-x-3 rtl:space-x-reverse">
             <Language />
             <SwitchDark />
-            {width >= breakpoints.md && <Notification />}
+            {/* Only render Notification when user is authenticated to prevent API calls and redirect loops */}
+            {width >= breakpoints.md && isLoggedIn && <Notification />}
             {width >= breakpoints.md && <Profile />}
             {width <= breakpoints.md && (
               <div
