@@ -128,11 +128,13 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
     {
         if (amount <= 0) throw new DomainException(MessageCode.OutOfRange);
         if (Quantity - amount < 0) throw new DomainException(MessageCode.InsufficientStock);
+        if (Quantity - amount < Reserved) throw new DomainException(MessageCode.InsufficientStock);
 
         var oldQuantity = Quantity;
 
         Quantity -= amount;
         LastModifiedBy = performedBy;
+        LastModifiedOnUtc = DateTimeOffset.UtcNow;
 
         AddDomainEvent(new StockChangedDomainEvent(Id, 
             Product.Id,
@@ -165,13 +167,26 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
     public void Reserve(int amount, Guid reservationId, string performedBy)
     {
         if (amount <= 0) throw new DomainException(MessageCode.OutOfRange);
-        if (!HasAvailable(amount)) throw new DomainException(MessageCode.InsufficientStock);
+        if (Quantity < amount) throw new DomainException(MessageCode.InsufficientStock);
 
+        var oldQuantity = Quantity;
+
+        Quantity -= amount;
         Reserved += amount;
         LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
 
         AddDomainEvent(new ReservedDomainEvent(Id, Product.Id, reservationId, amount));
+        AddDomainEvent(new StockChangedDomainEvent(
+            Id,
+            Product.Id,
+            Product.Name!,
+            amount,
+            oldQuantity,
+            Quantity,
+            InventoryChangeType.Reserve,
+            InventorySource.OrderService.GetDescription(),
+            Available));
     }
 
     public void Unreserve(int amount, Guid reservationId, string performedBy)
@@ -179,11 +194,24 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
         if (amount <= 0) throw new DomainException(MessageCode.OutOfRange);
         if (Reserved < amount) throw new DomainException(MessageCode.InvalidReservationAmount);
 
+        var oldQuantity = Quantity;
+
+        Quantity += amount;
         Reserved -= amount;
         LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
 
         AddDomainEvent(new UnreservedDomainEvent(Id, Product.Id, reservationId, amount));
+        AddDomainEvent(new StockChangedDomainEvent(
+            Id,
+            Product.Id,
+            Product.Name!,
+            amount,
+            oldQuantity,
+            Quantity,
+            InventoryChangeType.Release,
+            InventorySource.OrderService.GetDescription(),
+            Available));
     }
 
     public void CommitReservation(int amount, string performedBy)
@@ -191,8 +219,9 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
         if (amount <= 0) throw new DomainException(MessageCode.OutOfRange);
         if (Reserved < amount) throw new DomainException(MessageCode.InvalidReservationAmount);
 
+        var oldQuantity = Quantity;
+
         Reserved -= amount;
-        Quantity -= amount;
         LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
 
@@ -201,8 +230,8 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
             Product.Id,
             Product.Name!,
             amount,
-            Quantity + amount,
-            Available,
+            oldQuantity,
+            Quantity,
             InventoryChangeType.Commit,
             InventorySource.OrderService.GetDescription(),
             Available));

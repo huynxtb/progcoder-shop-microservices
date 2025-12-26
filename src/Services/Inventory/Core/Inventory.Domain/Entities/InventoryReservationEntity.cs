@@ -2,9 +2,9 @@
 
 using Inventory.Domain.Abstractions;
 using Inventory.Domain.Enums;
+using Inventory.Domain.Events;
 using Inventory.Domain.ValueObjects;
 using Common.Constants;
-using System.Collections.Generic;
 
 #endregion
 
@@ -58,7 +58,7 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
             LastModifiedBy = performedBy
         };
 
-        //entity.AddDomainEvent(new ReservationCreatedDomainEvent(id, productId, productName, referenceId, locationId, quantity, expiresAt));
+        entity.AddDomainEvent(new ReservationCreatedDomainEvent(id, productId, productName, referenceId, locationId, quantity, expiresAt));
 
         return entity;
     }
@@ -75,7 +75,7 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
         LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
 
-        //AddDomainEvent(new ReservationCommittedDomainEvent(Id, Product.Id, Product.Name!, ReferenceId, Quantity));
+        AddDomainEvent(new ReservationCommittedDomainEvent(Id, Product.Id, Product.Name!, ReferenceId, LocationId, Quantity));
     }
 
     public void Release(string reason, string performedBy)
@@ -86,7 +86,7 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
         LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
 
-        //AddDomainEvent(new ReservationReleasedDomainEvent(Id, Product.Id, Product.Name!, ReferenceId, Quantity, reason));
+        AddDomainEvent(new ReservationReleasedDomainEvent(Id, Product.Id, Product.Name!, ReferenceId, LocationId, Quantity, reason));
     }
 
     public void Expire()
@@ -95,7 +95,7 @@ public sealed class InventoryReservationEntity : Aggregate<Guid>
         {
             Status = ReservationStatus.Expired;
 
-            //AddDomainEvent(new ReservationExpiredDomainEvent(Id, Product.Id, Product.Name!, ReferenceId, Quantity));
+            AddDomainEvent(new ReservationExpiredDomainEvent(Id, Product.Id, Product.Name!, ReferenceId, LocationId, Quantity));
         }
     }
 

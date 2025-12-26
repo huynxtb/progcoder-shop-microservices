@@ -5,7 +5,6 @@ using Inventory.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Reflection;
 
 #endregion
 
@@ -51,28 +50,13 @@ public sealed class ExpireReservationCommandHandler(IApplicationDbContext dbCont
         {
             try
             {
-                // Find the inventory item
-                var inventoryItem = await dbContext.InventoryItems
-                    .FirstOrDefaultAsync(x => x.Product.Id == reservation.Product.Id && x.LocationId == reservation.LocationId,
-                        cancellationToken);
-
-                if (inventoryItem == null)
-                {
-                    logger.LogWarning("Inventory item not found Product ID: {ProductId}, Location ID: {LocationId}", reservation.Product.Id, reservation.LocationId);
-                    continue;
-                }
-
-                // Expire the reservation
+                // Expire the reservation (this will raise ReservationExpiredDomainEvent if status changes)
                 reservation.Expire();
 
-                // Only unreserve if the reservation was actually expired (status changed)
+                // Only update if the reservation was actually expired (status changed)
                 if (reservation.Status == Domain.Enums.ReservationStatus.Expired)
                 {
-                    inventoryItem.Unreserve((int)reservation.Quantity, reservation.Id, command.Actor.ToString());
-
-                    dbContext.InventoryItems.Update(inventoryItem);
                     dbContext.InventoryReservations.Update(reservation);
-                    await dbContext.SaveChangesAsync(cancellationToken);
                 }
 
                 logger.LogInformation("Successfully expired reservation {ReservationId} for order {OrderId}",
@@ -84,7 +68,7 @@ public sealed class ExpireReservationCommandHandler(IApplicationDbContext dbCont
             }
         }
 
-        
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }

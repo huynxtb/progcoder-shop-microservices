@@ -11,5 +11,6 @@ public sealed record ReservationCommittedDomainEvent(
     Guid ProductId,
     string ProductName,
     Guid ReferenceId,
+    Guid LocationId,
     int Quantity) : IDomainEvent;
 

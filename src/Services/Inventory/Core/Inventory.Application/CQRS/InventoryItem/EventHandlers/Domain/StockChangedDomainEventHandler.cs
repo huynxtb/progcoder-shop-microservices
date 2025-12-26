@@ -60,35 +60,35 @@ public sealed class StockChangedDomainEventHandler(
         {
             InventoryChangeType.Init => 
                 $"Initialized inventory for product '{@event.ProductName}' with {Math.Abs(@event.ChangeAmount)} units. " +
-                $"Quantity: {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
+                $"\nQuantity: {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
             
             InventoryChangeType.Increase => 
                 $"Increased {Math.Abs(@event.ChangeAmount)} units of product '{@event.ProductName}'. " +
-                $"Quantity: {@event.OldQuantity} → {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
+                $"\nQuantity: {@event.OldQuantity} → {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
             
             InventoryChangeType.Decrease => 
                 $"Decreased {Math.Abs(@event.ChangeAmount)} units of product '{@event.ProductName}'. " +
-                $"Quantity: {@event.OldQuantity} → {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
+                $"\nQuantity: {@event.OldQuantity} → {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
             
             InventoryChangeType.Reserve => 
                 $"Reserved {Math.Abs(@event.ChangeAmount)} units of product '{@event.ProductName}'. " +
-                $"Reserved increased, Available decreased: {@event.Available}. Source: {@event.Source}",
+                $"\nReserved increased, Available decreased: {@event.Available}. Source: {@event.Source}",
             
             InventoryChangeType.Release => 
                 $"Released {Math.Abs(@event.ChangeAmount)} units of product '{@event.ProductName}'. " +
-                $"Reserved decreased, Available increased: {@event.Available}. Source: {@event.Source}",
+                $"\nReserved decreased, Available increased: {@event.Available}. Source: {@event.Source}",
             
             InventoryChangeType.Commit => 
                 $"Committed {Math.Abs(@event.ChangeAmount)} units of product '{@event.ProductName}'. " +
-                $"Quantity: {@event.OldQuantity} → {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
+                $"\nQuantity: {@event.OldQuantity} → {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
             
             InventoryChangeType.Transfer => 
                 $"Transferred {Math.Abs(@event.ChangeAmount)} units of product '{@event.ProductName}'. " +
-                $"Quantity: {@event.OldQuantity} → {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
+                $"\nQuantity: {@event.OldQuantity} → {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
             
             _ => 
                 $"Stock changed for product '{@event.ProductName}' by {Math.Abs(@event.ChangeAmount)} units. " +
-                $"Quantity: {@event.OldQuantity} → {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}"
+                $"\nQuantity: {@event.OldQuantity} → {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}"
         };
 
         var history = InventoryHistoryEntity.Create(

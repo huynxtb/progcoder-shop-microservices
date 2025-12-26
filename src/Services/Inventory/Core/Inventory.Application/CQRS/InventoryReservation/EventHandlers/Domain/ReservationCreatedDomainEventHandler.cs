@@ -5,6 +5,7 @@ using Inventory.Application.Data;
 using Inventory.Domain.Entities;
 using Inventory.Domain.Events;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -22,32 +23,30 @@ public sealed class ReservationCreatedDomainEventHandler(
     {
         logger.LogInformation("Domain Event handled: {DomainEvent}", @event.GetType().Name);
 
-        await PushToOutboxAsync(@event, cancellationToken);
+        await ReserveInventoryAsync(@event, cancellationToken);
     }
 
     #endregion
 
     #region Methods
 
-    private async Task PushToOutboxAsync(ReservationCreatedDomainEvent @event, CancellationToken cancellationToken)
+    private async Task ReserveInventoryAsync(ReservationCreatedDomainEvent @event, CancellationToken cancellationToken)
     {
-        var message = new InventoryReservedIntegrationEvent
+        // Find the inventory item by ProductId and LocationId
+        var inventoryItem = await dbContext.InventoryItems
+            .FirstOrDefaultAsync(x => x.Product.Id == @event.ProductId && x.LocationId == @event.LocationId,
+                cancellationToken);
+
+        if (inventoryItem == null)
         {
-            ReservationId = @event.ReservationId,
-            ProductId = @event.ProductId,
-            ProductName = @event.ProductName,
-            ReferenceId = @event.ReferenceId,
-            Quantity = (int)@event.Quantity,
-            ExpiresAt = @event.ExpiresAt
-        };
+            logger.LogWarning("Inventory item not found for ProductId: {ProductId}, LocationId: {LocationId}",
+                @event.ProductId, @event.LocationId);
+            return;
+        }
 
-        var outboxMessage = OutboxMessageEntity.Create(
-            id: Guid.NewGuid(),
-            eventType: message.EventType!,
-            content: JsonConvert.SerializeObject(message),
-            occurredOnUtc: DateTimeOffset.UtcNow);
-
-        await dbContext.OutboxMessages.AddAsync(outboxMessage, cancellationToken);
+        // Reserve the inventory
+        inventoryItem.Reserve((int)@event.Quantity, @event.ReservationId, "System");
+        dbContext.InventoryItems.Update(inventoryItem);
     }
 
     #endregion

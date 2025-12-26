@@ -11,5 +11,6 @@ public sealed record ReservationExpiredDomainEvent(
     Guid ProductId,
     string ProductName,
     Guid ReferenceId,
+    Guid LocationId,
     int Quantity) : IDomainEvent;
 

@@ -52,21 +52,8 @@ public sealed class ReleaseReservationCommandHandler(IApplicationDbContext dbCon
 
         foreach (var reservation in reservations)
         {
-            // Find the inventory item
-            var inventoryItem = await dbContext.InventoryItems
-                .FirstOrDefaultAsync(x => x.Product.Id == reservation.Product.Id && x.LocationId == reservation.LocationId,
-                    cancellationToken);
-
-            if (inventoryItem == null)
-            {
-                throw new ClientValidationException(MessageCode.ResourceNotFound);
-            }
-
-            // Release the reservation
-            inventoryItem.Unreserve((int)reservation.Quantity, reservation.Id, command.Actor.ToString());
+            // Release the reservation (this will raise ReservationReleasedDomainEvent)
             reservation.Release(command.Reason, command.Actor.ToString());
-
-            dbContext.InventoryItems.Update(inventoryItem);
             dbContext.InventoryReservations.Update(reservation);
         }
 

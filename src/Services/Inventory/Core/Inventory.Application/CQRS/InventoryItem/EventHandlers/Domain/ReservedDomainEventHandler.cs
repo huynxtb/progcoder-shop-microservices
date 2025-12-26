@@ -43,7 +43,8 @@ public sealed class ReservedDomainEventHandler(
 
         var message = $"Reserved {-@event.Amount} units of product '{inventoryItem.Product.Name}' " +
                       $"at location '{inventoryItem.Location.Location}' for reservation {{{@event.ReservationId}}}. " +
-                      $"Available: {inventoryItem.Available}, Reserved: {inventoryItem.Reserved}";
+                      $"\nAvailable: {inventoryItem.Available}." +
+                      $"\nReserved: {inventoryItem.Reserved}";
 
         var history = InventoryHistoryEntity.Create(
             id: Guid.NewGuid(),

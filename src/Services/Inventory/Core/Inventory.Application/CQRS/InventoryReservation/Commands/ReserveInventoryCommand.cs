@@ -3,6 +3,7 @@
 using Inventory.Application.Data;
 using Inventory.Application.Dtos.InventoryReservations;
 using Inventory.Domain.Entities;
+using Inventory.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,11 +56,25 @@ public sealed class ReserveInventoryCommandHandler(IApplicationDbContext dbConte
     {
         var dto = command.Dto;
 
+        // Idempotency check: Check if reservation already exists for this ReferenceId + ProductId + Pending status
+        var existingReservation = await dbContext.InventoryReservations
+            .FirstOrDefaultAsync(
+                x => x.ReferenceId == dto.ReferenceId 
+                    && x.Product.Id == dto.ProductId 
+                    && x.Status == ReservationStatus.Pending,
+                cancellationToken);
+
+        if (existingReservation != null)
+        {
+            // Reservation already exists, return early (idempotent behavior)
+            return Unit.Value;
+        }
+
         // Find inventory item with the highest available quantity for this product
         var inventoryItem = await dbContext.InventoryItems
             .Include(x => x.Location)
-            .Where(x => x.Product.Id == dto.ProductId)
-            .OrderByDescending(x => x.Available)
+            .Where(x => x.Product.Id == dto.ProductId && x.Quantity > x.Reserved)
+            .OrderByDescending(x => x.Quantity - x.Reserved)
             .FirstOrDefaultAsync(cancellationToken)
             ?? throw new ClientValidationException(MessageCode.InventoryItemNotFound);
 
@@ -69,7 +84,7 @@ public sealed class ReserveInventoryCommandHandler(IApplicationDbContext dbConte
             throw new ClientValidationException(MessageCode.InsufficientStock);
         }
 
-        // Create reservation
+        // Create reservation (this will raise ReservationCreatedDomainEvent)
         var reservationId = Guid.NewGuid();
         var reservation = InventoryReservationEntity.Create(
             id: reservationId,
@@ -81,11 +96,7 @@ public sealed class ReserveInventoryCommandHandler(IApplicationDbContext dbConte
             expiresAt: dto.ExpiresAt,
             performedBy: command.Actor.ToString());
 
-        // Reserve the inventory (this will also raise domain event)
-        inventoryItem.Reserve(dto.Quantity, reservationId, command.Actor.ToString());
-
         await dbContext.InventoryReservations.AddAsync(reservation, cancellationToken);
-        dbContext.InventoryItems.Update(inventoryItem);
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;

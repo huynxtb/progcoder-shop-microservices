@@ -46,18 +46,8 @@ public sealed class CommitReservationCommandHandler(IApplicationDbContext dbCont
 
         foreach (var reservation in reservations)
         {
-            // Find the inventory item
-            var inventoryItem = await dbContext.InventoryItems
-                .FirstOrDefaultAsync(x => x.Product.Id == reservation.Product.Id && x.LocationId == reservation.LocationId,
-                    cancellationToken);
-
-            if (inventoryItem == null) continue;
-
-            // Commit the reservation
-            inventoryItem.CommitReservation(reservation.Quantity, command.Actor.ToString());
+            // Mark reservation as committed (this will raise ReservationCommittedDomainEvent)
             reservation.MarkCommitted(command.Actor.ToString());
-
-            dbContext.InventoryItems.Update(inventoryItem);
             dbContext.InventoryReservations.Update(reservation);
         }
 
