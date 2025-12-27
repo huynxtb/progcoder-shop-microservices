@@ -67,15 +67,9 @@ public sealed class BasketCheckoutCommandValidator : AbstractValidator<BasketChe
                             .MaximumLength(500)
                             .WithMessage(MessageCode.Max500Characters);
 
-                        RuleFor(x => x.Dto.ShippingAddress.Ward)
+                        RuleFor(x => x.Dto.ShippingAddress.Subdivision)
                             .NotEmpty()
-                            .WithMessage(MessageCode.WardIsRequired)
-                            .MaximumLength(100)
-                            .WithMessage(MessageCode.Max100Characters);
-
-                        RuleFor(x => x.Dto.ShippingAddress.District)
-                            .NotEmpty()
-                            .WithMessage(MessageCode.DistrictIsRequired)
+                            .WithMessage(MessageCode.SubdivisionIsRequired)
                             .MaximumLength(100)
                             .WithMessage(MessageCode.Max100Characters);
 
@@ -85,21 +79,21 @@ public sealed class BasketCheckoutCommandValidator : AbstractValidator<BasketChe
                             .MaximumLength(100)
                             .WithMessage(MessageCode.Max100Characters);
 
+                        RuleFor(x => x.Dto.ShippingAddress.StateOrProvince)
+                            .NotEmpty()
+                            .WithMessage(MessageCode.StateOrProvinceIsRequired)
+                            .MaximumLength(100)
+                            .WithMessage(MessageCode.Max100Characters);
+
                         RuleFor(x => x.Dto.ShippingAddress.Country)
                             .NotEmpty()
                             .WithMessage(MessageCode.CountryIsRequired)
                             .MaximumLength(100)
                             .WithMessage(MessageCode.Max100Characters);
 
-                        RuleFor(x => x.Dto.ShippingAddress.State)
+                        RuleFor(x => x.Dto.ShippingAddress.PostalCode)
                             .NotEmpty()
-                            .WithMessage(MessageCode.StateIsRequired)
-                            .MaximumLength(100)
-                            .WithMessage(MessageCode.Max100Characters);
-
-                        RuleFor(x => x.Dto.ShippingAddress.ZipCode)
-                            .NotEmpty()
-                            .WithMessage(MessageCode.ZipCodeIsRequired)
+                            .WithMessage(MessageCode.PostalCodeIsRequired)
                             .MaximumLength(20)
                             .WithMessage(MessageCode.Max20Characters);
                     });
@@ -169,12 +163,11 @@ public sealed class BasketCheckoutCommandHandler(
             dto.Customer.PhoneNumber);
         var shippingAddressEvent = new AddressDomainEvent(
             dto.ShippingAddress.AddressLine,
-            dto.ShippingAddress.Ward,
-            dto.ShippingAddress.District,
+            dto.ShippingAddress.Subdivision,
             dto.ShippingAddress.City,
+            dto.ShippingAddress.StateOrProvince,
             dto.ShippingAddress.Country,
-            dto.ShippingAddress.State,
-            dto.ShippingAddress.ZipCode);
+            dto.ShippingAddress.PostalCode);
         var discountEvent = new DiscountDomainEvent(couponCode, discountAmt);
 
         var @event = new BasketCheckoutDomainEvent(basket, customerEvent, shippingAddressEvent, discountEvent);

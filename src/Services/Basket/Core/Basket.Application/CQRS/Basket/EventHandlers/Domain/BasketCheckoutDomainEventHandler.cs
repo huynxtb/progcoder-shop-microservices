@@ -44,12 +44,11 @@ public sealed class BasketCheckoutDomainEventHandler(
             ShippingAddress = new AddressIntegrationEvent
             {
                 AddressLine = @event.ShippingAddress.AddressLine,
-                Ward = @event.ShippingAddress.Ward,
-                District = @event.ShippingAddress.District,
+                Subdivision = @event.ShippingAddress.Subdivision,
                 City = @event.ShippingAddress.City,
+                StateOrProvince = @event.ShippingAddress.StateOrProvince,
                 Country = @event.ShippingAddress.Country,
-                State = @event.ShippingAddress.State,
-                ZipCode = @event.ShippingAddress.ZipCode
+                PostalCode = @event.ShippingAddress.PostalCode
             },
             Discount = new DiscountIntegrationEvent
             {

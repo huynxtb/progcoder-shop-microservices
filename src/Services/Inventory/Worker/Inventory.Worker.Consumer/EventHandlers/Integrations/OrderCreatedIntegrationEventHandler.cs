@@ -46,7 +46,7 @@ public sealed class OrderCreatedIntegrationEventHandler(
                     ProductName = product.Name,
                     ReferenceId = message.OrderId,
                     Quantity = orderItem.Quantity,
-                    ExpiresAt = DateTimeOffset.UtcNow.AddMinutes(30) // 30 minutes to complete order
+                    ExpiresAt = DateTimeOffset.UtcNow.AddDays(3) // 3 days to complete order
                 };
 
                 // ReserveInventoryCommand will automatically find the inventory item with the highest quantity

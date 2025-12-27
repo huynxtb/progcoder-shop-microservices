@@ -49,12 +49,11 @@ const CreateOrder = () => {
       .required(t("validation.required")),
     customerPhoneNumber: Yup.string().required(t("validation.required")),
     shippingAddressLine: Yup.string().trim().required(t("validation.required")),
-    shippingWard: Yup.string().trim().required(t("validation.required")),
-    shippingDistrict: Yup.string().trim().required(t("validation.required")),
+    shippingSubdivision: Yup.string().trim().required(t("validation.required")),
     shippingCity: Yup.string().trim().required(t("validation.required")),
+    shippingStateOrProvince: Yup.string().trim().required(t("validation.required")),
     shippingCountry: Yup.string().trim().required(t("validation.required")),
-    shippingState: Yup.string().trim().required(t("validation.required")),
-    shippingZipCode: Yup.string().trim().required(t("validation.required")),
+    shippingPostalCode: Yup.string().trim().required(t("validation.required")),
     couponCode: Yup.string().nullable(),
     notes: Yup.string().nullable(),
   });
@@ -67,12 +66,11 @@ const CreateOrder = () => {
       customerEmail: "",
       customerPhoneNumber: "",
       shippingAddressLine: "",
-      shippingWard: "",
-      shippingDistrict: "",
+      shippingSubdivision: "",
       shippingCity: "",
+      shippingStateOrProvince: "",
       shippingCountry: "",
-      shippingState: "",
-      shippingZipCode: "",
+      shippingPostalCode: "",
       couponCode: "",
       notes: "",
     },
@@ -96,12 +94,11 @@ const CreateOrder = () => {
           },
           shippingAddress: {
             addressLine: values.shippingAddressLine,
-            ward: values.shippingWard,
-            district: values.shippingDistrict,
+            subdivision: values.shippingSubdivision,
             city: values.shippingCity,
+            stateOrProvince: values.shippingStateOrProvince,
             country: values.shippingCountry,
-            state: values.shippingState,
-            zipCode: values.shippingZipCode,
+            postalCode: values.shippingPostalCode,
           },
           orderItems: orderItems.map((item) => ({
             productId: item.productId,
@@ -252,30 +249,16 @@ const CreateOrder = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
-                      {t("orders.ward")} <span className="text-danger-500">*</span>
+                      {t("orders.subdivision")} <span className="text-danger-500">*</span>
                     </label>
                     <Textinput
                       type="text"
-                      placeholder={t("orders.wardPlaceholder")}
-                      value={formik.values.shippingWard}
+                      placeholder={t("orders.subdivisionPlaceholder")}
+                      value={formik.values.shippingSubdivision}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      name="shippingWard"
-                      error={formik.touched.shippingWard && formik.errors.shippingWard}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
-                      {t("orders.district")} <span className="text-danger-500">*</span>
-                    </label>
-                    <Textinput
-                      type="text"
-                      placeholder={t("orders.districtPlaceholder")}
-                      value={formik.values.shippingDistrict}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      name="shippingDistrict"
-                      error={formik.touched.shippingDistrict && formik.errors.shippingDistrict}
+                      name="shippingSubdivision"
+                      error={formik.touched.shippingSubdivision && formik.errors.shippingSubdivision}
                     />
                   </div>
                   <div>
@@ -292,8 +275,22 @@ const CreateOrder = () => {
                       error={formik.touched.shippingCity && formik.errors.shippingCity}
                     />
                   </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
+                      {t("orders.stateOrProvince")} <span className="text-danger-500">*</span>
+                    </label>
+                    <Textinput
+                      type="text"
+                      placeholder={t("orders.stateOrProvincePlaceholder")}
+                      value={formik.values.shippingStateOrProvince}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      name="shippingStateOrProvince"
+                      error={formik.touched.shippingStateOrProvince && formik.errors.shippingStateOrProvince}
+                    />
+                  </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
                       {t("orders.country")} <span className="text-danger-500">*</span>
@@ -310,30 +307,16 @@ const CreateOrder = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
-                      {t("orders.state")} <span className="text-danger-500">*</span>
+                      {t("orders.postalCode")} <span className="text-danger-500">*</span>
                     </label>
                     <Textinput
                       type="text"
-                      placeholder={t("orders.statePlaceholder")}
-                      value={formik.values.shippingState}
+                      placeholder={t("orders.postalCodePlaceholder")}
+                      value={formik.values.shippingPostalCode}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      name="shippingState"
-                      error={formik.touched.shippingState && formik.errors.shippingState}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
-                      {t("orders.zipCode")} <span className="text-danger-500">*</span>
-                    </label>
-                    <Textinput
-                      type="text"
-                      placeholder={t("orders.zipCodePlaceholder")}
-                      value={formik.values.shippingZipCode}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      name="shippingZipCode"
-                      error={formik.touched.shippingZipCode && formik.errors.shippingZipCode}
+                      name="shippingPostalCode"
+                      error={formik.touched.shippingPostalCode && formik.errors.shippingPostalCode}
                     />
                   </div>
                 </div>

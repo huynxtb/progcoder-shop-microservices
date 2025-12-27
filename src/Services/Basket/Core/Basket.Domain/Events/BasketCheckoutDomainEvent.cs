@@ -21,11 +21,10 @@ public sealed record CustomerDomainEvent(
 
 public sealed record AddressDomainEvent(
     string AddressLine, 
-    string Ward, 
-    string District, 
+    string Subdivision, 
     string City, 
-    string Country,
-    string State, 
-    string ZipCode);
+    string StateOrProvince,
+    string Country, 
+    string PostalCode);
 
 public sealed record DiscountDomainEvent(string CouponCode, decimal DiscountAmount);

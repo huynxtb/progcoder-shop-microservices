@@ -422,23 +422,16 @@ const OrderDetails = () => {
                   {order.shippingAddress.addressLine || "-"}
                 </span>
               </div>
-              {order.shippingAddress.ward && (
+              {(order.shippingAddress.subdivision || order.shippingAddress.ward || order.shippingAddress.district) && (
                 <div className="flex items-start gap-2">
                   <span className="text-sm font-medium text-slate-600 dark:text-slate-300 min-w-[120px]">
-                    {t("orders.ward")}:
+                    {t("orders.subdivision")}:
                   </span>
                   <span className="text-slate-600 dark:text-slate-300">
-                    {order.shippingAddress.ward}
-                  </span>
-                </div>
-              )}
-              {order.shippingAddress.district && (
-                <div className="flex items-start gap-2">
-                  <span className="text-sm font-medium text-slate-600 dark:text-slate-300 min-w-[120px]">
-                    {t("orders.district")}:
-                  </span>
-                  <span className="text-slate-600 dark:text-slate-300">
-                    {order.shippingAddress.district}
+                    {order.shippingAddress.subdivision || 
+                     (order.shippingAddress.ward && order.shippingAddress.district 
+                       ? `${order.shippingAddress.ward}, ${order.shippingAddress.district}`
+                       : order.shippingAddress.ward || order.shippingAddress.district || "-")}
                   </span>
                 </div>
               )}
@@ -452,13 +445,13 @@ const OrderDetails = () => {
                   </span>
                 </div>
               )}
-              {order.shippingAddress.state && (
+              {(order.shippingAddress.stateOrProvince || order.shippingAddress.state) && (
                 <div className="flex items-start gap-2">
                   <span className="text-sm font-medium text-slate-600 dark:text-slate-300 min-w-[120px]">
-                    {t("orders.state")}:
+                    {t("orders.stateOrProvince")}:
                   </span>
                   <span className="text-slate-600 dark:text-slate-300">
-                    {order.shippingAddress.state}
+                    {order.shippingAddress.stateOrProvince || order.shippingAddress.state}
                   </span>
                 </div>
               )}
@@ -472,13 +465,13 @@ const OrderDetails = () => {
                   </span>
                 </div>
               )}
-              {order.shippingAddress.zipCode && (
+              {(order.shippingAddress.postalCode || order.shippingAddress.zipCode) && (
                 <div className="flex items-start gap-2">
                   <span className="text-sm font-medium text-slate-600 dark:text-slate-300 min-w-[120px]">
-                    {t("orders.zipCode")}:
+                    {t("orders.postalCode")}:
                   </span>
                   <span className="text-slate-600 dark:text-slate-300">
-                    {order.shippingAddress.zipCode}
+                    {order.shippingAddress.postalCode || order.shippingAddress.zipCode}
                   </span>
                 </div>
               )}

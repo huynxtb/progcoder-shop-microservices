@@ -59,29 +59,25 @@ public sealed class UpdateOrderCommandValidator : AbstractValidator<UpdateOrderC
                             .NotEmpty()
                             .WithMessage(MessageCode.AddressLineIsRequired);
 
-                        RuleFor(x => x.Dto.ShippingAddress.Ward)
+                        RuleFor(x => x.Dto.ShippingAddress.Subdivision)
                             .NotEmpty()
-                            .WithMessage(MessageCode.WardIsRequired);
-
-                        RuleFor(x => x.Dto.ShippingAddress.District)
-                            .NotEmpty()
-                            .WithMessage(MessageCode.DistrictIsRequired);
+                            .WithMessage(MessageCode.SubdivisionIsRequired);
 
                         RuleFor(x => x.Dto.ShippingAddress.City)
                             .NotEmpty()
                             .WithMessage(MessageCode.CityIsRequired);
 
+                        RuleFor(x => x.Dto.ShippingAddress.StateOrProvince)
+                            .NotEmpty()
+                            .WithMessage(MessageCode.StateOrProvinceIsRequired);
+
                         RuleFor(x => x.Dto.ShippingAddress.Country)
                             .NotEmpty()
                             .WithMessage(MessageCode.CountryIsRequired);
 
-                        RuleFor(x => x.Dto.ShippingAddress.State)
+                        RuleFor(x => x.Dto.ShippingAddress.PostalCode)
                             .NotEmpty()
-                            .WithMessage(MessageCode.StateIsRequired);
-
-                        RuleFor(x => x.Dto.ShippingAddress.ZipCode)
-                            .NotEmpty()
-                            .WithMessage(MessageCode.ZipCodeIsRequired);
+                            .WithMessage(MessageCode.PostalCodeIsRequired);
                     });
 
                 RuleFor(x => x.Dto.OrderItems)
@@ -135,12 +131,11 @@ public sealed class UpdateOrderCommandHandler(IApplicationDbContext dbContext, I
             dto.Customer.Email);
         var shippingAddress = Address.Of(
             dto.ShippingAddress.AddressLine,
-            dto.ShippingAddress.Ward,
-            dto.ShippingAddress.District,
+            dto.ShippingAddress.Subdivision,
             dto.ShippingAddress.City,
             dto.ShippingAddress.Country,
-            dto.ShippingAddress.State,
-            dto.ShippingAddress.ZipCode);
+            dto.ShippingAddress.StateOrProvince,
+            dto.ShippingAddress.PostalCode);
 
         existingOrder.UpdateCustomerInfo(customer, command.Actor.ToString());
         existingOrder.UpdateShippingAddress(shippingAddress, command.Actor.ToString());

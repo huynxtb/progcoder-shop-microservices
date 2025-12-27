@@ -104,6 +104,7 @@ const InventoryPage = () => {
           productName: item.product?.name || "N/A",
           sku: item.product?.sku || "N/A",
           quantity: item.quantity || 0,
+          reserved: item.reserved || 0,
           available: item.available || 0,
           locationId: item.locationId,
           location: item.location?.location || "N/A",
@@ -300,6 +301,7 @@ const InventoryPage = () => {
             productName: item.product?.name || "N/A",
             sku: item.product?.sku || "N/A",
             quantity: item.quantity || 0,
+            reserved: item.reserved || 0,
             available: item.available || 0,
             locationId: item.locationId,
             location: item.location?.location || "N/A",
@@ -366,6 +368,7 @@ const InventoryPage = () => {
             productName: item.product?.name || "N/A",
             sku: item.product?.sku || "N/A",
             quantity: item.quantity || 0,
+            reserved: item.reserved || 0,
             available: item.available || 0,
             locationId: item.locationId,
             location: item.location?.location || "N/A",
@@ -429,6 +432,7 @@ const InventoryPage = () => {
             productName: item.product?.name || "N/A",
             sku: item.product?.sku || "N/A",
             quantity: item.quantity || 0,
+            reserved: item.reserved || 0,
             available: item.available || 0,
             locationId: item.locationId,
             location: item.location?.location || "N/A",
@@ -498,6 +502,7 @@ const InventoryPage = () => {
             productName: item.product?.name || "N/A",
             sku: item.product?.sku || "N/A",
             quantity: item.quantity || 0,
+            reserved: item.reserved || 0,
             available: item.available || 0,
             locationId: item.locationId,
             location: item.location?.location || "N/A",
@@ -633,6 +638,18 @@ const InventoryPage = () => {
               ({t("inventory.available")}: {item.available})
             </span>
           </div>
+        );
+      },
+    },
+    {
+      Header: t("inventory.reserved"),
+      accessor: "reserved",
+      Cell: (row) => {
+        const item = row?.row?.original;
+        return (
+          <span className="text-slate-600 dark:text-slate-300">
+            {item.reserved || 0}
+          </span>
         );
       },
     },
@@ -1413,6 +1430,14 @@ const InventoryPage = () => {
               setFilter={historyTableInstance.setGlobalFilter} 
               t={t} 
             />
+            <button
+              className="btn btn-outline-dark btn-sm inline-flex items-center"
+              onClick={fetchHistories}
+              disabled={loadingHistory}
+            >
+              <Icon icon="heroicons:arrow-path" className={`ltr:mr-2 rtl:ml-2 ${loadingHistory ? 'animate-spin' : ''}`} />
+              {loadingHistory ? t("common.refreshing") : t("common.refresh")}
+            </button>
           </div>
           
           <div className="overflow-x-auto">
@@ -1601,6 +1626,14 @@ const InventoryPage = () => {
               setFilter={reservationTableInstance.setGlobalFilter} 
               t={t} 
             />
+            <button
+              className="btn btn-outline-dark btn-sm inline-flex items-center"
+              onClick={fetchReservations}
+              disabled={loadingReservations}
+            >
+              <Icon icon="heroicons:arrow-path" className={`ltr:mr-2 rtl:ml-2 ${loadingReservations ? 'animate-spin' : ''}`} />
+              {loadingReservations ? t("common.refreshing") : t("common.refresh")}
+            </button>
           </div>
           
           <div className="overflow-x-auto">

@@ -4,33 +4,30 @@ public class Address
 {
     #region Fields, Properties and Indexers
 
-    public string AddressLine { get; } = default!;
+    public string AddressLine { get; set; } = default!;
 
-    public string Ward { get; } = default!;
-
-    public string District { get; set; } = default!;
+    public string Subdivision { get; set; } = default!; // Ward / County
 
     public string City { get; set; } = default!;
 
-    public string Country { get; } = default!;
+    public string StateOrProvince { get; set; } = default!;
 
-    public string State { get; } = default!;
+    public string Country { get; set; } = default!;
 
-    public string ZipCode { get; } = default!;
+    public string PostalCode { get; set; } = default!;
 
     #endregion
 
     #region Ctors
 
-    private Address(string addressLine, string ward, string district, string city, string country, string state, string zipCode)
+    private Address(string addressLine, string subdivision, string city, string country, string stateOrProvince, string postalCode)
     {
         AddressLine = addressLine;
-        Ward = ward;
-        District = district;
+        Subdivision = subdivision;
         City = city;
         Country = country;
-        State = state;
-        ZipCode = zipCode;
+        StateOrProvince = stateOrProvince;
+        PostalCode = postalCode;
     }
 
     #endregion
@@ -39,16 +36,20 @@ public class Address
 
     public static Address Of(
         string addressLine, 
-        string ward, 
-        string district, 
+        string subdivision, 
         string city, 
         string country, 
-        string state, 
-        string zipCode)
+        string stateOrProvince, 
+        string postalCode)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(addressLine);
+        ArgumentException.ThrowIfNullOrWhiteSpace(subdivision);
+        ArgumentException.ThrowIfNullOrWhiteSpace(city);
+        ArgumentException.ThrowIfNullOrWhiteSpace(country);
+        ArgumentException.ThrowIfNullOrWhiteSpace(stateOrProvince);
+        ArgumentException.ThrowIfNullOrWhiteSpace(postalCode);
 
-        return new Address(addressLine, ward, district, city, country, state, zipCode);
+        return new Address(addressLine, subdivision, city, country, stateOrProvince, postalCode);
     }
 
     #endregion

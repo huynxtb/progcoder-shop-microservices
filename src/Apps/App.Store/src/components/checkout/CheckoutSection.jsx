@@ -50,13 +50,15 @@ const CheckoutSection = () => {
     addressLine: Yup.string()
       .required(t('validation.required'))
       .min(5, t('validation.minLength', { min: 5 })),
+    subdivision: Yup.string()
+      .required(t('validation.required')),
     city: Yup.string()
+      .required(t('validation.required')),
+    stateOrProvince: Yup.string()
       .required(t('validation.required')),
     country: Yup.string()
       .required(t('validation.required')),
-    state: Yup.string()
-      .required(t('validation.required')),
-    zipCode: Yup.string()
+    postalCode: Yup.string()
       .required(t('validation.required')),
   });
 
@@ -69,10 +71,11 @@ const CheckoutSection = () => {
     phoneNumber: '',
     addressLine: '',
     apartment: '',
+    subdivision: '',
     city: '',
+    stateOrProvince: '',
     country: 'Vietnam',
-    state: '',
-    zipCode: '',
+    postalCode: '',
     additionalInfo: '',
   };
 
@@ -121,12 +124,12 @@ const CheckoutSection = () => {
           phoneNumber: values.phoneNumber,
         },
         shippingAddress: {
-          name: `${values.firstName} ${values.lastName}`,
-          emailAddress: values.email,
           addressLine: values.addressLine + (values.apartment ? `, ${values.apartment}` : ''),
+          subdivision: values.subdivision,
+          city: values.city,
+          stateOrProvince: values.stateOrProvince,
           country: values.country,
-          state: values.state,
-          zipCode: values.zipCode,
+          postalCode: values.postalCode,
         },
         couponCode: couponApplied && couponData ? couponData.couponCode : null,
       };
@@ -252,7 +255,23 @@ const CheckoutSection = () => {
                     />
                   </div>
 
-                  <div className="col-6 col-xxs-12">
+                  <div className="col-4 col-xxs-12">
+                    <input
+                      type="text"
+                      name="subdivision"
+                      id="checkout-subdivision"
+                      placeholder={t('checkout.subdivision')}
+                      value={values.subdivision}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={touched.subdivision && errors.subdivision ? 'error' : ''}
+                    />
+                    {touched.subdivision && errors.subdivision && (
+                      <div className="error-message text-danger small mt-1">{errors.subdivision}</div>
+                    )}
+                  </div>
+
+                  <div className="col-4 col-xxs-12">
                     <input
                       type="text"
                       name="city"
@@ -268,19 +287,35 @@ const CheckoutSection = () => {
                     )}
                   </div>
 
+                  <div className="col-4 col-xxs-12">
+                    <input
+                      type="text"
+                      name="stateOrProvince"
+                      id="checkout-state-or-province"
+                      placeholder={t('checkout.stateOrProvince')}
+                      value={values.stateOrProvince}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={touched.stateOrProvince && errors.stateOrProvince ? 'error' : ''}
+                    />
+                    {touched.stateOrProvince && errors.stateOrProvince && (
+                      <div className="error-message text-danger small mt-1">{errors.stateOrProvince}</div>
+                    )}
+                  </div>
+
                   <div className="col-6 col-xxs-12">
                     <input
                       type="text"
-                      name="zipCode"
-                      id="checkout-zip-code"
-                      placeholder={t('common.zipCode')}
-                      value={values.zipCode}
+                      name="postalCode"
+                      id="checkout-postal-code"
+                      placeholder={t('checkout.postalCode')}
+                      value={values.postalCode}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      className={touched.zipCode && errors.zipCode ? 'error' : ''}
+                      className={touched.postalCode && errors.postalCode ? 'error' : ''}
                     />
-                    {touched.zipCode && errors.zipCode && (
-                      <div className="error-message text-danger small mt-1">{errors.zipCode}</div>
+                    {touched.postalCode && errors.postalCode && (
+                      <div className="error-message text-danger small mt-1">{errors.postalCode}</div>
                     )}
                   </div>
 

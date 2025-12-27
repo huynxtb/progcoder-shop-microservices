@@ -93,13 +93,8 @@ public sealed class OrderEntityConfiguration : IEntityTypeConfiguration<OrderEnt
                     .HasMaxLength(500)
                     .IsRequired();
 
-                b.Property(a => a.Ward)
-                    .HasColumnName("shipping_ward")
-                    .HasMaxLength(100)
-                    .IsRequired();
-
-                b.Property(a => a.District)
-                    .HasColumnName("shipping_district")
+                b.Property(a => a.Subdivision)
+                    .HasColumnName("shipping_subdivision")
                     .HasMaxLength(100)
                     .IsRequired();
 
@@ -108,18 +103,18 @@ public sealed class OrderEntityConfiguration : IEntityTypeConfiguration<OrderEnt
                     .HasMaxLength(100)
                     .IsRequired();
 
+                b.Property(a => a.StateOrProvince)
+                    .HasColumnName("shipping_state_or_province")
+                    .HasMaxLength(100)
+                    .IsRequired();
+
                 b.Property(a => a.Country)
                     .HasColumnName("shipping_country")
                     .HasMaxLength(100)
                     .IsRequired();
 
-                b.Property(a => a.State)
-                    .HasColumnName("shipping_state")
-                    .HasMaxLength(100)
-                    .IsRequired();
-
-                b.Property(a => a.ZipCode)
-                    .HasColumnName("shipping_zip_code")
+                b.Property(a => a.PostalCode)
+                    .HasColumnName("shipping_postal_code")
                     .HasMaxLength(20)
                     .IsRequired();
             });

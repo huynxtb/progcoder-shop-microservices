@@ -6,17 +6,15 @@ public class AddressDto
 
     public string AddressLine { get; set; } = default!;
 
-    public string Ward { get; set; } = default!;
-
-    public string District { get; set; } = default!;
+    public string Subdivision { get; set; } = default!;
 
     public string City { get; set; } = default!;
 
+    public string StateOrProvince { get; set; } = default!;
+
     public string Country { get; set; } = default!;
 
-    public string State { get; set; } = default!;
-
-    public string ZipCode { get; set; } = default!;
+    public string PostalCode { get; set; } = default!;
 
     #endregion
 }
