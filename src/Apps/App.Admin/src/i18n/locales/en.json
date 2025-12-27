@@ -224,6 +224,7 @@
     "all": "All",
     "active": "Active",
     "outOfStock": "Out of Stock",
+    "inStock": "In Stock",
     "draft": "Draft",
     "hidden": "Hidden",
     "product": "Product",

@@ -523,6 +523,94 @@ const InventoryPage = () => {
     await fetchHistories();
   };
 
+  // History table columns
+  const HISTORY_COLUMNS = useMemo(() => [
+    {
+      Header: t("inventory.message"),
+      accessor: "message",
+      Cell: (row) => (
+        <span className="text-slate-600 dark:text-slate-300">
+          {row?.cell?.value}
+        </span>
+      ),
+    },
+    {
+      Header: t("inventory.createdDate"),
+      accessor: "createdOnUtc",
+      Cell: (row) => (
+        <span className="text-slate-600 dark:text-slate-300">
+          {formatDate(row?.cell?.value)}
+        </span>
+      ),
+    },
+  ], [t]);
+
+  // Reservation table columns
+  const RESERVATION_COLUMNS = useMemo(() => [
+    {
+      Header: t("inventory.productName"),
+      accessor: "productName",
+      Cell: (row) => (
+        <span className="text-slate-600 dark:text-slate-300">
+          {row?.cell?.value}
+        </span>
+      ),
+    },
+    {
+      Header: t("inventory.referenceId"),
+      accessor: "referenceId",
+      Cell: (row) => (
+        <span className="text-slate-600 dark:text-slate-300">
+          {row?.cell?.value}
+        </span>
+      ),
+    },
+    {
+      Header: t("inventory.quantity"),
+      accessor: "quantity",
+      Cell: (row) => (
+        <span className="text-slate-600 dark:text-slate-300">
+          {row?.cell?.value}
+        </span>
+      ),
+    },
+    {
+      Header: t("inventory.reservationStatus"),
+      accessor: "status",
+      Cell: (row) => {
+        const status = row?.cell?.value;
+        return (
+          <span className={`inline-block px-3 py-1 rounded-full text-sm ${
+            status === 1 ? 'text-warning-500 bg-warning-500/30' :
+            status === 2 ? 'text-success-500 bg-success-500/30' :
+            status === 3 ? 'text-slate-500 bg-slate-500/30' :
+            'text-danger-500 bg-danger-500/30'
+          }`}>
+            {t(`inventory.reservationStatus${status}`)}
+          </span>
+        );
+      },
+    },
+    {
+      Header: t("inventory.expiresAt"),
+      accessor: "expiresAt",
+      Cell: (row) => (
+        <span className="text-slate-600 dark:text-slate-300">
+          {row?.cell?.value ? formatDate(row?.cell?.value) : '-'}
+        </span>
+      ),
+    },
+    {
+      Header: t("inventory.createdDate"),
+      accessor: "createdOnUtc",
+      Cell: (row) => (
+        <span className="text-slate-600 dark:text-slate-300">
+          {formatDate(row?.cell?.value)}
+        </span>
+      ),
+    },
+  ], [t]);
+
   const COLUMNS = useMemo(() => [
     {
       Header: t("inventory.productName"),
@@ -655,6 +743,8 @@ const InventoryPage = () => {
   ], [t]);
 
   const data = useMemo(() => inventoryItems, [inventoryItems]);
+  const historyTableData = useMemo(() => historyData, [historyData]);
+  const reservationTableData = useMemo(() => reservationData, [reservationData]);
 
   const tableInstance = useTable(
     {
@@ -665,6 +755,28 @@ const InventoryPage = () => {
     useSortBy,
     usePagination,
     useRowSelect
+  );
+
+  const historyTableInstance = useTable(
+    {
+      columns: HISTORY_COLUMNS,
+      data: historyTableData,
+      initialState: { pageSize: 10 },
+    },
+    useGlobalFilter,
+    useSortBy,
+    usePagination
+  );
+
+  const reservationTableInstance = useTable(
+    {
+      columns: RESERVATION_COLUMNS,
+      data: reservationTableData,
+      initialState: { pageSize: 10 },
+    },
+    useGlobalFilter,
+    useSortBy,
+    usePagination
   );
 
   const {
@@ -1294,52 +1406,172 @@ const InventoryPage = () => {
         }}
         className="max-w-5xl"
       >
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-100 dark:divide-slate-700">
-            <thead className="bg-slate-200 dark:bg-slate-700">
-              <tr>
-                <th className="table-th">{t("inventory.message")}</th>
-                <th className="table-th">{t("inventory.createdDate")}</th>
-                <th className="table-th">{t("inventory.createdBy")}</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
-              {loadingHistory ? (
-                <tr>
-                  <td colSpan="3" className="table-td text-center py-8">
-                    <div className="flex flex-col items-center justify-center">
-                      <Icon icon="heroicons:arrow-path" className="animate-spin text-2xl text-slate-400 mb-2" />
-                      <span className="text-slate-500 dark:text-slate-400">{t("common.loading")}</span>
-                    </div>
-                  </td>
-                </tr>
-              ) : historyData.length === 0 ? (
-                <tr>
-                  <td colSpan="3" className="table-td text-center py-8">
-                    <span className="text-slate-500 dark:text-slate-400">{t("inventory.noHistory")}</span>
-                  </td>
-                </tr>
-              ) : (
-                historyData.map((history) => (
-                  <tr key={history.id}>
-                    <td className="table-td">
-                      <span className="text-slate-600 dark:text-slate-300">{history.message}</span>
-                    </td>
-                    <td className="table-td">
-                      <span className="text-slate-600 dark:text-slate-300">
-                        {formatDate(history.createdOnUtc)}
-                      </span>
-                    </td>
-                    <td className="table-td">
-                      <span className="text-slate-600 dark:text-slate-300">{history.createdBy}</span>
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <GlobalFilter 
+              filter={historyTableInstance.state.globalFilter} 
+              setFilter={historyTableInstance.setGlobalFilter} 
+              t={t} 
+            />
+          </div>
+          
+          <div className="overflow-x-auto">
+            <table 
+              className="min-w-full divide-y divide-slate-100 dark:divide-slate-700"
+              {...historyTableInstance.getTableProps()}
+            >
+              <thead className="bg-slate-200 dark:bg-slate-700">
+                {historyTableInstance.headerGroups.map((headerGroup) => {
+                  const { key: headerKey, ...restHeaderProps } = headerGroup.getHeaderGroupProps();
+                  return (
+                    <tr key={headerKey} {...restHeaderProps}>
+                      {headerGroup.headers.map((column) => {
+                        const { key: columnKey, ...restColumnProps } =
+                          column.getHeaderProps(column.getSortByToggleProps());
+                        return (
+                          <th
+                            key={columnKey}
+                            {...restColumnProps}
+                            className="table-th"
+                          >
+                            {column.render("Header")}
+                            <span>
+                              {column.isSorted
+                                ? column.isSortedDesc
+                                  ? " 🔽"
+                                  : " 🔼"
+                                : ""}
+                            </span>
+                          </th>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
+              </thead>
+              <tbody 
+                className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700"
+                {...historyTableInstance.getTableBodyProps()}
+              >
+                {loadingHistory ? (
+                  <tr>
+                    <td colSpan={historyTableInstance.headerGroups[0]?.headers?.length || 3} className="table-td text-center py-8">
+                      <div className="flex flex-col items-center justify-center">
+                        <Icon icon="heroicons:arrow-path" className="animate-spin text-2xl text-slate-400 mb-2" />
+                        <span className="text-slate-500 dark:text-slate-400">{t("common.loading")}</span>
+                      </div>
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : historyTableInstance.page.length === 0 ? (
+                  <tr>
+                    <td colSpan={historyTableInstance.headerGroups[0]?.headers?.length || 3} className="table-td text-center py-8">
+                      <span className="text-slate-500 dark:text-slate-400">{t("inventory.noHistory")}</span>
+                    </td>
+                  </tr>
+                ) : (
+                  historyTableInstance.page.map((row) => {
+                    historyTableInstance.prepareRow(row);
+                    const { key: rowKey, ...restRowProps } = row.getRowProps();
+                    return (
+                      <tr key={rowKey} {...restRowProps}>
+                        {row.cells.map((cell) => {
+                          const { key: cellKey, ...restCellProps } = cell.getCellProps();
+                          return (
+                            <td
+                              key={cellKey}
+                              {...restCellProps}
+                              className="table-td"
+                            >
+                              {cell.render("Cell")}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination for History */}
+          <div className="md:flex md:space-y-0 space-y-5 justify-between items-center">
+            <div className="flex items-center space-x-3 rtl:space-x-reverse">
+              <select
+                className="form-control py-2 w-max"
+                value={historyTableInstance.state.pageSize}
+                onChange={(e) => historyTableInstance.setPageSize(Number(e.target.value))}
+              >
+                {[10, 25, 50].map((size) => (
+                  <option key={size} value={size}>
+                    {t("common.show")} {size}
+                  </option>
+                ))}
+              </select>
+              <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                {t("common.page")}{" "}
+                <span>
+                  {historyTableInstance.state.pageIndex + 1} {t("common.of")} {historyTableInstance.pageOptions.length}
+                </span>
+              </span>
+            </div>
+            <ul className="flex items-center space-x-3 rtl:space-x-reverse">
+              <li className="text-xl leading-4 text-slate-900 dark:text-white rtl:rotate-180">
+                <button
+                  className={`${!historyTableInstance.canPreviousPage ? "opacity-50 cursor-not-allowed" : ""}`}
+                  onClick={() => historyTableInstance.gotoPage(0)}
+                  disabled={!historyTableInstance.canPreviousPage}
+                >
+                  <Icon icon="heroicons:chevron-double-left-solid" />
+                </button>
+              </li>
+              <li className="text-sm leading-4 text-slate-900 dark:text-white rtl:rotate-180">
+                <button
+                  className={`${!historyTableInstance.canPreviousPage ? "opacity-50 cursor-not-allowed" : ""}`}
+                  onClick={() => historyTableInstance.previousPage()}
+                  disabled={!historyTableInstance.canPreviousPage}
+                >
+                  {t("common.previous")}
+                </button>
+              </li>
+              {historyTableInstance.pageOptions.map((pageNum, pageIdx) => (
+                <li key={pageIdx}>
+                  <button
+                    aria-current="page"
+                    className={`${
+                      pageIdx === historyTableInstance.state.pageIndex
+                        ? "bg-slate-900 dark:bg-slate-600 dark:text-slate-200 text-white font-medium"
+                        : "bg-slate-100 dark:bg-slate-700 dark:text-slate-400 text-slate-900 font-normal"
+                    } text-sm rounded leading-[16px] flex h-6 w-6 items-center justify-center transition-all duration-150`}
+                    onClick={() => historyTableInstance.gotoPage(pageIdx)}
+                  >
+                    {pageNum + 1}
+                  </button>
+                </li>
+              ))}
+              <li className="text-sm leading-4 text-slate-900 dark:text-white rtl:rotate-180">
+                <button
+                  className={`${!historyTableInstance.canNextPage ? "opacity-50 cursor-not-allowed" : ""}`}
+                  onClick={() => historyTableInstance.nextPage()}
+                  disabled={!historyTableInstance.canNextPage}
+                >
+                  {t("common.next")}
+                </button>
+              </li>
+              <li className="text-xl leading-4 text-slate-900 dark:text-white rtl:rotate-180">
+                <button
+                  onClick={() => historyTableInstance.gotoPage(historyTableInstance.pageCount - 1)}
+                  disabled={!historyTableInstance.canNextPage}
+                  className={`${!historyTableInstance.canNextPage ? "opacity-50 cursor-not-allowed" : ""}`}
+                >
+                  <Icon icon="heroicons:chevron-double-right-solid" />
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div className="flex justify-end mt-4">
+
+        <div className="flex justify-end mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
           <button
             className="btn btn-outline-dark inline-flex items-center"
             onClick={() => {
@@ -1362,73 +1594,172 @@ const InventoryPage = () => {
         }}
         className="max-w-6xl"
       >
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-100 dark:divide-slate-700">
-            <thead className="bg-slate-200 dark:bg-slate-700">
-              <tr>
-                <th className="table-th">{t("inventory.productName")}</th>
-                <th className="table-th">{t("inventory.referenceId")}</th>
-                <th className="table-th">{t("inventory.quantity")}</th>
-                <th className="table-th">{t("inventory.reservationStatus")}</th>
-                <th className="table-th">{t("inventory.expiresAt")}</th>
-                <th className="table-th">{t("inventory.createdDate")}</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
-              {loadingReservations ? (
-                <tr>
-                  <td colSpan="6" className="table-td text-center py-8">
-                    <div className="flex flex-col items-center justify-center">
-                      <Icon icon="heroicons:arrow-path" className="animate-spin text-2xl text-slate-400 mb-2" />
-                      <span className="text-slate-500 dark:text-slate-400">{t("common.loading")}</span>
-                    </div>
-                  </td>
-                </tr>
-              ) : reservationData.length === 0 ? (
-                <tr>
-                  <td colSpan="6" className="table-td text-center py-8">
-                    <span className="text-slate-500 dark:text-slate-400">{t("inventory.noReservations")}</span>
-                  </td>
-                </tr>
-              ) : (
-                reservationData.map((reservation) => (
-                  <tr key={reservation.id}>
-                    <td className="table-td">
-                      <span className="text-slate-600 dark:text-slate-300">{reservation.productName}</span>
-                    </td>
-                    <td className="table-td">
-                      <span className="text-slate-600 dark:text-slate-300">{reservation.referenceId}</span>
-                    </td>
-                    <td className="table-td">
-                      <span className="text-slate-600 dark:text-slate-300">{reservation.quantity}</span>
-                    </td>
-                    <td className="table-td">
-                      <span className={`inline-block px-3 py-1 rounded-full text-sm ${
-                        reservation.status === 1 ? 'text-warning-500 bg-warning-500/30' :
-                        reservation.status === 2 ? 'text-success-500 bg-success-500/30' :
-                        reservation.status === 3 ? 'text-slate-500 bg-slate-500/30' :
-                        'text-danger-500 bg-danger-500/30'
-                      }`}>
-                        {t(`inventory.reservationStatus${reservation.status}`)}
-                      </span>
-                    </td>
-                    <td className="table-td">
-                      <span className="text-slate-600 dark:text-slate-300">
-                        {reservation.expiresAt ? formatDate(reservation.expiresAt) : '-'}
-                      </span>
-                    </td>
-                    <td className="table-td">
-                      <span className="text-slate-600 dark:text-slate-300">
-                        {formatDate(reservation.createdOnUtc)}
-                      </span>
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <GlobalFilter 
+              filter={reservationTableInstance.state.globalFilter} 
+              setFilter={reservationTableInstance.setGlobalFilter} 
+              t={t} 
+            />
+          </div>
+          
+          <div className="overflow-x-auto">
+            <table 
+              className="min-w-full divide-y divide-slate-100 dark:divide-slate-700"
+              {...reservationTableInstance.getTableProps()}
+            >
+              <thead className="bg-slate-200 dark:bg-slate-700">
+                {reservationTableInstance.headerGroups.map((headerGroup) => {
+                  const { key: headerKey, ...restHeaderProps } = headerGroup.getHeaderGroupProps();
+                  return (
+                    <tr key={headerKey} {...restHeaderProps}>
+                      {headerGroup.headers.map((column) => {
+                        const { key: columnKey, ...restColumnProps } =
+                          column.getHeaderProps(column.getSortByToggleProps());
+                        return (
+                          <th
+                            key={columnKey}
+                            {...restColumnProps}
+                            className="table-th"
+                          >
+                            {column.render("Header")}
+                            <span>
+                              {column.isSorted
+                                ? column.isSortedDesc
+                                  ? " 🔽"
+                                  : " 🔼"
+                                : ""}
+                            </span>
+                          </th>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
+              </thead>
+              <tbody 
+                className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700"
+                {...reservationTableInstance.getTableBodyProps()}
+              >
+                {loadingReservations ? (
+                  <tr>
+                    <td colSpan={reservationTableInstance.headerGroups[0]?.headers?.length || 6} className="table-td text-center py-8">
+                      <div className="flex flex-col items-center justify-center">
+                        <Icon icon="heroicons:arrow-path" className="animate-spin text-2xl text-slate-400 mb-2" />
+                        <span className="text-slate-500 dark:text-slate-400">{t("common.loading")}</span>
+                      </div>
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : reservationTableInstance.page.length === 0 ? (
+                  <tr>
+                    <td colSpan={reservationTableInstance.headerGroups[0]?.headers?.length || 6} className="table-td text-center py-8">
+                      <span className="text-slate-500 dark:text-slate-400">{t("inventory.noReservations")}</span>
+                    </td>
+                  </tr>
+                ) : (
+                  reservationTableInstance.page.map((row) => {
+                    reservationTableInstance.prepareRow(row);
+                    const { key: rowKey, ...restRowProps } = row.getRowProps();
+                    return (
+                      <tr key={rowKey} {...restRowProps}>
+                        {row.cells.map((cell) => {
+                          const { key: cellKey, ...restCellProps } = cell.getCellProps();
+                          return (
+                            <td
+                              key={cellKey}
+                              {...restCellProps}
+                              className="table-td"
+                            >
+                              {cell.render("Cell")}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination for Reservations */}
+          <div className="md:flex md:space-y-0 space-y-5 justify-between items-center">
+            <div className="flex items-center space-x-3 rtl:space-x-reverse">
+              <select
+                className="form-control py-2 w-max"
+                value={reservationTableInstance.state.pageSize}
+                onChange={(e) => reservationTableInstance.setPageSize(Number(e.target.value))}
+              >
+                {[10, 25, 50].map((size) => (
+                  <option key={size} value={size}>
+                    {t("common.show")} {size}
+                  </option>
+                ))}
+              </select>
+              <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                {t("common.page")}{" "}
+                <span>
+                  {reservationTableInstance.state.pageIndex + 1} {t("common.of")} {reservationTableInstance.pageOptions.length}
+                </span>
+              </span>
+            </div>
+            <ul className="flex items-center space-x-3 rtl:space-x-reverse">
+              <li className="text-xl leading-4 text-slate-900 dark:text-white rtl:rotate-180">
+                <button
+                  className={`${!reservationTableInstance.canPreviousPage ? "opacity-50 cursor-not-allowed" : ""}`}
+                  onClick={() => reservationTableInstance.gotoPage(0)}
+                  disabled={!reservationTableInstance.canPreviousPage}
+                >
+                  <Icon icon="heroicons:chevron-double-left-solid" />
+                </button>
+              </li>
+              <li className="text-sm leading-4 text-slate-900 dark:text-white rtl:rotate-180">
+                <button
+                  className={`${!reservationTableInstance.canPreviousPage ? "opacity-50 cursor-not-allowed" : ""}`}
+                  onClick={() => reservationTableInstance.previousPage()}
+                  disabled={!reservationTableInstance.canPreviousPage}
+                >
+                  {t("common.previous")}
+                </button>
+              </li>
+              {reservationTableInstance.pageOptions.map((pageNum, pageIdx) => (
+                <li key={pageIdx}>
+                  <button
+                    aria-current="page"
+                    className={`${
+                      pageIdx === reservationTableInstance.state.pageIndex
+                        ? "bg-slate-900 dark:bg-slate-600 dark:text-slate-200 text-white font-medium"
+                        : "bg-slate-100 dark:bg-slate-700 dark:text-slate-400 text-slate-900 font-normal"
+                    } text-sm rounded leading-[16px] flex h-6 w-6 items-center justify-center transition-all duration-150`}
+                    onClick={() => reservationTableInstance.gotoPage(pageIdx)}
+                  >
+                    {pageNum + 1}
+                  </button>
+                </li>
+              ))}
+              <li className="text-sm leading-4 text-slate-900 dark:text-white rtl:rotate-180">
+                <button
+                  className={`${!reservationTableInstance.canNextPage ? "opacity-50 cursor-not-allowed" : ""}`}
+                  onClick={() => reservationTableInstance.nextPage()}
+                  disabled={!reservationTableInstance.canNextPage}
+                >
+                  {t("common.next")}
+                </button>
+              </li>
+              <li className="text-xl leading-4 text-slate-900 dark:text-white rtl:rotate-180">
+                <button
+                  onClick={() => reservationTableInstance.gotoPage(reservationTableInstance.pageCount - 1)}
+                  disabled={!reservationTableInstance.canNextPage}
+                  className={`${!reservationTableInstance.canNextPage ? "opacity-50 cursor-not-allowed" : ""}`}
+                >
+                  <Icon icon="heroicons:chevron-double-right-solid" />
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div className="flex justify-end mt-4">
+
+        <div className="flex justify-end mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
           <button
             className="btn btn-outline-dark inline-flex items-center"
             onClick={() => {

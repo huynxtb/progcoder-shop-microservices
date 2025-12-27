@@ -20,6 +20,7 @@ import {
 // Helper function to map API status to component status
 const mapStatus = (displayStatus) => {
   if (displayStatus === "Out of Stock") return "out_of_stock";
+  if (displayStatus === "In Stock") return "in_stock";
   if (displayStatus === "Hidden" || displayStatus === "hidden") return "hidden";
   return "active";
 };
@@ -259,6 +260,7 @@ const Ecommerce = () => {
         const statusConfig = {
           active: { label: t("products.active"), class: "text-success-500 bg-success-500/30" },
           out_of_stock: { label: t("products.outOfStock"), class: "text-danger-500 bg-danger-500/30" },
+          in_stock: { label: t("products.inStock"), class: "text-success-500 bg-success-500/30" },
           draft: { label: t("products.draft"), class: "text-warning-500 bg-warning-500/30" },
           hidden: { label: t("products.hidden"), class: "text-slate-500 bg-slate-500/30" },
         };

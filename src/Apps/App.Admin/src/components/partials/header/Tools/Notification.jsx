@@ -64,6 +64,14 @@ const Notification = () => {
     // Don't fetch if authenticated is undefined/null/false or Keycloak is not ready
     if (keycloakReady && (authenticated === true || isAuth === true)) {
       fetchNotifications();
+      
+      // Set up interval to fetch every 5 seconds
+      const intervalId = setInterval(() => {
+        fetchNotifications();
+      }, 30000);
+
+      // Cleanup interval on unmount or when auth state changes
+      return () => clearInterval(intervalId);
     } else {
       // Ensure we reset state when not authenticated or Keycloak not ready
       setLoading(false);
@@ -202,7 +210,7 @@ const Notification = () => {
                         {item.message}
                       </div>
                       <div className="text-slate-400 dark:text-slate-400 text-xs mt-1">
-                        {formatTimeAgo(item.readAt)}
+                        {formatTimeAgo(item.createdOnUtc)}
                       </div>
                     </div>
                     {!item.isRead && (

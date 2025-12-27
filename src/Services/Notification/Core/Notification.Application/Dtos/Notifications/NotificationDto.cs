@@ -6,7 +6,7 @@ using Notification.Application.Dtos.Abstractions;
 
 namespace Notification.Application.Dtos.Notifications;
 
-public class NotificationDto : DtoId<Guid>
+public class NotificationDto : EntityDto<Guid>
 {
     #region Fields, Properties and Indexers
 
