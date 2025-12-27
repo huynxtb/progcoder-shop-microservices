@@ -61,25 +61,29 @@ public sealed class BasketCheckoutCommandValidator : AbstractValidator<BasketChe
                     .WithMessage(MessageCode.BadRequest)
                     .DependentRules(() =>
                     {
-                        RuleFor(x => x.Dto.ShippingAddress.Name)
-                            .NotEmpty()
-                            .WithMessage(MessageCode.NameIsRequired)
-                            .MaximumLength(255)
-                            .WithMessage(MessageCode.Max255Characters);
-
-                        RuleFor(x => x.Dto.ShippingAddress.EmailAddress)
-                            .NotEmpty()
-                            .WithMessage(MessageCode.EmailIsRequired)
-                            .EmailAddress()
-                            .WithMessage(MessageCode.InvalidEmailAddress)
-                            .MaximumLength(255)
-                            .WithMessage(MessageCode.Max255Characters);
-
                         RuleFor(x => x.Dto.ShippingAddress.AddressLine)
                             .NotEmpty()
                             .WithMessage(MessageCode.AddressLineIsRequired)
                             .MaximumLength(500)
                             .WithMessage(MessageCode.Max500Characters);
+
+                        RuleFor(x => x.Dto.ShippingAddress.Ward)
+                            .NotEmpty()
+                            .WithMessage(MessageCode.WardIsRequired)
+                            .MaximumLength(100)
+                            .WithMessage(MessageCode.Max100Characters);
+
+                        RuleFor(x => x.Dto.ShippingAddress.District)
+                            .NotEmpty()
+                            .WithMessage(MessageCode.DistrictIsRequired)
+                            .MaximumLength(100)
+                            .WithMessage(MessageCode.Max100Characters);
+
+                        RuleFor(x => x.Dto.ShippingAddress.City)
+                            .NotEmpty()
+                            .WithMessage(MessageCode.CityIsRequired)
+                            .MaximumLength(100)
+                            .WithMessage(MessageCode.Max100Characters);
 
                         RuleFor(x => x.Dto.ShippingAddress.Country)
                             .NotEmpty()
@@ -164,9 +168,10 @@ public sealed class BasketCheckoutCommandHandler(
             dto.Customer.Email,
             dto.Customer.PhoneNumber);
         var shippingAddressEvent = new AddressDomainEvent(
-            dto.ShippingAddress.Name,
-            dto.ShippingAddress.EmailAddress,
             dto.ShippingAddress.AddressLine,
+            dto.ShippingAddress.Ward,
+            dto.ShippingAddress.District,
+            dto.ShippingAddress.City,
             dto.ShippingAddress.Country,
             dto.ShippingAddress.State,
             dto.ShippingAddress.ZipCode);

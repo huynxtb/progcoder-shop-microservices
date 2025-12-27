@@ -168,6 +168,12 @@ public sealed class MessageCode
 
     public const string ZipCodeIsRequired = "ZIP_CODE_IS_REQUIRED";
 
+    public const string WardIsRequired = "WARD_IS_REQUIRED";
+
+    public const string DistrictIsRequired = "DISTRICT_IS_REQUIRED";
+
+    public const string CityIsRequired = "CITY_IS_REQUIRED";
+
     public const string OrderItemsIsRequired = "ORDER_ITEMS_IS_REQUIRED";
 
     public const string ProductIsRequired = "PRODUCT_IS_REQUIRED";

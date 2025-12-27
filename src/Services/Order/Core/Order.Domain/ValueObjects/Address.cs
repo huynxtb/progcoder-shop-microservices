@@ -4,11 +4,13 @@ public class Address
 {
     #region Fields, Properties and Indexers
 
-    public string Name { get; } = default!;
-
-    public string? EmailAddress { get; } = default!;
-
     public string AddressLine { get; } = default!;
+
+    public string Ward { get; } = default!;
+
+    public string District { get; set; } = default!;
+
+    public string City { get; set; } = default!;
 
     public string Country { get; } = default!;
 
@@ -20,11 +22,12 @@ public class Address
 
     #region Ctors
 
-    private Address(string name, string emailAddress, string addressLine, string country, string state, string zipCode)
+    private Address(string addressLine, string ward, string district, string city, string country, string state, string zipCode)
     {
-        Name = name;
-        EmailAddress = emailAddress;
         AddressLine = addressLine;
+        Ward = ward;
+        District = district;
+        City = city;
         Country = country;
         State = state;
         ZipCode = zipCode;
@@ -35,16 +38,17 @@ public class Address
     #region Methods
 
     public static Address Of(
-        string name, 
-        string emailAddress, 
         string addressLine, 
+        string ward, 
+        string district, 
+        string city, 
         string country, 
         string state, 
         string zipCode)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(addressLine);
 
-        return new Address(name, emailAddress, addressLine, country, state, zipCode);
+        return new Address(addressLine, ward, district, city, country, state, zipCode);
     }
 
     #endregion

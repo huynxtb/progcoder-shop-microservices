@@ -4,11 +4,13 @@ public class AddressDto
 {
     #region Fields, Properties and Indexers
 
-    public string Name { get; set; } = default!;
-
-    public string? EmailAddress { get; set; }
-
     public string AddressLine { get; set; } = default!;
+
+    public string Ward { get; set; } = default!;
+
+    public string District { get; set; } = default!;
+
+    public string City { get; set; } = default!;
 
     public string Country { get; set; } = default!;
 

@@ -48,9 +48,10 @@ const CreateOrder = () => {
       .email(t("validation.invalidEmail"))
       .required(t("validation.required")),
     customerPhoneNumber: Yup.string().required(t("validation.required")),
-    shippingName: Yup.string().trim().required(t("validation.required")),
-    shippingEmailAddress: Yup.string().email(t("validation.invalidEmail")).nullable(),
     shippingAddressLine: Yup.string().trim().required(t("validation.required")),
+    shippingWard: Yup.string().trim().required(t("validation.required")),
+    shippingDistrict: Yup.string().trim().required(t("validation.required")),
+    shippingCity: Yup.string().trim().required(t("validation.required")),
     shippingCountry: Yup.string().trim().required(t("validation.required")),
     shippingState: Yup.string().trim().required(t("validation.required")),
     shippingZipCode: Yup.string().trim().required(t("validation.required")),
@@ -65,9 +66,10 @@ const CreateOrder = () => {
       customerName: "",
       customerEmail: "",
       customerPhoneNumber: "",
-      shippingName: "",
-      shippingEmailAddress: "",
       shippingAddressLine: "",
+      shippingWard: "",
+      shippingDistrict: "",
+      shippingCity: "",
       shippingCountry: "",
       shippingState: "",
       shippingZipCode: "",
@@ -93,9 +95,10 @@ const CreateOrder = () => {
             phoneNumber: values.customerPhoneNumber,
           },
           shippingAddress: {
-            name: values.shippingName,
-            emailAddress: values.shippingEmailAddress || null,
             addressLine: values.shippingAddressLine,
+            ward: values.shippingWard,
+            district: values.shippingDistrict,
+            city: values.shippingCity,
             country: values.shippingCountry,
             state: values.shippingState,
             zipCode: values.shippingZipCode,
@@ -232,36 +235,6 @@ const CreateOrder = () => {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
-                    {t("orders.shippingName")} <span className="text-danger-500">*</span>
-                  </label>
-                  <Textinput
-                    type="text"
-                    placeholder={t("orders.shippingNamePlaceholder")}
-                    value={formik.values.shippingName}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    name="shippingName"
-                    error={formik.touched.shippingName && formik.errors.shippingName}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
-                    {t("orders.shippingEmail")} ({t("common.optional")})
-                  </label>
-                  <Textinput
-                    type="email"
-                    placeholder={t("orders.shippingEmailPlaceholder")}
-                    value={formik.values.shippingEmailAddress}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    name="shippingEmailAddress"
-                    error={
-                      formik.touched.shippingEmailAddress && formik.errors.shippingEmailAddress
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
                     {t("orders.addressLine")} <span className="text-danger-500">*</span>
                   </label>
                   <Textarea
@@ -275,6 +248,50 @@ const CreateOrder = () => {
                       formik.touched.shippingAddressLine && formik.errors.shippingAddressLine
                     }
                   />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
+                      {t("orders.ward")} <span className="text-danger-500">*</span>
+                    </label>
+                    <Textinput
+                      type="text"
+                      placeholder={t("orders.wardPlaceholder")}
+                      value={formik.values.shippingWard}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      name="shippingWard"
+                      error={formik.touched.shippingWard && formik.errors.shippingWard}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
+                      {t("orders.district")} <span className="text-danger-500">*</span>
+                    </label>
+                    <Textinput
+                      type="text"
+                      placeholder={t("orders.districtPlaceholder")}
+                      value={formik.values.shippingDistrict}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      name="shippingDistrict"
+                      error={formik.touched.shippingDistrict && formik.errors.shippingDistrict}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">
+                      {t("orders.city")} <span className="text-danger-500">*</span>
+                    </label>
+                    <Textinput
+                      type="text"
+                      placeholder={t("orders.cityPlaceholder")}
+                      value={formik.values.shippingCity}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      name="shippingCity"
+                      error={formik.touched.shippingCity && formik.errors.shippingCity}
+                    />
+                  </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>

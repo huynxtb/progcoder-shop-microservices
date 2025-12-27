@@ -55,19 +55,21 @@ public sealed class UpdateOrderCommandValidator : AbstractValidator<UpdateOrderC
                     .WithMessage(MessageCode.BadRequest)
                     .DependentRules(() =>
                     {
-                        RuleFor(x => x.Dto.ShippingAddress.Name)
-                            .NotEmpty()
-                            .WithMessage(MessageCode.NameIsRequired);
-
-                        RuleFor(x => x.Dto.ShippingAddress.EmailAddress)
-                            .NotEmpty()
-                            .WithMessage(MessageCode.EmailIsRequired)
-                            .EmailAddress()
-                            .WithMessage(MessageCode.InvalidEmailAddress);
-
                         RuleFor(x => x.Dto.ShippingAddress.AddressLine)
                             .NotEmpty()
                             .WithMessage(MessageCode.AddressLineIsRequired);
+
+                        RuleFor(x => x.Dto.ShippingAddress.Ward)
+                            .NotEmpty()
+                            .WithMessage(MessageCode.WardIsRequired);
+
+                        RuleFor(x => x.Dto.ShippingAddress.District)
+                            .NotEmpty()
+                            .WithMessage(MessageCode.DistrictIsRequired);
+
+                        RuleFor(x => x.Dto.ShippingAddress.City)
+                            .NotEmpty()
+                            .WithMessage(MessageCode.CityIsRequired);
 
                         RuleFor(x => x.Dto.ShippingAddress.Country)
                             .NotEmpty()
@@ -132,9 +134,10 @@ public sealed class UpdateOrderCommandHandler(IApplicationDbContext dbContext, I
             dto.Customer.Name,
             dto.Customer.Email);
         var shippingAddress = Address.Of(
-            dto.ShippingAddress.Name,
-            dto.ShippingAddress.EmailAddress!,
             dto.ShippingAddress.AddressLine,
+            dto.ShippingAddress.Ward,
+            dto.ShippingAddress.District,
+            dto.ShippingAddress.City,
             dto.ShippingAddress.Country,
             dto.ShippingAddress.State,
             dto.ShippingAddress.ZipCode);

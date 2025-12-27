@@ -34,9 +34,10 @@ public sealed class BasketCheckoutIntegrationEventHandler(IMediator sender, ILog
             },
             ShippingAddress = new AddressDto
             {
-                Name = message.ShippingAddress.Name,
-                EmailAddress = message.ShippingAddress.EmailAddress,
                 AddressLine = message.ShippingAddress.AddressLine,
+                Ward = message.ShippingAddress.Ward,
+                District = message.ShippingAddress.District,
+                City = message.ShippingAddress.City,
                 Country = message.ShippingAddress.Country,
                 State = message.ShippingAddress.State,
                 ZipCode = message.ShippingAddress.ZipCode

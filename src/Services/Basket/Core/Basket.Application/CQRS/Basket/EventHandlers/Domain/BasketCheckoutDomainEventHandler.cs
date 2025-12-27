@@ -43,9 +43,10 @@ public sealed class BasketCheckoutDomainEventHandler(
             },
             ShippingAddress = new AddressIntegrationEvent
             {
-                Name = @event.ShippingAddress.Name,
-                EmailAddress = @event.ShippingAddress.EmailAddress,
                 AddressLine = @event.ShippingAddress.AddressLine,
+                Ward = @event.ShippingAddress.Ward,
+                District = @event.ShippingAddress.District,
+                City = @event.ShippingAddress.City,
                 Country = @event.ShippingAddress.Country,
                 State = @event.ShippingAddress.State,
                 ZipCode = @event.ShippingAddress.ZipCode

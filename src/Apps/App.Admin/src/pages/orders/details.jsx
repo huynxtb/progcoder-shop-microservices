@@ -416,30 +416,42 @@ const OrderDetails = () => {
             <div className="space-y-2">
               <div className="flex items-start gap-2">
                 <span className="text-sm font-medium text-slate-600 dark:text-slate-300 min-w-[120px]">
-                  {t("orders.shippingName")}:
-                </span>
-                <span className="text-slate-800 dark:text-slate-200">
-                  {order.shippingAddress.name || "-"}
-                </span>
-              </div>
-              {order.shippingAddress.emailAddress && (
-                <div className="flex items-start gap-2">
-                  <span className="text-sm font-medium text-slate-600 dark:text-slate-300 min-w-[120px]">
-                    {t("orders.shippingEmail")}:
-                  </span>
-                  <span className="text-slate-600 dark:text-slate-300">
-                    {order.shippingAddress.emailAddress}
-                  </span>
-                </div>
-              )}
-              <div className="flex items-start gap-2">
-                <span className="text-sm font-medium text-slate-600 dark:text-slate-300 min-w-[120px]">
                   {t("orders.addressLine")}:
                 </span>
                 <span className="text-slate-600 dark:text-slate-300 flex-1">
                   {order.shippingAddress.addressLine || "-"}
                 </span>
               </div>
+              {order.shippingAddress.ward && (
+                <div className="flex items-start gap-2">
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-300 min-w-[120px]">
+                    {t("orders.ward")}:
+                  </span>
+                  <span className="text-slate-600 dark:text-slate-300">
+                    {order.shippingAddress.ward}
+                  </span>
+                </div>
+              )}
+              {order.shippingAddress.district && (
+                <div className="flex items-start gap-2">
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-300 min-w-[120px]">
+                    {t("orders.district")}:
+                  </span>
+                  <span className="text-slate-600 dark:text-slate-300">
+                    {order.shippingAddress.district}
+                  </span>
+                </div>
+              )}
+              {order.shippingAddress.city && (
+                <div className="flex items-start gap-2">
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-300 min-w-[120px]">
+                    {t("orders.city")}:
+                  </span>
+                  <span className="text-slate-600 dark:text-slate-300">
+                    {order.shippingAddress.city}
+                  </span>
+                </div>
+              )}
               {order.shippingAddress.state && (
                 <div className="flex items-start gap-2">
                   <span className="text-sm font-medium text-slate-600 dark:text-slate-300 min-w-[120px]">

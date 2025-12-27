@@ -20,9 +20,10 @@ public sealed record CustomerDomainEvent(
     string PhoneNumber);
 
 public sealed record AddressDomainEvent(
-    string Name, 
-    string EmailAddress, 
     string AddressLine, 
+    string Ward, 
+    string District, 
+    string City, 
     string Country,
     string State, 
     string ZipCode);

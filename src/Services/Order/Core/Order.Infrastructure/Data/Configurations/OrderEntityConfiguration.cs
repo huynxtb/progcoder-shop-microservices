@@ -88,18 +88,24 @@ public sealed class OrderEntityConfiguration : IEntityTypeConfiguration<OrderEnt
         builder.ComplexProperty(
             o => o.ShippingAddress, b =>
             {
-                b.Property(a => a.Name)
-                    .HasColumnName("shipping_name")
-                    .HasMaxLength(100)
-                    .IsRequired();
-
-                b.Property(a => a.EmailAddress)
-                    .HasColumnName("shipping_email")
-                    .HasMaxLength(255);
-
                 b.Property(a => a.AddressLine)
                     .HasColumnName("shipping_address_line")
                     .HasMaxLength(500)
+                    .IsRequired();
+
+                b.Property(a => a.Ward)
+                    .HasColumnName("shipping_ward")
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                b.Property(a => a.District)
+                    .HasColumnName("shipping_district")
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                b.Property(a => a.City)
+                    .HasColumnName("shipping_city")
+                    .HasMaxLength(100)
                     .IsRequired();
 
                 b.Property(a => a.Country)
