@@ -27,8 +27,6 @@ public class ProductInfoDto : DtoId<Guid>
 
     public List<string>? CategoryNames { get; set; }
 
-    public bool IsAvaiable { get; set; }
-
     public ProductStatus Status { get; set; }
 
     public string DisplayStatus { get; set; } = default!;

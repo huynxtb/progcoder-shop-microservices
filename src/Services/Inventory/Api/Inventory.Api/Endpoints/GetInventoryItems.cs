@@ -3,7 +3,7 @@
 using BuildingBlocks.Pagination;
 using Common.Models.Reponses;
 using Inventory.Api.Constants;
-using Inventory.Application.CQRS.InventoryItem.Queries;
+using Inventory.Application.Features.InventoryItem.Queries;
 using Inventory.Application.Models.Filters;
 using Inventory.Application.Models.Results;
 

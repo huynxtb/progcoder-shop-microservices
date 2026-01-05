@@ -176,7 +176,6 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
         LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
 
-        AddDomainEvent(new ReservedDomainEvent(Id, Product.Id, reservationId, amount));
         AddDomainEvent(new StockChangedDomainEvent(
             Id,
             Product.Id,
@@ -201,7 +200,6 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
         LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
 
-        AddDomainEvent(new UnreservedDomainEvent(Id, Product.Id, reservationId, amount));
         AddDomainEvent(new StockChangedDomainEvent(
             Id,
             Product.Id,

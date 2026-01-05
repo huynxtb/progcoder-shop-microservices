@@ -27,7 +27,7 @@ src/
 │       │   │   ├── Exceptions/
 │       │   │   └── ValueObjects/
 │       │   ├── {Service}.Application/   # Application Layer
-│       │   │   ├── CQRS/
+│       │   │   ├── Features/
 │       │   │   │   └── {Feature}/
 │       │   │   │       ├── Commands/
 │       │   │   │       ├── Queries/
@@ -95,7 +95,7 @@ src/
 - **Exceptions**: DomainException for domain rule violations
 
 ### Application Layer (Depends on Domain only)
-- **CQRS Commands/Queries**: Business use cases
+- **Features/{Feature}/Commands/Queries**: Business use cases
 - **DTOs**: Data transfer objects for API contracts
 - **Repository Interfaces**: Abstractions for data access
 - **Service Interfaces**: Abstractions for external services

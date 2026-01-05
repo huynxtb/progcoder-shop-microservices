@@ -2,7 +2,7 @@
 
 using BuildingBlocks.Pagination;
 using Catalog.Api.Constants;
-using Catalog.Application.CQRS.Product.Queries;
+using Catalog.Application.Features.Product.Queries;
 using Catalog.Application.Models.Filters;
 using Catalog.Application.Models.Results;
 using Common.Models.Reponses;

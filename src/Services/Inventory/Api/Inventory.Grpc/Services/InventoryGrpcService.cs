@@ -3,7 +3,7 @@
 using BuildingBlocks.Abstractions.ValueObjects;
 using Common.Constants;
 using Grpc.Core;
-using Inventory.Application.CQRS.InventoryReservation.Commands;
+using Inventory.Application.Features.InventoryReservation.Commands;
 using MediatR;
 
 #endregion

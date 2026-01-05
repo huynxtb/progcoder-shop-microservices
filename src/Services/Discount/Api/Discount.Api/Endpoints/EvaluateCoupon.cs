@@ -2,7 +2,7 @@
 
 using Common.Models.Reponses;
 using Discount.Api.Constants;
-using Discount.Application.CQRS.Coupon.Commands;
+using Discount.Application.Features.Coupon.Commands;
 using Discount.Application.Dtos.Coupons;
 using Discount.Application.Models.Results;
 using Microsoft.AspNetCore.Mvc;

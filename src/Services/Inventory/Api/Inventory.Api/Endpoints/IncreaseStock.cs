@@ -5,7 +5,7 @@ using BuildingBlocks.Authentication.Extensions;
 using Common.Extensions;
 using Common.Models.Reponses;
 using Inventory.Api.Constants;
-using Inventory.Application.CQRS.InventoryItem.Commands;
+using Inventory.Application.Features.InventoryItem.Commands;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;

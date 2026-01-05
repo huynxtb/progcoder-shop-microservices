@@ -1,7 +1,7 @@
 #region using
 
 using Discount.Api.Constants;
-using Discount.Application.CQRS.Coupon.Queries;
+using Discount.Application.Features.Coupon.Queries;
 using Discount.Application.Models.Results;
 using Common.Models.Reponses;
 

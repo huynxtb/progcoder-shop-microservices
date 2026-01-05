@@ -2,7 +2,7 @@
 
 using Common.Models.Reponses;
 using Inventory.Api.Constants;
-using Inventory.Application.CQRS.InventoryItem.Commands;
+using Inventory.Application.Features.InventoryItem.Commands;
 using Microsoft.AspNetCore.Mvc;
 
 #endregion

@@ -14,8 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CQRS\Product\Commands\" />
-    <Folder Include="CQRS\Product\EventHandlers\Domain\" />
+    <Folder Include="Features\Product\EventHandlers\Domain\" />
     <Folder Include="Models\Responses\" />
     <Folder Include="Services\" />
   </ItemGroup>

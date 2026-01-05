@@ -1,7 +1,7 @@
 ﻿#region using
 
-using Notification.Application.CQRS.Delivery.Commands;
-using Notification.Application.CQRS.Delivery.Queries;
+using Notification.Application.Features.Delivery.Commands;
+using Notification.Application.Features.Delivery.Queries;
 using Common.Configurations;
 using Common.Constants;
 using BuildingBlocks.Abstractions.ValueObjects;

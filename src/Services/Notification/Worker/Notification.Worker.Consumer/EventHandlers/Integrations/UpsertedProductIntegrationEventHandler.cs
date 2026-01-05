@@ -3,7 +3,7 @@
 using EventSourcing.Events.Catalog;
 using MassTransit;
 using MediatR;
-using Notification.Application.CQRS.Delivery.Commands;
+using Notification.Application.Features.Delivery.Commands;
 using Notification.Application.Dtos.Deliveries;
 using Notification.Application.Constants;
 using Notification.Domain.Enums;

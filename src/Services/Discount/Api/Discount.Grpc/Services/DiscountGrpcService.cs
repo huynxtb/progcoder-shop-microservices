@@ -1,6 +1,6 @@
                       #region using
 
-using Discount.Application.CQRS.Coupon.Commands;
+using Discount.Application.Features.Coupon.Commands;
 using Discount.Application.Dtos.Coupons;
 using Grpc.Core;
 using MediatR;

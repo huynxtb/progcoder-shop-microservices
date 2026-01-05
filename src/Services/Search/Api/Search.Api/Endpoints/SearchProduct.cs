@@ -3,7 +3,7 @@
 using BuildingBlocks.Pagination;
 using Common.Models.Reponses;
 using Search.Api.Constants;
-using Search.Application.CQRS.Product.Queries;
+using Search.Application.Features.Product.Queries;
 using Search.Application.Models.Filters;
 using Search.Application.Models.Results;
 using Search.Domain.Enums;

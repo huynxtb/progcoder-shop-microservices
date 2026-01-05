@@ -3,7 +3,7 @@
 using EventSourcing.Events.Catalog;
 using MassTransit;
 using MediatR;
-using Search.Application.CQRS.Product.Commands;
+using Search.Application.Features.Product.Commands;
 
 #endregion
 

@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CQRS\Brand\EventHandlers\" />
-    <Folder Include="CQRS\Category\EventHandlers\" />
+    <Folder Include="Features\Brand\EventHandlers\" />
+    <Folder Include="Features\Category\EventHandlers\" />
   </ItemGroup>
 
 </Project>

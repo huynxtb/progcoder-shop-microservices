@@ -2,7 +2,7 @@
 #region using
 
 using Catalog.Api.Constants;
-using Catalog.Application.CQRS.Product.Commands;
+using Catalog.Application.Features.Product.Commands;
 using Microsoft.AspNetCore.Mvc;
 using Common.Models.Reponses;
 

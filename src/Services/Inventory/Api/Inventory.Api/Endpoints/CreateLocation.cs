@@ -2,7 +2,7 @@
 
 using BuildingBlocks.Authentication.Extensions;
 using Inventory.Api.Constants;
-using Inventory.Application.CQRS.Location.Commands;
+using Inventory.Application.Features.Location.Commands;
 using Inventory.Application.Dtos.Locations;
 using Microsoft.AspNetCore.Mvc;
 

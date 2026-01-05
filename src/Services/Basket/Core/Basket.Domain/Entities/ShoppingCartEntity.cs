@@ -1,6 +1,7 @@
 ﻿#region using
 
 using Basket.Domain.Abstractions;
+using Basket.Domain.Attributes;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -8,6 +9,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Basket.Domain.Entities;
 
+[BsonCollection("Shopping_Carts")]
 public sealed class ShoppingCartEntity : Aggregate<Guid>
 {
     #region Fields, Properties and Indexers

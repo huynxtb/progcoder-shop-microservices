@@ -2,7 +2,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Notification.Api.Constants;
-using Notification.Application.CQRS.Notification.Commands;
+using Notification.Application.Features.Notification.Commands;
 using Common.Models.Reponses;
 using BuildingBlocks.Abstractions.ValueObjects;
 using BuildingBlocks.Authentication.Extensions;

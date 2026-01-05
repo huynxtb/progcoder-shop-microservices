@@ -3,7 +3,7 @@
 using BuildingBlocks.Abstractions.ValueObjects;
 using BuildingBlocks.Authentication.Extensions;
 using Catalog.Api.Constants;
-using Catalog.Application.CQRS.Product.Commands;
+using Catalog.Application.Features.Product.Commands;
 using Common.Models.Reponses;
 using Microsoft.AspNetCore.Mvc;
 

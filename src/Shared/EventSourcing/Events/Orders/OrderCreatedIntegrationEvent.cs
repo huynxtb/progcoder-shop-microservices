@@ -4,15 +4,15 @@ public sealed record OrderCreatedIntegrationEvent : IntegrationEvent
 {
     #region Fields, Properties and Indexers
     
-    public Guid OrderId { get; set; }
+    public Guid OrderId { get; init; }
 
-    public string OrderNo { get; set; } = default!;
+    public string OrderNo { get; init; } = default!;
 
-    public List<OrderItemIntegrationEvent> OrderItems { get; set; } = default!;
+    public List<OrderItemIntegrationEvent> OrderItems { get; init; } = default!;
 
-    public decimal TotalPrice { get; set; }
+    public decimal TotalPrice { get; init; }
 
-    public decimal FinalPrice { get; set; }
+    public decimal FinalPrice { get; init; }
 
     #endregion
 }
@@ -21,15 +21,15 @@ public sealed record OrderItemIntegrationEvent
 {
     #region Fields, Properties and Indexers
 
-    public Guid ProductId { get; set; }
+    public Guid ProductId { get; init; }
 
-    public string ProductName { get; set; } = default!;
+    public string ProductName { get; init; } = default!;
 
-    public int Quantity { get; set; }
+    public int Quantity { get; init; }
 
-    public decimal UnitPrice { get; set; }
+    public decimal UnitPrice { get; init; }
 
-    public decimal LineTotal { get; set; }
+    public decimal LineTotal { get; init; }
 
     #endregion
 }

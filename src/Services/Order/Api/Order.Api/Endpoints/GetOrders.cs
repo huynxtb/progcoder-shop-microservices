@@ -3,7 +3,7 @@
 using BuildingBlocks.Pagination;
 using Common.Models.Reponses;
 using Order.Api.Constants;
-using Order.Application.CQRS.Order.Queries;
+using Order.Application.Features.Order.Queries;
 using Order.Application.Models.Filters;
 using Order.Application.Models.Results;
 

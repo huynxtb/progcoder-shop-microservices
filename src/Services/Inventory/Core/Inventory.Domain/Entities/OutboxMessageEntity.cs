@@ -21,8 +21,6 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
 
     public string? LastErrorMessage { get; set; }
 
-    public DateTimeOffset? ClaimedOnUtc { get; set; }
-
     public int AttemptCount { get; set; }
 
     public int MaxAttempts { get; set; }
@@ -58,13 +56,7 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
     {
         ProcessedOnUtc = processedOnUtc;
         LastErrorMessage = null;
-        ClaimedOnUtc = null;
         NextAttemptOnUtc = null;
-    }
-
-    public void Claim(DateTimeOffset claimedOnUtc)
-    {
-        ClaimedOnUtc = claimedOnUtc;
     }
 
     public void SetRetryProperties(

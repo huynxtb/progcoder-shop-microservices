@@ -16,6 +16,8 @@ public sealed class AppConfigCfg
 
     public const string GrpcApiKey = "GrpcApiKey";
 
+    public const string ReservationExpirationMinutes = "ReservationExpirationMinutes";
+
     #endregion
 
 }

@@ -634,9 +634,9 @@ const InventoryPage = () => {
         return (
           <div>
             <span className="font-semibold">{item.quantity}</span>
-            <span className="text-xs text-slate-400 ml-2">
+            {/* <span className="text-xs text-slate-400 ml-2">
               ({t("inventory.available")}: {item.available})
-            </span>
+            </span> */}
           </div>
         );
       },
@@ -664,15 +664,14 @@ const InventoryPage = () => {
       Cell: (row) => {
         const item = row?.row?.original;
         const quantity = item.quantity || 0;
-        const available = item.available || 0;
         
         // Determine status based on quantity
         let status = "in_stock";
         let statusText = t("inventory.inStock");
-        if (quantity === 0 || available === 0) {
+        if (quantity === 0) {
           status = "out_of_stock";
           statusText = t("inventory.outOfStock");
-        } else if (available < 10) {
+        } else if (quantity < 10) {
           status = "low_stock";
           statusText = t("inventory.lowStock");
         }

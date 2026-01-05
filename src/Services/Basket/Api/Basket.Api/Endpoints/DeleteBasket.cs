@@ -2,7 +2,7 @@
 #region using
 
 using Basket.Api.Constants;
-using Basket.Application.CQRS.Basket.Commands;
+using Basket.Application.Features.Basket.Commands;
 using BuildingBlocks.Authentication.Extensions;
 using Common.Models.Reponses;
 

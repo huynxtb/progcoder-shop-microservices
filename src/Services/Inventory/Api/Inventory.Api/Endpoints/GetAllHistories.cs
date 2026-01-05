@@ -1,7 +1,7 @@
 #region using
 
 using Inventory.Api.Constants;
-using Inventory.Application.CQRS.InventoryItemHistory.Queries;
+using Inventory.Application.Features.InventoryItemHistory.Queries;
 using Inventory.Application.Models.Results;
 
 #endregion

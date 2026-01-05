@@ -1,10 +1,7 @@
 ﻿#region using
 
 using Common.Configurations;
-using Common.Extensions;
-using Order.Domain.Entities;
 using Order.Worker.Outbox.Abstractions;
-using Order.Worker.Outbox.Enums;
 using Order.Worker.Outbox.Factories;
 using Order.Worker.Outbox.Structs;
 using MassTransit;
@@ -53,39 +50,15 @@ internal sealed class OutboxProcessor
 
     public async Task<int> ExecuteAsync(CancellationToken cancellationToken = default)
     {
+        var messages = await _databaseProvider.GetUnprocessedMessagesAsync(_connectionString, _batchSize, cancellationToken);
 
-        var claimTimeout = TimeSpan.FromMinutes(5);
-
-        // First, release any expired claims (crash recovery)
-        await _databaseProvider.ReleaseExpiredClaimsAsync(_connectionString, claimTimeout, cancellationToken);
-
-        // Process new messages
-        var newMessages = await _databaseProvider.ClaimAndRetrieveMessagesBatchAsync(_connectionString, _batchSize, claimTimeout, cancellationToken);
-        var newMessagesProcessed = await ProcessMessagesAsync(newMessages, MessageType.New, cancellationToken);
-
-        // Process retry messages
-        var retryMessages = await _databaseProvider.ClaimAndRetrieveRetryMessagesAsync(_connectionString, _batchSize, cancellationToken);
-        var retryMessagesProcessed = await ProcessMessagesAsync(retryMessages, MessageType.Retry, cancellationToken);
-
-        var totalProcessed = newMessagesProcessed + retryMessagesProcessed;
-        if (totalProcessed > 0)
-        {
-            _logger.LogInformation("Processed {TotalCount} messages from outbox ({NewCount} new, {RetryCount} retry)", 
-                totalProcessed, newMessagesProcessed, retryMessagesProcessed);
-        }
-
-        return totalProcessed;
-    }
-
-    private async Task<int> ProcessMessagesAsync(List<OutboxMessageEntity> messages, MessageType messageType, CancellationToken cancellationToken)
-    {
-        if (messages.Count == 0) return 0;
-
+        if (messages.Count == 0)
+            return 0;
 
         var updateQueue = new ConcurrentQueue<OutboxUpdate>();
 
         var publishTasks = messages
-            .Select(message => PublishMessageWithRetryAsync(message, updateQueue, _publish, _logger, cancellationToken))
+            .Select(message => PublishMessageAsync(message, updateQueue, cancellationToken))
             .ToList();
 
         await Task.WhenAll(publishTasks);
@@ -94,61 +67,63 @@ internal sealed class OutboxProcessor
         {
             await _databaseProvider.UpdateProcessedMessagesAsync(_connectionString, updateQueue, cancellationToken);
         }
-        else
-        {
-            // If no messages were successfully processed, release the claims
-            _logger.LogWarning("No {MessageType} messages were successfully processed, releasing claims", messageType.GetDescription());
-            await _databaseProvider.ReleaseClaimsAsync(_connectionString, messages.Select(m => m.Id), cancellationToken);
-        }
 
         return messages.Count;
     }
 
-    private static async Task PublishMessageWithRetryAsync(
-        OutboxMessageEntity message,
+    private async Task PublishMessageAsync(
+        Models.OutboxMessage message,
         ConcurrentQueue<OutboxUpdate> updateQueue,
-        IPublishEndpoint publish,
-        ILogger<OutboxProcessor> logger,
         CancellationToken cancellationToken)
     {
         try
         {
-            
-            var eventType = GetOrAddMessageType(message.EventType!);
-            var deserializedMessage = JsonSerializer.Deserialize(message.Content!, eventType)!;
+            var messageType = GetOrAddMessageType(message.Type);
+            var deserializedMessage = JsonSerializer.Deserialize(message.Content, messageType)!;
 
-            logger.LogInformation("Publishing message {Id} of type {EventType} (attempt {AttemptCount}/{MaxAttempts})", 
-                message.Id, message.EventType, message.AttemptCount + 1, message.MaxAttempts);
-            
-            await publish.Publish(deserializedMessage, cancellationToken);
-            
-            // Increment attempt count for successful publish
-            message.IncreaseAttemptCount();
-            
-            logger.LogInformation("Successfully published message {Id} of type {EventType} (attempt {AttemptCount})", 
-                message.Id, message.EventType, message.AttemptCount);
+            await _publish.Publish(deserializedMessage, cancellationToken);
 
-            // Success - mark as processed
-            updateQueue.Enqueue(new OutboxUpdate(message.Id, DateTime.UtcNow, null, message.AttemptCount, null));
+            updateQueue.Enqueue(new OutboxUpdate(
+                message.Id,
+                DateTimeOffset.UtcNow,
+                null,
+                message.AttemptCount + 1,
+                null));
         }
         catch (Exception ex)
         {
             var currentTime = DateTimeOffset.UtcNow;
-            message.RecordFailedAttempt(ex.ToString(), currentTime);
+            var attemptCount = message.AttemptCount + 1;
 
-            if (message.IsPermanentlyFailed())
+            if (attemptCount >= message.MaxAttempts)
             {
-                // Max attempts reached - mark as permanently failed
-                updateQueue.Enqueue(new OutboxUpdate(message.Id, DateTime.UtcNow, message.LastErrorMessage, message.AttemptCount, null));
-                logger.LogError(ex, "Permanently failed to publish outbox message {Id} after {AttemptCount} attempts", 
-                    message.Id, message.AttemptCount);
+                updateQueue.Enqueue(new OutboxUpdate(
+                    message.Id,
+                    currentTime,
+                    $"Max attempts ({message.MaxAttempts}) exceeded. Last error: {ex}",
+                    attemptCount,
+                    null));
+
+                _logger.LogError(ex, "Permanently failed to publish outbox message {Id} after {AttemptCount} attempts",
+                    message.Id, attemptCount);
             }
             else
             {
-                // Schedule for retry
-                updateQueue.Enqueue(new OutboxUpdate(message.Id, DateTime.UtcNow, message.LastErrorMessage, message.AttemptCount, message.NextAttemptOnUtc));
-                logger.LogWarning(ex, "Failed to publish outbox message {Id} (attempt {AttemptCount}/{MaxAttempts}), will retry at {NextAttemptOnUtc}", 
-                    message.Id, message.AttemptCount, message.MaxAttempts, message.NextAttemptOnUtc);
+                var baseDelay = TimeSpan.FromSeconds(Math.Pow(2, attemptCount - 1));
+                var maxDelay = TimeSpan.FromMinutes(5);
+                var jitter = TimeSpan.FromMilliseconds(Random.Shared.Next(0, 1000));
+                var delay = TimeSpan.FromTicks(Math.Min(baseDelay.Ticks, maxDelay.Ticks)) + jitter;
+                var nextAttemptOnUtc = currentTime + delay;
+
+                updateQueue.Enqueue(new OutboxUpdate(
+                    message.Id,
+                    currentTime,
+                    ex.ToString(),
+                    attemptCount,
+                    nextAttemptOnUtc));
+
+                _logger.LogWarning(ex, "Failed to publish outbox message {Id} (attempt {AttemptCount}/{MaxAttempts}), will retry at {NextAttemptOnUtc}",
+                    message.Id, attemptCount, message.MaxAttempts, nextAttemptOnUtc);
             }
         }
     }

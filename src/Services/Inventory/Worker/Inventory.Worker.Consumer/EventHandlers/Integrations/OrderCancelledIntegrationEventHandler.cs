@@ -3,7 +3,7 @@
 using BuildingBlocks.Abstractions.ValueObjects;
 using Common.Constants;
 using EventSourcing.Events.Orders;
-using Inventory.Application.CQRS.InventoryReservation.Commands;
+using Inventory.Application.Features.InventoryReservation.Commands;
 using MassTransit;
 using MediatR;
 

@@ -1,7 +1,7 @@
 ﻿#region using
 
 using BuildingBlocks.Abstractions.ValueObjects;
-using Catalog.Application.CQRS.Product.Commands;
+using Catalog.Application.Features.Product.Commands;
 using Catalog.Domain.Enums;
 using Common.Constants;
 using EventSourcing.Events.Inventories;

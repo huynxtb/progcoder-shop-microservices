@@ -3,7 +3,7 @@
 using Basket.Api.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Basket.Application.Dtos.Baskets;
-using Basket.Application.CQRS.Basket.Commands;
+using Basket.Application.Features.Basket.Commands;
 using BuildingBlocks.Authentication.Extensions;
 
 #endregion

@@ -9,19 +9,12 @@ using MongoDB.Driver;
 
 namespace Basket.Infrastructure.Repositories;
 
-public sealed class BasketRepository : IBasketRepository
+public sealed class BasketRepository : BaseRepository<ShoppingCartEntity>, IBasketRepository
 {
-    #region Fields, Properties and Indexers
-
-    private readonly IMongoCollection<ShoppingCartEntity> _collection;
-
-    #endregion
-
     #region Ctors
 
-    public BasketRepository(IMongoDatabase db)
+    public BasketRepository(IMongoDatabase db) : base(db)
     {
-        _collection = db.GetCollection<ShoppingCartEntity>(MongoCollection.ShoppingCart);
     }
 
     #endregion

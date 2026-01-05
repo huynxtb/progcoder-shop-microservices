@@ -2,7 +2,7 @@
 
 using Basket.Api.Constants;
 using Basket.Application.Models.Results;
-using Basket.Application.CQRS.Basket.Queries;
+using Basket.Application.Features.Basket.Queries;
 using BuildingBlocks.Authentication.Extensions;
 
 #endregion

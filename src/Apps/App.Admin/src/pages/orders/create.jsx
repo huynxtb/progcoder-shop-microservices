@@ -29,7 +29,11 @@ const CreateOrder = () => {
         setLoadingProducts(true);
         const response = await api.get(API_ENDPOINTS.CATALOG.GET_ALL_PRODUCTS);
         if (response.data && response.data.result && response.data.result.items) {
-          setProducts(response.data.result.items);
+          // Filter products: published = true and status = 1 (InStock)
+          const filteredProducts = response.data.result.items.filter(
+            (product) => product.published === true && product.status === 1
+          );
+          setProducts(filteredProducts);
         }
       } catch (error) {
         console.error("Failed to fetch products:", error);

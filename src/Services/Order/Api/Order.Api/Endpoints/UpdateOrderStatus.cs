@@ -6,7 +6,7 @@ using Common.Models.Reponses;
 using Microsoft.AspNetCore.Mvc;
 using Order.Api.Constants;
 using Order.Api.Models;
-using Order.Application.CQRS.Order.Commands;
+using Order.Application.Features.Order.Commands;
 
 #endregion
 

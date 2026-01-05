@@ -4,7 +4,7 @@ using BuildingBlocks.Abstractions.ValueObjects;
 using BuildingBlocks.Authentication.Extensions;
 using Common.Models.Reponses;
 using Order.Api.Constants;
-using Order.Application.CQRS.Order.Queries;
+using Order.Application.Features.Order.Queries;
 using Order.Application.Models.Results;
 using Microsoft.AspNetCore.Mvc;
 

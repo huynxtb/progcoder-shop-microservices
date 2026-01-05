@@ -3,7 +3,7 @@
 using BuildingBlocks.Authentication.Extensions;
 using Common.Models.Reponses;
 using Report.Api.Constants;
-using Report.Application.CQRS.TopProductPieChart.Queries;
+using Report.Application.Features.TopProductPieChart.Queries;
 using Report.Application.Models.Results;
 
 #endregion

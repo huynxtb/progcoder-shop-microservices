@@ -2,7 +2,7 @@
 
 using Common.Models.Reponses;
 using Inventory.Api.Constants;
-using Inventory.Application.CQRS.Location.Queries;
+using Inventory.Application.Features.Location.Queries;
 using Inventory.Application.Models.Results;
 using Microsoft.AspNetCore.Mvc;
 

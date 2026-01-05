@@ -251,10 +251,6 @@ namespace Order.Infrastructure.Data.Migrations
                         .HasDefaultValue(0)
                         .HasColumnName("attempt_count");
 
-                    b.Property<DateTimeOffset?>("ClaimedOnUtc")
-                        .HasColumnType("datetimeoffset")
-                        .HasColumnName("claimed_on_utc");
-
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -289,15 +285,11 @@ namespace Order.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClaimedOnUtc");
-
                     b.HasIndex("EventType");
 
                     b.HasIndex("OccurredOnUtc");
 
                     b.HasIndex("ProcessedOnUtc");
-
-                    b.HasIndex("ProcessedOnUtc", "ClaimedOnUtc");
 
                     b.HasIndex("NextAttemptOnUtc", "ProcessedOnUtc", "AttemptCount");
 

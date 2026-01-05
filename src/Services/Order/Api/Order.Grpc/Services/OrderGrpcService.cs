@@ -3,7 +3,7 @@
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MediatR;
-using Order.Application.CQRS.Order.Queries;
+using Order.Application.Features.Order.Queries;
 using Order.Application.Models.Filters;
 
 #endregion

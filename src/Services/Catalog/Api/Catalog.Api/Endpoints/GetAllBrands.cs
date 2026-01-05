@@ -1,7 +1,7 @@
 #region using
 
 using Catalog.Api.Constants;
-using Catalog.Application.CQRS.Brand.Queries;
+using Catalog.Application.Features.Brand.Queries;
 using Catalog.Application.Models.Filters;
 using Catalog.Application.Models.Results;
 using Common.Models.Reponses;

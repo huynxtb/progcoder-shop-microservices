@@ -1,6 +1,6 @@
 #region using
 
-using Catalog.Application.CQRS.Product.Queries;
+using Catalog.Application.Features.Product.Queries;
 using Catalog.Application.Models.Filters;
 using Grpc.Core;
 using MediatR;

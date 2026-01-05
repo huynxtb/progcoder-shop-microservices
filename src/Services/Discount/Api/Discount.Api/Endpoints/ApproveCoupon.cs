@@ -2,7 +2,7 @@
 
 using BuildingBlocks.Authentication.Extensions;
 using Discount.Api.Constants;
-using Discount.Application.CQRS.Coupon.Commands;
+using Discount.Application.Features.Coupon.Commands;
 
 #endregion
 

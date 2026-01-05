@@ -4,9 +4,9 @@ public record IntegrationEvent
 {
     #region Fields, Properties and Indexers
 
-    public string Id => Guid.NewGuid().ToString();
+    public string Id { get; init; } = default!;
 
-    public DateTimeOffset OccurredOn => DateTimeOffset.UtcNow;
+    public DateTimeOffset OccurredOn { get; init; } = DateTimeOffset.UtcNow;
 
     public string? EventType => GetType()?.AssemblyQualifiedName;
 

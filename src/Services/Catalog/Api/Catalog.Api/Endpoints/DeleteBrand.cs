@@ -1,7 +1,7 @@
 #region using
 
 using Catalog.Api.Constants;
-using Catalog.Application.CQRS.Brand.Commands;
+using Catalog.Application.Features.Brand.Commands;
 
 #endregion
 

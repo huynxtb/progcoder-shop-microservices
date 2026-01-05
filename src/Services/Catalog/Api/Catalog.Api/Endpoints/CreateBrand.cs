@@ -2,7 +2,7 @@
 
 using BuildingBlocks.Authentication.Extensions;
 using Catalog.Api.Constants;
-using Catalog.Application.CQRS.Brand.Commands;
+using Catalog.Application.Features.Brand.Commands;
 using Catalog.Application.Dtos.Brands;
 using Microsoft.AspNetCore.Mvc;
 
