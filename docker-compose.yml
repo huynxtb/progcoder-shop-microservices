@@ -405,9 +405,7 @@ services:
   # =========================
   
   catalog-api:
-    build:
-      context: .
-      dockerfile: src/Services/Catalog/Api/Catalog.Api/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/catalog-api:latest
     container_name: catalog-api
     restart: unless-stopped 
     ports:
@@ -427,9 +425,7 @@ services:
       start_period: 60s
 
   basket-api:
-    build:
-      context: .
-      dockerfile: src/Services/Basket/Api/Basket.Api/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/basket-api:latest
     container_name: basket-api
     restart: unless-stopped 
     ports:
@@ -449,9 +445,7 @@ services:
       start_period: 60s
 
   inventory-api:
-    build:
-      context: .
-      dockerfile: src/Services/Inventory/Api/Inventory.Api/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/inventory-api:latest
     container_name: inventory-api
     restart: unless-stopped 
     ports:
@@ -472,9 +466,7 @@ services:
       start_period: 60s
 
   order-api:
-    build:
-      context: .
-      dockerfile: src/Services/Order/Api/Order.Api/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/order-api:latest
     container_name: order-api
     restart: unless-stopped 
     ports:
@@ -495,9 +487,7 @@ services:
       start_period: 60s
 
   discount-api:
-    build:
-      context: .
-      dockerfile: src/Services/Discount/Api/Discount.Api/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/discount-api:latest
     container_name: discount-api
     restart: unless-stopped 
     ports:
@@ -516,9 +506,7 @@ services:
       start_period: 60s
 
   notification-api:
-    build:
-      context: .
-      dockerfile: src/Services/Notification/Api/Notification.Api/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/notification-api:latest
     container_name: notification-api
     restart: unless-stopped 
     ports:
@@ -540,9 +528,7 @@ services:
       start_period: 60s
 
   search-api:
-    build:
-      context: .
-      dockerfile: src/Services/Search/Api/Search.Api/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/search-api:latest
     container_name: search-api
     restart: unless-stopped 
     ports:
@@ -561,9 +547,7 @@ services:
       start_period: 60s
 
   report-api:
-    build:
-      context: .
-      dockerfile: src/Services/Report/Api/Report.Api/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/report-api:latest
     container_name: report-api
     restart: unless-stopped 
     ports:
@@ -584,9 +568,7 @@ services:
       start_period: 60s
 
   communication-api:
-    build:
-      context: .
-      dockerfile: src/Services/Communication/Api/Communication.Api/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/communication-api:latest
     container_name: communication-api
     restart: unless-stopped 
     ports:
@@ -609,9 +591,7 @@ services:
   # =========================
 
   catalog-grpc:
-    build:
-      context: .
-      dockerfile: src/Services/Catalog/Api/Catalog.Grpc/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/catalog-grpc:latest
     container_name: catalog-grpc
     restart: unless-stopped 
     ports:
@@ -630,9 +610,7 @@ services:
       start_period: 60s
 
   inventory-grpc:
-    build:
-      context: .
-      dockerfile: src/Services/Inventory/Api/Inventory.Grpc/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/inventory-grpc:latest
     container_name: inventory-grpc
     restart: unless-stopped 
     ports:
@@ -651,9 +629,7 @@ services:
       start_period: 60s
 
   order-grpc:
-    build:
-      context: .
-      dockerfile: src/Services/Order/Api/Order.Grpc/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/order-grpc:latest
     container_name: order-grpc
     restart: unless-stopped 
     ports:
@@ -672,9 +648,7 @@ services:
       start_period: 60s
 
   discount-grpc:
-    build:
-      context: .
-      dockerfile: src/Services/Discount/Api/Discount.Grpc/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/discount-grpc:latest
     container_name: discount-grpc
     restart: unless-stopped 
     ports:
@@ -693,9 +667,7 @@ services:
       start_period: 60s
 
   report-grpc:
-    build:
-      context: .
-      dockerfile: src/Services/Report/Api/Report.Grpc/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/report-grpc:latest
     container_name: report-grpc
     restart: unless-stopped 
     ports:
@@ -718,9 +690,7 @@ services:
   # =========================
 
   catalog-worker-outbox:
-    build:
-      context: .
-      dockerfile: src/Services/Catalog/Worker/Catalog.Woker.Outbox/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/catalog-worker-outbox:latest
     container_name: catalog-worker-outbox
     restart: unless-stopped
     depends_on:
@@ -733,9 +703,7 @@ services:
       - progcoder_network
 
   basket-worker-outbox:
-    build:
-      context: .
-      dockerfile: src/Services/Basket/Worker/Basket.Worker.Outbox/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/basket-worker-outbox:latest
     container_name: basket-worker-outbox
     restart: unless-stopped
     depends_on:
@@ -747,9 +715,7 @@ services:
       - progcoder_network
 
   inventory-worker-outbox:
-    build:
-      context: .
-      dockerfile: src/Services/Inventory/Worker/Inventory.Worker.Outbox/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/inventory-worker-outbox:latest
     container_name: inventory-worker-outbox
     restart: unless-stopped
     depends_on:
@@ -762,9 +728,7 @@ services:
       - progcoder_network
 
   order-worker-outbox:
-    build:
-      context: .
-      dockerfile: src/Services/Order/Worker/Order.Woker.Outbox/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/order-worker-outbox:latest
     container_name: order-worker-outbox
     restart: unless-stopped
     depends_on:
@@ -781,9 +745,7 @@ services:
   # =========================
 
   catalog-worker-consumer:
-    build:
-      context: .
-      dockerfile: src/Services/Catalog/Worker/Catalog.Worker.Consumer/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/catalog-worker-consumer:latest
     container_name: catalog-worker-consumer
     restart: unless-stopped
     depends_on:
@@ -796,9 +758,7 @@ services:
       - progcoder_network
 
   inventory-worker-consumer:
-    build:
-      context: .
-      dockerfile: src/Services/Inventory/Worker/Inventory.Worker.Consumer/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/inventory-worker-consumer:latest
     container_name: inventory-worker-consumer
     restart: unless-stopped
     depends_on:
@@ -811,9 +771,7 @@ services:
       - progcoder_network
 
   order-worker-consumer:
-    build:
-      context: .
-      dockerfile: src/Services/Order/Worker/Order.Worker.Consumer/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/order-worker-consumer:latest
     container_name: order-worker-consumer
     restart: unless-stopped
     depends_on:
@@ -826,9 +784,7 @@ services:
       - progcoder_network
 
   search-worker-consumer:
-    build:
-      context: .
-      dockerfile: src/Services/Search/Worker/Search.Worker.Consumer/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/search-worker-consumer:latest
     container_name: search-worker-consumer
     restart: unless-stopped
     depends_on:
@@ -840,9 +796,7 @@ services:
       - progcoder_network
 
   notification-worker-consumer:
-    build:
-      context: .
-      dockerfile: src/Services/Notification/Worker/Notification.Worker.Consumer/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/notification-worker-consumer:latest
     container_name: notification-worker-consumer
     restart: unless-stopped
     depends_on:
@@ -855,9 +809,7 @@ services:
       - progcoder_network
 
   notification-worker-processor:
-    build:
-      context: .
-      dockerfile: src/Services/Notification/Worker/Notification.Worker.Processor/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/notification-worker-processor:latest
     container_name: notification-worker-processor
     restart: unless-stopped
     depends_on:
@@ -874,9 +826,7 @@ services:
   # =========================
 
   app-job:
-    build:
-      context: .
-      dockerfile: src/JobOrchestrator/App.Job/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/job-orchestrator:latest
     container_name: app-job
     restart: unless-stopped
     depends_on:
@@ -904,9 +854,7 @@ services:
   # =========================
 
   api-gateway:
-    build:
-      context: .
-      dockerfile: src/ApiGateway/YarpApiGateway/Dockerfile
+    image: ${DOCKERHUB_USERNAME}/api-gateway:latest
     container_name: api-gateway
     restart: unless-stopped 
     ports:
@@ -925,6 +873,46 @@ services:
       - progcoder_network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # =========================
+  # Frontend Apps
+  # =========================
+
+  app-admin:
+    image: ${DOCKERHUB_USERNAME}/app-admin:latest
+    container_name: app-admin
+    restart: unless-stopped
+    ports:
+      - ${APP_ADMIN_PORT}:80
+    depends_on:
+      - api-gateway
+      - keycloak
+    networks:
+      - progcoder_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  app-store:
+    image: ${DOCKERHUB_USERNAME}/app-store:latest
+    container_name: app-store
+    restart: unless-stopped
+    ports:
+      - ${APP_STORE_PORT}:80
+    depends_on:
+      - api-gateway
+      - keycloak
+    networks:
+      - progcoder_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
       interval: 30s
       timeout: 10s
       retries: 3
