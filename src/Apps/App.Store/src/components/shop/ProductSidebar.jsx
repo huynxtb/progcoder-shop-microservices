@@ -3,7 +3,7 @@ import ProductCategoryList2 from "./ProductCategoryList2";
 import FrameShapeFilter from "./FrameShapeFilter";
 import FrameColorFilter from "./FrameColorFilter";
 import FrameBrandFilter from "./FrameBrandFilter";
-import FramePriceFilter from "./FramePriceFIlter";
+import FramePriceFilter from "./FramePriceFilter";
 import FrameWidthFilter from "./FrameWidthFilter";
 import GenderSelectFilter from "./GenderSelectFilter";
 import SalesFilter from "./SalesFilter";
