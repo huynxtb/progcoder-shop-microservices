@@ -85,6 +85,7 @@ public static class DependencyInjection
 
     public static IServiceCollection AddRefitClients(this IServiceCollection services, IConfiguration cfg)
     {
+        // HTTP Clients
         services.AddRefitClient<IKeycloakApi>()
                 .ConfigureHttpClient(c =>
                 {
