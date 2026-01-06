@@ -41,26 +41,47 @@ jobs:
           filters: |
             catalog:
               - 'src/Services/Catalog/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
             basket:
               - 'src/Services/Basket/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
             order:
               - 'src/Services/Order/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
             discount:
               - 'src/Services/Discount/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
             inventory:
               - 'src/Services/Inventory/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
             notification:
               - 'src/Services/Notification/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
             search:
               - 'src/Services/Search/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
             report:
               - 'src/Services/Report/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
             api-gateway:
               - 'src/ApiGateway/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
             job-orchestrator:
               - 'src/JobOrchestrator/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
             shared:
               - 'src/Shared/**'
+              - 'src/Directory.*.props'
             app-store:
               - 'src/Apps/App.Store/**'
             app-admin:
