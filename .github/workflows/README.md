@@ -7,6 +7,7 @@ This repository uses GitHub Actions to automatically build and test microservice
 - **`.github/workflows/ci.yml`** - Main CI workflow with change detection
 - **`.github/workflows/build-services.yml`** - Reusable workflow for .NET services
 - **`.github/workflows/build-react-apps.yml`** - Reusable workflow for React apps
+- **`.github/workflows/docker-image.yml`** - Docker image build & push to Docker Hub 🐳
 
 ## 🚀 How It Works
 
@@ -220,6 +221,277 @@ Update the version in both workflow files:
 - [dorny/paths-filter Action](https://github.com/dorny/paths-filter)
 - [.NET GitHub Actions](https://github.com/actions/setup-dotnet)
 - [Node.js GitHub Actions](https://github.com/actions/setup-node)
+
+---
+
+## 🐳 Docker Image CI Workflow
+
+The **`docker-image.yml`** workflow automatically builds and pushes Docker images to Docker Hub for all microservices and frontend applications - **but only when they change**.
+
+### 🎯 Key Features
+
+✅ **Smart Change Detection** - Only builds images for modified services  
+✅ **Parallel Builds** - All changed services build simultaneously  
+✅ **Docker Layer Caching** - Speeds up builds by reusing unchanged layers  
+✅ **Dual Tagging** - Images tagged with both `latest` and commit SHA  
+✅ **Cost Efficient** - Saves Docker Hub storage and CI/CD minutes  
+
+### 📦 Supported Components (26 Total)
+
+#### Backend Services (24 microservices)
+
+| Service | Images |
+|---------|--------|
+| **Basket** | `basket-api`, `basket-worker-outbox` |
+| **Catalog** | `catalog-api`, `catalog-grpc`, `catalog-worker-outbox`, `catalog-worker-consumer` |
+| **Communication** | `communication-api` |
+| **Discount** | `discount-api`, `discount-grpc` |
+| **Inventory** | `inventory-api`, `inventory-grpc`, `inventory-worker-consumer`, `inventory-worker-outbox` |
+| **Notification** | `notification-api`, `notification-worker-consumer`, `notification-worker-processor` |
+| **Order** | `order-api`, `order-grpc`, `order-worker-outbox`, `order-worker-consumer` |
+| **Report** | `report-api`, `report-grpc` |
+| **Search** | `search-api`, `search-worker-consumer` |
+
+#### Frontend Apps (2 applications)
+
+- `app-admin` - Admin dashboard (Vite + React + Nginx)
+- `app-store` - Customer storefront (Vite + React + Nginx)
+
+### 🔧 Setup Requirements
+
+#### 1. Create Docker Hub Access Token
+
+1. Log in to [Docker Hub](https://hub.docker.com/)
+2. Navigate to **Account Settings** → **Security**
+3. Click **New Access Token**
+4. Name: `github-actions` (or similar)
+5. Permissions: **Read & Write**
+6. Copy the generated token (shown only once!)
+
+#### 2. Configure GitHub Secrets
+
+Go to your repository on GitHub:
+
+**Settings** → **Secrets and variables** → **Actions** → **New repository secret**
+
+**Required Secret:**
+
+| Secret Name | Value | Description |
+|-------------|-------|-------------|
+| `DOCKERHUB_TOKEN` | `dckr_pat_xxxxx...` | Your Docker Hub access token |
+
+**Optional Secrets** (for frontend apps only):
+
+| Secret Name | Example Value | Required For |
+|-------------|---------------|--------------|
+| `VITE_KEYCLOAK_URL` | `https://auth.example.com` | App.Admin, App.Store |
+| `VITE_KEYCLOAK_REALM` | `shopping-cart` | App.Admin, App.Store |
+| `VITE_KEYCLOAK_CLIENT_ID` | `store-app` | App.Admin, App.Store |
+| `VITE_KEYCLOAK_REDIRECT_URI` | `https://store.example.com` | App.Admin, App.Store |
+| `VITE_KEYCLOAK_BASE_URL` | `https://auth.example.com/realms/cart` | App.Admin, App.Store |
+| `VITE_API_GATEWAY` | `https://api.example.com` | App.Admin, App.Store |
+
+#### 3. Configure GitHub Variable
+
+**Settings** → **Secrets and variables** → **Actions** → **Variables** tab → **New repository variable**
+
+| Variable Name | Value | Description |
+|---------------|-------|-------------|
+| `DOCKERHUB_USERNAME` | `progcoder` | Your Docker Hub username |
+
+### 🏷️ Image Naming Convention
+
+All images follow this pattern:
+
+```
+progcoder/<service-name>:<tag>
+```
+
+**Examples:**
+- `progcoder/basket-api:latest`
+- `progcoder/basket-api:abc1234` (commit SHA)
+- `progcoder/catalog-grpc:latest`
+- `progcoder/app-admin:latest`
+
+### 📋 Usage Examples
+
+#### Example 1: Modify Only Basket Service
+
+```bash
+# Make changes to Basket service
+git add src/Services/Basket/
+git commit -m "feat: add basket expiration logic"
+git push origin main
+```
+
+**Result:** Only these images are built and pushed:
+- ✅ `progcoder/basket-api:latest`
+- ✅ `progcoder/basket-api:<commit-sha>`
+- ✅ `progcoder/basket-worker-outbox:latest`
+- ✅ `progcoder/basket-worker-outbox:<commit-sha>`
+
+#### Example 2: Modify Shared Code
+
+```bash
+# Update shared utilities
+git add src/Shared/BuildingBlocks/
+git commit -m "refactor: improve error handling in CQRS"
+git push origin main
+```
+
+**Result:** ⚠️ **ALL 24 microservices** are rebuilt (they all depend on shared code)
+
+#### Example 3: Modify Frontend Only
+
+```bash
+# Update admin dashboard
+git add src/Apps/App.Admin/
+git commit -m "ui: redesign login page"
+git push origin main
+```
+
+**Result:** Only frontend image is built:
+- ✅ `progcoder/app-admin:latest`
+- ✅ `progcoder/app-admin:<commit-sha>`
+
+#### Example 4: Multiple Services Changed
+
+```bash
+# Update multiple services
+git add src/Services/Basket/ src/Services/Order/
+git commit -m "feat: integrate basket with order service"
+git push origin main
+```
+
+**Result:** All Basket and Order images are built in parallel:
+- ✅ `basket-api`, `basket-worker-outbox`
+- ✅ `order-api`, `order-grpc`, `order-worker-outbox`, `order-worker-consumer`
+
+### 🎬 Workflow Triggers
+
+The workflow runs on:
+
+| Event | Behavior |
+|-------|----------|
+| **Push to `main`** | Builds AND pushes images to Docker Hub |
+| **Pull Request to `main`** | Builds images (validates) but does NOT push |
+
+### 📊 Monitoring Builds
+
+1. Go to **Actions** tab in GitHub
+2. Click on the latest **Docker Image CI** workflow run
+3. View the **detect-changes** job to see what was detected
+4. Check individual build jobs for logs and status
+
+Each job will show:
+- ✅ **Success** - Image built and pushed
+- ⏭️ **Skipped** - No changes detected
+- ❌ **Failed** - Check logs for errors
+
+### 🚢 Deploying Images
+
+Pull images from Docker Hub:
+
+```bash
+# Pull latest version
+docker pull progcoder/basket-api:latest
+
+# Pull specific version (recommended for production)
+docker pull progcoder/basket-api:abc1234567
+
+# Run the image
+docker run -d -p 8080:8080 progcoder/basket-api:latest
+```
+
+### 🐛 Troubleshooting
+
+#### ❌ Error: "unauthorized: incorrect username or password"
+
+**Cause:** Invalid or missing Docker Hub credentials
+
+**Fix:**
+1. Verify `DOCKERHUB_TOKEN` secret exists
+2. Regenerate token if needed (may have expired)
+3. Ensure token has **Read & Write** permissions
+
+#### ❌ Error: "Dockerfile not found"
+
+**Cause:** Dockerfile path is incorrect
+
+**Fix:**
+1. Check that Dockerfile exists at expected location
+2. Verify path in workflow matches actual file location
+
+#### ❌ Frontend builds fail with environment errors
+
+**Cause:** Missing `VITE_*` secrets
+
+**Fix:**
+1. Add all required frontend secrets (see setup section)
+2. Verify secret names match exactly (case-sensitive)
+
+#### ⚠️ All services rebuilding unexpectedly
+
+**Cause:** Changes detected in `src/Shared/**` or `src/Directory.*.props`
+
+**Expected Behavior:** This is correct - shared code affects all services
+
+### 💡 Best Practices
+
+1. **Use Specific Tags in Production**
+   ```yaml
+   # ✅ Good - Use commit SHA for production
+   image: progcoder/basket-api:abc1234
+   
+   # ❌ Avoid - Don't use 'latest' in production
+   image: progcoder/basket-api:latest
+   ```
+
+2. **Test Locally First**
+   ```bash
+   # Build Docker image locally before pushing
+   docker build -f src/Services/Basket/Api/Basket.Api/Dockerfile -t basket-api .
+   docker run -p 8080:8080 basket-api
+   ```
+
+3. **Monitor Build Logs**
+   - Always check the Actions tab after pushing
+   - Review logs for any warnings or errors
+   - Verify images appear on Docker Hub
+
+4. **Keep Secrets Secure**
+   - Never commit secrets to the repository
+   - Rotate Docker Hub tokens periodically
+   - Use separate tokens for different environments
+
+### 🔄 Adding a New Service
+
+To add a new microservice to the Docker workflow:
+
+1. **Add change detection filter:**
+   ```yaml
+   # In detect-changes job outputs
+   new-service: ${{ steps.changes.outputs.new-service }}
+   ```
+
+2. **Add path filter:**
+   ```yaml
+   # In filters section
+   new-service:
+     - 'src/Services/NewService/**'
+     - 'src/Shared/**'
+     - 'src/Directory.*.props'
+   ```
+
+3. **Add build job:**
+   ```yaml
+   build-new-service:
+     needs: detect-changes
+     if: needs.detect-changes.outputs.new-service == 'true'
+     runs-on: ubuntu-latest
+     steps:
+       # ... standard build steps
+   ```
 
 ---
 

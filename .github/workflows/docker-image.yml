@@ -2,27 +2,1058 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "main" ]
-    
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
-  docker:
+  detect-changes:
     runs-on: ubuntu-latest
+    outputs:
+      basket-api: ${{ steps.changes.outputs.basket-api }}
+      basket-worker-outbox: ${{ steps.changes.outputs.basket-worker-outbox }}
+      catalog-api: ${{ steps.changes.outputs.catalog-api }}
+      catalog-grpc: ${{ steps.changes.outputs.catalog-grpc }}
+      catalog-worker-outbox: ${{ steps.changes.outputs.catalog-worker-outbox }}
+      catalog-worker-consumer: ${{ steps.changes.outputs.catalog-worker-consumer }}
+      communication-api: ${{ steps.changes.outputs.communication-api }}
+      discount-api: ${{ steps.changes.outputs.discount-api }}
+      discount-grpc: ${{ steps.changes.outputs.discount-grpc }}
+      inventory-api: ${{ steps.changes.outputs.inventory-api }}
+      inventory-grpc: ${{ steps.changes.outputs.inventory-grpc }}
+      inventory-worker-consumer: ${{ steps.changes.outputs.inventory-worker-consumer }}
+      inventory-worker-outbox: ${{ steps.changes.outputs.inventory-worker-outbox }}
+      notification-api: ${{ steps.changes.outputs.notification-api }}
+      notification-worker-consumer: ${{ steps.changes.outputs.notification-worker-consumer }}
+      notification-worker-processor: ${{ steps.changes.outputs.notification-worker-processor }}
+      order-api: ${{ steps.changes.outputs.order-api }}
+      order-grpc: ${{ steps.changes.outputs.order-grpc }}
+      order-worker-outbox: ${{ steps.changes.outputs.order-worker-outbox }}
+      order-worker-consumer: ${{ steps.changes.outputs.order-worker-consumer }}
+      report-api: ${{ steps.changes.outputs.report-api }}
+      report-grpc: ${{ steps.changes.outputs.report-grpc }}
+      search-api: ${{ steps.changes.outputs.search-api }}
+      search-worker-consumer: ${{ steps.changes.outputs.search-worker-consumer }}
+      api-gateway: ${{ steps.changes.outputs.api-gateway }}
+      job-orchestrator: ${{ steps.changes.outputs.job-orchestrator }}
+      app-admin: ${{ steps.changes.outputs.app-admin }}
+      app-store: ${{ steps.changes.outputs.app-store }}
+      shared: ${{ steps.changes.outputs.shared }}
     steps:
-      -
-        name: Login to Docker Hub
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed paths
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            basket-api:
+              - 'src/Services/Basket/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            basket-worker-outbox:
+              - 'src/Services/Basket/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            catalog-api:
+              - 'src/Services/Catalog/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            catalog-grpc:
+              - 'src/Services/Catalog/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            catalog-worker-outbox:
+              - 'src/Services/Catalog/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            catalog-worker-consumer:
+              - 'src/Services/Catalog/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            communication-api:
+              - 'src/Services/Communication/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            discount-api:
+              - 'src/Services/Discount/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            discount-grpc:
+              - 'src/Services/Discount/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            inventory-api:
+              - 'src/Services/Inventory/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            inventory-grpc:
+              - 'src/Services/Inventory/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            inventory-worker-consumer:
+              - 'src/Services/Inventory/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            inventory-worker-outbox:
+              - 'src/Services/Inventory/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            notification-api:
+              - 'src/Services/Notification/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            notification-worker-consumer:
+              - 'src/Services/Notification/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            notification-worker-processor:
+              - 'src/Services/Notification/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            order-api:
+              - 'src/Services/Order/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            order-grpc:
+              - 'src/Services/Order/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            order-worker-outbox:
+              - 'src/Services/Order/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            order-worker-consumer:
+              - 'src/Services/Order/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            report-api:
+              - 'src/Services/Report/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            report-grpc:
+              - 'src/Services/Report/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            search-api:
+              - 'src/Services/Search/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            search-worker-consumer:
+              - 'src/Services/Search/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            api-gateway:
+              - 'src/ApiGateway/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            job-orchestrator:
+              - 'src/JobOrchestrator/**'
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+            app-admin:
+              - 'src/Apps/App.Admin/**'
+            app-store:
+              - 'src/Apps/App.Store/**'
+            shared:
+              - 'src/Shared/**'
+              - 'src/Directory.*.props'
+
+  # Basket Service Jobs
+  build-basket-api:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.basket-api == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      -
-        name: Build and push
+      
+      - name: Build and push Basket API
         uses: docker/build-push-action@v6
         with:
+          context: .
+          file: ./src/Services/Basket/Api/Basket.Api/Dockerfile
           push: true
-          tags: user/app:latest
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/basket-api:latest,${{ vars.DOCKERHUB_USERNAME }}/basket-api:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/basket-api:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/basket-api:buildcache,mode=max
+
+  build-basket-worker-outbox:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.basket-worker-outbox == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Basket Worker Outbox
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Basket/Worker/Basket.Worker.Outbox/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/basket-worker-outbox:latest,${{ vars.DOCKERHUB_USERNAME }}/basket-worker-outbox:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/basket-worker-outbox:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/basket-worker-outbox:buildcache,mode=max
+
+  # Catalog Service Jobs
+  build-catalog-api:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.catalog-api == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Catalog API
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Catalog/Api/Catalog.Api/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/catalog-api:latest,${{ vars.DOCKERHUB_USERNAME }}/catalog-api:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/catalog-api:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/catalog-api:buildcache,mode=max
+
+  build-catalog-grpc:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.catalog-grpc == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Catalog gRPC
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Catalog/Api/Catalog.Grpc/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/catalog-grpc:latest,${{ vars.DOCKERHUB_USERNAME }}/catalog-grpc:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/catalog-grpc:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/catalog-grpc:buildcache,mode=max
+
+  build-catalog-worker-outbox:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.catalog-worker-outbox == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Catalog Worker Outbox
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Catalog/Worker/Catalog.Woker.Outbox/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/catalog-worker-outbox:latest,${{ vars.DOCKERHUB_USERNAME }}/catalog-worker-outbox:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/catalog-worker-outbox:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/catalog-worker-outbox:buildcache,mode=max
+
+  build-catalog-worker-consumer:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.catalog-worker-consumer == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Catalog Worker Consumer
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Catalog/Worker/Catalog.Worker.Consumer/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/catalog-worker-consumer:latest,${{ vars.DOCKERHUB_USERNAME }}/catalog-worker-consumer:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/catalog-worker-consumer:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/catalog-worker-consumer:buildcache,mode=max
+
+  # Communication Service Jobs
+  build-communication-api:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.communication-api == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Communication API
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Communication/Api/Communication.Api/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/communication-api:latest,${{ vars.DOCKERHUB_USERNAME }}/communication-api:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/communication-api:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/communication-api:buildcache,mode=max
+
+  # Discount Service Jobs
+  build-discount-api:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.discount-api == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Discount API
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Discount/Api/Discount.Api/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/discount-api:latest,${{ vars.DOCKERHUB_USERNAME }}/discount-api:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/discount-api:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/discount-api:buildcache,mode=max
+
+  build-discount-grpc:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.discount-grpc == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Discount gRPC
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Discount/Api/Discount.Grpc/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/discount-grpc:latest,${{ vars.DOCKERHUB_USERNAME }}/discount-grpc:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/discount-grpc:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/discount-grpc:buildcache,mode=max
+
+  # Inventory Service Jobs
+  build-inventory-api:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.inventory-api == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Inventory API
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Inventory/Api/Inventory.Api/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/inventory-api:latest,${{ vars.DOCKERHUB_USERNAME }}/inventory-api:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/inventory-api:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/inventory-api:buildcache,mode=max
+
+  build-inventory-grpc:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.inventory-grpc == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Inventory gRPC
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Inventory/Api/Inventory.Grpc/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/inventory-grpc:latest,${{ vars.DOCKERHUB_USERNAME }}/inventory-grpc:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/inventory-grpc:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/inventory-grpc:buildcache,mode=max
+
+  build-inventory-worker-consumer:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.inventory-worker-consumer == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Inventory Worker Consumer
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Inventory/Worker/Inventory.Worker.Consumer/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/inventory-worker-consumer:latest,${{ vars.DOCKERHUB_USERNAME }}/inventory-worker-consumer:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/inventory-worker-consumer:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/inventory-worker-consumer:buildcache,mode=max
+
+  build-inventory-worker-outbox:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.inventory-worker-outbox == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Inventory Worker Outbox
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Inventory/Worker/Inventory.Worker.Outbox/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/inventory-worker-outbox:latest,${{ vars.DOCKERHUB_USERNAME }}/inventory-worker-outbox:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/inventory-worker-outbox:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/inventory-worker-outbox:buildcache,mode=max
+
+  # Notification Service Jobs
+  build-notification-api:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.notification-api == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Notification API
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Notification/Api/Notification.Api/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/notification-api:latest,${{ vars.DOCKERHUB_USERNAME }}/notification-api:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/notification-api:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/notification-api:buildcache,mode=max
+
+  build-notification-worker-consumer:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.notification-worker-consumer == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Notification Worker Consumer
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Notification/Worker/Notification.Worker.Consumer/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/notification-worker-consumer:latest,${{ vars.DOCKERHUB_USERNAME }}/notification-worker-consumer:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/notification-worker-consumer:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/notification-worker-consumer:buildcache,mode=max
+
+  build-notification-worker-processor:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.notification-worker-processor == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Notification Worker Processor
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Notification/Worker/Notification.Worker.Processor/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/notification-worker-processor:latest,${{ vars.DOCKERHUB_USERNAME }}/notification-worker-processor:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/notification-worker-processor:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/notification-worker-processor:buildcache,mode=max
+
+  # Order Service Jobs
+  build-order-api:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.order-api == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Order API
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Order/Api/Order.Api/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/order-api:latest,${{ vars.DOCKERHUB_USERNAME }}/order-api:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/order-api:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/order-api:buildcache,mode=max
+
+  build-order-grpc:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.order-grpc == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Order gRPC
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Order/Api/Order.Grpc/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/order-grpc:latest,${{ vars.DOCKERHUB_USERNAME }}/order-grpc:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/order-grpc:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/order-grpc:buildcache,mode=max
+
+  build-order-worker-outbox:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.order-worker-outbox == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Order Worker Outbox
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Order/Worker/Order.Woker.Outbox/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/order-worker-outbox:latest,${{ vars.DOCKERHUB_USERNAME }}/order-worker-outbox:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/order-worker-outbox:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/order-worker-outbox:buildcache,mode=max
+
+  build-order-worker-consumer:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.order-worker-consumer == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Order Worker Consumer
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Order/Worker/Order.Worker.Consumer/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/order-worker-consumer:latest,${{ vars.DOCKERHUB_USERNAME }}/order-worker-consumer:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/order-worker-consumer:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/order-worker-consumer:buildcache,mode=max
+
+  # Report Service Jobs
+  build-report-api:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.report-api == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Report API
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Report/Api/Report.Api/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/report-api:latest,${{ vars.DOCKERHUB_USERNAME }}/report-api:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/report-api:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/report-api:buildcache,mode=max
+
+  build-report-grpc:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.report-grpc == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Report gRPC
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Report/Api/Report.Grpc/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/report-grpc:latest,${{ vars.DOCKERHUB_USERNAME }}/report-grpc:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/report-grpc:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/report-grpc:buildcache,mode=max
+
+  # Search Service Jobs
+  build-search-api:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.search-api == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Search API
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Search/Api/Search.Api/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/search-api:latest,${{ vars.DOCKERHUB_USERNAME }}/search-api:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/search-api:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/search-api:buildcache,mode=max
+
+  build-search-worker-consumer:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.search-worker-consumer == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Search Worker Consumer
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Services/Search/Worker/Search.Worker.Consumer/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/search-worker-consumer:latest,${{ vars.DOCKERHUB_USERNAME }}/search-worker-consumer:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/search-worker-consumer:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/search-worker-consumer:buildcache,mode=max
+
+  # Frontend Apps Jobs
+  build-app-admin:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.app-admin == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push App Admin
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Apps/App.Admin/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/app-admin:latest,${{ vars.DOCKERHUB_USERNAME }}/app-admin:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/app-admin:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/app-admin:buildcache,mode=max
+          build-args: |
+            VITE_KEYCLOAK_URL=${{ secrets.VITE_KEYCLOAK_URL }}
+            VITE_KEYCLOAK_REALM=${{ secrets.VITE_KEYCLOAK_REALM }}
+            VITE_KEYCLOAK_CLIENT_ID=${{ secrets.VITE_KEYCLOAK_CLIENT_ID }}
+            VITE_KEYCLOAK_REDIRECT_URI=${{ secrets.VITE_KEYCLOAK_REDIRECT_URI }}
+            VITE_KEYCLOAK_BASE_URL=${{ secrets.VITE_KEYCLOAK_BASE_URL }}
+            VITE_API_GATEWAY=${{ secrets.VITE_API_GATEWAY }}
+
+  build-app-store:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.app-store == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push App Store
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/Apps/App.Store/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/app-store:latest,${{ vars.DOCKERHUB_USERNAME }}/app-store:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/app-store:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/app-store:buildcache,mode=max
+          build-args: |
+            VITE_KEYCLOAK_URL=${{ secrets.VITE_KEYCLOAK_URL }}
+            VITE_KEYCLOAK_REALM=${{ secrets.VITE_KEYCLOAK_REALM }}
+            VITE_KEYCLOAK_CLIENT_ID=${{ secrets.VITE_KEYCLOAK_CLIENT_ID }}
+            VITE_KEYCLOAK_REDIRECT_URI=${{ secrets.VITE_KEYCLOAK_REDIRECT_URI }}
+            VITE_KEYCLOAK_BASE_URL=${{ secrets.VITE_KEYCLOAK_BASE_URL }}
+            VITE_API_GATEWAY=${{ secrets.VITE_API_GATEWAY }}
+
+  # Infrastructure Jobs
+  build-api-gateway:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.api-gateway == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push API Gateway
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/ApiGateway/YarpApiGateway/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/api-gateway:latest,${{ vars.DOCKERHUB_USERNAME }}/api-gateway:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/api-gateway:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/api-gateway:buildcache,mode=max
+
+  build-job-orchestrator:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.job-orchestrator == 'true'
+    runs-on: ubuntu-latest
+    environment: Prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Job Orchestrator
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./src/JobOrchestrator/App.Job/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/job-orchestrator:latest,${{ vars.DOCKERHUB_USERNAME }}/job-orchestrator:${{ github.sha }}
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/job-orchestrator:buildcache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/job-orchestrator:buildcache,mode=max
+

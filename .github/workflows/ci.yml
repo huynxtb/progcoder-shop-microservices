@@ -83,14 +83,49 @@ jobs:
       needs.detect-changes.outputs.shared == 'true'
     uses: ./.github/workflows/build-services.yml
     with:
-      build-catalog: ${{ needs.detect-changes.outputs.catalog == 'true' || needs.detect-changes.outputs.shared == 'true' }}
-      build-basket: ${{ needs.detect-changes.outputs.basket == 'true' || needs.detect-changes.outputs.shared == 'true' }}
-      build-order: ${{ needs.detect-changes.outputs.order == 'true' || needs.detect-changes.outputs.shared == 'true' }}
-      build-discount: ${{ needs.detect-changes.outputs.discount == 'true' || needs.detect-changes.outputs.shared == 'true' }}
-      build-inventory: ${{ needs.detect-changes.outputs.inventory == 'true' || needs.detect-changes.outputs.shared == 'true' }}
-      build-notification: ${{ needs.detect-changes.outputs.notification == 'true' || needs.detect-changes.outputs.shared == 'true' }}
-      build-search: ${{ needs.detect-changes.outputs.search == 'true' || needs.detect-changes.outputs.shared == 'true' }}
-      build-report: ${{ needs.detect-changes.outputs.report == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      # Basket Service
+      build-basket-api: ${{ needs.detect-changes.outputs.basket == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-basket-worker-outbox: ${{ needs.detect-changes.outputs.basket == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      
+      # Catalog Service
+      build-catalog-api: ${{ needs.detect-changes.outputs.catalog == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-catalog-grpc: ${{ needs.detect-changes.outputs.catalog == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-catalog-worker-outbox: ${{ needs.detect-changes.outputs.catalog == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-catalog-worker-consumer: ${{ needs.detect-changes.outputs.catalog == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      
+      # Communication Service
+      build-communication-api: ${{ needs.detect-changes.outputs.shared == 'true' }}
+      
+      # Discount Service
+      build-discount-api: ${{ needs.detect-changes.outputs.discount == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-discount-grpc: ${{ needs.detect-changes.outputs.discount == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      
+      # Inventory Service
+      build-inventory-api: ${{ needs.detect-changes.outputs.inventory == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-inventory-grpc: ${{ needs.detect-changes.outputs.inventory == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-inventory-worker-consumer: ${{ needs.detect-changes.outputs.inventory == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-inventory-worker-outbox: ${{ needs.detect-changes.outputs.inventory == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      
+      # Notification Service
+      build-notification-api: ${{ needs.detect-changes.outputs.notification == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-notification-worker-consumer: ${{ needs.detect-changes.outputs.notification == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-notification-worker-processor: ${{ needs.detect-changes.outputs.notification == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      
+      # Order Service
+      build-order-api: ${{ needs.detect-changes.outputs.order == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-order-grpc: ${{ needs.detect-changes.outputs.order == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-order-worker-outbox: ${{ needs.detect-changes.outputs.order == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-order-worker-consumer: ${{ needs.detect-changes.outputs.order == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      
+      # Report Service
+      build-report-api: ${{ needs.detect-changes.outputs.report == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-report-grpc: ${{ needs.detect-changes.outputs.report == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      
+      # Search Service
+      build-search-api: ${{ needs.detect-changes.outputs.search == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      build-search-worker-consumer: ${{ needs.detect-changes.outputs.search == 'true' || needs.detect-changes.outputs.shared == 'true' }}
+      
+      # Infrastructure
       build-api-gateway: ${{ needs.detect-changes.outputs.api-gateway == 'true' || needs.detect-changes.outputs.shared == 'true' }}
       build-job-orchestrator: ${{ needs.detect-changes.outputs.job-orchestrator == 'true' || needs.detect-changes.outputs.shared == 'true' }}
 

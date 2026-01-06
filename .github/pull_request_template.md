@@ -86,12 +86,10 @@ Recommended:
 
 ### API Changes (if any)
 ```json
-// Request example
 
 ```
 
 ```json
-// Response example
 
 ```
 

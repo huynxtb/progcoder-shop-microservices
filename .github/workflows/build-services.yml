@@ -3,30 +3,97 @@ name: Build .NET Services
 on:
   workflow_call:
     inputs:
-      build-catalog:
+      # Basket Service
+      build-basket-api:
         required: true
         type: boolean
-      build-basket:
+      build-basket-worker-outbox:
         required: true
         type: boolean
-      build-order:
+      
+      # Catalog Service
+      build-catalog-api:
         required: true
         type: boolean
-      build-discount:
+      build-catalog-grpc:
         required: true
         type: boolean
-      build-inventory:
+      build-catalog-worker-outbox:
         required: true
         type: boolean
-      build-notification:
+      build-catalog-worker-consumer:
         required: true
         type: boolean
-      build-search:
+      
+      # Communication Service
+      build-communication-api:
         required: true
         type: boolean
-      build-report:
+      
+      # Discount Service
+      build-discount-api:
         required: true
         type: boolean
+      build-discount-grpc:
+        required: true
+        type: boolean
+      
+      # Inventory Service
+      build-inventory-api:
+        required: true
+        type: boolean
+      build-inventory-grpc:
+        required: true
+        type: boolean
+      build-inventory-worker-consumer:
+        required: true
+        type: boolean
+      build-inventory-worker-outbox:
+        required: true
+        type: boolean
+      
+      # Notification Service
+      build-notification-api:
+        required: true
+        type: boolean
+      build-notification-worker-consumer:
+        required: true
+        type: boolean
+      build-notification-worker-processor:
+        required: true
+        type: boolean
+      
+      # Order Service
+      build-order-api:
+        required: true
+        type: boolean
+      build-order-grpc:
+        required: true
+        type: boolean
+      build-order-worker-outbox:
+        required: true
+        type: boolean
+      build-order-worker-consumer:
+        required: true
+        type: boolean
+      
+      # Report Service
+      build-report-api:
+        required: true
+        type: boolean
+      build-report-grpc:
+        required: true
+        type: boolean
+      
+      # Search Service
+      build-search-api:
+        required: true
+        type: boolean
+      build-search-worker-consumer:
+        required: true
+        type: boolean
+      
+      # Infrastructure
       build-api-gateway:
         required: true
         type: boolean
@@ -34,54 +101,23 @@ on:
         required: true
         type: boolean
 
+env:
+  DOTNET_VERSION: '8.x'
+
 jobs:
-  build-catalog-service:
-    name: Build Catalog Service
-    if: inputs.build-catalog == true
+  # Basket Service Jobs
+  build-basket-api:
+    name: Build Basket API
+    if: inputs.build-basket-api == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup .NET 8
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.x'
-
-      - name: Cache NuGet packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Restore dependencies
-        run: dotnet restore src/Services/Catalog/Api/Catalog.Api/Catalog.Api.csproj
-
-      - name: Build Catalog.Api
-        run: dotnet build src/Services/Catalog/Api/Catalog.Api/Catalog.Api.csproj --configuration Release --no-restore
-
-      - name: Build Catalog.Grpc
-        run: dotnet build src/Services/Catalog/Api/Catalog.Grpc/Catalog.Grpc.csproj --configuration Release --no-restore
-
-      - name: Build Catalog Workers
-        run: |
-          dotnet build src/Services/Catalog/Worker/Catalog.Worker.Outbox/Catalog.Worker.Outbox.csproj --configuration Release --no-restore
-          dotnet build src/Services/Catalog/Worker/Catalog.Worker.Consumer/Catalog.Worker.Consumer.csproj --configuration Release --no-restore
-
-  build-basket-service:
-    name: Build Basket Service
-    if: inputs.build-basket == true
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup .NET 8
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Cache NuGet packages
         uses: actions/cache@v4
@@ -97,21 +133,18 @@ jobs:
       - name: Build Basket.Api
         run: dotnet build src/Services/Basket/Api/Basket.Api/Basket.Api.csproj --configuration Release --no-restore
 
-      - name: Build Basket Worker
-        run: dotnet build src/Services/Basket/Worker/Basket.Worker.Outbox/Basket.Worker.Outbox.csproj --configuration Release --no-restore
-
-  build-order-service:
-    name: Build Order Service
-    if: inputs.build-order == true
+  build-basket-worker-outbox:
+    name: Build Basket Worker Outbox
+    if: inputs.build-basket-worker-outbox == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup .NET 8
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Cache NuGet packages
         uses: actions/cache@v4
@@ -122,28 +155,161 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Restore dependencies
-        run: dotnet restore src/Services/Order/Api/Order.Api/Order.Api.csproj
+        run: dotnet restore src/Services/Basket/Worker/Basket.Worker.Outbox/Basket.Worker.Outbox.csproj
 
-      - name: Build Order.Api
-        run: dotnet build src/Services/Order/Api/Order.Api/Order.Api.csproj --configuration Release --no-restore
+      - name: Build Basket.Worker.Outbox
+        run: dotnet build src/Services/Basket/Worker/Basket.Worker.Outbox/Basket.Worker.Outbox.csproj --configuration Release --no-restore
 
-      - name: Build Order Workers
-        run: |
-          dotnet build src/Services/Order/Worker/Order.Worker.Outbox/Order.Worker.Outbox.csproj --configuration Release --no-restore
-          dotnet build src/Services/Order/Worker/Order.Worker.Consumer/Order.Worker.Consumer.csproj --configuration Release --no-restore
-
-  build-discount-service:
-    name: Build Discount Service
-    if: inputs.build-discount == true
+  # Catalog Service Jobs
+  build-catalog-api:
+    name: Build Catalog API
+    if: inputs.build-catalog-api == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup .NET 8
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Catalog/Api/Catalog.Api/Catalog.Api.csproj
+
+      - name: Build Catalog.Api
+        run: dotnet build src/Services/Catalog/Api/Catalog.Api/Catalog.Api.csproj --configuration Release --no-restore
+
+  build-catalog-grpc:
+    name: Build Catalog gRPC
+    if: inputs.build-catalog-grpc == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Catalog/Api/Catalog.Grpc/Catalog.Grpc.csproj
+
+      - name: Build Catalog.Grpc
+        run: dotnet build src/Services/Catalog/Api/Catalog.Grpc/Catalog.Grpc.csproj --configuration Release --no-restore
+
+  build-catalog-worker-outbox:
+    name: Build Catalog Worker Outbox
+    if: inputs.build-catalog-worker-outbox == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Catalog/Worker/Catalog.Woker.Outbox/Catalog.Woker.Outbox.csproj
+
+      - name: Build Catalog.Worker.Outbox
+        run: dotnet build src/Services/Catalog/Worker/Catalog.Woker.Outbox/Catalog.Woker.Outbox.csproj --configuration Release --no-restore
+
+  build-catalog-worker-consumer:
+    name: Build Catalog Worker Consumer
+    if: inputs.build-catalog-worker-consumer == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Catalog/Worker/Catalog.Worker.Consumer/Catalog.Worker.Consumer.csproj
+
+      - name: Build Catalog.Worker.Consumer
+        run: dotnet build src/Services/Catalog/Worker/Catalog.Worker.Consumer/Catalog.Worker.Consumer.csproj --configuration Release --no-restore
+
+  # Communication Service Jobs
+  build-communication-api:
+    name: Build Communication API
+    if: inputs.build-communication-api == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Communication/Api/Communication.Api/Communication.Api.csproj
+
+      - name: Build Communication.Api
+        run: dotnet build src/Services/Communication/Api/Communication.Api/Communication.Api.csproj --configuration Release --no-restore
+
+  # Discount Service Jobs
+  build-discount-api:
+    name: Build Discount API
+    if: inputs.build-discount-api == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Cache NuGet packages
         uses: actions/cache@v4
@@ -159,21 +325,46 @@ jobs:
       - name: Build Discount.Api
         run: dotnet build src/Services/Discount/Api/Discount.Api/Discount.Api.csproj --configuration Release --no-restore
 
-      - name: Build Discount.Grpc
-        run: dotnet build src/Services/Discount/Api/Discount.Grpc/Discount.Grpc.csproj --configuration Release --no-restore
-
-  build-inventory-service:
-    name: Build Inventory Service
-    if: inputs.build-inventory == true
+  build-discount-grpc:
+    name: Build Discount gRPC
+    if: inputs.build-discount-grpc == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup .NET 8
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Discount/Api/Discount.Grpc/Discount.Grpc.csproj
+
+      - name: Build Discount.Grpc
+        run: dotnet build src/Services/Discount/Api/Discount.Grpc/Discount.Grpc.csproj --configuration Release --no-restore
+
+  # Inventory Service Jobs
+  build-inventory-api:
+    name: Build Inventory API
+    if: inputs.build-inventory-api == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Cache NuGet packages
         uses: actions/cache@v4
@@ -189,21 +380,100 @@ jobs:
       - name: Build Inventory.Api
         run: dotnet build src/Services/Inventory/Api/Inventory.Api/Inventory.Api.csproj --configuration Release --no-restore
 
-      - name: Build Inventory Worker
-        run: dotnet build src/Services/Inventory/Worker/Inventory.Worker.Outbox/Inventory.Worker.Outbox.csproj --configuration Release --no-restore
-
-  build-notification-service:
-    name: Build Notification Service
-    if: inputs.build-notification == true
+  build-inventory-grpc:
+    name: Build Inventory gRPC
+    if: inputs.build-inventory-grpc == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup .NET 8
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Inventory/Api/Inventory.Grpc/Inventory.Grpc.csproj
+
+      - name: Build Inventory.Grpc
+        run: dotnet build src/Services/Inventory/Api/Inventory.Grpc/Inventory.Grpc.csproj --configuration Release --no-restore
+
+  build-inventory-worker-consumer:
+    name: Build Inventory Worker Consumer
+    if: inputs.build-inventory-worker-consumer == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Inventory/Worker/Inventory.Worker.Consumer/Inventory.Worker.Consumer.csproj
+
+      - name: Build Inventory.Worker.Consumer
+        run: dotnet build src/Services/Inventory/Worker/Inventory.Worker.Consumer/Inventory.Worker.Consumer.csproj --configuration Release --no-restore
+
+  build-inventory-worker-outbox:
+    name: Build Inventory Worker Outbox
+    if: inputs.build-inventory-worker-outbox == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Inventory/Worker/Inventory.Worker.Outbox/Inventory.Worker.Outbox.csproj
+
+      - name: Build Inventory.Worker.Outbox
+        run: dotnet build src/Services/Inventory/Worker/Inventory.Worker.Outbox/Inventory.Worker.Outbox.csproj --configuration Release --no-restore
+
+  # Notification Service Jobs
+  build-notification-api:
+    name: Build Notification API
+    if: inputs.build-notification-api == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Cache NuGet packages
         uses: actions/cache@v4
@@ -219,23 +489,18 @@ jobs:
       - name: Build Notification.Api
         run: dotnet build src/Services/Notification/Api/Notification.Api/Notification.Api.csproj --configuration Release --no-restore
 
-      - name: Build Notification Workers
-        run: |
-          dotnet build src/Services/Notification/Worker/Notification.Worker.Consumer/Notification.Worker.Consumer.csproj --configuration Release --no-restore
-          dotnet build src/Services/Notification/Worker/Notification.Worker.Processor/Notification.Worker.Processor.csproj --configuration Release --no-restore
-
-  build-search-service:
-    name: Build Search Service
-    if: inputs.build-search == true
+  build-notification-worker-consumer:
+    name: Build Notification Worker Consumer
+    if: inputs.build-notification-worker-consumer == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup .NET 8
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Cache NuGet packages
         uses: actions/cache@v4
@@ -246,26 +511,160 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Restore dependencies
-        run: dotnet restore src/Services/Search/Api/Search.Api/Search.Api.csproj
+        run: dotnet restore src/Services/Notification/Worker/Notification.Worker.Consumer/Notification.Worker.Consumer.csproj
 
-      - name: Build Search.Api
-        run: dotnet build src/Services/Search/Api/Search.Api/Search.Api.csproj --configuration Release --no-restore
+      - name: Build Notification.Worker.Consumer
+        run: dotnet build src/Services/Notification/Worker/Notification.Worker.Consumer/Notification.Worker.Consumer.csproj --configuration Release --no-restore
 
-      - name: Build Search Worker
-        run: dotnet build src/Services/Search/Worker/Search.Worker.Consumer/Search.Worker.Consumer.csproj --configuration Release --no-restore
-
-  build-report-service:
-    name: Build Report Service
-    if: inputs.build-report == true
+  build-notification-worker-processor:
+    name: Build Notification Worker Processor
+    if: inputs.build-notification-worker-processor == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup .NET 8
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Notification/Worker/Notification.Worker.Processor/Notification.Worker.Processor.csproj
+
+      - name: Build Notification.Worker.Processor
+        run: dotnet build src/Services/Notification/Worker/Notification.Worker.Processor/Notification.Worker.Processor.csproj --configuration Release --no-restore
+
+  # Order Service Jobs
+  build-order-api:
+    name: Build Order API
+    if: inputs.build-order-api == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Order/Api/Order.Api/Order.Api.csproj
+
+      - name: Build Order.Api
+        run: dotnet build src/Services/Order/Api/Order.Api/Order.Api.csproj --configuration Release --no-restore
+
+  build-order-grpc:
+    name: Build Order gRPC
+    if: inputs.build-order-grpc == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Order/Api/Order.Grpc/Order.Grpc.csproj
+
+      - name: Build Order.Grpc
+        run: dotnet build src/Services/Order/Api/Order.Grpc/Order.Grpc.csproj --configuration Release --no-restore
+
+  build-order-worker-outbox:
+    name: Build Order Worker Outbox
+    if: inputs.build-order-worker-outbox == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Order/Worker/Order.Woker.Outbox/Order.Woker.Outbox.csproj
+
+      - name: Build Order.Worker.Outbox
+        run: dotnet build src/Services/Order/Worker/Order.Woker.Outbox/Order.Woker.Outbox.csproj --configuration Release --no-restore
+
+  build-order-worker-consumer:
+    name: Build Order Worker Consumer
+    if: inputs.build-order-worker-consumer == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Order/Worker/Order.Worker.Consumer/Order.Worker.Consumer.csproj
+
+      - name: Build Order.Worker.Consumer
+        run: dotnet build src/Services/Order/Worker/Order.Worker.Consumer/Order.Worker.Consumer.csproj --configuration Release --no-restore
+
+  # Report Service Jobs
+  build-report-api:
+    name: Build Report API
+    if: inputs.build-report-api == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Cache NuGet packages
         uses: actions/cache@v4
@@ -281,6 +680,89 @@ jobs:
       - name: Build Report.Api
         run: dotnet build src/Services/Report/Api/Report.Api/Report.Api.csproj --configuration Release --no-restore
 
+  build-report-grpc:
+    name: Build Report gRPC
+    if: inputs.build-report-grpc == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Report/Api/Report.Grpc/Report.Grpc.csproj
+
+      - name: Build Report.Grpc
+        run: dotnet build src/Services/Report/Api/Report.Grpc/Report.Grpc.csproj --configuration Release --no-restore
+
+  # Search Service Jobs
+  build-search-api:
+    name: Build Search API
+    if: inputs.build-search-api == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Search/Api/Search.Api/Search.Api.csproj
+
+      - name: Build Search.Api
+        run: dotnet build src/Services/Search/Api/Search.Api/Search.Api.csproj --configuration Release --no-restore
+
+  build-search-worker-consumer:
+    name: Build Search Worker Consumer
+    if: inputs.build-search-worker-consumer == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore src/Services/Search/Worker/Search.Worker.Consumer/Search.Worker.Consumer.csproj
+
+      - name: Build Search.Worker.Consumer
+        run: dotnet build src/Services/Search/Worker/Search.Worker.Consumer/Search.Worker.Consumer.csproj --configuration Release --no-restore
+
+  # Infrastructure Jobs
   build-api-gateway:
     name: Build API Gateway
     if: inputs.build-api-gateway == true
@@ -289,10 +771,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup .NET 8
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Cache NuGet packages
         uses: actions/cache@v4
@@ -316,10 +798,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup .NET 8
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Cache NuGet packages
         uses: actions/cache@v4
@@ -334,4 +816,3 @@ jobs:
 
       - name: Build Job Orchestrator
         run: dotnet build src/JobOrchestrator/App.Job/App.Job.csproj --configuration Release --no-restore
-
