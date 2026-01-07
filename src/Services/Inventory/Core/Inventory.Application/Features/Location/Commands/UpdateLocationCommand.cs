@@ -1,6 +1,6 @@
 #region using
 
-using Inventory.Application.Data;
+using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Application.Dtos.Locations;
 using Inventory.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -39,23 +39,23 @@ public sealed class UpdateLocationCommandValidator : AbstractValidator<UpdateLoc
     #endregion
 }
 
-public sealed class UpdateLocationCommandHandler(IApplicationDbContext dbContext) 
+public sealed class UpdateLocationCommandHandler(IUnitOfWork unitOfWork) 
     : ICommandHandler<UpdateLocationCommand, Guid>
 {
     #region Implementations
 
     public async Task<Guid> Handle(UpdateLocationCommand command, CancellationToken cancellationToken)
     {
-        var entity = await dbContext.Locations
-            .SingleOrDefaultAsync(x => x.Id == command.LocationId, cancellationToken)
+        var entity = await unitOfWork.Locations
+            .FirstOrDefaultAsync(x => x.Id == command.LocationId, cancellationToken)
             ?? throw new NotFoundException(MessageCode.ResourceNotFound);
 
         entity.Update(
             location: command.Dto.Location!,
             performBy: command.Actor.ToString());
 
-        dbContext.Locations.Update(entity);
-        await dbContext.SaveChangesAsync(cancellationToken);
+        unitOfWork.Locations.Update(entity);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return entity.Id;
     }

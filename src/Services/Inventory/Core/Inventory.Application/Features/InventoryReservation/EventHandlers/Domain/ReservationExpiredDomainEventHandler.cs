@@ -1,7 +1,7 @@
 #region using
 
 using EventSourcing.Events.Inventories;
-using Inventory.Application.Data;
+using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Domain.Entities;
 using Inventory.Domain.Events;
 using MediatR;
@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 namespace Inventory.Application.Features.InventoryReservation.EventHandlers.Domain;
 
 public sealed class ReservationExpiredDomainEventHandler(
-    IApplicationDbContext dbContext,
+    IUnitOfWork unitOfWork,
     ILogger<ReservationExpiredDomainEventHandler> logger) : INotificationHandler<ReservationExpiredDomainEvent>
 {
     #region Implementations
@@ -40,7 +40,7 @@ public sealed class ReservationExpiredDomainEventHandler(
             message: message,
             performBy: Actor.System(AppConstants.Service.Inventory).ToString());
 
-        await dbContext.InventoryHistories.AddAsync(history, cancellationToken);
+        await unitOfWork.InventoryHistories.AddAsync(history, cancellationToken);
     }
 
     private async Task PushToOutboxAsync(ReservationExpiredDomainEvent @event, CancellationToken cancellationToken)
@@ -61,7 +61,7 @@ public sealed class ReservationExpiredDomainEventHandler(
             content: JsonConvert.SerializeObject(message),
             occurredOnUtc: DateTimeOffset.UtcNow);
 
-        await dbContext.OutboxMessages.AddAsync(outboxMessage, cancellationToken);
+        await unitOfWork.OutboxMessages.AddAsync(outboxMessage, cancellationToken);
     }
 
     #endregion

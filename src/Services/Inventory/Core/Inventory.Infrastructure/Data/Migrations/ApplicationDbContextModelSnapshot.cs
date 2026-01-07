@@ -20,6 +20,42 @@ namespace Inventory.Infrastructure.Data.Migrations
                 .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("Inventory.Domain.Entities.InboxMessageEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("content");
+
+                    b.Property<string>("EventType")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("event_type");
+
+                    b.Property<string>("LastErrorMessage")
+                        .HasColumnType("longtext")
+                        .HasColumnName("last_error_message");
+
+                    b.Property<DateTimeOffset?>("ProcessedOnUtc")
+                        .HasColumnType("datetime")
+                        .HasColumnName("processed_on_utc");
+
+                    b.Property<DateTimeOffset>("ReceivedOnUtc")
+                        .HasColumnType("datetime")
+                        .HasColumnName("received_on_utc");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProcessedOnUtc");
+
+                    b.ToTable("inbox_messages", (string)null);
+                });
+
             modelBuilder.Entity("Inventory.Domain.Entities.InventoryHistoryEntity", b =>
                 {
                     b.Property<Guid>("Id")

@@ -1,7 +1,7 @@
-﻿#region using
+#region using
 
 using AutoMapper;
-using Inventory.Application.Data;
+using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Application.Models.Results;
 using Microsoft.EntityFrameworkCore;
@@ -13,18 +13,14 @@ namespace Inventory.Application.Features.InventoryItemHistory.Queries;
 public sealed record GetAllHistoriesQuery : IQuery<GetAllHistoriesResult>;
 
 public sealed class GetAllHistoriesQueryHandler(
-    IApplicationDbContext dbContext,
+    IUnitOfWork unitOfWork,
     IMapper mapper) : IQueryHandler<GetAllHistoriesQuery, GetAllHistoriesResult>
 {
     #region Implementations
 
     public async Task<GetAllHistoriesResult> Handle(GetAllHistoriesQuery query, CancellationToken cancellationToken)
     {
-        var result = await dbContext.InventoryHistories
-            .AsNoTracking()
-            .OrderByDescending(x => x.CreatedOnUtc)
-            .ToListAsync(cancellationToken);
-
+        var result = await unitOfWork.InventoryHistories.GetAllAsync(cancellationToken);
         var items = mapper.Map<List<InventoryHistoryDto>>(result);
         var response = new GetAllHistoriesResult(items);
 

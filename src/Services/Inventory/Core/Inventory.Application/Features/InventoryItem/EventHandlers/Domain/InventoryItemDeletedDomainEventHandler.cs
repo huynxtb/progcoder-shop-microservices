@@ -1,7 +1,7 @@
-﻿#region using
+#region using
 
 using EventSourcing.Events.Inventories;
-using Inventory.Application.Data;
+using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Domain.Entities;
 using Inventory.Domain.Enums;
 using Inventory.Domain.Events;
@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 namespace Inventory.Application.Features.InventoryItem.EventHandlers.Domain;
 
 public sealed class InventoryItemDeletedDomainEventHandler(
-    IApplicationDbContext dbContext,
+    IUnitOfWork unitOfWork,
     ILogger<InventoryItemDeletedDomainEventHandler> logger) : INotificationHandler<InventoryItemDeletedDomainEvent>
 {
     #region Implementations
@@ -48,7 +48,7 @@ public sealed class InventoryItemDeletedDomainEventHandler(
             content: JsonConvert.SerializeObject(message),
             occurredOnUtc: DateTimeOffset.UtcNow);
 
-        await dbContext.OutboxMessages.AddAsync(outboxMessage, cancellationToken);
+        await unitOfWork.OutboxMessages.AddAsync(outboxMessage, cancellationToken);
     }
 
     private async Task LogHistoryAsync(InventoryItemDeletedDomainEvent @event, CancellationToken cancellationToken)
@@ -57,7 +57,7 @@ public sealed class InventoryItemDeletedDomainEventHandler(
             message: $"Product {@event.Inventory.Product.Name} has been deleted from warehouse",
             performBy: Actor.System(AppConstants.Service.Inventory).ToString());
 
-        await dbContext.InventoryHistories.AddAsync(history, cancellationToken);
+        await unitOfWork.InventoryHistories.AddAsync(history, cancellationToken);
     }
 
     #endregion

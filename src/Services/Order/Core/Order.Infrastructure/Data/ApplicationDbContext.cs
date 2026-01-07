@@ -26,6 +26,8 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
 
     public DbSet<OutboxMessageEntity> OutboxMessages => Set<OutboxMessageEntity>();
 
+    public DbSet<InboxMessageEntity> InboxMessages => Set<InboxMessageEntity>();
+
 
     #endregion
 

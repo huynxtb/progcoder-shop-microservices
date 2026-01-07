@@ -1,6 +1,6 @@
 #region using
 
-using Inventory.Application.Data;
+using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -25,19 +25,18 @@ public sealed class DeleteLocationCommandValidator : AbstractValidator<DeleteLoc
     #endregion
 }
 
-public sealed class DeleteLocationCommandHandler(IApplicationDbContext dbContext) 
+public sealed class DeleteLocationCommandHandler(IUnitOfWork unitOfWork) 
     : ICommandHandler<DeleteLocationCommand, Unit>
 {
     #region Implementations
 
     public async Task<Unit> Handle(DeleteLocationCommand command, CancellationToken cancellationToken)
     {
-        var entity = await dbContext.Locations
-            .SingleOrDefaultAsync(x => x.Id == command.LocationId, cancellationToken)
+        var entity = await unitOfWork.Locations
+            .FirstOrDefaultAsync(x => x.Id == command.LocationId, cancellationToken)
             ?? throw new NotFoundException(MessageCode.ResourceNotFound);
 
-        // Check if location is being used by any inventory items
-        var isInUse = await dbContext.InventoryItems
+        var isInUse = await unitOfWork.InventoryItems
             .AnyAsync(x => x.LocationId == command.LocationId, cancellationToken);
 
         if (isInUse)
@@ -45,8 +44,8 @@ public sealed class DeleteLocationCommandHandler(IApplicationDbContext dbContext
             throw new ClientValidationException(MessageCode.BadRequest, command.LocationId);
         }
 
-        dbContext.Locations.Remove(entity);
-        await dbContext.SaveChangesAsync(cancellationToken);
+        unitOfWork.Locations.Remove(entity);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }

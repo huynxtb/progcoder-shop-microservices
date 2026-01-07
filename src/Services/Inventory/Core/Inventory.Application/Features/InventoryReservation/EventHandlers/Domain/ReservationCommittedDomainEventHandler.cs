@@ -1,6 +1,6 @@
 #region using
 
-using Inventory.Application.Data;
+using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Domain.Entities;
 using Inventory.Domain.Events;
 using MediatR;
@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 namespace Inventory.Application.Features.InventoryReservation.EventHandlers.Domain;
 
 public sealed class ReservationCommittedDomainEventHandler(
-    IApplicationDbContext dbContext,
+    IUnitOfWork unitOfWork,
     ILogger<ReservationCommittedDomainEventHandler> logger) : INotificationHandler<ReservationCommittedDomainEvent>
 {
     #region Implementations
@@ -38,7 +38,7 @@ public sealed class ReservationCommittedDomainEventHandler(
             message: message,
             performBy: Actor.System(AppConstants.Service.Inventory).ToString());
 
-        await dbContext.InventoryHistories.AddAsync(history, cancellationToken);
+        await unitOfWork.InventoryHistories.AddAsync(history, cancellationToken);
     }
 
     #endregion

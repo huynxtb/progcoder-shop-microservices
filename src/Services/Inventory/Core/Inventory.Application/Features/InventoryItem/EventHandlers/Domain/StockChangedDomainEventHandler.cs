@@ -1,8 +1,8 @@
-﻿#region using
+#region using
 
 using BuildingBlocks.Abstractions.ValueObjects;
 using EventSourcing.Events.Inventories;
-using Inventory.Application.Data;
+using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Domain.Entities;
 using Inventory.Domain.Enums;
@@ -18,7 +18,7 @@ using System.Threading;
 namespace Inventory.Application.Features.InventoryItem.EventHandlers.Domain;
 
 public sealed class StockChangedDomainEventHandler(
-    IApplicationDbContext dbContext,
+    IUnitOfWork unitOfWork,
     ILogger<StockChangedDomainEventHandler> logger) : INotificationHandler<StockChangedDomainEvent>
 {
     #region Implementations
@@ -52,7 +52,7 @@ public sealed class StockChangedDomainEventHandler(
             content: JsonConvert.SerializeObject(message),
             occurredOnUtc: DateTimeOffset.UtcNow);
 
-        await dbContext.OutboxMessages.AddAsync(outboxMessage, cancellationToken);
+        await unitOfWork.OutboxMessages.AddAsync(outboxMessage, cancellationToken);
     }
 
     private async Task LogHistoryAsync(StockChangedDomainEvent @event, CancellationToken cancellationToken)
@@ -65,11 +65,11 @@ public sealed class StockChangedDomainEventHandler(
             
             InventoryChangeType.Increase => 
                 $"Increased {Math.Abs(@event.ChangeAmount)} units of product '{@event.ProductName}'. " +
-                $"\nQuantity: {@event.OldQuantity} → {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
+                $"\nQuantity: {@event.OldQuantity} ? {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
             
             InventoryChangeType.Decrease => 
                 $"Decreased {Math.Abs(@event.ChangeAmount)} units of product '{@event.ProductName}'. " +
-                $"\nQuantity: {@event.OldQuantity} → {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
+                $"\nQuantity: {@event.OldQuantity} ? {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
             
             InventoryChangeType.Reserve => 
                 $"Reserved {Math.Abs(@event.ChangeAmount)} units of product '{@event.ProductName}'. " +
@@ -81,15 +81,15 @@ public sealed class StockChangedDomainEventHandler(
             
             InventoryChangeType.Commit => 
                 $"Committed {Math.Abs(@event.ChangeAmount)} units of product '{@event.ProductName}'. " +
-                $"\nQuantity: {@event.OldQuantity} → {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
+                $"\nQuantity: {@event.OldQuantity} ? {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
             
             InventoryChangeType.Transfer => 
                 $"Transferred {Math.Abs(@event.ChangeAmount)} units of product '{@event.ProductName}'. " +
-                $"\nQuantity: {@event.OldQuantity} → {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
+                $"\nQuantity: {@event.OldQuantity} ? {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
             
             _ => 
                 $"Stock changed for product '{@event.ProductName}' by {Math.Abs(@event.ChangeAmount)} units. " +
-                $"\nQuantity: {@event.OldQuantity} → {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}"
+                $"\nQuantity: {@event.OldQuantity} ? {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}"
         };
 
         var history = InventoryHistoryEntity.Create(
@@ -97,7 +97,7 @@ public sealed class StockChangedDomainEventHandler(
             message: message, 
             performBy: Actor.System(AppConstants.Service.Inventory).ToString());
 
-        await dbContext.InventoryHistories.AddAsync(history, cancellationToken);
+        await unitOfWork.InventoryHistories.AddAsync(history, cancellationToken);
     }
 
     #endregion

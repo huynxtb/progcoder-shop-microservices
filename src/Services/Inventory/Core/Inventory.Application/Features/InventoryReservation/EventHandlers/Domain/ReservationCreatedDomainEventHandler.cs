@@ -1,7 +1,7 @@
 #region using
 
 using EventSourcing.Events.Inventories;
-using Inventory.Application.Data;
+using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Domain.Entities;
 using Inventory.Domain.Events;
 using MediatR;
@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 namespace Inventory.Application.Features.InventoryReservation.EventHandlers.Domain;
 
 public sealed class ReservationCreatedDomainEventHandler(
-    IApplicationDbContext dbContext,
+    IUnitOfWork unitOfWork,
     ILogger<ReservationCreatedDomainEventHandler> logger) : INotificationHandler<ReservationCreatedDomainEvent>
 {
     #region Implementations
@@ -39,7 +39,7 @@ public sealed class ReservationCreatedDomainEventHandler(
             message: message,
             performBy: Actor.System(AppConstants.Service.Inventory).ToString());
 
-        await dbContext.InventoryHistories.AddAsync(history, cancellationToken);
+        await unitOfWork.InventoryHistories.AddAsync(history, cancellationToken);
     }
 
     #endregion

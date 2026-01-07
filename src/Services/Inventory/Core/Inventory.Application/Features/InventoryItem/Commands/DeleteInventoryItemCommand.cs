@@ -1,6 +1,6 @@
 #region using
 
-using Inventory.Application.Data;
+using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -25,23 +25,34 @@ public sealed class DeleteInventoryItemCommandValidator : AbstractValidator<Dele
     #endregion
 }
 
-public sealed class DeleteInventoryItemCommandHandler(IApplicationDbContext dbContext) 
+public sealed class DeleteInventoryItemCommandHandler(IUnitOfWork unitOfWork) 
     : ICommandHandler<DeleteInventoryItemCommand, Unit>
 {
     #region Implementations
 
     public async Task<Unit> Handle(DeleteInventoryItemCommand command, CancellationToken cancellationToken)
     {
-        var entity = await dbContext.InventoryItems
-            .SingleOrDefaultAsync(x => x.Id == command.InventoryItemId, cancellationToken)
+        var transaction = await unitOfWork.BeginTransactionAsync(cancellationToken);
+
+        try
+        {
+            var entity = await unitOfWork.InventoryItems
+            .FirstOrDefaultAsync(x => x.Id == command.InventoryItemId, cancellationToken)
             ?? throw new NotFoundException(MessageCode.ResourceNotFound);
 
-        entity.Delete();
+            entity.Delete();
+            unitOfWork.InventoryItems.Remove(entity);
+            
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
 
-        dbContext.InventoryItems.Remove(entity);
-        await dbContext.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
+            return Unit.Value;
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync(cancellationToken);
+            throw;
+        }
     }
 
     #endregion

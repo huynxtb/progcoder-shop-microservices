@@ -23,6 +23,66 @@ namespace Order.Infrastructure.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Order.Domain.Entities.InboxMessageEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<int>("AttemptCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("attempt_count");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("content");
+
+                    b.Property<string>("EventType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("event_type");
+
+                    b.Property<string>("LastErrorMessage")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("last_error_message");
+
+                    b.Property<int>("MaxAttempts")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(3)
+                        .HasColumnName("max_attempts");
+
+                    b.Property<DateTimeOffset?>("NextAttemptOnUtc")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("next_attempt_on_utc");
+
+                    b.Property<DateTimeOffset?>("ProcessedOnUtc")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("processed_on_utc");
+
+                    b.Property<DateTimeOffset>("ReceivedOnUtc")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("received_on_utc");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventType");
+
+                    b.HasIndex("ProcessedOnUtc");
+
+                    b.HasIndex("ReceivedOnUtc");
+
+                    b.HasIndex("NextAttemptOnUtc", "ProcessedOnUtc", "AttemptCount");
+
+                    b.HasIndex("ProcessedOnUtc", "AttemptCount", "MaxAttempts");
+
+                    b.ToTable("inbox_messages", (string)null);
+                });
+
             modelBuilder.Entity("Order.Domain.Entities.OrderEntity", b =>
                 {
                     b.Property<Guid>("Id")

@@ -1,6 +1,6 @@
 #region using
 
-using Inventory.Application.Data;
+using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Application.Dtos.Locations;
 using Inventory.Domain.Entities;
 using BuildingBlocks.Abstractions.ValueObjects;
@@ -31,7 +31,7 @@ public sealed class CreateLocationCommandValidator : AbstractValidator<CreateLoc
     #endregion
 }
 
-public sealed class CreateLocationCommandHandler(IApplicationDbContext dbContext) 
+public sealed class CreateLocationCommandHandler(IUnitOfWork unitOfWork) 
     : ICommandHandler<CreateLocationCommand, Guid>
 {
     #region Implementations
@@ -39,15 +39,14 @@ public sealed class CreateLocationCommandHandler(IApplicationDbContext dbContext
     public async Task<Guid> Handle(CreateLocationCommand command, CancellationToken cancellationToken)
     {
         var dto = command.Dto;
-
         var locationId = Guid.NewGuid();
         var entity = LocationEntity.Create(
             id: locationId,
             location: dto.Location!,
             performBy: command.Actor.ToString());
 
-        await dbContext.Locations.AddAsync(entity, cancellationToken);
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await unitOfWork.Locations.AddAsync(entity, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return locationId;
     }

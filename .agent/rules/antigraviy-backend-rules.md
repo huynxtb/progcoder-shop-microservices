@@ -54,62 +54,42 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 ```
 
 ### Queries & Results
-**🚨 CRITICAL: NEVER return DTOs or nullable types directly. Use Result wrapper.**
+**🚨 NEVER return DTOs/nullable directly. Use Result wrapper.**
 
 ```csharp
-// ❌ WRONG
-public record GetQuery(Guid Id) : IQuery<ProductDto>;  // Direct DTO
-public record GetQuery(Guid Id) : IQuery<ProductDto?>; // Nullable
-
+// ❌ WRONG: public record GetQuery(Guid Id) : IQuery<ProductDto>;
 // ✅ CORRECT
 public record GetQuery(Guid Id) : IQuery<GetProductResult>;
-public sealed class GetProductResult 
-{ 
+public sealed class GetProductResult { 
     public ProductDto Item { get; init; } 
     public GetProductResult(ProductDto item) => Item = item;
 }
 
-// Handler
-public sealed class GetHandler(IRepository repo, IMapper map) : IQueryHandler<GetQuery, GetProductResult>
-{
-    public async Task<GetProductResult> Handle(GetQuery q, CancellationToken ct)
-    {
-        var entity = await repo.GetByIdAsync(q.Id, ct) 
-            ?? throw new NotFoundException(MessageCode.ProductNotFound);
+public sealed class GetHandler(IRepository repo, IMapper map) : IQueryHandler<GetQuery, GetProductResult> {
+    public async Task<GetProductResult> Handle(GetQuery q, CancellationToken ct) {
+        var entity = await repo.GetByIdAsync(q.Id, ct) ?? throw new NotFoundException(MessageCode.ProductNotFound);
         return new GetProductResult(map.Map<ProductDto>(entity));
     }
 }
 ```
-
-**Result Guidelines:**
-- Single item: `Item` property
-- Collections: `Items` property (or inherit `PaginationResult<T>`)
-- Place in `Application/Models/Results/`
-- Throw `NotFoundException` instead of returning null
 
 ---
 
 ## Domain Modeling
 
 ```csharp
-// Entity with Factory & Behavior
-public sealed class ProductEntity : Aggregate<Guid>
-{
+public sealed class ProductEntity : Aggregate<Guid> {
     public string? Name { get; set; }
     public decimal Price { get; set; }
-    public ProductStatus Status { get; set; }
 
-    public static ProductEntity Create(Guid id, string name, decimal price, string by)
-    {
-        return new ProductEntity
-        {
-            Id = id, Name = name, Price = price, Status = ProductStatus.OutOfStock,
+    public static ProductEntity Create(Guid id, string name, decimal price, string by) {
+        return new ProductEntity {
+            Id = id, Name = name, Price = price,
             CreatedBy = by, CreatedOnUtc = DateTimeOffset.UtcNow
         };
     }
 
-    public void UpdatePrice(decimal newPrice, string by)
-    {
+    public void UpdatePrice(decimal newPrice, string by) {
         if (newPrice < 0) throw new DomainException(MessageCode.InvalidPrice);
         Price = newPrice;
         LastModifiedBy = by;
@@ -119,6 +99,84 @@ public sealed class ProductEntity : Aggregate<Guid>
 
 // Domain Event
 public record UpsertedProductDomainEvent(Guid Id, string Name, decimal Price) : IDomainEvent;
+```
+
+---
+
+## Repository & UnitOfWork (EF Core Services Only)
+
+**🚨 CRITICAL:**
+1. **NEVER** use `IApplicationDbContext` in Application layer
+2. **ALWAYS** use `IUnitOfWork` → access repositories
+3. Methods with Include → `WithRelationship` suffix
+4. Read queries → `AsNoTracking()` in repo implementation
+
+```csharp
+// Domain - Generic Repository
+public interface IRepository<T> where T : class {
+    Task<T?> GetByIdAsync(Guid id, CancellationToken ct = default);
+    Task<IReadOnlyList<T>> GetAllAsync(CancellationToken ct = default);
+    Task<IReadOnlyList<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default);
+    Task AddAsync(T entity, CancellationToken ct = default);
+    void Update(T entity);
+}
+
+// Domain - Specific Repository (with Include methods)
+public interface IInventoryItemRepository : IRepository<InventoryItemEntity> {
+    Task<List<InventoryItemEntity>> GetAllWithRelationshipAsync(CancellationToken ct = default);
+    Task<List<InventoryItemEntity>> FindByProductWithRelationshipAsync(Guid productId, CancellationToken ct = default);
+}
+
+// Infrastructure - Implementation
+public class Repository<T>(ApplicationDbContext ctx) : IRepository<T> where T : class {
+    protected readonly DbSet<T> _dbSet = ctx.Set<T>();
+    public virtual async Task<IReadOnlyList<T>> GetAllAsync(CancellationToken ct = default) 
+        => await _dbSet.AsNoTracking().ToListAsync(ct);
+}
+
+public class InventoryItemRepository(ApplicationDbContext ctx) : Repository<InventoryItemEntity>(ctx), IInventoryItemRepository {
+    public async Task<List<InventoryItemEntity>> GetAllWithRelationshipAsync(CancellationToken ct = default)
+        => await _dbSet.AsNoTracking().Include(x => x.Location).ToListAsync(ct);
+}
+
+// Domain - UnitOfWork
+public interface IUnitOfWork : IDisposable {
+    IInventoryItemRepository InventoryItems { get; }
+    Task<int> SaveChangesAsync(CancellationToken ct = default);
+    Task<IDbTransaction> BeginTransactionAsync(CancellationToken ct = default);
+}
+
+// Usage in Handler
+public sealed class CreateHandler(IUnitOfWork unitOfWork) : ICommandHandler<CreateCommand, Guid> {
+    public async Task<Guid> Handle(CreateCommand cmd, CancellationToken ct) {
+        var existing = await unitOfWork.InventoryItems.FirstOrDefaultAsync(x => x.Id == cmd.Id, ct);
+        if (existing != null) throw new ClientValidationException(MessageCode.AlreadyExists);
+        
+        var entity = InventoryItemEntity.Create(...);
+        await unitOfWork.InventoryItems.AddAsync(entity, ct);
+        await unitOfWork.SaveChangesAsync(ct);
+        return entity.Id;
+    }
+}
+
+// Query with Include
+public sealed class GetAllHandler(IUnitOfWork unitOfWork, IMapper mapper) : IQueryHandler<GetAllQuery, GetAllResult> {
+    public async Task<GetAllResult> Handle(GetAllQuery q, CancellationToken ct) {
+        var items = await unitOfWork.InventoryItems.GetAllWithRelationshipAsync(ct); // WithRelationship!
+        return new GetAllResult(mapper.Map<List<ItemDto>>(items));
+    }
+}
+
+// Transaction (Consumer)
+public sealed class Consumer(IUnitOfWork uow) : IConsumer<Event> {
+    public async Task Consume(ConsumeContext<Event> ctx) {
+        await using var tx = await uow.BeginTransactionAsync(ctx.CancellationToken);
+        try {
+            // Check idempotency, process event...
+            await tx.CommitAsync(ctx.CancellationToken);
+        } catch { await tx.RollbackAsync(ctx.CancellationToken); throw; }
+    }
+}
 ```
 
 ---

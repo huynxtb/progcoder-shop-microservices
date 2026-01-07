@@ -21,6 +21,8 @@ public interface IApplicationDbContext
 
     DbSet<OutboxMessageEntity> OutboxMessages { get; }
 
+    DbSet<InboxMessageEntity> InboxMessages { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
     #endregion

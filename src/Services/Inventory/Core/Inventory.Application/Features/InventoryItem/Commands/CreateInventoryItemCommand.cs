@@ -1,11 +1,12 @@
-﻿#region using
+#region using
 
-using Inventory.Application.Data;
+using BuildingBlocks.Abstractions.ValueObjects;
+using Common.Models.Reponses;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Application.Services;
+using Inventory.Domain.Abstractions;
 using Inventory.Domain.Entities;
-using Common.Models.Reponses;
-using BuildingBlocks.Abstractions.ValueObjects;
+using Inventory.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 #endregion
@@ -45,7 +46,7 @@ public sealed class CreateInventoryItemCommandValidator : AbstractValidator<Crea
 }
 
 public sealed class CreateInventoryItemCommandHandler(
-    IApplicationDbContext dbContext,
+    IUnitOfWork unitOfWork,
     ICatalogApiService catalogApi,
     ICatalogGrpcService catalogGrpc) : ICommandHandler<CreateInventoryItemCommand, Guid>
 {
@@ -53,31 +54,43 @@ public sealed class CreateInventoryItemCommandHandler(
 
     public async Task<Guid> Handle(CreateInventoryItemCommand command, CancellationToken cancellationToken)
     {
-        var dto = command.Dto;
+        var transaction = await unitOfWork.BeginTransactionAsync(cancellationToken);
 
-        var productByApi = await catalogApi.GetProductByIdAsync(dto.ProductId.ToString())
-            ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, dto.ProductId);
+        try
+        {
+            var dto = command.Dto;
+            var productByApi = await catalogApi.GetProductByIdAsync(dto.ProductId.ToString())
+                ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, dto.ProductId);
+            var productByGrpc = await catalogGrpc.GetProductByIdAsync(dto.ProductId.ToString(), cancellationToken)
+                ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, dto.ProductId);
+            var existsingInventoryItem = await unitOfWork.InventoryItems
+                .FirstOrDefaultAsync(x =>
+                    x.Product.Id == productByGrpc.Product.Id &&
+                    x.LocationId == dto.LocationId,
+                cancellationToken);
 
-        var productByGrpc = await catalogGrpc.GetProductByIdAsync(dto.ProductId.ToString(), cancellationToken)
-            ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, dto.ProductId);
+            if (existsingInventoryItem is not null) throw new ClientValidationException(MessageCode.InventoryItemAlreadyExists, dto.ProductId);
 
-        var existsingInventoryItem = await dbContext.InventoryItems
-            .FirstOrDefaultAsync(x => x.Product.Id == productByGrpc.Product.Id && x.LocationId == dto.LocationId, cancellationToken);
+            
+            var inventoryItemId = Guid.NewGuid();
 
-        if (existsingInventoryItem is not null) throw new ClientValidationException(MessageCode.InventoryItemAlreadyExists, dto.ProductId);
+            await AddInventoryItemAsync(inventoryItemId,
+                productByGrpc.Product.Id,
+                productByGrpc.Product.Name!,
+                dto.LocationId,
+                dto.Quantity,
+                command.Actor);
 
-        var inventoryItemId = Guid.NewGuid();
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
 
-        await AddInventoryItemAsync(inventoryItemId,
-            productByGrpc.Product.Id,
-            productByGrpc.Product.Name!,
-            dto.LocationId, 
-            dto.Quantity, 
-            command.Actor);
-
-        await dbContext.SaveChangesAsync(cancellationToken);
-
-        return inventoryItemId;
+            return inventoryItemId;
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync(cancellationToken);
+            throw;
+        }
     }
 
     #endregion
@@ -100,7 +113,7 @@ public sealed class CreateInventoryItemCommandHandler(
             quantity: qty,
             performedBy: actor.ToString());
 
-        await dbContext.InventoryItems.AddAsync(entity);
+        await unitOfWork.InventoryItems.AddAsync(entity);
     }
 
     #endregion

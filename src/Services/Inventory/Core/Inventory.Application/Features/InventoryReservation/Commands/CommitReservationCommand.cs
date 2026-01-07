@@ -1,6 +1,6 @@
 #region using
 
-using Inventory.Application.Data;
+using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -27,43 +27,38 @@ public sealed class CommitReservationCommandValidator : AbstractValidator<Commit
     #endregion
 }
 
-public sealed class CommitReservationCommandHandler(IApplicationDbContext dbContext)
+public sealed class CommitReservationCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<CommitReservationCommand, Unit>
 {
     #region Implementations
 
     public async Task<Unit> Handle(CommitReservationCommand command, CancellationToken cancellationToken)
     {
-        // Find all pending reservations for this reference (order)
-        var reservations = await dbContext.InventoryReservations
-            .Where(x => x.ReferenceId == command.ReferenceId && x.Status == ReservationStatus.Pending)
-            .ToListAsync(cancellationToken);
+        var reservations = await unitOfWork.InventoryReservations
+            .FindAsync(x => x.ReferenceId == command.ReferenceId && x.Status == ReservationStatus.Pending,
+                cancellationToken);
 
-        if (!reservations.Any())
-        {
-            return Unit.Value;
-        }
+        if (!reservations.Any()) return Unit.Value;
 
         foreach (var reservation in reservations)
         {
-            // Find the inventory item for this reservation
-            var inventoryItem = await dbContext.InventoryItems
-                .FirstOrDefaultAsync(x => x.Product.Id == reservation.Product.Id && x.LocationId == reservation.LocationId,
+            var inventoryItem = await unitOfWork.InventoryItems
+                .FirstOrDefaultAsync(x => 
+                        x.Product.Id == reservation.Product.Id && 
+                        x.LocationId == reservation.LocationId, 
                     cancellationToken);
 
             if (inventoryItem != null)
             {
-                // Commit the reservation on inventory item directly in command handler
                 inventoryItem.CommitReservation(reservation.Quantity, command.Actor.ToString());
-                dbContext.InventoryItems.Update(inventoryItem);
+                unitOfWork.InventoryItems.Update(inventoryItem);
             }
 
-            // Mark reservation as committed (this will raise ReservationCommittedDomainEvent)
             reservation.MarkCommitted(command.Actor.ToString());
-            dbContext.InventoryReservations.Update(reservation);
+            unitOfWork.InventoryReservations.Update(reservation);
         }
 
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }

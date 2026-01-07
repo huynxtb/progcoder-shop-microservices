@@ -1,6 +1,6 @@
 #region using
 
-using Inventory.Application.Data;
+using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +24,7 @@ public sealed class ExpireReservationCommandValidator : AbstractValidator<Expire
     #endregion
 }
 
-public sealed class ExpireReservationCommandHandler(IApplicationDbContext dbContext, ILogger<ExpireReservationCommandHandler> logger)
+public sealed class ExpireReservationCommandHandler(IUnitOfWork unitOfWork, ILogger<ExpireReservationCommandHandler> logger)
     : ICommandHandler<ExpireReservationCommand, Unit>
 {
     #region Implementations
@@ -32,11 +32,11 @@ public sealed class ExpireReservationCommandHandler(IApplicationDbContext dbCont
     public async Task<Unit> Handle(ExpireReservationCommand command, CancellationToken cancellationToken)
     {
         var now = DateTimeOffset.UtcNow;
-        var expiredReservations = await dbContext.InventoryReservations
-            .Where(x => x.Status == ReservationStatus.Pending
+        var expiredReservations = await unitOfWork.InventoryReservations
+            .FindAsync(x => x.Status == ReservationStatus.Pending
                         && x.ExpiresAt.HasValue
-                        && x.ExpiresAt.Value <= now)
-            .ToListAsync(cancellationToken);
+                        && x.ExpiresAt.Value <= now,
+                cancellationToken);
 
         if (!expiredReservations.Any())
         {
@@ -50,25 +50,23 @@ public sealed class ExpireReservationCommandHandler(IApplicationDbContext dbCont
         {
             try
             {
-                // Find the inventory item for this reservation
-                var inventoryItem = await dbContext.InventoryItems
-                    .FirstOrDefaultAsync(x => x.Product.Id == reservation.Product.Id && x.LocationId == reservation.LocationId,
+                var inventoryItem = await unitOfWork.InventoryItems
+                    .FirstOrDefaultAsync(x => 
+                            x.Product.Id == reservation.Product.Id && 
+                            x.LocationId == reservation.LocationId,
                         cancellationToken);
 
                 if (inventoryItem != null)
                 {
-                    // Unreserve inventory directly in command handler
                     inventoryItem.Unreserve(reservation.Quantity, reservation.Id, Actor.System(AppConstants.Service.Inventory).ToString());
-                    dbContext.InventoryItems.Update(inventoryItem);
+                    unitOfWork.InventoryItems.Update(inventoryItem);
                 }
 
-                // Expire the reservation (this will raise ReservationExpiredDomainEvent if status changes)
                 reservation.Expire();
 
-                // Only update if the reservation was actually expired (status changed)
                 if (reservation.Status == Domain.Enums.ReservationStatus.Expired)
                 {
-                    dbContext.InventoryReservations.Update(reservation);
+                    unitOfWork.InventoryReservations.Update(reservation);
                 }
 
                 logger.LogInformation("Successfully expired reservation {ReservationId} for order {OrderId}",
@@ -80,7 +78,7 @@ public sealed class ExpireReservationCommandHandler(IApplicationDbContext dbCont
             }
         }
 
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }

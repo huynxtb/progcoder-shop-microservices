@@ -61,6 +61,11 @@ public static class DependencyInjection
 
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
         }
+
+        // Repository & Unit of Work
+        {
+            services.AddScoped<Inventory.Domain.Abstractions.IUnitOfWork, Inventory.Infrastructure.UnitOfWork.UnitOfWork>();
+        }
         
         services.AddRefitClients(cfg);
         services.AddGrpcClients(cfg);

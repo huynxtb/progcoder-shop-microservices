@@ -1,6 +1,6 @@
-﻿#region using
+#region using
 
-using Inventory.Application.Data;
+using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -43,32 +43,44 @@ public sealed class UpdateStockCommandValidator : AbstractValidator<UpdateStockC
     #endregion
 }
 
-public sealed class UpdateStockCommandHandler(IApplicationDbContext dbContext) : ICommandHandler<UpdateStockCommand, Guid>
+public sealed class UpdateStockCommandHandler(IUnitOfWork unitOfWork) : ICommandHandler<UpdateStockCommand, Guid>
 {
     #region Implementations
 
     public async Task<Guid> Handle(UpdateStockCommand command, CancellationToken cancellationToken)
     {
-        var dto = command.Dto;
-        var entity = await dbContext.InventoryItems.SingleOrDefaultAsync(x => x.Id == command.InventoryItemId, cancellationToken)
-            ?? throw new NotFoundException(MessageCode.ResourceNotFound);
+        var transaction = await unitOfWork.BeginTransactionAsync(cancellationToken);
 
-        switch (command.ChangeType)
+        try
         {
-            case InventoryChangeType.Increase:
-                entity.Increase(dto.Amount, dto.Source!, command.Actor.ToString());
-                break;
-            case InventoryChangeType.Decrease:
-                entity.Decrease(dto.Amount, dto.Source!, command.Actor.ToString());
-                break;
-            default:
-                throw new ClientValidationException(MessageCode.InventoryChangeTypeIsRequired);
+            var dto = command.Dto;
+            var entity = await unitOfWork.InventoryItems.FirstOrDefaultAsync(x => x.Id == command.InventoryItemId, cancellationToken)
+                ?? throw new NotFoundException(MessageCode.ResourceNotFound);
+
+            switch (command.ChangeType)
+            {
+                case InventoryChangeType.Increase:
+                    entity.Increase(dto.Amount, dto.Source!, command.Actor.ToString());
+                    break;
+                case InventoryChangeType.Decrease:
+                    entity.Decrease(dto.Amount, dto.Source!, command.Actor.ToString());
+                    break;
+                default:
+                    throw new ClientValidationException(MessageCode.InventoryChangeTypeIsRequired);
+            }
+
+            unitOfWork.InventoryItems.Update(entity);
+            
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+
+            return entity.Id;
         }
-
-        dbContext.InventoryItems.Update(entity);
-        await dbContext.SaveChangesAsync(cancellationToken);
-
-        return entity.Id;
+        catch (Exception)
+        {
+            await transaction.RollbackAsync(cancellationToken);
+            throw;
+        }
     }
 
     #endregion

@@ -1,12 +1,14 @@
-﻿#region using
+#region using
 
 using AutoMapper;
 using BuildingBlocks.Pagination.Extensions;
-using Inventory.Application.Data;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Application.Models.Filters;
 using Inventory.Application.Models.Results;
+using Inventory.Domain.Abstractions;
+using Inventory.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Net.NetworkInformation;
 
 #endregion
 
@@ -16,7 +18,7 @@ public sealed record GetInventoryItemsQuery(
     GetInventoryItemsFilter Filter,
     PaginationRequest Paging) : IQuery<GetInventoryItemsResult>;
 
-public sealed class GetInventoryItemsQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
+public sealed class GetInventoryItemsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     : IQueryHandler<GetInventoryItemsQuery, GetInventoryItemsResult>
 {
     #region Implementations
@@ -26,18 +28,20 @@ public sealed class GetInventoryItemsQueryHandler(IApplicationDbContext dbContex
         var filter = query.Filter;
         var paging = query.Paging;
 
-        var filteredQuery = dbContext.InventoryItems
-            .AsNoTracking()
-            .Include(x => x.Location)
-            .Where(x => string.IsNullOrEmpty(filter.SearchText) || 
-                    x.Product.Name!.Contains(filter.SearchText) ||
-                    x.Location.Location!.Contains(filter.SearchText));
+        var result = unitOfWork.InventoryItems
+            .SearchWithRelationshipAsync(x => 
+                string.IsNullOrEmpty(filter.SearchText) ||
+                x.Product.Name!.Contains(filter.SearchText) ||
+                x.Location.Location!.Contains(filter.SearchText),
+                paging,
+                cancellationToken);
 
-        var totalCount = await filteredQuery.CountAsync(cancellationToken);
-        var result = await filteredQuery
-            .OrderByDescending(x => x.CreatedOnUtc)
-            .WithPaging(query.Paging)
-            .ToListAsync(cancellationToken);
+        var totalCount = await unitOfWork.InventoryItems
+            .CountAsync(x =>
+                string.IsNullOrEmpty(filter.SearchText) ||
+                x.Product.Name!.Contains(filter.SearchText) ||
+                x.Location.Location!.Contains(filter.SearchText), 
+                cancellationToken);
 
         var items = mapper.Map<List<InventoryItemDto>>(result);
         var reponse = new GetInventoryItemsResult(items, totalCount, paging);

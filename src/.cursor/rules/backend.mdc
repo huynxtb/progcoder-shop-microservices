@@ -434,6 +434,394 @@ public sealed record UpsertedProductDomainEvent(
 
 ---
 
+## Repository Pattern & Unit of Work
+
+### CRITICAL Rules
+
+1. **NEVER** use `IApplicationDbContext` directly in Application layer (Commands/Queries/Handlers)
+2. **ALWAYS** use `IUnitOfWork` to access repositories
+3. **Repository methods with EF Include** MUST have `WithRelationship` suffix
+4. **Read-only queries** MUST use `AsNoTracking()` in repository implementation
+5. **Specific methods** for complex queries instead of exposing `IQueryable`
+
+### Repository Interface (Domain Layer)
+
+```csharp
+// Generic base repository
+public interface IRepository<T> where T : class
+{
+    Task<T?> GetByIdAsync(Guid id, CancellationToken ct = default);
+    Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default);
+    Task<IReadOnlyList<T>> GetAllAsync(CancellationToken ct = default);
+    Task<IReadOnlyList<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default);
+    Task<long> CountAsync(CancellationToken ct = default);
+    Task<long> CountAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default);
+    
+    Task AddAsync(T entity, CancellationToken ct = default);
+    Task AddRangeAsync(IEnumerable<T> entities, CancellationToken ct = default);
+    
+    void Update(T entity);
+    void UpdateRange(IEnumerable<T> entities);
+    
+    void Remove(T entity);
+    void RemoveRange(IEnumerable<T> entities);
+}
+
+// Specific repository with Include methods
+public interface IInventoryItemRepository : IRepository<InventoryItemEntity>
+{
+    // ✅ Method name indicates it includes relationships
+    Task<List<InventoryItemEntity>> GetAllWithRelationshipAsync(CancellationToken ct = default);
+    
+    Task<List<InventoryItemEntity>> FindByProductWithRelationshipAsync(Guid productId, CancellationToken ct = default);
+    
+    Task<List<InventoryItemEntity>> SearchWithRelationshipAsync(
+        Expression<Func<InventoryItemEntity, bool>> predicate,
+        PaginationRequest pagination,
+        CancellationToken ct = default);
+}
+```
+
+### Repository Implementation (Infrastructure Layer)
+
+```csharp
+// Generic repository - implements AsNoTracking for read operations
+public class Repository<T>(ApplicationDbContext context) : IRepository<T> where T : class
+{
+    protected readonly ApplicationDbContext _context = context;
+    protected readonly DbSet<T> _dbSet = context.Set<T>();
+
+    // ✅ AsNoTracking for read-only queries
+    public virtual async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default)
+    {
+        return await _dbSet
+            .AsNoTracking()
+            .FirstOrDefaultAsync(predicate, ct);
+    }
+
+    public virtual async Task<IReadOnlyList<T>> GetAllAsync(CancellationToken ct = default)
+    {
+        return await _dbSet
+            .AsNoTracking()
+            .ToListAsync(ct);
+    }
+
+    public virtual async Task<IReadOnlyList<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default)
+    {
+        return await _dbSet
+            .AsNoTracking()
+            .Where(predicate)
+            .ToListAsync(ct);
+    }
+    
+    public virtual async Task<long> CountAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default)
+    {
+        return await _dbSet
+            .AsNoTracking()
+            .Where(predicate)
+            .CountAsync(ct);
+    }
+
+    public virtual async Task AddAsync(T entity, CancellationToken ct = default)
+    {
+        await _dbSet.AddAsync(entity, ct);
+    }
+
+    public virtual void Update(T entity)
+    {
+        _dbSet.Update(entity);
+    }
+}
+
+// Specific repository implementation
+public class InventoryItemRepository(ApplicationDbContext context) 
+    : Repository<InventoryItemEntity>(context), IInventoryItemRepository
+{
+    // ✅ Include + OrderBy + AsNoTracking in specific method
+    public async Task<List<InventoryItemEntity>> FindByProductWithRelationshipAsync(
+        Guid productId, 
+        CancellationToken ct = default)
+    {
+        return await _dbSet
+            .AsNoTracking()
+            .Include(x => x.Location)  // ← Include here
+            .Where(x => x.Product.Id == productId && x.Quantity > x.Reserved)
+            .OrderByDescending(x => x.Quantity - x.Reserved)
+            .ToListAsync(ct);
+    }
+    
+    public async Task<List<InventoryItemEntity>> GetAllWithRelationshipAsync(CancellationToken ct = default)
+    {
+        return await _dbSet
+            .AsNoTracking()
+            .Include(x => x.Location)
+            .OrderByDescending(x => x.CreatedOnUtc)
+            .ToListAsync(ct);
+    }
+    
+    public async Task<List<InventoryItemEntity>> SearchWithRelationshipAsync(
+        Expression<Func<InventoryItemEntity, bool>> predicate,
+        PaginationRequest pagination,
+        CancellationToken ct = default)
+    {
+        return await _dbSet
+            .AsNoTracking()
+            .Include(x => x.Location)
+            .Where(predicate)
+            .OrderByDescending(x => x.CreatedOnUtc)
+            .WithPaging(pagination)  // BuildingBlocks extension
+            .ToListAsync(ct);
+    }
+}
+```
+
+### Unit of Work Interface (Domain Abstractions)
+
+```csharp
+public interface IUnitOfWork : IDisposable
+{
+    // Repository properties
+    IInventoryReservationRepository InventoryReservations { get; }
+    IInventoryItemRepository InventoryItems { get; }
+    IInventoryHistoryRepository InventoryHistories { get; }
+    ILocationRepository Locations { get; }
+    IInboxMessageRepository InboxMessages { get; }
+    IOutboxMessageRepository OutboxMessages { get; }
+    
+    // Transaction methods
+    Task<int> SaveChangesAsync(CancellationToken ct = default);
+    Task<IDbTransaction> BeginTransactionAsync(CancellationToken ct = default);
+}
+
+// Transaction abstraction (no EF Core dependency in Domain)
+public interface IDbTransaction : IDisposable, IAsyncDisposable
+{
+    Task CommitAsync(CancellationToken ct = default);
+    Task RollbackAsync(CancellationToken ct = default);
+}
+```
+
+### Unit of Work Implementation (Infrastructure)
+
+```csharp
+public class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
+{
+    private IInventoryReservationRepository? _inventoryReservations;
+    private IInventoryItemRepository? _inventoryItems;
+    // ... other repositories
+
+    // Lazy initialization
+    public IInventoryReservationRepository InventoryReservations => 
+        _inventoryReservations ??= new InventoryReservationRepository(context);
+    
+    public IInventoryItemRepository InventoryItems => 
+        _inventoryItems ??= new InventoryItemRepository(context);
+    
+    public async Task<int> SaveChangesAsync(CancellationToken ct = default)
+    {
+        return await context.SaveChangesAsync(ct);
+    }
+
+    public async Task<IDbTransaction> BeginTransactionAsync(CancellationToken ct = default)
+    {
+        var efTransaction = await context.Database.BeginTransactionAsync(ct);
+        return new DbTransactionAdapter(efTransaction);
+    }
+
+    public void Dispose()
+    {
+        context.Dispose();
+    }
+}
+
+// Adapter to hide EF Core transaction from Domain
+internal class DbTransactionAdapter(IDbContextTransaction transaction) : IDbTransaction
+{
+    public async Task CommitAsync(CancellationToken ct = default)
+    {
+        await transaction.CommitAsync(ct);
+    }
+
+    public async Task RollbackAsync(CancellationToken ct = default)
+    {
+        await transaction.RollbackAsync(ct);
+    }
+
+    public void Dispose()
+    {
+        transaction.Dispose();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await transaction.DisposeAsync();
+    }
+}
+```
+
+### Usage in Command Handler
+
+```csharp
+// ❌ WRONG - Don't use IApplicationDbContext
+public sealed class CreateInventoryItemCommandHandler(
+    IApplicationDbContext dbContext) : ICommandHandler<CreateInventoryItemCommand, Guid>
+{
+    public async Task<Guid> Handle(CreateInventoryItemCommand command, CancellationToken ct)
+    {
+        var item = await dbContext.InventoryItems.FirstOrDefaultAsync(...);  // ❌ Wrong
+    }
+}
+
+// ✅ CORRECT - Use IUnitOfWork
+public sealed class CreateInventoryItemCommandHandler(
+    IUnitOfWork unitOfWork,
+    ICatalogGrpcService catalogGrpc) : ICommandHandler<CreateInventoryItemCommand, Guid>
+{
+    public async Task<Guid> Handle(CreateInventoryItemCommand command, CancellationToken ct)
+    {
+        var dto = command.Dto;
+        
+        // Validate product exists
+        var product = await catalogGrpc.GetProductByIdAsync(dto.ProductId.ToString(), ct)
+            ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, dto.ProductId);
+        
+        // Check if item already exists
+        var existing = await unitOfWork.InventoryItems
+            .FirstOrDefaultAsync(x => x.Product.Id == product.Id && x.LocationId == dto.LocationId, ct);
+        
+        if (existing is not null)
+            throw new ClientValidationException(MessageCode.InventoryItemAlreadyExists, dto.ProductId);
+        
+        // Create new item
+        var itemId = Guid.NewGuid();
+        var entity = InventoryItemEntity.Create(
+            id: itemId,
+            productId: product.Id,
+            productName: product.Name,
+            locationId: dto.LocationId,
+            quantity: dto.Quantity,
+            performedBy: command.Actor.ToString());
+        
+        await unitOfWork.InventoryItems.AddAsync(entity, ct);
+        await unitOfWork.SaveChangesAsync(ct);
+        
+        return itemId;
+    }
+}
+```
+
+### Usage with Transaction
+
+```csharp
+// Consumer event handler with transaction
+public sealed class OrderCreatedIntegrationEventHandler(
+    IUnitOfWork unitOfWork,
+    ILogger<OrderCreatedIntegrationEventHandler> logger)
+    : IConsumer<OrderCreatedIntegrationEvent>
+{
+    public async Task Consume(ConsumeContext<OrderCreatedIntegrationEvent> context)
+    {
+        var message = context.Message;
+        var messageId = context.MessageId ?? Guid.NewGuid();
+        
+        // Begin transaction
+        await using var transaction = await unitOfWork.BeginTransactionAsync(context.CancellationToken);
+        
+        try
+        {
+            // Check idempotency
+            var existing = await unitOfWork.InboxMessages.GetByMessageIdAsync(messageId, context.CancellationToken);
+            if (existing != null) return;
+            
+            // Create inbox record
+            var inboxMessage = InboxMessageEntity.Create(...);
+            await unitOfWork.InboxMessages.AddAsync(inboxMessage, context.CancellationToken);
+            await unitOfWork.SaveChangesAsync(context.CancellationToken);
+            
+            // Process event
+            // ... business logic ...
+            
+            // Mark as processed
+            inboxMessage.MarkAsProcessed(DateTimeOffset.UtcNow);
+            await unitOfWork.SaveChangesAsync(context.CancellationToken);
+            
+            // Commit transaction
+            await transaction.CommitAsync(context.CancellationToken);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to process event");
+            await transaction.RollbackAsync(context.CancellationToken);
+            throw;
+        }
+    }
+}
+```
+
+### Usage in Query Handler
+
+```csharp
+// Query with relationships
+public sealed class GetAllInventoryItemsQueryHandler(
+    IUnitOfWork unitOfWork,
+    IMapper mapper) : IQueryHandler<GetAllInventoryItemsQuery, GetAllInventoryItemsResult>
+{
+    public async Task<GetAllInventoryItemsResult> Handle(GetAllInventoryItemsQuery query, CancellationToken ct)
+    {
+        // ✅ Use WithRelationship method when need Include
+        var items = await unitOfWork.InventoryItems
+            .GetAllWithRelationshipAsync(ct);
+        
+        var dtos = mapper.Map<List<InventoryItemDto>>(items);
+        return new GetAllInventoryItemsResult(dtos);
+    }
+}
+
+// Query with search and pagination
+public sealed class SearchInventoryItemsQueryHandler(
+    IUnitOfWork unitOfWork,
+    IMapper mapper) : IQueryHandler<SearchInventoryItemsQuery, SearchInventoryItemsResult>
+{
+    public async Task<SearchInventoryItemsResult> Handle(SearchInventoryItemsQuery query, CancellationToken ct)
+    {
+        var filter = query.Filter;
+        var pagination = query.Pagination;
+        
+        // Build predicate
+        Expression<Func<InventoryItemEntity, bool>> predicate = x => 
+            (string.IsNullOrEmpty(filter.ProductName) || x.Product.Name.Contains(filter.ProductName)) &&
+            (!filter.LocationId.HasValue || x.LocationId == filter.LocationId);
+        
+        // Use WithRelationship method
+        var items = await unitOfWork.InventoryItems
+            .SearchWithRelationshipAsync(predicate, pagination, ct);
+        
+        var totalCount = await unitOfWork.InventoryItems.CountAsync(predicate, ct);
+        
+        var dtos = mapper.Map<List<InventoryItemDto>>(items);
+        return new SearchInventoryItemsResult(dtos, (int)totalCount, pagination);
+    }
+}
+```
+
+### Repository Naming Convention for Include Methods
+
+| Scenario | Method Name Pattern | Example |
+|----------|-------------------|---------|
+| Get all with includes | `GetAllWithRelationshipAsync` | Gets all inventory items with Location |
+| Find by ID with includes | `GetByIdWithRelationshipAsync` | Gets item by ID with Location |
+| Search with includes | `SearchWithRelationshipAsync` | Searches items with Location |
+| Find by filter with includes | `FindByXWithRelationshipAsync` | `FindByProductWithRelationshipAsync` |
+
+**Key Points:**
+- `WithRelationship` suffix indicates method includes related entities
+- Method name should describe what it returns (GetAll, FindBy, Search)
+- Include specific relationships in implementation, not in interface
+- Use `AsNoTracking()` for all read operations
+- Use `OrderBy` in repository when needed, not in Application layer
+
+---
+
 ## API Endpoint Convention (Carter)
 
 ### Endpoint Structure

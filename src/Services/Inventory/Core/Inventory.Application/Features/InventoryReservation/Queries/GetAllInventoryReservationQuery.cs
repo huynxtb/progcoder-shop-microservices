@@ -1,7 +1,7 @@
-﻿#region using
+#region using
 
 using AutoMapper;
-using Inventory.Application.Data;
+using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Application.Dtos.InventoryReservations;
 using Inventory.Application.Models.Results;
 using Microsoft.EntityFrameworkCore;
@@ -12,19 +12,15 @@ namespace Inventory.Application.Features.InventoryReservation.Queries;
 
 public sealed record GetAllInventoryReservationQuery : IQuery<GetAllInventoryReservationResult>;
 
-public sealed class GetAllInventoryReservationQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
+public sealed class GetAllInventoryReservationQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     : IQueryHandler<GetAllInventoryReservationQuery, GetAllInventoryReservationResult>
 {
     #region Implementations
 
     public async Task<GetAllInventoryReservationResult> Handle(GetAllInventoryReservationQuery query, CancellationToken cancellationToken)
     {
-        var result = await dbContext.InventoryReservations
-            .AsNoTracking()
-            .Include(x => x.Location)
-            .OrderByDescending(x => x.CreatedOnUtc)
-            .ToListAsync(cancellationToken);
-
+        var result = await unitOfWork.InventoryReservations
+            .GetAllWithRelationshipAsync(cancellationToken);
         var items = mapper.Map<List<ReservationDto>>(result);
         var response = new GetAllInventoryReservationResult(items);
 
