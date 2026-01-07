@@ -1,9 +1,8 @@
 #region using
 
-using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Domain.Enums;
-using Microsoft.EntityFrameworkCore;
+using Inventory.Domain.Abstractions;
 
 #endregion
 
@@ -70,7 +69,7 @@ public sealed class UpdateStockCommandHandler(IUnitOfWork unitOfWork) : ICommand
             }
 
             unitOfWork.InventoryItems.Update(entity);
-            
+
             await unitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
 

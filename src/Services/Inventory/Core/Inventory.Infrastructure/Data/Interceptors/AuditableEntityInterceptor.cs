@@ -3,7 +3,6 @@
 using Inventory.Domain.Abstractions;
 using Inventory.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 #endregion

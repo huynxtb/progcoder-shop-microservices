@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi;
 #endregion
 
 namespace BuildingBlocks.Swagger.Extensions;

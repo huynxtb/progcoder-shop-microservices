@@ -1,7 +1,5 @@
 #region using
 
-using BuildingBlocks.Authentication.Extensions;
-using Communication.Api.Models;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 

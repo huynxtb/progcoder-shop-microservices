@@ -57,12 +57,12 @@ public class StoreBasketCommandHandler(IBasketRepository repository, ICatalogGrp
         var products = await catalogGrpc.GetProductsAsync(
             ids: dto.Items.Select(x => x.ProductId.ToString()).ToArray(),
             cancellationToken: cancellationToken);
-        
+
         basket.Clear();
-        
+
         foreach (var item in dto.Items)
         {
-            var product = products!.Items!.FirstOrDefault(x => x.Id == item.ProductId) 
+            var product = products!.Items!.FirstOrDefault(x => x.Id == item.ProductId)
                 ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, item.ProductId);
 
             basket.AddOrIncreaseItem(

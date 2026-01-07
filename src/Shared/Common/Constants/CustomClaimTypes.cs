@@ -12,7 +12,7 @@ public sealed class CustomClaimTypes
 
     public const string EmailVerified = "email_verified";
 
-    public const string Tenant = "tenant"; 
-    
+    public const string Tenant = "tenant";
+
     #endregion
 }

@@ -1,5 +1,6 @@
 #region using
 
+using BuildingBlocks.Abstractions;
 using Inventory.Domain.Abstractions;
 using Inventory.Domain.Repositories;
 using Inventory.Infrastructure.Data;
@@ -22,7 +23,7 @@ public class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
     private IInventoryHistoryRepository? _inventoryHistories;
 
     private ILocationRepository? _locations;
-    
+
     private IOutboxMessageRepository? _outboxMessages;
 
     #endregion
@@ -30,21 +31,21 @@ public class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
 
     #region Implementations
 
-    public IInboxMessageRepository InboxMessages => 
+    public IInboxMessageRepository InboxMessages =>
         _inboxMessages ??= new InboxMessageRepository(context);
 
-    public IInventoryReservationRepository InventoryReservations => 
+    public IInventoryReservationRepository InventoryReservations =>
         _inventoryReservations ??= new InventoryReservationRepository(context);
 
-    public IInventoryItemRepository InventoryItems => 
+    public IInventoryItemRepository InventoryItems =>
         _inventoryItems ??= new InventoryItemRepository(context);
 
-    public IInventoryHistoryRepository InventoryHistories => 
+    public IInventoryHistoryRepository InventoryHistories =>
         _inventoryHistories ??= new InventoryHistoryRepository(context);
 
-    public ILocationRepository Locations => 
+    public ILocationRepository Locations =>
         _locations ??= new LocationRepository(context);
-    
+
     public IOutboxMessageRepository OutboxMessages =>
         _outboxMessages ??= new OutboxMessageRepository(context);
 

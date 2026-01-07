@@ -1,6 +1,6 @@
 ﻿#region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
+using Common.ValueObjects;
 using Catalog.Application.Features.Product.Commands;
 using Catalog.Domain.Enums;
 using Common.Constants;

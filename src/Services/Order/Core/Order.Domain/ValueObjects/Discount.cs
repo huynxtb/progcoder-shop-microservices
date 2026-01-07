@@ -12,7 +12,7 @@ public class Discount
 
     #region Ctors
 
-    private Discount(string couponCode, decimal discountAmount) 
+    private Discount(string couponCode, decimal discountAmount)
     {
         CouponCode = couponCode;
         DiscountAmount = discountAmount;

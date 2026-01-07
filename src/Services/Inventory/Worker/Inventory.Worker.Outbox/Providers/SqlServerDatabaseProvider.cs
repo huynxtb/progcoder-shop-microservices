@@ -15,8 +15,8 @@ public sealed class SqlServerDatabaseProvider : IDatabaseProvider
     #region Implementations
 
     public async Task<List<OutboxMessage>> GetUnprocessedMessagesAsync(
-        string connectionString, 
-        int batchSize, 
+        string connectionString,
+        int batchSize,
         CancellationToken cancellationToken = default)
     {
         await using var connection = new SqlConnection(connectionString);
@@ -49,8 +49,8 @@ public sealed class SqlServerDatabaseProvider : IDatabaseProvider
     }
 
     public async Task UpdateProcessedMessagesAsync(
-        string connectionString, 
-        IEnumerable<OutboxUpdate> updates, 
+        string connectionString,
+        IEnumerable<OutboxUpdate> updates,
         CancellationToken cancellationToken = default)
     {
         var updatesList = updates.ToList();

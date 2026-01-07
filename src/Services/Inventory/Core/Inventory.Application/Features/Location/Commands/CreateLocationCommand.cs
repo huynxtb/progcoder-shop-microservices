@@ -1,9 +1,8 @@
 #region using
 
-using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Application.Dtos.Locations;
 using Inventory.Domain.Entities;
-using BuildingBlocks.Abstractions.ValueObjects;
+using Inventory.Domain.Abstractions;
 
 #endregion
 
@@ -31,7 +30,7 @@ public sealed class CreateLocationCommandValidator : AbstractValidator<CreateLoc
     #endregion
 }
 
-public sealed class CreateLocationCommandHandler(IUnitOfWork unitOfWork) 
+public sealed class CreateLocationCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<CreateLocationCommand, Guid>
 {
     #region Implementations

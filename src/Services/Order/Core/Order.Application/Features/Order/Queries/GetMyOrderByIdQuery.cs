@@ -1,10 +1,9 @@
-﻿#region using
+#region using
 
 using AutoMapper;
-using Order.Application.Data;
+using Order.Domain.Abstractions;
 using Order.Application.Dtos.Orders;
 using Order.Application.Models.Results;
-using BuildingBlocks.Abstractions.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 #endregion
@@ -15,7 +14,7 @@ public sealed record GetMyOrderByIdQuery(
     Guid OrderId,
     Actor Actor) : IQuery<GetMyOrderByIdResult>;
 
-public sealed class GetMyOrderByIdQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
+public sealed class GetMyOrderByIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     : IQueryHandler<GetMyOrderByIdQuery, GetMyOrderByIdResult>
 {
     #region Implementations
@@ -24,9 +23,8 @@ public sealed class GetMyOrderByIdQueryHandler(IApplicationDbContext dbContext, 
     {
         var actor = query.Actor;
 
-        var order = await dbContext.Orders
-            .Where(x => x.Id == query.OrderId && x.Customer.Id == Guid.Parse(actor.ToString()))
-            .FirstOrDefaultAsync(cancellationToken)
+        var order = await unitOfWork.Orders
+            .FirstOrDefaultAsync(x => x.Id == query.OrderId && x.Customer.Id == Guid.Parse(actor.ToString()), cancellationToken)
             ?? throw new NotFoundException(MessageCode.OrderNotFound);
 
         var orderDto = mapper.Map<OrderDto>(order);

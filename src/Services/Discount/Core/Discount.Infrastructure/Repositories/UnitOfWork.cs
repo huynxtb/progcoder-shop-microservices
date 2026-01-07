@@ -29,8 +29,8 @@ public sealed class UnitOfWork : IUnitOfWork, IMongoSessionProvider
     #region Ctors
 
     public UnitOfWork(
-        IMongoClient mongoClient, 
-        IMongoDatabase database, 
+        IMongoClient mongoClient,
+        IMongoDatabase database,
         ICouponRepository couponRepository)
     {
         _mongoClient = mongoClient ?? throw new ArgumentNullException(nameof(mongoClient));

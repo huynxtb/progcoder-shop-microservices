@@ -1,7 +1,6 @@
 ﻿#region using
 
 using Inventory.Domain.Abstractions;
-using Inventory.Domain.ValueObjects;
 
 #endregion
 

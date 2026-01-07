@@ -20,7 +20,7 @@ public static class SerilogLoggingExtensions
     #region Methods
 
     public static IServiceCollection AddSerilogLogging(
-        this IServiceCollection services, 
+        this IServiceCollection services,
         IConfiguration cfg)
     {
         var section = SerilogCfg.Section;
@@ -90,7 +90,7 @@ public static class SerilogLoggingExtensions
                 if (path.StartsWith("/metrics", StringComparison.OrdinalIgnoreCase)) return LogEventLevel.Debug;
                 if (path.StartsWith("/swagger", StringComparison.OrdinalIgnoreCase)) return LogEventLevel.Debug;
                 if (ex != null || httpCtx.Response.StatusCode >= 500) return LogEventLevel.Error;
-                
+
                 return LogEventLevel.Information;
             };
             options.EnrichDiagnosticContext = (diag, ctx) =>

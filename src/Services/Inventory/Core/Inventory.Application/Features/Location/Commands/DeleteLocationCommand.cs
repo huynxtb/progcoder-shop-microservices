@@ -1,9 +1,7 @@
 #region using
 
-using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
-using Inventory.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Inventory.Domain.Abstractions;
 
 #endregion
 
@@ -25,7 +23,7 @@ public sealed class DeleteLocationCommandValidator : AbstractValidator<DeleteLoc
     #endregion
 }
 
-public sealed class DeleteLocationCommandHandler(IUnitOfWork unitOfWork) 
+public sealed class DeleteLocationCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<DeleteLocationCommand, Unit>
 {
     #region Implementations

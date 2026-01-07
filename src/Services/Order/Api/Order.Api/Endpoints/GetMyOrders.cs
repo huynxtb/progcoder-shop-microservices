@@ -1,7 +1,6 @@
 ﻿#region using
 
 using BuildingBlocks.Pagination;
-using BuildingBlocks.Abstractions.ValueObjects;
 using BuildingBlocks.Authentication.Extensions;
 using Common.Models.Reponses;
 using Order.Api.Constants;

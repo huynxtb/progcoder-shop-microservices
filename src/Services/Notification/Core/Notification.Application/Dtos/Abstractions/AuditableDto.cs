@@ -1,7 +1,5 @@
 ﻿#region using
 
-using Notification.Application.Dtos.Abstractions;
-
 #endregion
 
 namespace Notification.Application.Dtos.Abstractions;

@@ -19,7 +19,7 @@ public sealed class GetProductByIdQueryHandler(IDocumentSession session, IMapper
 
     public async Task<GetProductByIdResult> Handle(GetProductByIdQuery query, CancellationToken cancellationToken)
     {
-        var result = await session.LoadAsync<ProductEntity>(query.ProductId) 
+        var result = await session.LoadAsync<ProductEntity>(query.ProductId)
             ?? throw new NotFoundException(MessageCode.ResourceNotFound, query.ProductId);
 
         var categories = await session.Query<CategoryEntity>()

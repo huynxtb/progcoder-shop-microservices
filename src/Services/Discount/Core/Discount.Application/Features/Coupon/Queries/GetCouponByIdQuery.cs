@@ -21,7 +21,7 @@ public sealed class GetCouponQueryHandler(ICouponRepository repository, IMapper 
             ?? throw new NotFoundException(MessageCode.ResourceNotFound, query.Id);
 
         var dto = mapper.Map<CouponDto>(coupon);
-        
+
         return new GetCouponByIdResult(dto);
     }
 

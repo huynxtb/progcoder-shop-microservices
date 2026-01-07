@@ -2,7 +2,6 @@
 
 using BuildingBlocks.Logging;
 using EventSourcing.MassTransit;
-using Inventory.Worker.Consumer.BackgroundServices;
 using System.Reflection;
 
 #endregion

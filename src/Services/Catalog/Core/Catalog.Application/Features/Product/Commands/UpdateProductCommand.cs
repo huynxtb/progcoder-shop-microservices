@@ -70,7 +70,7 @@ public class UpdateProductCommandHandler(IMapper mapper,
 
         var entity = await session.LoadAsync<ProductEntity>(command.ProductId)
             ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, command.ProductId);
-        
+
         var currentPublishStatus = entity.Published;
         var dto = command.Dto;
 

@@ -7,7 +7,7 @@ using Search.Domain.Enums;
 namespace Search.Application.Models.Filters;
 
 public record class SearchTermsFilter(
-    string? SearchText, 
+    string? SearchText,
     string Categories,
     decimal? MinPrice = null,
     decimal? MaxPrice = null,

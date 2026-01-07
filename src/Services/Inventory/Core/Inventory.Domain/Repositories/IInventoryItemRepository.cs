@@ -1,5 +1,6 @@
 #region using
 
+using BuildingBlocks.Abstractions;
 using BuildingBlocks.Pagination;
 using Inventory.Domain.Entities;
 using System.Linq.Expressions;
@@ -8,10 +9,10 @@ using System.Linq.Expressions;
 
 namespace Inventory.Domain.Repositories;
 
-public interface IInventoryItemRepository : IRepository<InventoryItemEntity>
+public interface IInventoryItemRepository : IBaseRepository<InventoryItemEntity>
 {
     #region Methods
-    
+
     Task<List<InventoryItemEntity>> GetAllWithRelationshipAsync(CancellationToken cancellationToken = default);
 
     Task<List<InventoryItemEntity>> FindByProductWithRelationshipAsync(Guid productId, CancellationToken cancellationToken = default);

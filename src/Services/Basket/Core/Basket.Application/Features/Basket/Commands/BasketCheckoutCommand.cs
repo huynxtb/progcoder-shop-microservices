@@ -112,10 +112,10 @@ public sealed class BasketCheckoutCommandValidator : AbstractValidator<BasketChe
 }
 
 public sealed class BasketCheckoutCommandHandler(
-    IBasketRepository basketRepo, 
-    IMediator mediator, 
+    IBasketRepository basketRepo,
+    IMediator mediator,
     IDiscountGrpcService discountGrpc,
-    ICatalogGrpcService catalogGrpc) 
+    ICatalogGrpcService catalogGrpc)
     : ICommandHandler<BasketCheckoutCommand, Guid>
 {
     #region Implementations

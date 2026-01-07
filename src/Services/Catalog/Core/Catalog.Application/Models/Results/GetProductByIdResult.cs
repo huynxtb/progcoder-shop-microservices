@@ -1,6 +1,5 @@
 ﻿#region using
 
-using Catalog.Application.Dtos.Categories;
 using Catalog.Application.Dtos.Products;
 
 #endregion

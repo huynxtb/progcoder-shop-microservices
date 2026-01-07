@@ -2,7 +2,7 @@
 
 using Notification.Application.Data.Repositories;
 using Notification.Application.Dtos.Notifications;
-using BuildingBlocks.Abstractions.ValueObjects;
+using Common.ValueObjects;
 using Notification.Application.Models.Results;
 
 #endregion

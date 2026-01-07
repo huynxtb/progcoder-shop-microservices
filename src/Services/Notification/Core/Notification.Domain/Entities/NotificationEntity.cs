@@ -3,9 +3,6 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Notification.Domain.Abstractions;
-using Notification.Domain.Enums;
-using Common.Constants;
-using System.Threading;
 
 #endregion
 

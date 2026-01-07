@@ -1,9 +1,9 @@
 ﻿#region using
 
 using Microsoft.EntityFrameworkCore;
-using Order.Application.Data;
 using Order.Application.Dtos.Orders;
 using Order.Application.Services;
+using Order.Domain.Abstractions;
 using Order.Domain.Enums;
 using Order.Domain.ValueObjects;
 
@@ -105,15 +105,13 @@ public sealed class UpdateOrderCommandValidator : AbstractValidator<UpdateOrderC
     #endregion
 }
 
-public sealed class UpdateOrderCommandHandler(IApplicationDbContext dbContext, ICatalogGrpcService catalogGrpc) : ICommandHandler<UpdateOrderCommand, Guid>
+public sealed class UpdateOrderCommandHandler(IUnitOfWork unitOfWork, ICatalogGrpcService catalogGrpc) : ICommandHandler<UpdateOrderCommand, Guid>
 {
     #region Implementations
 
     public async Task<Guid> Handle(UpdateOrderCommand command, CancellationToken cancellationToken)
     {
-        var existingOrder = await dbContext.Orders
-            .Include(x => x.OrderItems)
-            .SingleOrDefaultAsync(x => x.Id == command.OrderId, cancellationToken)
+        var existingOrder = await unitOfWork.Orders.GetByIdWithRelationshipAsync(command.OrderId, cancellationToken)
             ?? throw new NotFoundException(MessageCode.ResourceNotFound, command.OrderId);
 
         if (existingOrder.Status == OrderStatus.Delivered ||
@@ -200,8 +198,8 @@ public sealed class UpdateOrderCommandHandler(IApplicationDbContext dbContext, I
             }
         }
 
-        dbContext.Orders.Update(existingOrder);
-        await dbContext.SaveChangesAsync(cancellationToken);
+        unitOfWork.Orders.Update(existingOrder);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return existingOrder.Id;
     }

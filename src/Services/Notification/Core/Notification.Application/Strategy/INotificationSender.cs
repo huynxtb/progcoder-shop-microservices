@@ -10,7 +10,7 @@ namespace Notification.Application.Strategy;
 public interface INotificationSender
 {
     #region Fields, Properties and Indexers
-    
+
     ChannelType Channel { get; }
 
     #endregion

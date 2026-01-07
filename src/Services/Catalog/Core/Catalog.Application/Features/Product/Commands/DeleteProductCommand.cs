@@ -1,9 +1,7 @@
 ﻿#region using
 
-using Catalog.Domain.Abstractions;
 using Catalog.Domain.Entities;
 using Catalog.Domain.Events;
-using Common.Models.Reponses;
 using Marten;
 using MediatR;
 
@@ -33,7 +31,7 @@ public class DeleteProductCommandHandler(IDocumentSession session, IMediator med
 
     public async Task<Unit> Handle(DeleteProductCommand command, CancellationToken cancellationToken)
     {
-        var product = await session.LoadAsync<ProductEntity>(command.ProductId) 
+        var product = await session.LoadAsync<ProductEntity>(command.ProductId)
             ?? throw new ClientValidationException(MessageCode.ProductIsNotExists, command.ProductId.ToString());
 
         session.Delete<ProductEntity>(product.Id);

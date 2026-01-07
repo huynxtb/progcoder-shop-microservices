@@ -1,8 +1,6 @@
 ﻿#region using
 
-using BuildingBlocks.Exceptions;
 using BuildingBlocks.Pagination;
-using Common.Constants;
 using Common.Extensions;
 using Elasticsearch.Net;
 using Nest;
@@ -36,7 +34,7 @@ public class ProductRepository(IElasticClient elasticClient) : IProductRepositor
     }
 
     public async Task<(List<ProductEntity> Items, long TotalCount)> SearchAsync(
-        SearchTermsFilter filter, 
+        SearchTermsFilter filter,
         PaginationRequest? paging = null,
         CancellationToken cancellationToken = default)
     {

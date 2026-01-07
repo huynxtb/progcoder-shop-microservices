@@ -3,8 +3,7 @@
 using Notification.Application.Data.Repositories;
 using Notification.Application.Models;
 using Notification.Domain.Enums;
-using BuildingBlocks.Abstractions.ValueObjects;
-using Common.Constants;
+using Common.ValueObjects;
 using Microsoft.Extensions.Logging;
 using Notification.Application.Strategy;
 
@@ -40,7 +39,7 @@ public sealed class ProcessDeliveryCommandHandler(
     public async Task<bool> Handle(ProcessDeliveryCommand command, CancellationToken cancellationToken)
     {
         var delivery = await deliveryQueryRepo.GetByIdAsync(command.DeliveryId, cancellationToken);
-        
+
         if (delivery == null)
         {
             logger.LogWarning("Delivery not found: {DeliveryId}", command.DeliveryId);

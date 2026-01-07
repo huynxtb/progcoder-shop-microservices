@@ -4,7 +4,6 @@ using Discount.Api.Constants;
 using Discount.Application.Features.Coupon.Queries;
 using Discount.Application.Models.Results;
 using Discount.Domain.Enums;
-using Common.Models.Reponses;
 
 #endregion
 

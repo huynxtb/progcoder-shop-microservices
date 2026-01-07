@@ -1,13 +1,9 @@
 #region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
-using Common.Models.Reponses;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Application.Services;
 using Inventory.Domain.Abstractions;
 using Inventory.Domain.Entities;
-using Inventory.Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 #endregion
 
@@ -71,7 +67,7 @@ public sealed class CreateInventoryItemCommandHandler(
 
             if (existsingInventoryItem is not null) throw new ClientValidationException(MessageCode.InventoryItemAlreadyExists, dto.ProductId);
 
-            
+
             var inventoryItemId = Guid.NewGuid();
 
             await AddInventoryItemAsync(inventoryItemId,
@@ -98,11 +94,11 @@ public sealed class CreateInventoryItemCommandHandler(
     #region Methods
 
     private async Task AddInventoryItemAsync(
-        Guid inventoryItemId, 
-        Guid productId, 
-        string productName, 
-        Guid locationId, 
-        int qty, 
+        Guid inventoryItemId,
+        Guid productId,
+        string productName,
+        Guid locationId,
+        int qty,
         Actor actor)
     {
         var entity = InventoryItemEntity.Create(

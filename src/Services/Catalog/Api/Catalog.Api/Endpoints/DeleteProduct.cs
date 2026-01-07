@@ -4,7 +4,6 @@
 using Catalog.Api.Constants;
 using Catalog.Application.Features.Product.Commands;
 using Microsoft.AspNetCore.Mvc;
-using Common.Models.Reponses;
 
 #endregion
 
@@ -35,7 +34,7 @@ public sealed class DeleteProduct : ICarterModule
         [FromRoute] Guid productId)
     {
         var command = new DeleteProductCommand(productId);
-        
+
         await sender.Send(command);
 
         return new ApiDeletedResponse<Guid>(productId);

@@ -6,13 +6,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using Notification.Application.Providers;
-using Notification.Application.Services;
 using Notification.Application.Strategy;
 using Notification.Infrastructure.ApiClients;
 using Notification.Infrastructure.Data.Extensions;
 using Notification.Infrastructure.Providers;
 using Notification.Infrastructure.Resolvers;
-using Notification.Infrastructure.Services;
 using Refit;
 
 #endregion
@@ -24,7 +22,7 @@ public static class DependencyInjection
     #region Methods
 
     public static IServiceCollection AddInfrastructureServices(
-        this IServiceCollection services, 
+        this IServiceCollection services,
         IConfiguration cfg)
     {
         services.Scan(s => s

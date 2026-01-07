@@ -35,11 +35,11 @@ public class Address
     #region Methods
 
     public static Address Of(
-        string addressLine, 
-        string subdivision, 
-        string city, 
-        string country, 
-        string stateOrProvince, 
+        string addressLine,
+        string subdivision,
+        string city,
+        string country,
+        string stateOrProvince,
         string postalCode)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(addressLine);

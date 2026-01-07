@@ -1,7 +1,5 @@
 ﻿#region using
 
-using Basket.Domain.Entities;
-
 #endregion
 
 namespace Basket.Application.Dtos.Baskets;

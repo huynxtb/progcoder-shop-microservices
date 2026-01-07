@@ -1,7 +1,5 @@
 #region using
 
-using Catalog.Application.Dtos.Abstractions;
-
 #endregion
 
 namespace Catalog.Application.Dtos.Products;

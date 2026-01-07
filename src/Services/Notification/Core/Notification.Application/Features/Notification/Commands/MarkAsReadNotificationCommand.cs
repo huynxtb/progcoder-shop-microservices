@@ -1,7 +1,6 @@
 ﻿#region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
-using Common.Models.Reponses;
+using Common.ValueObjects;
 using MediatR;
 using Notification.Application.Data.Repositories;
 using Notification.Application.Dtos.Notifications;
@@ -34,7 +33,7 @@ public sealed class MarkAsReadNotificationCommandValidator : AbstractValidator<M
 
 public class MarkAsReadNotificationCommandHandler(
     ICommandNotificationRepository commandRepo,
-    IQueryNotificationRepository queryRepo) 
+    IQueryNotificationRepository queryRepo)
     : ICommandHandler<MarkAsReadNotificationCommand, Unit>
 {
     #region Implementations
@@ -52,7 +51,7 @@ public class MarkAsReadNotificationCommandHandler(
 
             await commandRepo.UpsertAsync(doc, cancellationToken);
         }
-        
+
         return Unit.Value;
     }
 

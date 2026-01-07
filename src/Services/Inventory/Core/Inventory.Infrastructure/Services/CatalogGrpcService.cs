@@ -14,8 +14,8 @@ public sealed class CatalogGrpcService(CatalogGrpc.CatalogGrpcClient grpcClient,
 {
     public async Task<GetProductByIdReponse?> GetProductByIdAsync(string productId, CancellationToken cancellationToken = default)
     {
-		try
-		{
+        try
+        {
             var result = await grpcClient.GetProductByIdAsync(
                 new GetProductByIdRequest { Id = productId },
                 cancellationToken: cancellationToken);
@@ -33,8 +33,8 @@ public sealed class CatalogGrpcService(CatalogGrpc.CatalogGrpcClient grpcClient,
                 }
             };
         }
-		catch (Exception ex)
-		{
+        catch (Exception ex)
+        {
             logger.LogWarning(ex, "Failed to get product by ID {ProductId} from Catalog Grpc service", productId);
             return null;
         }

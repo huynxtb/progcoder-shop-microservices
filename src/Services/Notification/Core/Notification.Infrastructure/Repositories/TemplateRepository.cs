@@ -30,8 +30,8 @@ public sealed class TemplateRepository : IQueryTemplateRepository
     #region Implementations
 
     public async Task<TemplateEntity> GetAsync(
-        string key, 
-        ChannelType channel, 
+        string key,
+        ChannelType channel,
         CancellationToken cancellationToken = default)
     {
         return await _collection.Find(x => x.Key == key && x.Channel == channel)

@@ -2,7 +2,7 @@
 
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Order.Application.Data;
+using Order.Domain.Abstractions;
 using Order.Application.Dtos.Orders;
 using Order.Application.Models.Results;
 
@@ -12,16 +12,15 @@ namespace Order.Application.Features.Order.Queries;
 
 public sealed record GetOrderByOrderNoQuery(string OrderNo) : IQuery<GetOrderByOrderNoResult>;
 
-public sealed class GetOrderByOrderNoQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
+public sealed class GetOrderByOrderNoQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     : IQueryHandler<GetOrderByOrderNoQuery, GetOrderByOrderNoResult>
 {
     #region Implementations
 
     public async Task<GetOrderByOrderNoResult> Handle(GetOrderByOrderNoQuery query, CancellationToken cancellationToken)
     {
-        var order = await dbContext.Orders
-            .Include(x => x.OrderItems)
-            .FirstOrDefaultAsync(x => x.OrderNo.Value == query.OrderNo, cancellationToken)
+        var order = await unitOfWork.Orders
+            .GetByOrderNoAsync(query.OrderNo, cancellationToken)
             ?? throw new NotFoundException(MessageCode.ResourceNotFound, query.OrderNo);
 
         var orderDto = mapper.Map<OrderDto>(order);

@@ -6,10 +6,8 @@ using BuildingBlocks.Logging;
 using BuildingBlocks.Swagger.Extensions;
 using Common.Configurations;
 using Common.Constants;
-using Common.Models.Reponses;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using System.Xml.Linq;
 
 #endregion
 

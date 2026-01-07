@@ -1,7 +1,7 @@
 ﻿#region using
 
-using Order.Application.Data;
 using Order.Application.Dtos.Orders;
+using Order.Domain.Abstractions;
 using Order.Domain.Entities;
 using Order.Domain.ValueObjects;
 using Order.Application.Services;
@@ -100,7 +100,7 @@ public sealed class CreateOrderCommandValidator : AbstractValidator<CreateOrderC
     #endregion
 }
 
-public sealed class CreateOrderCommandHandler(IApplicationDbContext dbContext, ICatalogGrpcService catalogGrpc, IDiscountGrpcService discountGrpc) : ICommandHandler<CreateOrderCommand, Guid>
+public sealed class CreateOrderCommandHandler(IUnitOfWork unitOfWork, ICatalogGrpcService catalogGrpc, IDiscountGrpcService discountGrpc) : ICommandHandler<CreateOrderCommand, Guid>
 {
     #region Implementations
 
@@ -124,17 +124,17 @@ public sealed class CreateOrderCommandHandler(IApplicationDbContext dbContext, I
             dto.ShippingAddress.StateOrProvince,
             dto.ShippingAddress.PostalCode);
 
-        var order = OrderEntity.Create(id: orderId, 
+        var order = OrderEntity.Create(id: orderId,
             notes: dto.Notes,
-            customer: customer, 
-            orderNo: orderNo, 
-            shippingAddress: shippingAddress, 
+            customer: customer,
+            orderNo: orderNo,
+            shippingAddress: shippingAddress,
             performedBy: command.Actor.ToString());
         var productIds = dto.OrderItems.Select(x => x.ProductId.ToString()).ToArray();
-        
+
         var productsResponse = await catalogGrpc.GetAllAvailableProductsAsync(cancellationToken: cancellationToken);
 
-        if(productsResponse == null || productsResponse.Items == null || productsResponse.Items.Count == 0)
+        if (productsResponse == null || productsResponse.Items == null || productsResponse.Items.Count == 0)
         {
             throw new ClientValidationException(MessageCode.ProductsIsNotExistsOrNotInStock);
         }
@@ -158,7 +158,7 @@ public sealed class CreateOrderCommandHandler(IApplicationDbContext dbContext, I
 
         if (!string.IsNullOrWhiteSpace(dto.CouponCode))
         {
-            
+
             decimal amount = 0m;
 
             foreach (var item in dto.OrderItems)
@@ -182,8 +182,8 @@ public sealed class CreateOrderCommandHandler(IApplicationDbContext dbContext, I
         order.ApplyDiscount(discount);
         order.OrderCreated();
 
-        await dbContext.Orders.AddAsync(order, cancellationToken);
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await unitOfWork.Orders.AddAsync(order, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return order.Id;
     }

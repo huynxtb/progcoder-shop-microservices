@@ -14,7 +14,7 @@ public class ProductDto : ProductInfoDto, IAuditableDto
 
     public ProductImageDto? Thumbnail { get; set; }
 
-    public List<ProductImageDto>? Images {  get; set; }
+    public List<ProductImageDto>? Images { get; set; }
 
     public List<Guid>? CategoryIds { get; set; }
 

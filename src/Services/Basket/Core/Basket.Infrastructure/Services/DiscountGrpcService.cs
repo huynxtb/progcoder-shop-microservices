@@ -3,7 +3,6 @@
 using Basket.Application.Services;
 using Discount.Grpc;
 using Microsoft.Extensions.Logging;
-using static MongoDB.Driver.WriteConcern;
 
 #endregion
 

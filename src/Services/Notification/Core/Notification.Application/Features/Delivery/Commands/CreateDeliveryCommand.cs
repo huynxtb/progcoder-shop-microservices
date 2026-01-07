@@ -4,9 +4,7 @@ using Notification.Application.Dtos.Deliveries;
 using Notification.Application.Data.Repositories;
 using Notification.Application.Providers;
 using Notification.Domain.Entities;
-using Notification.Domain.Enums;
-using BuildingBlocks.Abstractions.ValueObjects;
-using Common.Constants;
+using Common.ValueObjects;
 using Microsoft.Extensions.Logging;
 
 #endregion

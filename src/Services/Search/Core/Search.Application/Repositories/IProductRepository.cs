@@ -1,6 +1,5 @@
 ﻿#region using
 
-using BuildingBlocks.Pagination;
 using Search.Application.Models.Filters;
 using Search.Domain.Entities;
 
@@ -13,7 +12,7 @@ public interface IProductRepository
     #region Methods
 
     Task<(List<ProductEntity> Items, long TotalCount)> SearchAsync(
-        SearchTermsFilter filter, 
+        SearchTermsFilter filter,
         PaginationRequest? paging = null,
         CancellationToken cancellationToken = default);
 

@@ -1,13 +1,14 @@
-﻿#region using
+#region using
 
 using AutoMapper;
 using BuildingBlocks.Pagination.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Order.Application.Data;
+using Order.Domain.Abstractions;
 using Order.Application.Dtos.Orders;
 using Order.Application.Models.Filters;
 using Order.Application.Models.Results;
 using Order.Domain.Entities;
+using System.Linq.Expressions;
 
 #endregion
 
@@ -17,7 +18,7 @@ public sealed record GetOrdersQuery(
     GetOrdersFilter Filter,
     PaginationRequest Paging) : IQuery<GetOrdersResult>;
 
-public sealed class GetOrdersQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
+public sealed class GetOrdersQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     : IQueryHandler<GetOrdersQuery, GetOrdersResult>
 {
     #region Implementations
@@ -26,53 +27,32 @@ public sealed class GetOrdersQueryHandler(IApplicationDbContext dbContext, IMapp
     {
         var filter = query.Filter;
         var paging = query.Paging;
-        var orderQuery = dbContext.Orders.AsQueryable();
+        var predicate = BuildFilterPredicate(filter);
 
-        if (!filter.SearchText.IsNullOrWhiteSpace())
-        {
-            var search = filter.SearchText.Trim().ToLower();
-            orderQuery = orderQuery.Where(x => 
-                x.OrderNo.Value.ToLower().Contains(search) ||
-                x.Customer.Name.ToLower().Contains(search) ||
-                x.Customer.Email.ToLower().Contains(search));
-        }
+        var orders = await unitOfWork.Orders
+            .SearchWithRelationshipAsync(predicate, paging, cancellationToken);
 
-        if (filter.Ids?.Length > 0)
-        {
-            orderQuery = orderQuery.Where(x => filter.Ids.Contains(x.Id));
-        }
-
-        if (filter.CustomerId.HasValue)
-        {
-            orderQuery = orderQuery.Where(x => x.Customer.Id == filter.CustomerId.Value);
-        }
-
-        if (filter.Status.HasValue)
-        {
-            orderQuery = orderQuery.Where(x => x.Status == filter.Status.Value);
-        }
-
-        if (filter.FromDate.HasValue)
-        {
-            orderQuery = orderQuery.Where(x => x.CreatedOnUtc >= filter.FromDate.Value);
-        }
-
-        if (filter.ToDate.HasValue)
-        {
-            orderQuery = orderQuery.Where(x => x.CreatedOnUtc <= filter.ToDate.Value);
-        }
-
-        var totalCount = await orderQuery.CountAsync(cancellationToken);
-        var orders = await orderQuery
-            .Include(x => x.OrderItems)
-            .OrderByDescending(x => x.CreatedOnUtc)
-            .WithPaging(paging)
-            .ToListAsync(cancellationToken);
+        var totalCount = await unitOfWork.Orders.CountAsync(predicate, cancellationToken);
 
         var items = mapper.Map<List<OrderDto>>(orders);
         var response = new GetOrdersResult(items, totalCount, paging);
 
         return response;
+    }
+
+    #endregion
+
+    #region Helper Methods
+
+    private static Expression<Func<OrderEntity, bool>> BuildFilterPredicate(GetOrdersFilter filter)
+    {
+        return x =>
+            (filter.Ids == null || filter.Ids.Length == 0 || filter.Ids.Contains(x.Id)) &&
+            (!filter.CustomerId.HasValue || x.Customer.Id == filter.CustomerId.Value) &&
+            (!filter.Status.HasValue || x.Status == filter.Status.Value) &&
+            (filter.SearchText.IsNullOrWhiteSpace() || x.OrderNo.Value.ToLower().Contains(filter.SearchText.Trim().ToLower())) &&
+            (!filter.FromDate.HasValue || x.CreatedOnUtc >= filter.FromDate.Value) &&
+            (!filter.ToDate.HasValue || x.CreatedOnUtc <= filter.ToDate.Value);
     }
 
     #endregion

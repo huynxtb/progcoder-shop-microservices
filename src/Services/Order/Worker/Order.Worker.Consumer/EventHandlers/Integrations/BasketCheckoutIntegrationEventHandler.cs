@@ -1,13 +1,13 @@
-﻿#region using
+#region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
+using Common.ValueObjects;
 using EventSourcing.Events.Baskets;
 using MassTransit;
 using MediatR;
 using Order.Application.Features.Order.Commands;
 using Order.Application.Dtos.Orders;
 using Order.Application.Dtos.ValueObjects;
-using Order.Application.Data;
+using Order.Domain.Abstractions;
 using Order.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
@@ -18,7 +18,7 @@ namespace Order.Worker.Consumer.EventHandlers.Integrations;
 
 public sealed class BasketCheckoutIntegrationEventHandler(
     IMediator sender,
-    IApplicationDbContext dbContext,
+    IUnitOfWork unitOfWork,
     ILogger<BasketCheckoutIntegrationEventHandler> logger)
     : IConsumer<BasketCheckoutIntegrationEvent>
 {
@@ -30,7 +30,7 @@ public sealed class BasketCheckoutIntegrationEventHandler(
         var messageId = context.MessageId ?? Guid.NewGuid();
 
         // Check if message already exists in inbox (idempotency)
-        var existingMessage = await dbContext.InboxMessages
+        var existingMessage = await unitOfWork.InboxMessages
             .FirstOrDefaultAsync(m => m.Id == messageId, context.CancellationToken);
 
         if (existingMessage != null)
@@ -46,8 +46,8 @@ public sealed class BasketCheckoutIntegrationEventHandler(
             JsonSerializer.Serialize(message),
             DateTimeOffset.UtcNow);
 
-        await dbContext.InboxMessages.AddAsync(inboxMessage, context.CancellationToken);
-        await dbContext.SaveChangesAsync(context.CancellationToken);
+        await unitOfWork.InboxMessages.AddAsync(inboxMessage, context.CancellationToken);
+        await unitOfWork.SaveChangesAsync(context.CancellationToken);
 
         logger.LogInformation("Processing integration event {EventType} with ID {MessageId}",
             message.GetType().Name, messageId);
@@ -80,24 +80,24 @@ public sealed class BasketCheckoutIntegrationEventHandler(
                 }).ToList(),
                 CouponCode = message.Discount.CouponCode
             };
-            
+
             var command = new CreateOrderCommand(dto, Actor.User(dto.Customer.Id.ToString()!));
             await sender.Send(command, context.CancellationToken);
 
             // Mark as successfully processed
             inboxMessage.CompleteProcessing(DateTimeOffset.UtcNow);
-            await dbContext.SaveChangesAsync(context.CancellationToken);
+            await unitOfWork.SaveChangesAsync(context.CancellationToken);
 
             logger.LogInformation("Successfully processed event {MessageId}", messageId);
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Failed to process event {MessageId}", messageId);
-            
+
             // Mark as failed
             inboxMessage.CompleteProcessing(DateTimeOffset.UtcNow, ex.Message);
-            await dbContext.SaveChangesAsync(context.CancellationToken);
-            
+            await unitOfWork.SaveChangesAsync(context.CancellationToken);
+
             throw;
         }
     }

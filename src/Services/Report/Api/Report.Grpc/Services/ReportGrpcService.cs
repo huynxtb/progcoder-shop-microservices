@@ -1,6 +1,6 @@
 #region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
+using Common.ValueObjects;
 using Common.Constants;
 using Grpc.Core;
 using MediatR;

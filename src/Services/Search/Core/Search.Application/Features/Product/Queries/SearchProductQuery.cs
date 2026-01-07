@@ -1,7 +1,6 @@
 #region using
 
 using AutoMapper;
-using BuildingBlocks.Pagination;
 using Search.Application.Dtos.Products;
 using Search.Application.Models.Filters;
 using Search.Application.Models.Results;
@@ -24,8 +23,8 @@ public sealed class SearchProductQueryHandler(
     public async Task<SearchProductResult> Handle(SearchProductQuery query, CancellationToken cancellationToken)
     {
         var (products, totalCount) = await productRepository.SearchAsync(
-            query.Filter, 
-            query.Paging, 
+            query.Filter,
+            query.Paging,
             cancellationToken);
 
         var productDtos = mapper.Map<List<ProductDto>>(products);

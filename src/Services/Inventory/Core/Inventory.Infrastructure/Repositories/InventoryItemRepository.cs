@@ -15,7 +15,7 @@ namespace Inventory.Infrastructure.Repositories;
 public class InventoryItemRepository(ApplicationDbContext context) : Repository<InventoryItemEntity>(context), IInventoryItemRepository
 {
     #region Implementations
-    
+
     public async Task<List<InventoryItemEntity>> FindByProductWithRelationshipAsync(Guid productId, CancellationToken cancellationToken = default)
     {
         return await _dbSet
@@ -35,8 +35,8 @@ public class InventoryItemRepository(ApplicationDbContext context) : Repository<
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<InventoryItemEntity>> SearchWithRelationshipAsync(Expression<Func<InventoryItemEntity, bool>> predicate, 
-        PaginationRequest pagination, 
+    public async Task<List<InventoryItemEntity>> SearchWithRelationshipAsync(Expression<Func<InventoryItemEntity, bool>> predicate,
+        PaginationRequest pagination,
         CancellationToken cancellationToken = default)
     {
         return await _dbSet

@@ -1,8 +1,6 @@
 #region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
-using Common.Constants;
-using FluentValidation;
+using Common.ValueObjects;
 using MediatR;
 using Report.Application.Data.Repositories;
 using Report.Application.Dtos.OrderGrowthLineCharts;
@@ -40,7 +38,7 @@ public sealed class UpdateOrderGrowthLineChartCommandValidator : AbstractValidat
     #endregion
 }
 
-public sealed class UpdateOrderGrowthLineChartCommandHandler(IOrderGrowthLineChartRepository repository) 
+public sealed class UpdateOrderGrowthLineChartCommandHandler(IOrderGrowthLineChartRepository repository)
     : ICommandHandler<UpdateOrderGrowthLineChartCommand, Unit>
 {
     #region Implementations

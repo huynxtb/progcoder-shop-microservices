@@ -1,14 +1,10 @@
 #region using
 
 using AutoMapper;
-using BuildingBlocks.Pagination.Extensions;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Application.Models.Filters;
 using Inventory.Application.Models.Results;
 using Inventory.Domain.Abstractions;
-using Inventory.Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
-using System.Net.NetworkInformation;
 
 #endregion
 
@@ -29,7 +25,7 @@ public sealed class GetInventoryItemsQueryHandler(IUnitOfWork unitOfWork, IMappe
         var paging = query.Paging;
 
         var result = unitOfWork.InventoryItems
-            .SearchWithRelationshipAsync(x => 
+            .SearchWithRelationshipAsync(x =>
                 string.IsNullOrEmpty(filter.SearchText) ||
                 x.Product.Name!.Contains(filter.SearchText) ||
                 x.Location.Location!.Contains(filter.SearchText),
@@ -40,7 +36,7 @@ public sealed class GetInventoryItemsQueryHandler(IUnitOfWork unitOfWork, IMappe
             .CountAsync(x =>
                 string.IsNullOrEmpty(filter.SearchText) ||
                 x.Product.Name!.Contains(filter.SearchText) ||
-                x.Location.Location!.Contains(filter.SearchText), 
+                x.Location.Location!.Contains(filter.SearchText),
                 cancellationToken);
 
         var items = mapper.Map<List<InventoryItemDto>>(result);

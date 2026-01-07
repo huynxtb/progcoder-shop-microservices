@@ -4,7 +4,6 @@ using BuildingBlocks.Authentication.Extensions;
 using Catalog.Api.Constants;
 using Catalog.Application.Features.Brand.Commands;
 using Catalog.Application.Dtos.Brands;
-using Common.Models.Reponses;
 using Microsoft.AspNetCore.Mvc;
 
 #endregion

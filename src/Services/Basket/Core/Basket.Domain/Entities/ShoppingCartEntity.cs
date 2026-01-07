@@ -2,8 +2,6 @@
 
 using Basket.Domain.Abstractions;
 using Basket.Domain.Attributes;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 
 #endregion
 

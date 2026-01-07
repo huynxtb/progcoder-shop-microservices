@@ -8,9 +8,9 @@ namespace Order.Application.Services;
 
 public interface ICatalogGrpcService
 {
-	#region Methods
+    #region Methods
 
-	Task<ProductReponse?> GetProductByIdAsync(string productId, CancellationToken cancellationToken = default);
+    Task<ProductReponse?> GetProductByIdAsync(string productId, CancellationToken cancellationToken = default);
 
     Task<GetAllProductsResponse?> GetProductsAsync(string[]? ids = null, string searchText = "", CancellationToken cancellationToken = default);
 

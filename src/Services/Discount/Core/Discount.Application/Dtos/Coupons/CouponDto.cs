@@ -2,7 +2,6 @@
 
 using Discount.Application.Dtos.Abstractions;
 using Discount.Domain.Enums;
-using Discount.Domain.ValueObjects;
 
 #endregion
 

@@ -2,11 +2,8 @@
 
 using BuildingBlocks.Behaviors;
 using BuildingBlocks.Exceptions.Handler;
-using EventSourcing.MassTransit;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FeatureManagement;
-using Common.Configurations;
 using System.Reflection;
 
 #endregion
@@ -28,7 +25,7 @@ public static class DependencyInjection
             config.AddOpenBehavior(typeof(LoggingBehavior<,>));
         });
         services.AddFeatureManagement();
-        
+
         // Register all AutoMapper profiles from the current assembly
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
 

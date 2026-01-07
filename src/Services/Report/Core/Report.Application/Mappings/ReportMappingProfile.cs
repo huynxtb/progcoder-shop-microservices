@@ -1,6 +1,5 @@
 #region using
 
-using AutoMapper;
 using Report.Application.Dtos.DashboardTotals;
 using Report.Application.Dtos.OrderGrowthLineCharts;
 using Report.Application.Dtos.TopProductPieCharts;

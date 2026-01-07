@@ -16,7 +16,7 @@ public sealed class ChannelResult
 
     private ChannelResult(bool ok, string? id = null, string? msg = null)
     {
-        IsSuccess = ok; ProviderMessageId = id;  ErrorMessage = msg;
+        IsSuccess = ok; ProviderMessageId = id; ErrorMessage = msg;
     }
 
     #endregion

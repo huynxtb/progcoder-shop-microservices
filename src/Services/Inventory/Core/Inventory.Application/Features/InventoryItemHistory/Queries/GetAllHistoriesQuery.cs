@@ -1,10 +1,9 @@
 #region using
 
 using AutoMapper;
-using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Application.Models.Results;
-using Microsoft.EntityFrameworkCore;
+using Inventory.Domain.Abstractions;
 
 #endregion
 

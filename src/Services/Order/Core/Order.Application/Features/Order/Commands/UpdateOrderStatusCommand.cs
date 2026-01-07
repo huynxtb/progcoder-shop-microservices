@@ -1,7 +1,7 @@
 ﻿#region using
 
 using Microsoft.EntityFrameworkCore;
-using Order.Application.Data;
+using Order.Domain.Abstractions;
 using Order.Domain.Enums;
 
 #endregion
@@ -50,15 +50,14 @@ public sealed class UpdateOrderStatusCommandValidator : AbstractValidator<Update
     #endregion
 }
 
-public sealed class UpdateOrderStatusCommandHandler(IApplicationDbContext dbContext)
+public sealed class UpdateOrderStatusCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<UpdateOrderStatusCommand, Guid>
 {
     #region Implementations
 
     public async Task<Guid> Handle(UpdateOrderStatusCommand command, CancellationToken cancellationToken)
     {
-        var order = await dbContext.Orders
-            .FirstOrDefaultAsync(x => x.Id == command.OrderId, cancellationToken)
+        var order = await unitOfWork.Orders.FirstOrDefaultAsync(x => x.Id == command.OrderId, cancellationToken)
             ?? throw new NotFoundException(MessageCode.ResourceNotFound, command.OrderId);
 
         if (order.Status == OrderStatus.Delivered ||
@@ -92,7 +91,7 @@ public sealed class UpdateOrderStatusCommandHandler(IApplicationDbContext dbCont
                 }
                 order.RefundOrder(command.Reason!, performedBy);
                 break;
-            
+
             case OrderStatus.Delivered:
                 order.OrderDelivered(performedBy);
                 break;
@@ -102,8 +101,8 @@ public sealed class UpdateOrderStatusCommandHandler(IApplicationDbContext dbCont
                 break;
         }
 
-        dbContext.Orders.Update(order);
-        await dbContext.SaveChangesAsync(cancellationToken);
+        unitOfWork.Orders.Update(order);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return order.Id;
     }

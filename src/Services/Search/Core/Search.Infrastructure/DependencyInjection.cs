@@ -18,7 +18,7 @@ public static class DependencyInjection
     #region Methods
 
     public static IServiceCollection AddInfrastructureServices(
-        this IServiceCollection services, 
+        this IServiceCollection services,
         IConfiguration cfg)
     {
         services.Scan(s => s

@@ -1,7 +1,5 @@
 ﻿#region using
 
-using BuildingBlocks.Pagination;
-using BuildingBlocks.Pagination.Extensions;
 using MongoDB.Driver;
 using Notification.Application.Data.Repositories;
 using Notification.Domain.Entities;

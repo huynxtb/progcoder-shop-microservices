@@ -1,15 +1,14 @@
 #region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
+using Common.ValueObjects;
 using Common.Constants;
 using EventSourcing.Events.Orders;
 using Inventory.Application.Features.InventoryReservation.Commands;
-using Inventory.Domain.Abstractions;
-using Inventory.Domain.Repositories;
 using Inventory.Domain.Entities;
 using MassTransit;
 using MediatR;
 using System.Text.Json;
+using Inventory.Domain.Abstractions;
 
 #endregion
 
@@ -77,10 +76,10 @@ public sealed class OrderDeliveredIntegrationEventHandler(
             logger.LogError(ex,
                 "Failed to commit reservations for delivered order {OrderNo} (ID: {OrderId})",
                 message.OrderNo, message.OrderId);
-            
+
             inboxMessage.CompleteProcessing(DateTimeOffset.UtcNow, ex.Message);
             await unitOfWork.SaveChangesAsync(context.CancellationToken);
-            
+
             throw;
         }
     }

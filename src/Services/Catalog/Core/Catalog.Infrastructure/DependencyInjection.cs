@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
 using Common.Configurations;
-using Catalog.Infrastructure.Data;
 
 #endregion
 
@@ -17,7 +16,7 @@ public static class DependencyInjection
     #region Methods
 
     public static IServiceCollection AddInfrastructureServices(
-        this IServiceCollection services, 
+        this IServiceCollection services,
         IConfiguration cfg)
     {
         services.AddMarten(opts =>

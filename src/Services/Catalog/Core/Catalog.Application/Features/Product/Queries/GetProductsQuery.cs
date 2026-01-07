@@ -41,7 +41,7 @@ public sealed class GetProductsQueryHandler(IDocumentSession session, IMapper ma
         var result = await productQuery
             .OrderByDescending(x => x.CreatedOnUtc)
             .ToPagedListAsync(paging.PageNumber, paging.PageSize, cancellationToken);
-        
+
         var products = result.ToList();
         var items = mapper.Map<List<ProductDto>>(products);
 

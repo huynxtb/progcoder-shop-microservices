@@ -1,6 +1,6 @@
 ﻿#region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
+using Common.ValueObjects;
 using Common.Constants;
 using Common.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -101,7 +101,7 @@ public static class DatabaseExtentions
                 Builders<OrderGrowthLineChartEntity>.IndexKeys
                     .Ascending(x => x.Date),
                 new CreateIndexOptions { Unique = true }));
-        
+
         await orderGrowthCollection.Indexes.CreateOneAsync(
             new CreateIndexModel<OrderGrowthLineChartEntity>(
                 Builders<OrderGrowthLineChartEntity>.IndexKeys
@@ -114,7 +114,7 @@ public static class DatabaseExtentions
                 Builders<TopProductPieChartEntity>.IndexKeys
                     .Ascending(x => x.Name),
                 new CreateIndexOptions { Unique = true }));
-        
+
         await topProductCollection.Indexes.CreateOneAsync(
             new CreateIndexModel<TopProductPieChartEntity>(
                 Builders<TopProductPieChartEntity>.IndexKeys

@@ -1,6 +1,5 @@
 #region using
 
-using BuildingBlocks.Authentication.Extensions;
 using Common.Models.Reponses;
 using Report.Api.Constants;
 using Report.Application.Features.TopProductPieChart.Queries;

@@ -1,7 +1,7 @@
 ﻿#region using
 
 using Notification.Application.Data.Repositories;
-using BuildingBlocks.Abstractions.ValueObjects;
+using Common.ValueObjects;
 using Notification.Application.Models.Results;
 
 #endregion

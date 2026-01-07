@@ -1,8 +1,5 @@
 ﻿#region using
 
-using Inventory.Application.Dtos.Abstractions;
-using Inventory.Domain.Enums;
-
 #endregion
 
 namespace Inventory.Application.Dtos.InventoryItems;

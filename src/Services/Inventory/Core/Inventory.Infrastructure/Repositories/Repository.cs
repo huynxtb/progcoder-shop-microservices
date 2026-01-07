@@ -1,6 +1,6 @@
 #region using
 
-using Inventory.Domain.Repositories;
+using BuildingBlocks.Abstractions;
 using Inventory.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace Inventory.Infrastructure.Repositories;
 
-public class Repository<T>(ApplicationDbContext context) : IRepository<T> where T : class
+public class Repository<T>(ApplicationDbContext context) : IBaseRepository<T> where T : class
 {
     #region Fields
 

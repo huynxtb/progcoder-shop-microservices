@@ -1,7 +1,7 @@
-﻿#region using
+#region using
 
 using AutoMapper;
-using Order.Application.Data;
+using Order.Domain.Abstractions;
 using Order.Application.Dtos.Orders;
 using Order.Application.Models.Filters;
 using Order.Application.Models.Results;
@@ -15,7 +15,7 @@ public sealed record GetAllMyOrdersQuery(
     GetMyOrdersFilter Filter,
     Actor Actor) : IQuery<GetAllMyOrdersResult>;
 
-public sealed class GetAllMyOrdersQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
+public sealed class GetAllMyOrdersQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     : IQueryHandler<GetAllMyOrdersQuery, GetAllMyOrdersResult>
 {
     #region Implementations
@@ -25,29 +25,13 @@ public sealed class GetAllMyOrdersQueryHandler(IApplicationDbContext dbContext, 
         var filter = query.Filter;
         var actor = query.Actor;
 
-        var orderQuery = dbContext.Orders
-            .Where(x => x.Customer.Id == Guid.Parse(actor.ToString()));
-
-        if (!filter.SearchText.IsNullOrWhiteSpace())
-        {
-            var search = filter.SearchText.Trim().ToLower();
-            orderQuery = orderQuery.Where(x => 
-                x.OrderNo.Value.ToLower().Contains(search));
-        }
-
-        if (filter.FromDate.HasValue)
-        {
-            orderQuery = orderQuery.Where(x => x.CreatedOnUtc >= filter.FromDate.Value);
-        }
-
-        if (filter.ToDate.HasValue)
-        {
-            orderQuery = orderQuery.Where(x => x.CreatedOnUtc <= filter.ToDate.Value);
-        }
-
-        var orders = await orderQuery
-            .OrderByDescending(x => x.CreatedOnUtc)
-            .ToListAsync(cancellationToken);
+        var orders = await unitOfWork.Orders
+            .SearchWithRelationshipAsync(x => 
+                x.Customer.Id == Guid.Parse(actor.ToString()) && 
+                (filter.SearchText.IsNullOrWhiteSpace() || x.OrderNo.Value.ToLower().Contains(filter.SearchText!)) &&
+                (!filter.FromDate.HasValue || x.CreatedOnUtc >= filter.FromDate.Value) &&
+                (!filter.ToDate.HasValue || x.CreatedOnUtc <= filter.ToDate.Value),
+                cancellationToken);
 
         var items = mapper.Map<List<OrderDto>>(orders);
         var response = new GetAllMyOrdersResult(items);

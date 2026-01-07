@@ -2,7 +2,6 @@
 
 using Order.Domain.Abstractions;
 using Order.Domain.ValueObjects;
-using System.Diagnostics;
 
 #endregion
 
@@ -23,7 +22,7 @@ public sealed class OrderItemEntity : Entity<Guid>
         get => Product.Price * Quantity;
         private set { }
     }
-    
+
     #endregion
 
     #region Factories

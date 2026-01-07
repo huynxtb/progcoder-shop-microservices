@@ -22,7 +22,7 @@ public static class DependencyInjection
     #region Methods
 
     public static IServiceCollection AddInfrastructureServices(
-        this IServiceCollection services, 
+        this IServiceCollection services,
         IConfiguration cfg)
     {
         services.Scan(s => s
@@ -48,7 +48,7 @@ public static class DependencyInjection
                         options.UseSqlServer(conn);
                         break;
                     case DatabaseType.MySql:
-                        options.UseMySQL(conn!); 
+                        options.UseMySQL(conn!);
                         break;
                     case DatabaseType.PostgreSql:
                         options.UseNpgsql(conn);
@@ -59,6 +59,7 @@ public static class DependencyInjection
             });
 
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+            services.AddScoped<Order.Domain.Abstractions.IUnitOfWork, UnitOfWork.UnitOfWork>();
         }
 
         services.AddGrpcClients(cfg);

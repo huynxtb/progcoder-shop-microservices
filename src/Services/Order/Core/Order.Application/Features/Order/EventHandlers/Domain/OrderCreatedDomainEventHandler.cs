@@ -1,10 +1,10 @@
-﻿#region using
+#region using
 
 using EventSourcing.Events.Orders;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Order.Application.Data;
+using Order.Domain.Abstractions;
 using Order.Domain.Entities;
 using Order.Domain.Events;
 
@@ -13,7 +13,7 @@ using Order.Domain.Events;
 namespace Order.Application.Features.Order.EventHandlers.Domain;
 
 public sealed class OrderCreatedDomainEventHandler(
-    IApplicationDbContext dbContext,
+    IUnitOfWork unitOfWork,
     ILogger<OrderCreatedDomainEventHandler> logger) : INotificationHandler<OrderCreatedDomainEvent>
 {
     #region Implementations
@@ -48,7 +48,7 @@ public sealed class OrderCreatedDomainEventHandler(
                 LineTotal = oi.LineTotal
             }).ToList(),
         };
-        
+
         var outboxMessageId = Guid.NewGuid();
         var outboxMessage = OutboxMessageEntity.Create(
             id: outboxMessageId,
@@ -56,8 +56,8 @@ public sealed class OrderCreatedDomainEventHandler(
             content: JsonConvert.SerializeObject(message),
             occurredOnUtc: DateTimeOffset.UtcNow);
 
-        await dbContext.OutboxMessages.AddAsync(outboxMessage, cancellationToken);
-        
+        await unitOfWork.OutboxMessages.AddAsync(outboxMessage, cancellationToken);
+
         logger.LogInformation(
             "Created outbox message {OutboxMessageId} for OrderId: {OrderId}, OrderNo: {OrderNo}",
             outboxMessageId, @event.Order.Id, @event.Order.OrderNo);

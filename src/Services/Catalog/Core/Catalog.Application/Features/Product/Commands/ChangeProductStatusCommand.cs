@@ -1,10 +1,8 @@
 ﻿#region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
 using Catalog.Domain.Entities;
 using Catalog.Domain.Enums;
 using Catalog.Domain.Events;
-using Common.Models.Reponses;
 using Marten;
 using MediatR;
 

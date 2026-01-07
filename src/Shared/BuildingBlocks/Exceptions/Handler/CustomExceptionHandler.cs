@@ -9,7 +9,6 @@ using Common.Configurations;
 using Common.Constants;
 using Common.Models;
 using Common.Models.Reponses;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 #endregion
 

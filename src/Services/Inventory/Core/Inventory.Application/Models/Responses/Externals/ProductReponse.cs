@@ -17,7 +17,7 @@ public class ProductReponse
     #endregion
 }
 
-public class ProductImageResponse 
+public class ProductImageResponse
 {
     #region Fields, Properties and Indexers
 

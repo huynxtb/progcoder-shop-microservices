@@ -4,7 +4,6 @@ using Catalog.Grpc;
 using Microsoft.Extensions.Logging;
 using Order.Application.Models.Responses.Externals;
 using Order.Application.Services;
-using Org.BouncyCastle.Crypto;
 
 #endregion
 

@@ -3,8 +3,7 @@
 using Notification.Application.Features.Delivery.Commands;
 using Notification.Application.Features.Delivery.Queries;
 using Common.Configurations;
-using Common.Constants;
-using BuildingBlocks.Abstractions.ValueObjects;
+using Common.ValueObjects;
 using MediatR;
 
 #endregion

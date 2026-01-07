@@ -1,7 +1,6 @@
 ﻿#region using
 
 using Inventory.Domain.Entities;
-using Inventory.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

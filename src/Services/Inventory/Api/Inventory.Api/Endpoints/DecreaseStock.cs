@@ -5,8 +5,6 @@ using Inventory.Application.Features.InventoryItem.Commands;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
-using Common.Models.Reponses;
-using BuildingBlocks.Abstractions.ValueObjects;
 using Common.Extensions;
 using BuildingBlocks.Authentication.Extensions;
 

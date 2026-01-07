@@ -56,10 +56,10 @@ public sealed class OrderEntity : Aggregate<Guid>
 
     #region Factories
 
-    public static OrderEntity Create(Guid id, 
-        Customer customer, 
-        OrderNo orderNo, 
-        Address shippingAddress, 
+    public static OrderEntity Create(Guid id,
+        Customer customer,
+        OrderNo orderNo,
+        Address shippingAddress,
         string? notes,
         string performedBy)
     {

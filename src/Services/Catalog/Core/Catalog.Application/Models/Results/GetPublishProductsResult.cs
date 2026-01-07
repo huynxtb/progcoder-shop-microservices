@@ -1,7 +1,6 @@
 ﻿#region using
 
 using Catalog.Application.Dtos.Products;
-using Common.Models.Reponses;
 
 #endregion
 

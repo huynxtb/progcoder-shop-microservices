@@ -3,7 +3,6 @@
 using Discount.Application.Dtos.Coupons;
 using Discount.Application.Repositories;
 using Discount.Domain.Entities;
-using Discount.Domain.ValueObjects;
 
 #endregion
 

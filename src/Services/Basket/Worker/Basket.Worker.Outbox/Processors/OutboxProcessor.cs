@@ -69,7 +69,7 @@ internal sealed class OutboxProcessor
         if (!updateQueue.IsEmpty)
         {
             // Convert OutboxUpdate to OutboxMessageEntity for bulk update
-            var messagesToUpdate = updateQueue.Select(update => 
+            var messagesToUpdate = updateQueue.Select(update =>
             {
                 var message = allMessages.First(m => m.Id == update.Id);
                 message.CompleteProcessing(update.ProcessedOnUtc, update.LastErrorMessage);
@@ -102,59 +102,59 @@ internal sealed class OutboxProcessor
     {
         try
         {
-            
+
             var messageType = GetOrAddMessageType(message.EventType!);
             var deserializedMessage = JsonSerializer.Deserialize(message.Content!, messageType)!;
 
-            logger.LogInformation("Publishing message {Id} of type {EventType} (attempt {AttemptCount}/{MaxAttempts})", 
+            logger.LogInformation("Publishing message {Id} of type {EventType} (attempt {AttemptCount}/{MaxAttempts})",
                 message.Id, message.EventType, message.AttemptCount, message.MaxAttempts);
-            
+
             await publish.Publish(deserializedMessage, cancellationToken);
-            
+
             // Increment attempt count for successful publish
             message.IncreaseAttemptCount();
-            
-            logger.LogInformation("Successfully published message {Id} of type {EventType} (attempt {AttemptCount})", 
+
+            logger.LogInformation("Successfully published message {Id} of type {EventType} (attempt {AttemptCount})",
                 message.Id, message.EventType, message.AttemptCount);
 
             // Success - mark as processed
             updateQueue.Enqueue(new OutboxUpdate(
-                message.Id, 
-                DateTimeOffset.UtcNow, 
-                null, 
-                message.AttemptCount, 
+                message.Id,
+                DateTimeOffset.UtcNow,
+                null,
+                message.AttemptCount,
                 null));
-            
+
         }
         catch (Exception ex)
         {
             var currentTime = DateTimeOffset.UtcNow;
             message.RecordFailedAttempt(ex.ToString(), currentTime);
-            
+
             if (message.IsPermanentlyFailed())
             {
                 // Permanently failed - mark as processed with error
                 updateQueue.Enqueue(new OutboxUpdate(
-                    message.Id, 
-                    currentTime, 
-                    message.LastErrorMessage, 
-                    message.AttemptCount, 
+                    message.Id,
+                    currentTime,
+                    message.LastErrorMessage,
+                    message.AttemptCount,
                     null));
-                
-                logger.LogError(ex, "Permanently failed to publish outbox message {Id} after {AttemptCount} attempts", 
+
+                logger.LogError(ex, "Permanently failed to publish outbox message {Id} after {AttemptCount} attempts",
                     message.Id, message.AttemptCount);
             }
             else
             {
                 // Schedule for retry
                 updateQueue.Enqueue(new OutboxUpdate(
-                    message.Id, 
-                    currentTime, 
-                    message.LastErrorMessage, 
-                    message.AttemptCount, 
+                    message.Id,
+                    currentTime,
+                    message.LastErrorMessage,
+                    message.AttemptCount,
                     message.NextAttemptOnUtc));
-                
-                logger.LogWarning(ex, "Failed to publish outbox message {Id} (attempt {AttemptCount}/{MaxAttempts}), will retry at {NextAttemptOnUtc}", 
+
+                logger.LogWarning(ex, "Failed to publish outbox message {Id} (attempt {AttemptCount}/{MaxAttempts}), will retry at {NextAttemptOnUtc}",
                     message.Id, message.AttemptCount, message.MaxAttempts, message.NextAttemptOnUtc);
             }
         }

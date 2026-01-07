@@ -7,7 +7,7 @@ using Notification.Application.Features.Delivery.Commands;
 using Notification.Application.Dtos.Deliveries;
 using Notification.Application.Constants;
 using Notification.Domain.Enums;
-using BuildingBlocks.Abstractions.ValueObjects;
+using Common.ValueObjects;
 using Common.Constants;
 using Common.Extensions;
 using Notification.Application.Services;
@@ -55,7 +55,7 @@ public sealed class UpsertedProductIntegrationEventHandler(
         await sender.Send(deliveryCommand, context.CancellationToken);
 
         var adminUsers = await keycloak.GetUsersByRoleAsync(AuthorizeRole.SystemAdmin, context.CancellationToken);
-        
+
         if (!adminUsers.Any())
         {
             logger.LogWarning("No admin users found to notify for product upserted event: {ProductId}", integrationEvent.ProductId);

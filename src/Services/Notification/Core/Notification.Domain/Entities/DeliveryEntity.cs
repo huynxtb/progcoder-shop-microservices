@@ -2,7 +2,6 @@
 
 using Notification.Domain.Abstractions;
 using Notification.Domain.Enums;
-using Common.Constants;
 
 #endregion
 
@@ -42,7 +41,7 @@ public sealed class DeliveryEntity : Aggregate<Guid>
         List<string> to,
         string subject,
         bool isHtml,
-		string body,
+        string body,
         DeliveryPriority priority,
         string eventId,
         string performedBy,
@@ -107,7 +106,7 @@ public sealed class DeliveryEntity : Aggregate<Guid>
 
     public void IncreaseAttemptCount()
     {
-        AttemptCount += 1;   
+        AttemptCount += 1;
     }
 
     #endregion

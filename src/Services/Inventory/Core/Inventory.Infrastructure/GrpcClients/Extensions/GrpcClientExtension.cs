@@ -16,7 +16,7 @@ public static class GrpcClientExtension
 
     public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration cfg)
     {
-        var catalogServiceUrl = cfg.GetValue<string>($"{GrpcClientCfg.Catalog.Section}:{GrpcClientCfg.Catalog.Url}") 
+        var catalogServiceUrl = cfg.GetValue<string>($"{GrpcClientCfg.Catalog.Section}:{GrpcClientCfg.Catalog.Url}")
             ?? throw new InvalidOperationException("Catalog service URL is not configured.");
         services.AddGrpcClient<CatalogGrpc.CatalogGrpcClient>(options =>
         {

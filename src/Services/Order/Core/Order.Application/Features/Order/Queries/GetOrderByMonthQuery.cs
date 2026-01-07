@@ -1,8 +1,8 @@
-﻿#region using
+#region using
 
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Order.Application.Data;
+using Order.Domain.Abstractions;
 using Order.Application.Dtos.Orders;
 using Order.Application.Models.Results;
 
@@ -12,18 +12,20 @@ namespace Order.Application.Features.Order.Queries;
 
 public sealed record GetOrderByMonthQuery(int Year, int Month) : IQuery<GetOrderByMonthResult>;
 
-public sealed class GetOrderByMonthQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
+public sealed class GetOrderByMonthQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     : IQueryHandler<GetOrderByMonthQuery, GetOrderByMonthResult>
 {
     #region Implementations
 
     public async Task<GetOrderByMonthResult> Handle(GetOrderByMonthQuery query, CancellationToken cancellationToken)
     {
-        // Fetch orders for the specified month
-        var orders = await dbContext.Orders
-            .Include(x => x.OrderItems)
-            .Where(x => x.CreatedOnUtc.Year == query.Year && x.CreatedOnUtc.Month == query.Month && x.Status == Domain.Enums.OrderStatus.Delivered)
-            .ToListAsync(cancellationToken);
+        // Fetch orders for the specified month using repository
+        var orders = await unitOfWork.Orders
+            .SearchWithRelationshipAsync(
+                x => x.CreatedOnUtc.Year == query.Year && 
+                     x.CreatedOnUtc.Month == query.Month && 
+                     x.Status == Domain.Enums.OrderStatus.Delivered,
+                cancellationToken);
 
         // Group orders by day
         var ordersByDay = orders
@@ -35,7 +37,7 @@ public sealed class GetOrderByMonthQueryHandler(IApplicationDbContext dbContext,
 
         // Create result for all days in the month
         var allOrderDtos = new List<OrderDto>();
-        
+
         for (int day = 1; day <= daysInMonth; day++)
         {
             if (ordersByDay.TryGetValue(day, out var dayOrders))

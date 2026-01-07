@@ -1,7 +1,6 @@
 ﻿#region using
 
 using Catalog.Application.Dtos.Products;
-using Common.Models.Reponses;
 
 #endregion
 
@@ -20,8 +19,8 @@ public sealed class GetProductsResult
     #region Ctors
 
     public GetProductsResult(
-        List<ProductDto> items, 
-        long totalCount, 
+        List<ProductDto> items,
+        long totalCount,
         PaginationRequest pagination)
     {
         Items = items;

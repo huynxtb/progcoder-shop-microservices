@@ -14,17 +14,17 @@ public record BasketCheckoutDomainEvent(
     DiscountDomainEvent Discount) : INotification;
 
 public sealed record CustomerDomainEvent(
-    Guid? Id, 
-    string Name, 
-    string Email, 
+    Guid? Id,
+    string Name,
+    string Email,
     string PhoneNumber);
 
 public sealed record AddressDomainEvent(
-    string AddressLine, 
-    string Subdivision, 
-    string City, 
+    string AddressLine,
+    string Subdivision,
+    string City,
     string StateOrProvince,
-    string Country, 
+    string Country,
     string PostalCode);
 
 public sealed record DiscountDomainEvent(string CouponCode, decimal DiscountAmount);

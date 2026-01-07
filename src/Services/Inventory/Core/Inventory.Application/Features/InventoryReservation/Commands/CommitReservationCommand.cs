@@ -1,9 +1,8 @@
 #region using
 
-using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Domain.Enums;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Inventory.Domain.Abstractions;
 
 #endregion
 
@@ -43,9 +42,9 @@ public sealed class CommitReservationCommandHandler(IUnitOfWork unitOfWork)
         foreach (var reservation in reservations)
         {
             var inventoryItem = await unitOfWork.InventoryItems
-                .FirstOrDefaultAsync(x => 
-                        x.Product.Id == reservation.Product.Id && 
-                        x.LocationId == reservation.LocationId, 
+                .FirstOrDefaultAsync(x =>
+                        x.Product.Id == reservation.Product.Id &&
+                        x.LocationId == reservation.LocationId,
                     cancellationToken);
 
             if (inventoryItem != null)

@@ -1,10 +1,7 @@
 #region using
 
-using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Application.Dtos.Locations;
-using Inventory.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-using BuildingBlocks.Abstractions.ValueObjects;
+using Inventory.Domain.Abstractions;
 
 #endregion
 
@@ -39,7 +36,7 @@ public sealed class UpdateLocationCommandValidator : AbstractValidator<UpdateLoc
     #endregion
 }
 
-public sealed class UpdateLocationCommandHandler(IUnitOfWork unitOfWork) 
+public sealed class UpdateLocationCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<UpdateLocationCommand, Guid>
 {
     #region Implementations

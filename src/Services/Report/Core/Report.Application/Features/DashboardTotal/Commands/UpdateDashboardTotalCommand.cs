@@ -1,7 +1,7 @@
 #region using
 
 using Report.Application.Data.Repositories;
-using BuildingBlocks.Abstractions.ValueObjects;
+using Common.ValueObjects;
 using MediatR;
 using Report.Application.Dtos.DashboardTotals;
 

@@ -22,7 +22,7 @@ public static class NotificationCfg
 
         public const string EnableSsl = "EnableSsl";
 
-        public const string TimeoutMs = "TimeoutMs"; 
+        public const string TimeoutMs = "TimeoutMs";
 
         #endregion
     }

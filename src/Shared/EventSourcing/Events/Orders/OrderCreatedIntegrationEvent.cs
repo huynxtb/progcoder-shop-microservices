@@ -3,7 +3,7 @@
 public sealed record OrderCreatedIntegrationEvent : IntegrationEvent
 {
     #region Fields, Properties and Indexers
-    
+
     public Guid OrderId { get; init; }
 
     public string OrderNo { get; init; } = default!;

@@ -6,7 +6,6 @@ using Catalog.Application.Dtos.Categories;
 using Catalog.Application.Dtos.Products;
 using Catalog.Application.Models.Results;
 using Catalog.Domain.Entities;
-using Common.Models;
 
 #endregion
 

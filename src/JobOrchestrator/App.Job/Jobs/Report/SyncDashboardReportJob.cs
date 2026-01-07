@@ -11,8 +11,6 @@ using Google.Protobuf.WellKnownTypes;
 using Order.Grpc;
 using Quartz;
 using Report.Grpc;
-using System.Threading;
-using static IdentityModel.OidcConstants;
 
 #endregion
 
@@ -24,7 +22,7 @@ namespace App.Job.Jobs.Report;
     Description = "Synchronizes dashboard report data from multiple sources",
     CronExpression = "0 0/1 * * * ?", // Runs every 1 minutes
     AutoStart = true)]
-public class SyncDashboardReportJob(ILogger<SyncDashboardReportJob> logger, 
+public class SyncDashboardReportJob(ILogger<SyncDashboardReportJob> logger,
     IKeycloakApi keycloak,
     IConfiguration cfg,
     ReportGrpc.ReportGrpcClient reportGrpc,

@@ -27,7 +27,7 @@ public static class DistributedTracingExtension
         if (!enable) return services;
 
         var otlpEndpoint = cfg[$"{DistributedTracingCfg.Section}:{DistributedTracingCfg.Otlp}:{DistributedTracingCfg.Endpoint}"];
-        
+
         services.AddOpenTelemetry()
             .ConfigureResource(r => r
                 .AddService(

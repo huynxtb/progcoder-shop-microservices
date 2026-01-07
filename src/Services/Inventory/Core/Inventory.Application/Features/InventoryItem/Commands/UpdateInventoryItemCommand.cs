@@ -1,12 +1,9 @@
 #region using
 
-using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Application.Services;
-using Inventory.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-using BuildingBlocks.Abstractions.ValueObjects;
 using Inventory.Domain.Enums;
+using Inventory.Domain.Abstractions;
 
 #endregion
 
@@ -91,7 +88,7 @@ public sealed class UpdateInventoryItemCommandHandler(
                 newLocationName: requestLocation.Location);
 
             unitOfWork.InventoryItems.Update(entity);
-            
+
             await unitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
 

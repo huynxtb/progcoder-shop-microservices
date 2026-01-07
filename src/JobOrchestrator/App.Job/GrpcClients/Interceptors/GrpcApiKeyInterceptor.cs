@@ -4,7 +4,6 @@ using Common.Configurations;
 using Common.Constants;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
-using Microsoft.Extensions.Configuration;
 
 #endregion
 
@@ -21,9 +20,9 @@ public sealed class GrpcApiKeyInterceptor(IConfiguration cfg) : Interceptor
     {
         var grpcKey = cfg.GetValue<string>($"{GrpcClientCfg.Catalog.Section}:{GrpcClientCfg.Catalog.ApiKey}")
             ?? throw new InvalidOperationException("gRPC Key is not configured.");
-        
+
         var headers = context.Options.Headers ?? [];
-        
+
         if (!headers.Any(h => h.Key.Equals(ReqHeaderName.GrpcKey, StringComparison.OrdinalIgnoreCase)))
         {
             headers.Add(ReqHeaderName.GrpcKey, grpcKey);

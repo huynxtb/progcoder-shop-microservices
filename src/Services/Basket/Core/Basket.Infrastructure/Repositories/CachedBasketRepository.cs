@@ -50,7 +50,7 @@ public sealed class CachedBasketRepository(IBasketRepository repository, IDistri
     {
         await repository.StoreBasketAsync(userId, cart, cancellationToken);
         await cache.SetStringAsync(userId, JsonConvert.SerializeObject(cart), _cacheOptions, cancellationToken);
-        
+
         return true;
     }
 

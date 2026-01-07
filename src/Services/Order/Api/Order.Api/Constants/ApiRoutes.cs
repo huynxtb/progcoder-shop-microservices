@@ -17,11 +17,11 @@ public sealed class ApiRoutes
         public const string Update = $"{BaseAdmin}/{{orderId}}";
 
         public const string GetOrders = $"{BaseAdmin}";
-        
+
         public const string GetAllOrders = $"{BaseAdmin}/all";
-        
+
         public const string GetOrderById = $"{BaseAdmin}/{{orderId}}";
-        
+
         public const string UpdateOrderStatus = $"{BaseAdmin}/{{orderId}}/status";
 
         public const string GetOrderByOrderNo = $"{Base}/by-order-no/{{orderNo}}";

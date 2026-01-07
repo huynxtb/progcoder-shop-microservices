@@ -9,9 +9,9 @@ namespace Inventory.Application.Services;
 
 public interface ICatalogGrpcService
 {
-	#region Methods
+    #region Methods
 
-	Task<GetProductByIdReponse?> GetProductByIdAsync(string productId, CancellationToken cancellationToken = default);
+    Task<GetProductByIdReponse?> GetProductByIdAsync(string productId, CancellationToken cancellationToken = default);
 
     Task<GetAllProductsResponse?> GetProductsAsync(string[]? ids = null, string searchText = "", CancellationToken cancellationToken = default);
 

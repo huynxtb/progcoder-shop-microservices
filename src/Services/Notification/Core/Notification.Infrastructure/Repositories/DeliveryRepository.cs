@@ -30,8 +30,8 @@ public sealed class DeliveryRepository : ICommandDeliveryRepository, IQueryDeliv
     #region Implementations
 
     public async Task<IReadOnlyList<DeliveryEntity>> GetDueAsync(
-        DateTimeOffset now, 
-        int batchSize, 
+        DateTimeOffset now,
+        int batchSize,
         CancellationToken cancellationToken = default)
     {
         var filterBuilder = Builders<DeliveryEntity>.Filter;

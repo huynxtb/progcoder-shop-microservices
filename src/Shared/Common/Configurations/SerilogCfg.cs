@@ -26,7 +26,7 @@ public sealed class SerilogCfg
 
     public const string Console = "Console";
 
-    public const string Level = "Level"; 
+    public const string Level = "Level";
 
     #endregion
 

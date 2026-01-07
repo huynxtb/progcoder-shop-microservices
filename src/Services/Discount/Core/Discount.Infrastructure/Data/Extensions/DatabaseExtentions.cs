@@ -1,6 +1,6 @@
 ﻿#region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
+using Common.ValueObjects;
 using Common.Constants;
 using Discount.Domain.Entities;
 using Discount.Domain.Enums;
@@ -21,7 +21,7 @@ public static class DatabaseExtentions
     {
         var db = app.Services.GetRequiredService<IMongoDatabase>();
         var coupon = db.GetCollection<CouponEntity>(MongoCollection.Coupon);
-        
+
         await coupon.Indexes.CreateOneAsync(new CreateIndexModel<CouponEntity>(
             Builders<CouponEntity>.IndexKeys
                 .Ascending(x => x.Code),

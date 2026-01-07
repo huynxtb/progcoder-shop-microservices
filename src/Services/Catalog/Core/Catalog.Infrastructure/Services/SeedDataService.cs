@@ -1,6 +1,6 @@
 #region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
+using Common.ValueObjects;
 using Catalog.Application.Services;
 using Catalog.Domain.Entities;
 using Catalog.Infrastructure.Data;
@@ -39,7 +39,7 @@ public sealed class SeedDataService : ISeedDataService
             hasChanges = true;
         }
 
-        if (hasChanges) 
+        if (hasChanges)
         {
             await session.SaveChangesAsync(cancellationToken);
         }

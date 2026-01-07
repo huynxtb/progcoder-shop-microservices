@@ -47,7 +47,7 @@ public static class CustomValidators
 
         // Remove all whitespace and common separators for validation
         var cleanNumber = Regex.Replace(phoneNumber, @"[\s\-\(\)\.]+", "");
-        
+
         // Check for international format starting with +
         if (cleanNumber.StartsWith("+"))
         {

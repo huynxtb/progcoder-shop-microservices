@@ -2,7 +2,6 @@
 
 using Basket.Application.Repositories;
 using Basket.Domain.Entities;
-using Basket.Infrastructure.Constants;
 using MongoDB.Driver;
 
 #endregion

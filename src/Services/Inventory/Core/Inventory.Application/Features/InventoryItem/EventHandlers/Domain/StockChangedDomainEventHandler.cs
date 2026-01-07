@@ -1,17 +1,13 @@
 #region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
 using EventSourcing.Events.Inventories;
-using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
-using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Domain.Entities;
 using Inventory.Domain.Enums;
 using Inventory.Domain.Events;
-using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System.Threading;
+using Inventory.Domain.Abstractions;
 
 #endregion
 
@@ -59,42 +55,42 @@ public sealed class StockChangedDomainEventHandler(
     {
         var message = @event.ChangeType switch
         {
-            InventoryChangeType.Init => 
+            InventoryChangeType.Init =>
                 $"Initialized inventory for product '{@event.ProductName}' with {Math.Abs(@event.ChangeAmount)} units. " +
                 $"\nQuantity: {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
-            
-            InventoryChangeType.Increase => 
+
+            InventoryChangeType.Increase =>
                 $"Increased {Math.Abs(@event.ChangeAmount)} units of product '{@event.ProductName}'. " +
                 $"\nQuantity: {@event.OldQuantity} ? {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
-            
-            InventoryChangeType.Decrease => 
+
+            InventoryChangeType.Decrease =>
                 $"Decreased {Math.Abs(@event.ChangeAmount)} units of product '{@event.ProductName}'. " +
                 $"\nQuantity: {@event.OldQuantity} ? {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
-            
-            InventoryChangeType.Reserve => 
+
+            InventoryChangeType.Reserve =>
                 $"Reserved {Math.Abs(@event.ChangeAmount)} units of product '{@event.ProductName}'. " +
                 $"\nReserved increased, Available decreased: {@event.Available}. Source: {@event.Source}",
-            
-            InventoryChangeType.Release => 
+
+            InventoryChangeType.Release =>
                 $"Released {Math.Abs(@event.ChangeAmount)} units of product '{@event.ProductName}'. " +
                 $"\nReserved decreased, Available increased: {@event.Available}. Source: {@event.Source}",
-            
-            InventoryChangeType.Commit => 
+
+            InventoryChangeType.Commit =>
                 $"Committed {Math.Abs(@event.ChangeAmount)} units of product '{@event.ProductName}'. " +
                 $"\nQuantity: {@event.OldQuantity} ? {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
-            
-            InventoryChangeType.Transfer => 
+
+            InventoryChangeType.Transfer =>
                 $"Transferred {Math.Abs(@event.ChangeAmount)} units of product '{@event.ProductName}'. " +
                 $"\nQuantity: {@event.OldQuantity} ? {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}",
-            
-            _ => 
+
+            _ =>
                 $"Stock changed for product '{@event.ProductName}' by {Math.Abs(@event.ChangeAmount)} units. " +
                 $"\nQuantity: {@event.OldQuantity} ? {@event.QuantityAfterChange}, Available: {@event.Available}. Source: {@event.Source}"
         };
 
         var history = InventoryHistoryEntity.Create(
-            id: Guid.NewGuid(), 
-            message: message, 
+            id: Guid.NewGuid(),
+            message: message,
             performBy: Actor.System(AppConstants.Service.Inventory).ToString());
 
         await unitOfWork.InventoryHistories.AddAsync(history, cancellationToken);

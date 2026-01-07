@@ -14,13 +14,13 @@ public class InventoryReservationRepository(ApplicationDbContext context) : Repo
     #region Implementations
 
     public async Task<InventoryReservationEntity?> GetByOrderAndProductAsync(
-        Guid orderId, 
-        Guid productId, 
+        Guid orderId,
+        Guid productId,
         CancellationToken cancellationToken = default)
     {
         return await _dbSet
-            .FirstOrDefaultAsync(r => 
-                    r.ReferenceId == orderId && r.Product.Id == productId, 
+            .FirstOrDefaultAsync(r =>
+                    r.ReferenceId == orderId && r.Product.Id == productId,
                 cancellationToken);
     }
 

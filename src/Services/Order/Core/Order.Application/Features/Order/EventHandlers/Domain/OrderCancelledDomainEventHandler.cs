@@ -1,10 +1,10 @@
-﻿#region using
+#region using
 
 using EventSourcing.Events.Orders;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Order.Application.Data;
+using Order.Domain.Abstractions;
 using Order.Domain.Entities;
 using Order.Domain.Events;
 
@@ -13,7 +13,7 @@ using Order.Domain.Events;
 namespace Order.Application.Features.Order.EventHandlers.Domain;
 
 public sealed class OrderCancelledDomainEventHandler(
-    IApplicationDbContext dbContext,
+    IUnitOfWork unitOfWork,
     ILogger<OrderCancelledDomainEventHandler> logger) : INotificationHandler<OrderCancelledDomainEvent>
 {
     #region Implementations
@@ -52,7 +52,7 @@ public sealed class OrderCancelledDomainEventHandler(
             content: JsonConvert.SerializeObject(message),
             occurredOnUtc: DateTimeOffset.UtcNow);
 
-        await dbContext.OutboxMessages.AddAsync(outboxMessage, cancellationToken);
+        await unitOfWork.OutboxMessages.AddAsync(outboxMessage, cancellationToken);
     }
 
     #endregion

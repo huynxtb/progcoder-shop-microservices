@@ -1,7 +1,5 @@
 ﻿#region using
 
-using Report.Application.Dtos.Abstractions;
-
 #endregion
 
 namespace Report.Application.Dtos.Abstractions;

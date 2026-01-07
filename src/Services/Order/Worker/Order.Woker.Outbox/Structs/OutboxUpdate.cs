@@ -1,8 +1,8 @@
 ﻿namespace Order.Worker.Outbox.Structs;
 
 public record struct OutboxUpdate(
-    Guid Id, 
-    DateTimeOffset ProcessedOnUtc, 
-    string? LastErrorMessage, 
-    int AttemptCount, 
+    Guid Id,
+    DateTimeOffset ProcessedOnUtc,
+    string? LastErrorMessage,
+    int AttemptCount,
     DateTimeOffset? NextAttemptOnUtc);

@@ -3,7 +3,6 @@
 using Order.Domain.Abstractions;
 using Order.Infrastructure.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 #endregion

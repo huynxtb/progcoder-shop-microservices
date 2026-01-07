@@ -1,12 +1,10 @@
 #region using
 
-using Inventory.Domain.Abstractions;
-using Inventory.Domain.Repositories;
 using Inventory.Domain.Entities;
 using Inventory.Domain.Events;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Inventory.Domain.Abstractions;
 
 #endregion
 

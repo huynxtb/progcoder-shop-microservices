@@ -16,10 +16,10 @@ public class OutboxRepository(IDocumentSession session, ILogger<OutboxRepository
     public async Task<bool> AddMessageAsync(OutboxMessageEntity message, CancellationToken cancellationToken = default)
     {
         logger.LogDebug("Adding outbox message {MessageId} of type {EventType}", message.Id, message.EventType);
-        
+
         session.Store(message);
         await session.SaveChangesAsync(cancellationToken);
-        
+
         logger.LogInformation("Successfully added outbox message {MessageId} of type {EventType}", message.Id, message.EventType);
         return true;
     }
@@ -28,13 +28,13 @@ public class OutboxRepository(IDocumentSession session, ILogger<OutboxRepository
     {
         var messageList = messages.ToList();
         logger.LogDebug("Updating {Count} outbox messages", messageList.Count);
-        
+
         foreach (var message in messageList)
         {
             session.Store(message);
         }
         await session.SaveChangesAsync(cancellationToken);
-        
+
         logger.LogInformation("Successfully updated {Count} outbox messages", messageList.Count);
         return true;
     }
@@ -53,7 +53,7 @@ public class OutboxRepository(IDocumentSession session, ILogger<OutboxRepository
         {
             // Query for unprocessed messages that are not claimed or have expired claims
             var messagesToClaim = await session.Query<OutboxMessageEntity>()
-                .Where(x => x.ProcessedOnUtc == null 
+                .Where(x => x.ProcessedOnUtc == null
                     && (x.ClaimedOnUtc == null || x.ClaimedOnUtc < expiredTime))
                 .OrderBy(x => x.OccurredOnUtc)
                 .Take(batchSize)
@@ -99,14 +99,14 @@ public class OutboxRepository(IDocumentSession session, ILogger<OutboxRepository
         {
             // Query for retry messages
             var allRetryMessages = await session.Query<OutboxMessageEntity>()
-                .Where(x => x.ProcessedOnUtc == null 
+                .Where(x => x.ProcessedOnUtc == null
                     && x.AttemptCount < x.MaxAttempts
                     && (x.NextAttemptOnUtc == null || x.NextAttemptOnUtc <= now)
                     && (x.ClaimedOnUtc == null || x.ClaimedOnUtc < expiredTime))
                 .OrderBy(x => x.OccurredOnUtc)
                 .Take(batchSize * 2)
                 .ToListAsync(cancellationToken);
-            
+
             var retryMessages = allRetryMessages
                 .OrderBy(x => x.NextAttemptOnUtc ?? x.OccurredOnUtc)
                 .ThenBy(x => x.OccurredOnUtc)
@@ -146,8 +146,8 @@ public class OutboxRepository(IDocumentSession session, ILogger<OutboxRepository
         logger.LogDebug("Releasing expired claims older than {ExpiredTime}", expiredTime);
 
         var expiredMessages = await session.Query<OutboxMessageEntity>()
-            .Where(x => x.ProcessedOnUtc == null 
-                && x.ClaimedOnUtc != null 
+            .Where(x => x.ProcessedOnUtc == null
+                && x.ClaimedOnUtc != null
                 && x.ClaimedOnUtc < expiredTime)
             .ToListAsync(cancellationToken);
 
@@ -181,7 +181,7 @@ public class OutboxRepository(IDocumentSession session, ILogger<OutboxRepository
         }
 
         await session.SaveChangesAsync(cancellationToken);
-        
+
         logger.LogInformation("Successfully released claims for {Count} outbox messages", messageList.Count);
         return true;
     }

@@ -29,5 +29,5 @@ public sealed class WorkerCfg
         #endregion
 
     }
-    
+
 }

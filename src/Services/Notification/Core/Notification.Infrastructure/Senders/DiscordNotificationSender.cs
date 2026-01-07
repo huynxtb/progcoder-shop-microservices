@@ -6,7 +6,6 @@ using Notification.Domain.Enums;
 using Notification.Domain.Models.Externals.Discord;
 using Notification.Infrastructure.ApiClients;
 using Common.Configurations;
-using Refit;
 using Notification.Application.Strategy;
 
 #endregion

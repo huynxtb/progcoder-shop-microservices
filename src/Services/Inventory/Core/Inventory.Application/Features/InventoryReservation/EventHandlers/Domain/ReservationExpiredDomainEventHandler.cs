@@ -1,13 +1,12 @@
 #region using
 
 using EventSourcing.Events.Inventories;
-using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Domain.Entities;
 using Inventory.Domain.Events;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Inventory.Domain.Abstractions;
 
 #endregion
 

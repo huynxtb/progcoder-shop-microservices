@@ -17,7 +17,7 @@ public sealed class NotificationChannelResolver : INotificationSenderResolver
 
     #region Ctors
 
-    public NotificationChannelResolver(IEnumerable<INotificationSender> channels) 
+    public NotificationChannelResolver(IEnumerable<INotificationSender> channels)
         => _map = channels.ToDictionary(c => c.Channel);
 
     #endregion

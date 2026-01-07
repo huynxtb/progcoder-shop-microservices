@@ -1,6 +1,5 @@
 #region using
 
-using BuildingBlocks.Pagination;
 using Search.Application.Dtos.Products;
 
 #endregion

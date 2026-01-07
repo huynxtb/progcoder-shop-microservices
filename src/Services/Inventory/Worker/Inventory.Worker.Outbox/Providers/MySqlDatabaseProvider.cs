@@ -15,8 +15,8 @@ public sealed class MySqlDatabaseProvider : IDatabaseProvider
     #region Implementations
 
     public async Task<List<OutboxMessage>> GetUnprocessedMessagesAsync(
-        string connectionString, 
-        int batchSize, 
+        string connectionString,
+        int batchSize,
         CancellationToken cancellationToken = default)
     {
         await using var connection = new MySqlConnection(connectionString);
@@ -51,8 +51,8 @@ public sealed class MySqlDatabaseProvider : IDatabaseProvider
     }
 
     public async Task UpdateProcessedMessagesAsync(
-        string connectionString, 
-        IEnumerable<OutboxUpdate> updates, 
+        string connectionString,
+        IEnumerable<OutboxUpdate> updates,
         CancellationToken cancellationToken = default)
     {
         var updatesList = updates.ToList();

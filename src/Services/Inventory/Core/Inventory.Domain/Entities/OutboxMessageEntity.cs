@@ -32,9 +32,9 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
     #region Factories
 
     public static OutboxMessageEntity Create(
-        Guid id, 
-        string eventType, 
-        string content, 
+        Guid id,
+        string eventType,
+        string content,
         DateTimeOffset occurredOnUtc)
     {
         return new OutboxMessageEntity()
@@ -60,9 +60,9 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
     }
 
     public void SetRetryProperties(
-        int attemptCount, 
-        int maxAttempts, 
-        DateTimeOffset? nextAttemptOnUtc, 
+        int attemptCount,
+        int maxAttempts,
+        DateTimeOffset? nextAttemptOnUtc,
         string? lastErrorMessage)
     {
         AttemptCount = attemptCount;
@@ -74,7 +74,7 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
     public void RecordFailedAttempt(string errorMessage, DateTimeOffset now)
     {
         IncreaseAttemptCount();
-        
+
         if (AttemptCount >= MaxAttempts)
         {
             LastErrorMessage = $"Max attempts ({MaxAttempts}) exceeded. Last error: {errorMessage}";
@@ -87,7 +87,7 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
             var maxDelay = TimeSpan.FromMinutes(5);
             var jitter = TimeSpan.FromMilliseconds(Random.Shared.Next(0, 1000));
             var delay = TimeSpan.FromTicks(Math.Min(baseDelay.Ticks, maxDelay.Ticks)) + jitter;
-            
+
             NextAttemptOnUtc = now + delay;
             LastErrorMessage = errorMessage;
         }
@@ -100,7 +100,7 @@ public sealed class OutboxMessageEntity : EntityId<Guid>
 
     public bool CanRetry(DateTimeOffset currentTime)
     {
-        return AttemptCount < MaxAttempts && 
+        return AttemptCount < MaxAttempts &&
                (NextAttemptOnUtc == null || currentTime >= NextAttemptOnUtc.Value);
     }
 

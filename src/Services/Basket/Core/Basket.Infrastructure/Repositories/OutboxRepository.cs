@@ -3,7 +3,6 @@
 using Basket.Application.Repositories;
 using Basket.Domain.Entities;
 using Basket.Infrastructure.Constants;
-using MongoDB.Bson;
 using MongoDB.Driver;
 
 #endregion
@@ -70,12 +69,12 @@ public class OutboxRepository : IOutboxRepository
     {
         var now = DateTimeOffset.UtcNow;
         var claimTimeout = TimeSpan.FromMinutes(5);
-        
+
         // First, release any expired claims
         await ReleaseExpiredClaimsAsync(claimTimeout, cancellationToken);
-        
+
         var claimedMessages = new List<OutboxMessageEntity>();
-        
+
         // Use atomic findOneAndUpdate in a loop to avoid race conditions
         // This ensures each message is claimed atomically, preventing duplicates
         for (int i = 0; i < batchSize; i++)
@@ -87,24 +86,24 @@ public class OutboxRepository : IOutboxRepository
                     Builders<OutboxMessageEntity>.Filter.Eq(x => x.ClaimedOnUtc, null)
                 )
             );
-            
+
             var update = Builders<OutboxMessageEntity>.Update
                 .Set(x => x.ClaimedOnUtc, now);
-            
+
             var options = new FindOneAndUpdateOptions<OutboxMessageEntity>
             {
                 ReturnDocument = ReturnDocument.After,
                 Sort = Builders<OutboxMessageEntity>.Sort.Ascending(x => x.OccurredOnUtc)
             };
-            
+
             var claimedMessage = await _collection.FindOneAndUpdateAsync(filter, update, options, cancellationToken);
-            
+
             if (claimedMessage == null)
                 break; // No more messages to claim
-                
+
             claimedMessages.Add(claimedMessage);
         }
-        
+
         return claimedMessages;
     }
 
@@ -112,12 +111,12 @@ public class OutboxRepository : IOutboxRepository
     {
         var now = DateTimeOffset.UtcNow;
         var claimTimeout = TimeSpan.FromMinutes(5);
-        
+
         // First, release any expired claims
         await ReleaseExpiredClaimsAsync(claimTimeout, cancellationToken);
-        
+
         var claimedMessages = new List<OutboxMessageEntity>();
-        
+
         // Use atomic findOneAndUpdate in a loop to avoid race conditions
         // This ensures each retry message is claimed atomically, preventing duplicates
         for (int i = 0; i < batchSize; i++)
@@ -133,21 +132,21 @@ public class OutboxRepository : IOutboxRepository
                     Builders<OutboxMessageEntity>.Filter.Eq(x => x.ClaimedOnUtc, null)
                 )
             );
-            
+
             var update = Builders<OutboxMessageEntity>.Update
                 .Set(x => x.ClaimedOnUtc, now);
-            
+
             var options = new FindOneAndUpdateOptions<OutboxMessageEntity>
             {
                 ReturnDocument = ReturnDocument.After,
                 Sort = Builders<OutboxMessageEntity>.Sort.Ascending(x => x.NextAttemptOnUtc).Ascending(x => x.OccurredOnUtc)
             };
-            
+
             var claimedMessage = await _collection.FindOneAndUpdateAsync(filter, update, options, cancellationToken);
-            
+
             if (claimedMessage == null)
                 break; // No more messages to claim
-            
+
             // Check if the message is eligible for retry (MongoDB doesn't support field-to-field comparison)
             if (claimedMessage.AttemptCount < claimedMessage.MaxAttempts)
             {
@@ -162,7 +161,7 @@ public class OutboxRepository : IOutboxRepository
                     cancellationToken: cancellationToken);
             }
         }
-        
+
         return claimedMessages;
     }
 
@@ -174,27 +173,27 @@ public class OutboxRepository : IOutboxRepository
             Builders<OutboxMessageEntity>.Filter.Exists(x => x.ClaimedOnUtc, true),
             Builders<OutboxMessageEntity>.Filter.Lt(x => x.ClaimedOnUtc, now.Subtract(claimTimeout))
         );
-        
+
         var releaseUpdate = Builders<OutboxMessageEntity>.Update
             .Unset(x => x.ClaimedOnUtc);
-        
+
         var result = await _collection.UpdateManyAsync(expiredClaimFilter, releaseUpdate, cancellationToken: cancellationToken);
-        
+
         return result.IsAcknowledged;
     }
 
     public async Task<bool> ReleaseClaimsAsync(IEnumerable<OutboxMessageEntity> messages, CancellationToken cancellationToken = default)
     {
         var messageIds = messages.Select(m => m.Id).ToList();
-        
+
         if (!messageIds.Any()) return true;
-        
+
         var filter = Builders<OutboxMessageEntity>.Filter.In(x => x.Id, messageIds);
         var update = Builders<OutboxMessageEntity>.Update
             .Unset(x => x.ClaimedOnUtc);
-        
+
         var result = await _collection.UpdateManyAsync(filter, update, cancellationToken: cancellationToken);
-        
+
         return result.IsAcknowledged;
     }
 

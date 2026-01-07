@@ -52,7 +52,7 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
             CreatedBy = performedBy,
             LastModifiedBy = performedBy
         };
-        
+
         entity.AddDomainEvent(new StockChangedDomainEvent(id,
             productId,
             productName,
@@ -73,7 +73,7 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
     public void Update(Guid locationId,
         string? oldLocationName,
         string? newLocationName,
-        string performedBy, 
+        string performedBy,
         Guid productId,
         string productName)
     {
@@ -110,19 +110,19 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
         Quantity += amount;
         LastModifiedBy = performedBy;
 
-        AddDomainEvent(new StockChangedDomainEvent(Id, 
-            Product.Id, 
+        AddDomainEvent(new StockChangedDomainEvent(Id,
+            Product.Id,
             Product.Name!,
             amount,
             oldQuantity,
-            Quantity, 
-            InventoryChangeType.Increase, 
+            Quantity,
+            InventoryChangeType.Increase,
             source,
             Available));
     }
 
     public void Decrease(
-        int amount, 
+        int amount,
         string source,
         string performedBy)
     {
@@ -136,13 +136,13 @@ public sealed class InventoryItemEntity : Aggregate<Guid>
         LastModifiedBy = performedBy;
         LastModifiedOnUtc = DateTimeOffset.UtcNow;
 
-        AddDomainEvent(new StockChangedDomainEvent(Id, 
+        AddDomainEvent(new StockChangedDomainEvent(Id,
             Product.Id,
             Product.Name!,
             amount,
             oldQuantity,
-            Quantity, 
-            InventoryChangeType.Decrease, 
+            Quantity,
+            InventoryChangeType.Decrease,
             source,
             Available));
     }

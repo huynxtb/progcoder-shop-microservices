@@ -1,8 +1,6 @@
 ﻿#region using
 
 using Catalog.Domain.Abstractions;
-using Common.Constants;
-using System.Text.Json.Serialization;
 
 #endregion
 

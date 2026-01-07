@@ -1,9 +1,7 @@
 #region using
 
-using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
-using Inventory.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Inventory.Domain.Abstractions;
 
 #endregion
 
@@ -25,7 +23,7 @@ public sealed class DeleteInventoryItemCommandValidator : AbstractValidator<Dele
     #endregion
 }
 
-public sealed class DeleteInventoryItemCommandHandler(IUnitOfWork unitOfWork) 
+public sealed class DeleteInventoryItemCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<DeleteInventoryItemCommand, Unit>
 {
     #region Implementations
@@ -42,7 +40,7 @@ public sealed class DeleteInventoryItemCommandHandler(IUnitOfWork unitOfWork)
 
             entity.Delete();
             unitOfWork.InventoryItems.Remove(entity);
-            
+
             await unitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
 

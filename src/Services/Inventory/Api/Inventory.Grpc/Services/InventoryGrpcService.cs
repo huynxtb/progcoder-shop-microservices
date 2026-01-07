@@ -1,6 +1,6 @@
 #region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
+using Common.ValueObjects;
 using Common.Constants;
 using Grpc.Core;
 using Inventory.Application.Features.InventoryReservation.Commands;
@@ -17,7 +17,7 @@ public sealed class InventoryGrpcService(
     #region Methods
 
     public override async Task<ExpireReservationResponse> ExpireReservation(
-        ExpireReservationRequest request, 
+        ExpireReservationRequest request,
         ServerCallContext context)
     {
         logger.LogInformation("gRPC ExpireReservation called");

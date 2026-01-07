@@ -13,6 +13,7 @@ using Common.Configurations;
 using Common.Constants;
 using Inventory.Infrastructure.ApiClients.Extensions;
 using Inventory.Infrastructure.GrpcClients.Extensions;
+using BuildingBlocks.Abstractions;
 
 #endregion
 
@@ -23,7 +24,7 @@ public static class DependencyInjection
     #region Methods
 
     public static IServiceCollection AddInfrastructureServices(
-        this IServiceCollection services, 
+        this IServiceCollection services,
         IConfiguration cfg)
     {
         services.Scan(s => s
@@ -49,7 +50,7 @@ public static class DependencyInjection
                         options.UseSqlServer(conn);
                         break;
                     case DatabaseType.MySql:
-                        options.UseMySQL(conn!); 
+                        options.UseMySQL(conn!);
                         break;
                     case DatabaseType.PostgreSql:
                         options.UseNpgsql(conn);
@@ -64,9 +65,9 @@ public static class DependencyInjection
 
         // Repository & Unit of Work
         {
-            services.AddScoped<Inventory.Domain.Abstractions.IUnitOfWork, Inventory.Infrastructure.UnitOfWork.UnitOfWork>();
+            services.AddScoped<IBaseUnitOfWork, Inventory.Infrastructure.UnitOfWork.UnitOfWork>();
         }
-        
+
         services.AddRefitClients(cfg);
         services.AddGrpcClients(cfg);
 

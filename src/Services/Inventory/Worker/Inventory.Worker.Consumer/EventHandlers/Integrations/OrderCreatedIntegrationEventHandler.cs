@@ -1,19 +1,17 @@
 #region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
+using Common.ValueObjects;
 using Common.Configurations;
 using Common.Constants;
 using EventSourcing.Events.Orders;
 using Inventory.Application.Features.InventoryReservation.Commands;
 using Inventory.Application.Dtos.InventoryReservations;
 using Inventory.Application.Services;
-using Inventory.Domain.Abstractions;
-using Inventory.Domain.Repositories;
 using Inventory.Domain.Entities;
 using MassTransit;
 using MediatR;
-using Microsoft.Extensions.Configuration;
 using System.Text.Json;
+using Inventory.Domain.Abstractions;
 
 #endregion
 

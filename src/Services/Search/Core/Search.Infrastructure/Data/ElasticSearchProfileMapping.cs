@@ -48,7 +48,7 @@ public static class ElasticSearchProfileMapping
                                 .Name(n => n.LastModifiedOnUtc))
                             .Keyword(t => t
                                 .Name(n => n.LastModifiedBy))
-                            
+
                             ));
     }
 }

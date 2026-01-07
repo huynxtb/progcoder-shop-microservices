@@ -2,7 +2,6 @@
 
 using Notification.Domain.Abstractions;
 using Notification.Domain.Enums;
-using Common.Constants;
 
 #endregion
 

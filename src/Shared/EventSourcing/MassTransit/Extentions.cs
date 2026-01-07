@@ -15,8 +15,8 @@ public static class Extentions
     #region Methods
 
     public static IServiceCollection AddMessageBroker(
-        this IServiceCollection services, 
-        IConfiguration cfg, 
+        this IServiceCollection services,
+        IConfiguration cfg,
         Assembly? assembly = null)
     {
         services.AddMassTransit(config =>

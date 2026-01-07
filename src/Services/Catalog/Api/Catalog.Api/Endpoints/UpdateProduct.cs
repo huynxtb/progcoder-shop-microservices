@@ -1,6 +1,5 @@
 #region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
 using BuildingBlocks.Authentication.Extensions;
 using BuildingBlocks.Exceptions;
 using BuildingBlocks.Swagger.Extensions;
@@ -10,7 +9,6 @@ using Catalog.Application.Features.Product.Commands;
 using Catalog.Application.Dtos.Products;
 using Common.Constants;
 using Common.Models;
-using Common.Models.Reponses;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,8 +27,8 @@ public sealed class UpdateProduct : ICarterModule
             .WithName(nameof(UpdateProduct))
             .WithMultipartForm<UpdateProductRequest>()
             .Produces<ApiUpdatedResponse<Guid>>(StatusCodes.Status200OK)
-			.Produces(StatusCodes.Status403Forbidden)
-			.ProducesProblem(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status403Forbidden)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .DisableAntiforgery()
             .RequireAuthorization();

@@ -1,13 +1,13 @@
 #region using
 
-using BuildingBlocks.Abstractions.ValueObjects;
+using Common.ValueObjects;
 using Common.Constants;
 using EventSourcing.Events.Inventories;
 using MassTransit;
 using MediatR;
 using Order.Application.Features.Order.Commands;
 using Order.Domain.Enums;
-using Order.Application.Data;
+using Order.Domain.Abstractions;
 using Order.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
@@ -18,7 +18,7 @@ namespace Order.Worker.Consumer.EventHandlers.Integrations;
 
 public sealed class ReservationExpiredIntegrationEventHandler(
     ISender sender,
-    IApplicationDbContext dbContext,
+    IUnitOfWork unitOfWork,
     ILogger<ReservationExpiredIntegrationEventHandler> logger)
     : IConsumer<ReservationExpiredIntegrationEvent>
 {
@@ -30,7 +30,7 @@ public sealed class ReservationExpiredIntegrationEventHandler(
         var messageId = context.MessageId ?? Guid.NewGuid();
 
         // Check if message already exists in inbox (idempotency)
-        var existingMessage = await dbContext.InboxMessages
+        var existingMessage = await unitOfWork.InboxMessages
             .FirstOrDefaultAsync(m => m.Id == messageId, context.CancellationToken);
 
         if (existingMessage != null)
@@ -45,8 +45,8 @@ public sealed class ReservationExpiredIntegrationEventHandler(
             JsonSerializer.Serialize(message),
             DateTimeOffset.UtcNow);
 
-        await dbContext.InboxMessages.AddAsync(inboxMessage, context.CancellationToken);
-        await dbContext.SaveChangesAsync(context.CancellationToken);
+        await unitOfWork.InboxMessages.AddAsync(inboxMessage, context.CancellationToken);
+        await unitOfWork.SaveChangesAsync(context.CancellationToken);
 
         logger.LogInformation("Processing integration event {EventType} with ID {MessageId}",
             message.GetType().Name, messageId);
@@ -64,7 +64,7 @@ public sealed class ReservationExpiredIntegrationEventHandler(
 
             // Mark as successfully processed
             inboxMessage.CompleteProcessing(DateTimeOffset.UtcNow);
-            await dbContext.SaveChangesAsync(context.CancellationToken);
+            await unitOfWork.SaveChangesAsync(context.CancellationToken);
 
             logger.LogInformation(
                 "Successfully cancelled order {OrderId} due to expired reservation {ReservationId} for product {ProductId}",
@@ -75,11 +75,11 @@ public sealed class ReservationExpiredIntegrationEventHandler(
             logger.LogError(ex,
                 "Failed to cancel order {OrderId} due to expired reservation {ReservationId}",
                 message.OrderId, message.ReservationId);
-            
+
             // Mark as failed
             inboxMessage.CompleteProcessing(DateTimeOffset.UtcNow, ex.Message);
-            await dbContext.SaveChangesAsync(context.CancellationToken);
-            
+            await unitOfWork.SaveChangesAsync(context.CancellationToken);
+
             throw;
         }
     }

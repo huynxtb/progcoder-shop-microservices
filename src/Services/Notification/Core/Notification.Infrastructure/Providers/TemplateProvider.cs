@@ -19,7 +19,7 @@ public sealed class TemplateProvider : ITemplateProvider
 
     public string Render(string template, IDictionary<string, object> data = default!)
     {
-        if(data == null) return template;
+        if (data == null) return template;
 
         return Pattern.Replace(template, m =>
         {

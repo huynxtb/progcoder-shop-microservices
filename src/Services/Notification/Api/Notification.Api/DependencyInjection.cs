@@ -17,7 +17,7 @@ namespace Notification.Api;
 public static class DependencyInjection
 {
     public static IServiceCollection AddApiServices(
-        this IServiceCollection services, 
+        this IServiceCollection services,
         IConfiguration cfg)
     {
         services.AddDistributedTracing(cfg);

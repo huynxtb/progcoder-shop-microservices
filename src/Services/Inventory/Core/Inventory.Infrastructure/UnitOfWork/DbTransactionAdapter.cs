@@ -1,6 +1,6 @@
 #region using
 
-using Inventory.Domain.Abstractions;
+using BuildingBlocks.Abstractions;
 using Microsoft.EntityFrameworkCore.Storage;
 
 #endregion

@@ -1,4 +1,4 @@
-﻿namespace BuildingBlocks.Abstractions.ValueObjects;
+﻿namespace Common.ValueObjects;
 
 public enum ActorKind { User, System, Job, Worker, Consumer }
 

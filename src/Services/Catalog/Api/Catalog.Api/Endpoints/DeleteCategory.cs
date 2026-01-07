@@ -1,9 +1,7 @@
 #region using
 
-using BuildingBlocks.Authentication.Extensions;
 using Catalog.Api.Constants;
 using Catalog.Application.Features.Category.Commands;
-using Common.Models.Reponses;
 
 #endregion
 

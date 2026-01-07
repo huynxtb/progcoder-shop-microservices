@@ -5,4 +5,4 @@ global using Common.Constants;
 global using Common.Extensions;
 global using BuildingBlocks.Pagination;
 global using BuildingBlocks.Exceptions;
-global using BuildingBlocks.Abstractions.ValueObjects;
+global using Common.ValueObjects;

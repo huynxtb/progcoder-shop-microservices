@@ -48,7 +48,7 @@ public sealed class MinIOCloudService : IMinIOCloudService
             foreach (var f in files)
             {
                 var fileCloudId = Guid.NewGuid();
-                var ext = Path.GetExtension(f.FileName); 
+                var ext = Path.GetExtension(f.FileName);
                 var objectName = $"{fileCloudId:N}{ext}";
 
                 using var stream = new MemoryStream(f.Bytes, 0, f.Bytes.Length, writable: false, publiclyVisible: true);

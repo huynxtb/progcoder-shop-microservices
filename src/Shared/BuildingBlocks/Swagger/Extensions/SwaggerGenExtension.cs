@@ -15,7 +15,7 @@ public static class SwaggerGenExtension
     #region Methods
 
     public static IServiceCollection AddSwaggerServices(
-        this IServiceCollection services, 
+        this IServiceCollection services,
         IConfiguration cfg)
     {
         var authority = cfg[$"{AuthorizationCfg.Section}:{AuthorizationCfg.Authority}"];
@@ -87,7 +87,7 @@ public static class SwaggerGenExtension
     {
         var cfg = app.Configuration;
 
-        if (!cfg.GetValue<bool>($"{SwaggerGenCfg.Section}:{SwaggerGenCfg.Enable}")) 
+        if (!cfg.GetValue<bool>($"{SwaggerGenCfg.Section}:{SwaggerGenCfg.Enable}"))
             return app;
 
         var clientId = cfg[$"{AuthorizationCfg.Section}:{AuthorizationCfg.ClientId}"];

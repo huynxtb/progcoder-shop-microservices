@@ -10,13 +10,13 @@ namespace Order.Worker.Outbox.BackgroundServices;
 internal class OutboxBackgroundService : BackgroundService
 {
     #region Fields, Properties and Indexers
-    
+
     private readonly int _processorFrequency;
 
     private readonly int _maxParallelism;
 
     private int _totalIterations = 0;
-    
+
     private int _totalProcessedMessage = 0;
 
     private readonly IServiceScopeFactory _serviceScopeFactory;
@@ -45,7 +45,7 @@ internal class OutboxBackgroundService : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Outbox processor started");
-        
+
         var parallelOptions = new ParallelOptions
         {
             MaxDegreeOfParallelism = _maxParallelism,
@@ -86,7 +86,7 @@ internal class OutboxBackgroundService : BackgroundService
             var iterationCount = Interlocked.Increment(ref _totalIterations);
             if (processedMessages > 0 || iterationCount % 100 == 0)
             {
-                _logger.LogInformation("Iteration {IterationCount}: Processed {ProcessedMessages} messages. Total: {TotalProcessedMessages}", 
+                _logger.LogInformation("Iteration {IterationCount}: Processed {ProcessedMessages} messages. Total: {TotalProcessedMessages}",
                     iterationCount, processedMessages, totalProcessedMessages);
             }
 

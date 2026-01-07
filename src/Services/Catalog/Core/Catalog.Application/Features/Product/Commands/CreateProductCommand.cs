@@ -1,16 +1,11 @@
 #region using
 
 using AutoMapper;
-using BuildingBlocks.Abstractions.ValueObjects;
 using Catalog.Application.Dtos.Products;
 using Catalog.Application.Services;
 using Catalog.Domain.Entities;
-using Common.Models.Reponses;
-using JasperFx.Core;
 using Marten;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
-using System.Threading;
 
 #endregion
 
@@ -71,7 +66,7 @@ public class CreateProductCommandHandler(IMapper mapper,
     public async Task<Guid> Handle(CreateProductCommand command, CancellationToken cancellationToken)
     {
         var dto = command.Dto;
-        
+
         await session.BeginTransactionAsync(cancellationToken);
 
         await ValidateCategoryAsync(dto.CategoryIds, cancellationToken);

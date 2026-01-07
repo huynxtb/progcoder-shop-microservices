@@ -1,11 +1,9 @@
 #region using
 
-using Inventory.Domain.Abstractions;using Inventory.Domain.Repositories;
 using Inventory.Application.Dtos.InventoryReservations;
 using Inventory.Domain.Entities;
-using Inventory.Domain.Enums;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Inventory.Domain.Abstractions;
 
 #endregion
 
