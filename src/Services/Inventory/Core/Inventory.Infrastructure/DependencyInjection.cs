@@ -1,6 +1,5 @@
 ﻿#region using
 
-using Inventory.Application.Data;
 using Inventory.Infrastructure.Data;
 using Inventory.Infrastructure.Data.Extensions;
 using Inventory.Infrastructure.Data.Interceptors;
@@ -59,13 +58,11 @@ public static class DependencyInjection
                         throw new Exception("Unsupported database type");
                 }
             });
-
-            services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
         }
 
         // Repository & Unit of Work
         {
-            services.AddScoped<IBaseUnitOfWork, Inventory.Infrastructure.UnitOfWork.UnitOfWork>();
+            services.AddScoped<Domain.Abstractions.IUnitOfWork, UnitOfWork.UnitOfWork>();
         }
 
         services.AddRefitClients(cfg);

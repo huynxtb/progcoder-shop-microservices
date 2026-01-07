@@ -1,16 +1,16 @@
 ﻿#region using
 
-using Order.Application.Data;
-using Order.Infrastructure.Data;
-using Order.Infrastructure.Data.Extensions;
-using Order.Infrastructure.Data.Interceptors;
+using BuildingBlocks.Abstractions;
+using Common.Configurations;
+using Common.Constants;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Common.Configurations;
-using Common.Constants;
+using Order.Infrastructure.Data;
+using Order.Infrastructure.Data.Extensions;
+using Order.Infrastructure.Data.Interceptors;
 using Order.Infrastructure.GrpcClients.Extensions;
 
 #endregion
@@ -57,9 +57,11 @@ public static class DependencyInjection
                         throw new Exception("Unsupported database type");
                 }
             });
+        }
 
-            services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
-            services.AddScoped<Order.Domain.Abstractions.IUnitOfWork, UnitOfWork.UnitOfWork>();
+        // Repository & Unit of Work
+        {
+            services.AddScoped<Domain.Abstractions.IUnitOfWork, UnitOfWork.UnitOfWork>();
         }
 
         services.AddGrpcClients(cfg);

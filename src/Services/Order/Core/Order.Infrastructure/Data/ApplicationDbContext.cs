@@ -1,7 +1,6 @@
 ﻿#region using
 
 using Microsoft.EntityFrameworkCore;
-using Order.Application.Data;
 using System.Reflection;
 using Order.Domain.Entities;
 
@@ -9,7 +8,7 @@ using Order.Domain.Entities;
 
 namespace Order.Infrastructure.Data;
 
-public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
+public sealed class ApplicationDbContext : DbContext
 {
     #region Ctors
 

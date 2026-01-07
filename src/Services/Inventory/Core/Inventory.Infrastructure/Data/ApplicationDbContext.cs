@@ -1,7 +1,6 @@
 ﻿#region using
 
 using Microsoft.EntityFrameworkCore;
-using Inventory.Application.Data;
 using System.Reflection;
 using Inventory.Domain.Entities;
 
@@ -9,7 +8,7 @@ using Inventory.Domain.Entities;
 
 namespace Inventory.Infrastructure.Data;
 
-public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
+public sealed class ApplicationDbContext : DbContext
 {
     #region Ctors
 
