@@ -1,7 +1,5 @@
 ﻿#region using
 
-using Common.Configurations;
-using Common.Constants;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;

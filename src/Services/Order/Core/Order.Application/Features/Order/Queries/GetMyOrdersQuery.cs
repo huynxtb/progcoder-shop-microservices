@@ -5,9 +5,6 @@ using Order.Domain.Abstractions;
 using Order.Application.Dtos.Orders;
 using Order.Application.Models.Filters;
 using Order.Application.Models.Results;
-using Microsoft.EntityFrameworkCore;
-using BuildingBlocks.Pagination.Extensions;
-using Common.Models;
 
 #endregion
 
@@ -31,7 +28,7 @@ public sealed class GetMyOrdersQueryHandler(IUnitOfWork unitOfWork, IMapper mapp
 
         // Apply all filters in the predicate expression
         var orders = await unitOfWork.Orders
-            .SearchWithRelationshipAsync(x => 
+            .SearchWithRelationshipAsync(x =>
                 x.Customer.Id == Guid.Parse(actor.ToString()) &&
                 (filter.SearchText.IsNullOrWhiteSpace() || x.OrderNo.Value.ToLower().Contains(filter.SearchText.Trim().ToLower())) &&
                 (!filter.FromDate.HasValue || x.CreatedOnUtc >= filter.FromDate.Value) &&

@@ -1,7 +1,6 @@
 ﻿#region using
 
 using Catalog.Domain.Exceptions;
-using Common.Constants;
 
 #endregion
 

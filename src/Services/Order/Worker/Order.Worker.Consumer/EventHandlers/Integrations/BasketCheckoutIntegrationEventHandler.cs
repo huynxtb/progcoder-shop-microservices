@@ -9,7 +9,6 @@ using Order.Application.Dtos.Orders;
 using Order.Application.Dtos.ValueObjects;
 using Order.Domain.Abstractions;
 using Order.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
 #endregion

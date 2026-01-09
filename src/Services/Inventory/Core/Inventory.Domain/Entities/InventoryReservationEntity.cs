@@ -4,7 +4,6 @@ using Inventory.Domain.Abstractions;
 using Inventory.Domain.Enums;
 using Inventory.Domain.Events;
 using Inventory.Domain.ValueObjects;
-using Common.Constants;
 
 #endregion
 

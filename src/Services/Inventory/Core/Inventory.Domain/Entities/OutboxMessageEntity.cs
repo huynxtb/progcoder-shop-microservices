@@ -1,6 +1,5 @@
 ﻿#region using
 
-using Common.Constants;
 using Inventory.Domain.Abstractions;
 
 #endregion

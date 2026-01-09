@@ -1,7 +1,6 @@
 ﻿#region using
 
 using Basket.Domain.Exceptions;
-using Common.Constants;
 
 #endregion
 

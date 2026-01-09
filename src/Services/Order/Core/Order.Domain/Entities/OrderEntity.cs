@@ -1,6 +1,5 @@
 ﻿#region using
 
-using Common.Constants;
 using Order.Domain.Abstractions;
 using Order.Domain.Enums;
 using Order.Domain.Events;

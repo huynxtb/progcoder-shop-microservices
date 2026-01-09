@@ -5,7 +5,6 @@ using Inventory.Infrastructure.ApiClients;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Refit;
-using Common.Configurations;
 using Inventory.Application.Models.Responses.Externals;
 using Common.Models.Reponses;
 

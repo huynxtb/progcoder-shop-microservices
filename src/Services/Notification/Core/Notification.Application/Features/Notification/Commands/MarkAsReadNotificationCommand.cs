@@ -1,6 +1,5 @@
 ﻿#region using
 
-using Common.ValueObjects;
 using MediatR;
 using Notification.Application.Data.Repositories;
 using Notification.Application.Dtos.Notifications;

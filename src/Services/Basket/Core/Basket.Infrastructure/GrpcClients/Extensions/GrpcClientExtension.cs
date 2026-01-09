@@ -2,7 +2,6 @@
 
 using Basket.Infrastructure.GrpcClients.Interceptors;
 using Catalog.Grpc;
-using Common.Configurations;
 using Discount.Grpc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

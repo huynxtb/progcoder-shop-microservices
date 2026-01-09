@@ -1,6 +1,5 @@
 #region using
 
-using Common.Models;
 using Search.Application.Dtos.Products;
 
 #endregion

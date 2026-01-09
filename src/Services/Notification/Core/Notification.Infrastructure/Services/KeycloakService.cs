@@ -1,7 +1,6 @@
 #region using
 
 using AutoMapper;
-using Common.Configurations;
 using Microsoft.Extensions.Configuration;
 using Notification.Application.Dtos.Keycloaks;
 using Notification.Application.Services;

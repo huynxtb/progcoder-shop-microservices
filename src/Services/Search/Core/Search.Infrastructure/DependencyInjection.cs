@@ -1,6 +1,5 @@
 #region using
 
-using Common.Configurations;
 using Elasticsearch.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;

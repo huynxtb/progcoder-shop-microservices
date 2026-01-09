@@ -9,7 +9,6 @@ using Order.Application.Features.Order.Commands;
 using Order.Domain.Enums;
 using Order.Domain.Abstractions;
 using Order.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
 #endregion

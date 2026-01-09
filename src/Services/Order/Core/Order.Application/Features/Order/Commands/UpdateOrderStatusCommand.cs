@@ -1,6 +1,5 @@
 ﻿#region using
 
-using Microsoft.EntityFrameworkCore;
 using Order.Domain.Abstractions;
 using Order.Domain.Enums;
 

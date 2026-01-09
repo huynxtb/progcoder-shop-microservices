@@ -1,7 +1,6 @@
 ﻿#region using
 
 using Common.ValueObjects;
-using Common.Constants;
 using Notification.Application.Data.Repositories;
 using Notification.Application.Models;
 using Notification.Application.Strategy;

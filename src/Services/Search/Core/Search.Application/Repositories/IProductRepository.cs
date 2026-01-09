@@ -1,6 +1,5 @@
 ﻿#region using
 
-using Common.Models;
 using Search.Application.Models.Filters;
 using Search.Domain.Entities;
 

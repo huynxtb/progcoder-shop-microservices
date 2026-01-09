@@ -1,7 +1,6 @@
 ﻿#region using
 
 using Common.ValueObjects;
-using Common.Constants;
 using Discount.Domain.Entities;
 using Discount.Domain.Enums;
 using Discount.Infrastructure.Constants;

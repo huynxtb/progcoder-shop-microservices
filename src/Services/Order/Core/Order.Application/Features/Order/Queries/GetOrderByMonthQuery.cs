@@ -1,7 +1,6 @@
 #region using
 
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Order.Domain.Abstractions;
 using Order.Application.Dtos.Orders;
 using Order.Application.Models.Results;
@@ -22,8 +21,8 @@ public sealed class GetOrderByMonthQueryHandler(IUnitOfWork unitOfWork, IMapper 
         // Fetch orders for the specified month using repository
         var orders = await unitOfWork.Orders
             .SearchWithRelationshipAsync(
-                x => x.CreatedOnUtc.Year == query.Year && 
-                     x.CreatedOnUtc.Month == query.Month && 
+                x => x.CreatedOnUtc.Year == query.Year &&
+                     x.CreatedOnUtc.Month == query.Month &&
                      x.Status == Domain.Enums.OrderStatus.Delivered,
                 cancellationToken);
 

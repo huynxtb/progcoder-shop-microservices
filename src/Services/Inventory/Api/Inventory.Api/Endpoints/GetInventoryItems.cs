@@ -1,6 +1,5 @@
 #region using
 
-using BuildingBlocks.Pagination;
 using Common.Models;
 using Inventory.Api.Constants;
 using Inventory.Application.Features.InventoryItem.Queries;

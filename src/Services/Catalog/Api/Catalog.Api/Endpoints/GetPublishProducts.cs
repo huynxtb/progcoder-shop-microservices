@@ -1,6 +1,5 @@
 #region using
 
-using BuildingBlocks.Pagination;
 using Catalog.Api.Constants;
 using Catalog.Application.Features.Product.Queries;
 using Catalog.Application.Models.Filters;

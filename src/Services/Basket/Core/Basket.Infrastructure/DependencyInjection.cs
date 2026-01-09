@@ -4,7 +4,6 @@ using Basket.Application.Repositories;
 using Basket.Infrastructure.Data.Extensions;
 using Basket.Infrastructure.GrpcClients.Extensions;
 using Basket.Infrastructure.Repositories;
-using Common.Configurations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

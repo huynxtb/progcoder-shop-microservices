@@ -1,7 +1,6 @@
 ﻿#region using
 
 using BuildingBlocks.Authentication.Extensions;
-using Common.Models.Reponses;
 using Order.Api.Constants;
 using Order.Application.Features.Order.Queries;
 using Order.Application.Models.Results;

@@ -4,7 +4,6 @@ using Notification.Application.Dtos.Deliveries;
 using Notification.Application.Data.Repositories;
 using Notification.Application.Providers;
 using Notification.Domain.Entities;
-using Common.ValueObjects;
 using Microsoft.Extensions.Logging;
 
 #endregion

@@ -8,8 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Common.Configurations;
-using Common.Constants;
 using Inventory.Infrastructure.ApiClients.Extensions;
 using Inventory.Infrastructure.GrpcClients.Extensions;
 

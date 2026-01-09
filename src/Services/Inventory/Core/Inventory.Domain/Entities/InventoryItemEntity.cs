@@ -5,7 +5,6 @@ using Inventory.Domain.Enums;
 using Inventory.Domain.Events;
 using Inventory.Domain.Exceptions;
 using Inventory.Domain.ValueObjects;
-using Common.Constants;
 using Common.Extensions;
 
 #endregion

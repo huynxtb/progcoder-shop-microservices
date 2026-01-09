@@ -1,6 +1,5 @@
 ﻿#region using
 
-using Common.Extensions;
 using Nest;
 using Polly;
 using Search.Domain.Enums;

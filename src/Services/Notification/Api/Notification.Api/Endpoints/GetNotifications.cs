@@ -1,9 +1,6 @@
 ﻿#region using
 
-using BuildingBlocks.Pagination;
-using Common.ValueObjects;
 using BuildingBlocks.Authentication.Extensions;
-using Common.Models.Reponses;
 using Notification.Api.Constants;
 using Notification.Application.Features.Notification.Queries;
 using Notification.Application.Models.Results;

@@ -1,7 +1,6 @@
 ﻿#region using
 
 using Discount.Infrastructure.Data.Extensions;
-using Common.Configurations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

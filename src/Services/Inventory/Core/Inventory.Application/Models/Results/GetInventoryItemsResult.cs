@@ -1,6 +1,5 @@
 ﻿#region using
 
-using Common.Models;
 using Inventory.Application.Dtos.InventoryItems;
 
 #endregion

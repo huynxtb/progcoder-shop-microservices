@@ -1,7 +1,6 @@
 ﻿#region using
 
 using Basket.Domain.Abstractions;
-using Common.Constants;
 
 #endregion
 

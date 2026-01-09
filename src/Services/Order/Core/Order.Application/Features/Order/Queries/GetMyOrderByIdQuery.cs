@@ -4,7 +4,6 @@ using AutoMapper;
 using Order.Domain.Abstractions;
 using Order.Application.Dtos.Orders;
 using Order.Application.Models.Results;
-using Microsoft.EntityFrameworkCore;
 
 #endregion
 

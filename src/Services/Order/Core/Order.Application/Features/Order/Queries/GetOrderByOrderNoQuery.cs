@@ -1,7 +1,6 @@
 #region using
 
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Order.Domain.Abstractions;
 using Order.Application.Dtos.Orders;
 using Order.Application.Models.Results;

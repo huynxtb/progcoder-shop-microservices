@@ -1,7 +1,6 @@
 #region using
 
 using Order.Domain.Abstractions;
-using Common.Constants;
 
 #endregion
 

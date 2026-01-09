@@ -3,8 +3,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Notification.Api.Constants;
 using Notification.Application.Features.Notification.Commands;
-using Common.Models.Reponses;
-using Common.ValueObjects;
 using BuildingBlocks.Authentication.Extensions;
 using Notification.Application.Dtos.Notifications;
 

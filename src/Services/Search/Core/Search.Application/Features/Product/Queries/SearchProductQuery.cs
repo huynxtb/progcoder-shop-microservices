@@ -1,7 +1,6 @@
 #region using
 
 using AutoMapper;
-using Common.Models;
 using Search.Application.Dtos.Products;
 using Search.Application.Models.Filters;
 using Search.Application.Models.Results;

@@ -1,6 +1,5 @@
 #region using
 
-using Common.Models.Reponses;
 using Report.Api.Constants;
 using Report.Application.Features.TopProductPieChart.Queries;
 using Report.Application.Models.Results;

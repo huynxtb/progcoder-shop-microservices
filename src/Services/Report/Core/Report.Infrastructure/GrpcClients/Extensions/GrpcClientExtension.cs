@@ -1,7 +1,6 @@
 #region using
 
 using Catalog.Grpc;
-using Common.Configurations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Report.Infrastructure.GrpcClients.Interceptors;

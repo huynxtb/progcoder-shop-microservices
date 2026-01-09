@@ -1,12 +1,10 @@
 #region using
 
-using BuildingBlocks.Pagination;
 using BuildingBlocks.Pagination.Extensions;
 using Common.Models;
 using Microsoft.EntityFrameworkCore;
 using Order.Domain.Entities;
 using Order.Domain.Repositories;
-using Order.Domain.ValueObjects;
 using Order.Infrastructure.Data;
 using System.Linq.Expressions;
 
@@ -46,8 +44,8 @@ public class OrderRepository(ApplicationDbContext context) : Repository<OrderEnt
     }
 
     public async Task<List<OrderEntity>> SearchWithRelationshipAsync(
-        Expression<Func<OrderEntity, bool>> predicate, 
-        PaginationRequest pagination, 
+        Expression<Func<OrderEntity, bool>> predicate,
+        PaginationRequest pagination,
         CancellationToken cancellationToken = default)
     {
         return await _dbSet

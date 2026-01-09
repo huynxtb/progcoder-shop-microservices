@@ -1,6 +1,5 @@
 ﻿#region using
 
-using Microsoft.EntityFrameworkCore;
 using Order.Application.Dtos.Orders;
 using Order.Application.Services;
 using Order.Domain.Abstractions;

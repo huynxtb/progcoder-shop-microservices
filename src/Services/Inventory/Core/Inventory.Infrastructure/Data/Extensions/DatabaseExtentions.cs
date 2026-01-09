@@ -1,7 +1,6 @@
 ﻿#region using
 
 using Common.ValueObjects;
-using Common.Constants;
 using Inventory.Domain.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;

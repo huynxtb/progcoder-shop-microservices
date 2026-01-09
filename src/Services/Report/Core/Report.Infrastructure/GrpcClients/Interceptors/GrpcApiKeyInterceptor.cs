@@ -1,7 +1,5 @@
 ﻿#region using
 
-using Common.Configurations;
-using Common.Constants;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
 using Microsoft.Extensions.Configuration;

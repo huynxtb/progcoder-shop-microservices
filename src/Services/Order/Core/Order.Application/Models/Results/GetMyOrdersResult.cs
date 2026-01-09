@@ -1,6 +1,5 @@
 #region using
 
-using Common.Models;
 using Order.Application.Dtos.Orders;
 
 #endregion

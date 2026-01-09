@@ -1,7 +1,5 @@
 ﻿#region using
 
-using BuildingBlocks.Pagination;
-using Common.Extensions;
 using Common.Models;
 using Elasticsearch.Net;
 using Nest;

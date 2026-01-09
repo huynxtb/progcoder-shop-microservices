@@ -1,7 +1,6 @@
 #region using
 
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Order.Domain.Abstractions;
 using Order.Application.Dtos.Orders;
 using Order.Application.Models.Filters;
@@ -23,7 +22,7 @@ public sealed class GetAllOrdersQueryHandler(IUnitOfWork unitOfWork, IMapper map
         var filter = query.Filter;
 
         var orders = await unitOfWork.Orders
-            .SearchWithRelationshipAsync(x => 
+            .SearchWithRelationshipAsync(x =>
                 (filter.Ids == null || filter.Ids.Length > 0 || filter.Ids.Contains(x.Id)) &&
                 (!filter.CustomerId.HasValue || x.Customer.Id == filter.CustomerId.Value) &&
                 (!filter.Status.HasValue || x.Status == filter.Status.Value) &&

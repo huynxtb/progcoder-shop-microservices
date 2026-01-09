@@ -1,7 +1,6 @@
 ﻿#region using
 
 using Catalog.Domain.Abstractions;
-using Common.Constants;
 
 #endregion
 

@@ -1,7 +1,6 @@
 ﻿#region using
 
 using Notification.Application.Data.Repositories;
-using Common.ValueObjects;
 using Notification.Application.Models.Results;
 
 #endregion
