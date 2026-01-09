@@ -1,5 +1,6 @@
 ﻿#region using
 
+using AutoMapper;
 using Notification.Application.Data.Repositories;
 using Notification.Application.Dtos.Notifications;
 using Notification.Application.Models.Results;

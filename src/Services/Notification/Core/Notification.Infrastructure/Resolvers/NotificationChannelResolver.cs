@@ -2,6 +2,7 @@
 
 using Notification.Application.Strategy;
 using Notification.Domain.Enums;
+using Notification.Infrastructure.Exceptions;
 
 #endregion
 

@@ -1,5 +1,6 @@
 #region using
 
+using AutoMapper;
 using Notification.Application.Dtos.Keycloaks;
 using Notification.Application.Dtos.Notifications;
 using Notification.Domain.Entities;

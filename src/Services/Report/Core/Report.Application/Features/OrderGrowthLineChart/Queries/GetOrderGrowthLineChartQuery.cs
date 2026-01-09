@@ -1,5 +1,6 @@
 #region using
 
+using AutoMapper;
 using Report.Application.Data.Repositories;
 using Report.Application.Dtos.OrderGrowthLineCharts;
 using Report.Application.Models.Results;
