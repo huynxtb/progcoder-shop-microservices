@@ -1,6 +1,8 @@
 ﻿global using BuildingBlocks.CQRS;
 global using FluentValidation;
 global using Common.Constants;
-global using AutoMapper;
+global using Common.Extensions;
+global using Common.Models;
 global using BuildingBlocks.Pagination;
 global using BuildingBlocks.Exceptions;
+global using Common.ValueObjects;
