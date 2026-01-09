@@ -1,38 +1,39 @@
 #region using
 
-using BuildingBlocks.Abstractions;
 using Microsoft.EntityFrameworkCore.Storage;
+using Inventory.Domain.Abstractions;
 
 #endregion
 
 namespace Inventory.Infrastructure.UnitOfWork;
 
-internal class DbTransactionAdapter : IDbTransaction
+internal class DbTransactionAdapter(IDbContextTransaction transaction) : IDbTransaction
 {
-    private readonly IDbContextTransaction _transaction;
+    #region Implementations
 
-    public DbTransactionAdapter(IDbContextTransaction transaction)
-    {
-        _transaction = transaction;
-    }
 
     public async Task CommitAsync(CancellationToken cancellationToken = default)
     {
-        await _transaction.CommitAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
     }
+
 
     public async Task RollbackAsync(CancellationToken cancellationToken = default)
     {
-        await _transaction.RollbackAsync(cancellationToken);
+        await transaction.RollbackAsync(cancellationToken);
     }
+
 
     public void Dispose()
     {
-        _transaction.Dispose();
+        transaction.Dispose();
     }
+
 
     public async ValueTask DisposeAsync()
     {
-        await _transaction.DisposeAsync();
+        await transaction.DisposeAsync();
     }
+
+    #endregion
 }

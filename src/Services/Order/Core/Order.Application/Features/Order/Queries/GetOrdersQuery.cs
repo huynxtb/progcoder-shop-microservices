@@ -9,6 +9,7 @@ using Order.Application.Models.Filters;
 using Order.Application.Models.Results;
 using Order.Domain.Entities;
 using System.Linq.Expressions;
+using Common.Models;
 
 #endregion
 

@@ -1,5 +1,6 @@
 ﻿#region using
 
+using Common.Models;
 using MongoDB.Driver;
 
 #endregion

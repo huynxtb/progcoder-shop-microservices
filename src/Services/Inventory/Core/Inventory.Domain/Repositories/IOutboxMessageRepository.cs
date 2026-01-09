@@ -1,12 +1,12 @@
 #region using
 
-#endregion
+using Inventory.Domain.Entities;
 
-using BuildingBlocks.Abstractions;
+#endregion
 
 namespace Inventory.Domain.Repositories;
 
-public interface IOutboxMessageRepository : IBaseRepository<Inventory.Domain.Entities.OutboxMessageEntity>
+public interface IOutboxMessageRepository : IRepository<OutboxMessageEntity>
 {
     #region Methods
 

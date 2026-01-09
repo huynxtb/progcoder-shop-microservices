@@ -1,6 +1,6 @@
 #region using
 
-using BuildingBlocks.Abstractions;
+using Inventory.Domain.Repositories;
 using Inventory.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace Inventory.Infrastructure.Repositories;
 
-public class Repository<T>(ApplicationDbContext context) : IBaseRepository<T> where T : class
+public class Repository<T>(ApplicationDbContext context) : IRepository<T> where T : class
 {
     #region Fields
 
@@ -33,7 +33,7 @@ public class Repository<T>(ApplicationDbContext context) : IBaseRepository<T> wh
             .FirstOrDefaultAsync(predicate, cancellationToken);
     }
 
-    public async Task<T?> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    public virtual async Task<T?> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
     {
         return await _dbSet
             .AsNoTracking()
@@ -70,7 +70,7 @@ public class Repository<T>(ApplicationDbContext context) : IBaseRepository<T> wh
             .CountAsync(cancellationToken);
     }
 
-    public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    public virtual async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
     {
         return await _dbSet
             .AsNoTracking()

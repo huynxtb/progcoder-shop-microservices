@@ -1,7 +1,7 @@
 #region using
 
-using BuildingBlocks.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using Order.Domain.Repositories;
 using Order.Infrastructure.Data;
 using System.Linq.Expressions;
 
@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace Order.Infrastructure.Repositories;
 
-public class Repository<T>(ApplicationDbContext context) : IBaseRepository<T> where T : class
+public class Repository<T>(ApplicationDbContext context) : IRepository<T> where T : class
 {
     #region Fields
 

@@ -10,7 +10,4 @@ namespace Order.Infrastructure.Repositories;
 
 public class OutboxMessageRepository(ApplicationDbContext context) : Repository<OutboxMessageEntity>(context), IOutboxMessageRepository
 {
-    #region Implementations
-
-    #endregion
 }

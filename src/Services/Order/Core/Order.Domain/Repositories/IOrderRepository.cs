@@ -1,7 +1,6 @@
 #region using
 
-using BuildingBlocks.Abstractions;
-using BuildingBlocks.Pagination;
+using Common.Models;
 using Order.Domain.Entities;
 using System.Linq.Expressions;
 
@@ -9,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace Order.Domain.Repositories;
 
-public interface IOrderRepository : IBaseRepository<OrderEntity>
+public interface IOrderRepository : IRepository<OrderEntity>
 {
     #region Methods
 

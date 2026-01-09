@@ -8,13 +8,6 @@ using Inventory.Infrastructure.Data;
 
 namespace Inventory.Infrastructure.Repositories;
 
-public class LocationRepository : Repository<LocationEntity>, ILocationRepository
+public class LocationRepository(ApplicationDbContext context) : Repository<LocationEntity>(context), ILocationRepository
 {
-    #region Ctors
-
-    public LocationRepository(ApplicationDbContext context) : base(context)
-    {
-    }
-
-    #endregion
 }

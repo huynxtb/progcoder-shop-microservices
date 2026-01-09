@@ -1,7 +1,6 @@
 #region using
 
-using BuildingBlocks.Abstractions;
-using BuildingBlocks.Pagination;
+using Common.Models;
 using Inventory.Domain.Entities;
 using System.Linq.Expressions;
 
@@ -9,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace Inventory.Domain.Repositories;
 
-public interface IInventoryItemRepository : IBaseRepository<InventoryItemEntity>
+public interface IInventoryItemRepository : IRepository<InventoryItemEntity>
 {
     #region Methods
 

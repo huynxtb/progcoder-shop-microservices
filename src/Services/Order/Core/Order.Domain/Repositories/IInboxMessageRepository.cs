@@ -1,13 +1,12 @@
 #region using
 
-using BuildingBlocks.Abstractions;
 using Order.Domain.Entities;
 
 #endregion
 
 namespace Order.Domain.Repositories;
 
-public interface IInboxMessageRepository : IBaseRepository<InboxMessageEntity>
+public interface IInboxMessageRepository : IRepository<InboxMessageEntity>
 {
     #region Methods
 

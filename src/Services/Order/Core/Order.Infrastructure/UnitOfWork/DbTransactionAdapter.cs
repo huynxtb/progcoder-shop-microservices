@@ -1,7 +1,7 @@
 #region using
 
-using BuildingBlocks.Abstractions;
 using Microsoft.EntityFrameworkCore.Storage;
+using Order.Domain.Abstractions;
 
 #endregion
 

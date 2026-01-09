@@ -2,6 +2,7 @@
 
 using BuildingBlocks.Pagination;
 using BuildingBlocks.Pagination.Extensions;
+using Common.Models;
 using Microsoft.EntityFrameworkCore;
 using Order.Domain.Entities;
 using Order.Domain.Repositories;
@@ -58,7 +59,8 @@ public class OrderRepository(ApplicationDbContext context) : Repository<OrderEnt
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<OrderEntity>> SearchWithRelationshipAsync(Expression<Func<OrderEntity, bool>> predicate,CancellationToken cancellationToken = default)
+    public async Task<List<OrderEntity>> SearchWithRelationshipAsync(Expression<Func<OrderEntity, bool>> predicate,
+        CancellationToken cancellationToken = default)
     {
         return await _dbSet
             .AsNoTracking()

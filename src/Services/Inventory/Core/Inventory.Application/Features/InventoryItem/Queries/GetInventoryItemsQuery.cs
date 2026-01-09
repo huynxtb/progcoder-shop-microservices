@@ -1,6 +1,7 @@
 #region using
 
 using AutoMapper;
+using Common.Models;
 using Inventory.Application.Dtos.InventoryItems;
 using Inventory.Application.Models.Filters;
 using Inventory.Application.Models.Results;

@@ -8,13 +8,6 @@ using Inventory.Infrastructure.Data;
 
 namespace Inventory.Infrastructure.Repositories;
 
-public class InventoryHistoryRepository : Repository<InventoryHistoryEntity>, IInventoryHistoryRepository
+public class InventoryHistoryRepository(ApplicationDbContext context) : Repository<InventoryHistoryEntity>(context), IInventoryHistoryRepository
 {
-    #region Ctors
-
-    public InventoryHistoryRepository(ApplicationDbContext context) : base(context)
-    {
-    }
-
-    #endregion
 }

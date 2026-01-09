@@ -1,6 +1,7 @@
 ﻿#region using
 
 using BuildingBlocks.Pagination.Extensions;
+using Common.Models;
 
 #endregion
 

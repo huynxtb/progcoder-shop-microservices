@@ -4,9 +4,9 @@ using System.Linq.Expressions;
 
 #endregion
 
-namespace BuildingBlocks.Abstractions;
+namespace Inventory.Domain.Repositories;
 
-public interface IBaseRepository<T> where T : class
+public interface IRepository<T> where T : class
 {
     #region Methods
 

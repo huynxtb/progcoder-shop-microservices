@@ -1,6 +1,7 @@
 ﻿#region using
 
 using BuildingBlocks.Pagination;
+using Common.Models;
 using Common.Models.Reponses;
 using Order.Api.Constants;
 using Order.Application.Features.Order.Queries;

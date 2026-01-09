@@ -1,6 +1,5 @@
 ﻿#region using
 
-using BuildingBlocks.Abstractions;
 using Common.Configurations;
 using Common.Constants;
 using Microsoft.AspNetCore.Builder;
@@ -61,6 +60,13 @@ public static class DependencyInjection
 
         // Repository & Unit of Work
         {
+            services.Scan(s => s
+                .FromAssemblyOf<InfrastructureMarker>()
+                .AddClasses(c => c.Where(t => t.Name.EndsWith("Repository")))
+                .UsingRegistrationStrategy(Scrutor.RegistrationStrategy.Skip)
+                .AsImplementedInterfaces()
+                .WithScopedLifetime());
+
             services.AddScoped<Domain.Abstractions.IUnitOfWork, UnitOfWork.UnitOfWork>();
         }
 

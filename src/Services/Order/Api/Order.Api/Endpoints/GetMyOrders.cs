@@ -7,6 +7,7 @@ using Order.Api.Constants;
 using Order.Application.Features.Order.Queries;
 using Order.Application.Models.Filters;
 using Order.Application.Models.Results;
+using Common.Models;
 
 #endregion
 

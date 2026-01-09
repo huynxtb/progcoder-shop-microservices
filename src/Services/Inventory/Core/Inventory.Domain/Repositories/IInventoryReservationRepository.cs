@@ -1,13 +1,12 @@
 #region using
 
-using BuildingBlocks.Abstractions;
 using Inventory.Domain.Entities;
 
 #endregion
 
 namespace Inventory.Domain.Repositories;
 
-public interface IInventoryReservationRepository : IBaseRepository<InventoryReservationEntity>
+public interface IInventoryReservationRepository : IRepository<InventoryReservationEntity>
 {
     #region Methods
 

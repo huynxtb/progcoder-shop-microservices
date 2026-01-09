@@ -7,6 +7,7 @@ using Order.Application.Models.Filters;
 using Order.Application.Models.Results;
 using Microsoft.EntityFrameworkCore;
 using BuildingBlocks.Pagination.Extensions;
+using Common.Models;
 
 #endregion
 

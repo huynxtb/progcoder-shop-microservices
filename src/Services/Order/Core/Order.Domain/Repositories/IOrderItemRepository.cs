@@ -1,13 +1,12 @@
 #region using
 
-using BuildingBlocks.Abstractions;
 using Order.Domain.Entities;
 
 #endregion
 
 namespace Order.Domain.Repositories;
 
-public interface IOrderItemRepository : IBaseRepository<OrderItemEntity>
+public interface IOrderItemRepository : IRepository<OrderItemEntity>
 {
     #region Methods
 

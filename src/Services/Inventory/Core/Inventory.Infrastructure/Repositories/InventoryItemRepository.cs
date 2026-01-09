@@ -2,6 +2,7 @@
 
 using BuildingBlocks.Pagination;
 using BuildingBlocks.Pagination.Extensions;
+using Common.Models;
 using Inventory.Domain.Entities;
 using Inventory.Domain.Repositories;
 using Inventory.Infrastructure.Data;

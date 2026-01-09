@@ -12,7 +12,6 @@ using Common.Configurations;
 using Common.Constants;
 using Inventory.Infrastructure.ApiClients.Extensions;
 using Inventory.Infrastructure.GrpcClients.Extensions;
-using BuildingBlocks.Abstractions;
 
 #endregion
 
@@ -62,6 +61,13 @@ public static class DependencyInjection
 
         // Repository & Unit of Work
         {
+            services.Scan(s => s
+                .FromAssemblyOf<InfrastructureMarker>()
+                .AddClasses(c => c.Where(t => t.Name.EndsWith("Repository")))
+                .UsingRegistrationStrategy(Scrutor.RegistrationStrategy.Skip)
+                .AsImplementedInterfaces()
+                .WithScopedLifetime());
+
             services.AddScoped<Domain.Abstractions.IUnitOfWork, UnitOfWork.UnitOfWork>();
         }
 
