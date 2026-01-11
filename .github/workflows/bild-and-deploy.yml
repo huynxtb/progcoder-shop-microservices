@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Build and Deploy
 
 on:
   push:
@@ -1056,4 +1056,3 @@ jobs:
           tags: ${{ vars.DOCKERHUB_USERNAME }}/job-orchestrator:latest,${{ vars.DOCKERHUB_USERNAME }}/job-orchestrator:${{ github.sha }}
           cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/job-orchestrator:buildcache
           cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/job-orchestrator:buildcache,mode=max
-

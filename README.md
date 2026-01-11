@@ -1,14 +1,28 @@
-# ProG Coder Shop Microservices
-
-This project was created by ProG Coder. Visit [ProG Coder](https://www.progcoder.com) for more information.
-
 # ProG Coder Shop Microservices - E-Commerce Platform
 
-This repository contains a comprehensive suite of microservices implementing a complete **e-commerce platform**, including **Catalog, Basket, Order, Inventory, Discount, Notification, Search, Report, and Communication** services. The platform utilizes **NoSQL (MongoDB, Redis)** and **Relational databases (PostgreSQL, SQL Server, MySQL)**, with services communicating via **RabbitMQ Event-Driven Architecture** and routing through **YARP API Gateway**.
+**Real-world .NET Microservices Architecture**
 
-Overall picture of **microservices implementation with .NET tools** in a real-world **ProG Coder Shop Microservices** project.
+Clean Architecture • DDD • CQRS • Event-Driven • Docker • Kubernetes • Jenkins • GitHub Actions
 
-![ProGCoder.Com](assets/imgs/ProGCoder.Com.Diagram.png)
+Created by [**ProG Coder**](https://www.progcoder.com)
+
+[**🎥 Quick Demo**](https://youtu.be/snSgH7385tA) • [**💝 Support the Project**](DONATE.md) • [**⭐ Give a Star**](https://github.com/huynxtb/prog-coder-shopping-cart-microservices) • [**📺 Watch Tutorials**](https://www.youtube.com/playlist?list=PLIbiRai7ofZ1M-ijpIhXST3ZvxEIAJcBr)
+
+> *If you find this project useful, please **star the repository** to help us reach more developers!*
+
+---
+
+## 🚀 Project Overview
+
+This repository contains a comprehensive suite of microservices implementing a complete **e-commerce platform**, including **Catalog, Basket, Order, Inventory, Discount, Notification, Search, Report, and Communication** services. The platform utilizes a hybrid database strategy with **NoSQL (MongoDB, Redis)** and **Relational databases (PostgreSQL, SQL Server, MySQL)**.
+
+Services communicate asynchronously via **RabbitMQ** (Event-Driven Architecture) and are routed through a high-performance **YARP API Gateway**.
+
+### Architecture Diagram
+
+Overall picture of the **microservices implementation** in the **ProG Coder Shop** project:
+
+![ProGCoder.Com](assets/imgs/microservices_architecture.png)
 
 ## Technology Stack, Design Patterns, Infrastructure & Architecture
 
@@ -18,7 +32,7 @@ Overall picture of **microservices implementation with .NET tools** in a real-wo
 - **[`WSL2 - Ubuntu OS`](https://docs.microsoft.com/en-us/windows/wsl/install-win10)** - The subsystem that helps to run the bash shell on Windows OS.
 - **[`Docker for Desktop (Kubernetes enabled)`](https://www.docker.com/products/docker-desktop)** - The easiest tool to run Docker, Docker Swarm, and Kubernetes on Mac and Windows.
 - **[`Kubernetes`](https://kubernetes.io) / [`AKS`](https://docs.microsoft.com/en-us/azure/aks)** - The app is designed to run on Kubernetes (both locally on "Docker for Desktop" as well as on the cloud with AKS).
-- **[`Jenkins`](https://www.jenkins.io)** - ⚠️ **Under Development** - CI/CD automation server for building, testing, and deploying applications.
+- **[`GitHub Actions`](https://github.com/features/actions)** - CI/CD automation platform for building, testing, and deploying applications.
 - **[`Helm`](https://helm.sh)** - ⚠️ **Under Development** - Package manager for Kubernetes applications.
 
 ### Back-end
@@ -55,17 +69,32 @@ Overall picture of **microservices implementation with .NET tools** in a real-wo
 
 ### Design Patterns
 
+- **Repository** - Abstracts data access logic, providing a collection-like interface for domain objects.
+- **Unit of Work** - Maintains a list of objects affected by a business transaction and coordinates changes.
 - **Decorator** - A structural pattern that allows behavior to be added to individual objects dynamically.
 - **Strategy** - A behavioral pattern that enables selecting an algorithm's behavior at runtime.
+- **Mediator** - Reduces coupling between components by centralizing complex communications and control logic (using MediatR).
 - **CQRS** - Command Query Responsibility Segregation, a pattern that separates read and write operations.
 - **Saga** - A pattern for managing failures, ensuring data consistency across microservices.
 - **Outbox Pattern** - Ensures reliable event publishing in distributed systems.
+- **Inbox Pattern** - Ensures idempotent message processing, preventing duplicate event handling.
+- **Vertical Slice Architecture** - Organizes code by features instead of technical layers.
 
 ### Architecture
 
-- Implementation of **DDD, CQRS, and Clean Architecture** following best practices.
+This project implements modern architectural patterns to ensure scalability, maintainability, and testability.
 
-![ProGCoder.Com](assets/imgs/ProGCoder.ComCleanArchitecture.png)
+#### 1. Clean Architecture
+
+Most services follow **Clean Architecture** combined with **DDD (Domain-Driven Design)** and **CQRS (Command Query Responsibility Segregation)**. This separation of concerns allows for independent evolution of the domain logic and infrastructure.
+
+![Clean Architecture](assets/imgs/clean_architecture.png)
+
+#### 2. Vertical Slice Architecture
+
+To minimize complexity and coupling in specific features or smaller services, we utilize **Vertical Slice Architecture**. Instead of separating by technical layers (Controller, Service, Repository), code is organized by **Features** (e.g., "AddItemToBasket", "Checkout"). Each slice contains all the logic needed to fulfill a request, from API to Database.
+
+![Vertical Slice Architecture](assets/imgs/vertical_slice_architecture.png)
 
 ## Microservices Overview
 
@@ -210,11 +239,14 @@ Distributed transaction management across multiple services using choreography-b
 
 ## CI/CD Pipeline
 
-> ⚠️ **Status: Under Development**
->
-> CI/CD pipeline with Jenkins and Kubernetes deployment is currently under development. Detailed documentation will be updated soon.
+The project uses **GitHub Actions** for continuous integration and deployment:
 
-![ProGCoder.Com CI/CD](assets/imgs/ProGCoder.Com.CICD.png)
+- **Build Workflow**: Automated building and testing of services
+- **Docker Image Publishing**: Automated image building and pushing to Docker Hub
+- **Multi-service Deployment**: Coordinated deployment across all microservices
+- **Kubernetes Deployment**: ⚠️ **Under Development**
+
+![ProGCoder.Com CI/CD](assets/imgs/github_actions_flows.png)
 
 ## Observability & Monitoring
 
@@ -379,11 +411,11 @@ Use this to apply all existing migrations to your databases without creating new
 
 ```bash
 # On Linux/Mac/WSL
-chmod +x run-migration.sh
-./run-migration.sh
+chmod +x run-migration-linux.sh
+./run-migration-linux.sh
 
 # On Windows (PowerShell/CMD)
-run-migration.bat
+run-migration-windows.bat
 ```
 
 This script will automatically:
@@ -398,11 +430,11 @@ Use this when you need to create a new migration after modifying entities:
 
 ```bash
 # On Linux/Mac/WSL
-chmod +x add-migration.sh
-./add-migration.sh
+chmod +x add-migration-linux.sh
+./add-migration-linux.sh
 
 # On Windows (PowerShell/CMD)
-add-migration.bat
+add-migration-windows.bat
 ```
 
 This script will:
@@ -779,42 +811,11 @@ Code released under [the MIT License](LICENSE)
 
 See also the list of [contributors](https://github.com/huynxtb/progcoder-shop-microservices/contributors) who participated in this project.
 
-## Video Tutorials
-
-📺 **Complete video tutorials and detailed explanations** are available on YouTube!
-
-👉 **YouTube Channel**: [ProG Coder](https://www.youtube.com/@prog-coder)
-
-### Course Series: .NET Microservices - Shopping Cart (Beginner to Pro)
-
-This is a comprehensive course series covering everything from basics to advanced topics. See the complete course outline in [`YOUTUBE_SERIES.md`](YOUTUBE_SERIES.md).
-
-**What you'll learn**:
-- Building microservices with .NET 8 and Clean Architecture
-- Implementing DDD, CQRS, and design patterns
-- Event-driven architecture with RabbitMQ
-- Authentication with Keycloak
-- Observability with Prometheus, Grafana, and OpenTelemetry
-- Docker and Kubernetes deployment
-- And much more!
-
-🎬 **Subscribe** to the channel to get notified of new videos: [https://www.youtube.com/@prog-coder](https://www.youtube.com/@prog-coder)
-
-## Support
-
-If you liked the project or if it helped you, please **give a star** ⭐
-
-## Donate
-
-Your support helps create more high-quality content and maintain this project!
-
-For donation methods and details, please see [DONATE.md](DONATE.md).
-
 ## Community
 
 Join our community to stay updated and connect with other developers:
 
-- 💬 **Facebook Group**: [ProG Coder Community](https://www.facebook.com/groups/1331222145420361) - Get the latest updates, ask questions, and share your experience
+- 💬 **Facebook Group**: [ProG Coder Community](https://www.facebook.com/groups/progcoder) - Get the latest updates, ask questions, and share your experience
 - 📺 **YouTube Channel**: [ProG Coder](https://www.youtube.com/@prog-coder) - Video tutorials and coding sessions
 - 🌐 **Website**: [https://www.progcoder.com](https://www.progcoder.com) - Articles, resources, and more
 
