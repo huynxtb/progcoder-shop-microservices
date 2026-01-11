@@ -2,7 +2,7 @@
 
 **Real-world .NET Microservices Architecture**
 
-Clean Architecture • DDD • CQRS • Event-Driven • Docker • Kubernetes • Jenkins • GitHub Actions
+Clean Architecture • DDD • CQRS • Event-Driven • Docker • Kubernetes • GitHub Actions
 
 Created by [**ProG Coder**](https://www.progcoder.com)
 
@@ -103,9 +103,9 @@ To minimize complexity and coupling in specific features or smaller services, we
 | **Catalog Service** | 5001 | 6001 | PostgreSQL (5433) | Product catalog management, categories, brands |
 | **Basket Service** | 5006 | - | MongoDB (27018) + Redis (6380) | Shopping cart and session management |
 | **Order Service** | 5005 | 6005 | SQL Server (1434) | Order processing and management |
-| **Inventory Service** | 5002 | - | MySQL (3307) | Stock and inventory management |
+| **Inventory Service** | 5002 | 6002 | MySQL (3307) | Stock and inventory management |
 | **Discount Service** | 5004 | 6004 | PostgreSQL (5433) | Coupons, promotions, and discount rules |
-| **Notification Service** | 5003 | - | PostgreSQL (5433) | Email/SMS notifications |
+| **Notification Service** | 5003 | 6003 | PostgreSQL (5433) | Email/SMS notifications |
 | **Report Service** | 5007 | 6007 | PostgreSQL (5433) | Analytics, dashboards, and reporting |
 | **Search Service** | 5008 | - | Elasticsearch (9200) | Full-text product search |
 | **Communication Service** | 5009 | - | PostgreSQL (5433) | Webhooks and external integrations |
@@ -139,7 +139,7 @@ To minimize complexity and coupling in specific features or smaller services, we
 |-------------|------|------------------|---------|------------|
 | **App.Admin** | 3001 | React + Vite + TailwindCSS | Admin management interface | http://localhost:3001 |
 | **Store Frontend** | 3002 | React + Vite + Bootstrap | Customer shopping interface | http://localhost:3002 |
-| **YARP API Gateway** | 5000 | ASP.NET Core + YARP | API Gateway and reverse proxy | http://localhost:5000 |
+| **YARP API Gateway** | 15009 | ASP.NET Core + YARP | API Gateway and reverse proxy | http://localhost:15009 |
 
 ## Web UI Screenshots
 
@@ -381,7 +381,7 @@ docker-compose up --build -d --force-recreate
 After starting, access:
 - **App.Admin**: http://localhost:3001
 - **App.Store**: http://localhost:3002
-- **API Gateway**: http://localhost:5000
+- **API Gateway**: http://localhost:15009
 - **Keycloak**: http://localhost:8080
 - **Grafana**: http://localhost:3000
 - **RabbitMQ Management**: http://localhost:15673
@@ -556,7 +556,7 @@ After starting all services, you can access:
 #### Frontend Applications
 - **App.Admin**: http://localhost:3001
 - **App.Store**: http://localhost:3002
-- **API Gateway**: http://localhost:5000
+- **API Gateway**: http://localhost:15009
 
 #### Backend Services (Swagger)
 - **Catalog API**: http://localhost:5001/swagger
