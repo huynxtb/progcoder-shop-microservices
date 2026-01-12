@@ -6,7 +6,7 @@ Your support helps create more high-quality content and maintain this project!
 
 **💳 PayPal**
 
-`[@huynx11](https://www.paypal.com/paypalme/huynx11?locale.x=vi_VN&country.x=VN)`
+[@huynx11](https://www.paypal.com/paypalme/huynx11?locale.x=vi_VN&country.x=VN)
 
 ---
 
