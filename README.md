@@ -843,7 +843,7 @@ docker-compose -f docker-compose.infrastructure.yml down -v
 
 ## Contributing
 
-We welcome community contributions! We use GitHub issues to track bugs and feature requests, and pull requests to manage contributions. See the [contribution information](.github/CONTRIBUTING.md) for more details.
+We welcome community contributions! We use GitHub issues to track bugs and feature requests, and pull requests to manage contributions. See the [contribution information](CONTRIBUTING.md) for more details.
 
 ## License
 
