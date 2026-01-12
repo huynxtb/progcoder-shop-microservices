@@ -1,11 +1,15 @@
-﻿using MongoDB.Bson;
+﻿#region using
+
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+
+#endregion
 
 namespace Report.Domain.Abstractions;
 
 public abstract class Entity<T> : IEntityId<T>, IAuditable
 {
-    #region Fields Properties and Indexers
+    #region Fields, Properties and Indexers
 
     [BsonId]
     [BsonRepresentation(BsonType.String)]

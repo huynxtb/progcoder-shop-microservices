@@ -1,10 +1,16 @@
-﻿using System.Security.Cryptography;
+﻿#region using
+
+using System.Security.Cryptography;
 using System.Text;
+
+#endregion
 
 namespace Common.Extensions;
 
 public static class HashExtension
 {
+    #region Methods
+
     public static string UseSha256(this string input)
     {
         if (string.IsNullOrWhiteSpace(input)) return string.Empty;
@@ -43,4 +49,6 @@ public static class HashExtension
             return Convert.ToBase64String(hash);
         }
     }
+
+    #endregion
 }

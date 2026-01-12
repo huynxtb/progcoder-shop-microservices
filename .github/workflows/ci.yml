@@ -1,9 +1,6 @@
 name: CI - Main Workflow
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main

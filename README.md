@@ -12,6 +12,50 @@ Created by [**ProG Coder**](https://www.progcoder.com)
 
 ---
 
+## 📋 Table of Contents
+
+- [Project Overview](#-project-overview)
+  - [Architecture Diagram](#architecture-diagram)
+- [Technology Stack, Design Patterns, Infrastructure & Architecture](#technology-stack-design-patterns-infrastructure--architecture)
+  - [Infrastructure](#infrastructure)
+  - [Back-end](#back-end)
+  - [Front-end](#front-end)
+  - [Design Patterns](#design-patterns)
+  - [Architecture](#architecture)
+- [Microservices Overview](#microservices-overview)
+- [Infrastructure Services](#infrastructure-services)
+- [Web Applications](#web-applications)
+- [Web UI Screenshots](#web-ui-screenshots)
+- [Project Structure](#project-structure)
+- [Architecture & Design Patterns](#architecture--design-patterns)
+  - [Clean Architecture](#clean-architecture)
+  - [Domain-Driven Design (DDD)](#domain-driven-design-ddd)
+  - [CQRS](#cqrs-command-query-responsibility-segregation)
+  - [Event-Driven Architecture](#event-driven-architecture)
+  - [Saga Pattern](#saga-pattern)
+- [CI/CD Pipeline](#cicd-pipeline)
+- [Observability & Monitoring](#observability--monitoring)
+- [Data Infrastructure](#data-infrastructure)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Environment Configuration](#environment-configuration)
+  - [Quick Start](#quick-start-productiontesting-mode)
+  - [Development Mode](#development-mode)
+  - [Access URLs](#access-urls)
+  - [Default Credentials](#default-credentials)
+- [API Gateway Routes](#api-gateway-routes)
+- [Development](#development)
+  - [Running Individual Services](#running-individual-services)
+  - [Running Tests](#running-tests)
+  - [Database Migrations](#database-migrations)
+  - [Building Docker Images](#building-docker-images)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+
 ## 🚀 Project Overview
 
 This repository contains a comprehensive suite of microservices implementing a complete **e-commerce platform**, including **Catalog, Basket, Order, Inventory, Discount, Notification, Search, Report, and Communication** services. The platform utilizes a hybrid database strategy with **NoSQL (MongoDB, Redis)** and **Relational databases (PostgreSQL, SQL Server, MySQL)**.

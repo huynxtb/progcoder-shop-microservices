@@ -1,4 +1,8 @@
+#region using
+
 using Notification.Application.Dtos.Notifications;
+
+#endregion
 
 namespace Notification.Application.Models.Results;
 

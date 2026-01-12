@@ -1,89 +1,97 @@
 # Contributing to ProG Coder Shop Microservices
 
-We welcome contributions to the ProG Coder Shop Microservices project! This document provides guidelines for contributing.
+Thank you for your interest in contributing to ProG Coder Shop Microservices! This guide will help you get started with building, testing, and contributing to the project.
 
-## How to Report Bugs
+## Table of Contents
 
-If you find a bug, please create an issue on GitHub with:
-- A clear description of the problem
-- Steps to reproduce the issue
-- Expected vs actual behavior
-- Your environment details (OS, .NET version, Docker version)
+- [Contributing to ProG Coder Shop](#contributing-to-prog-coder-shop-microservices)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+    - [Required](#required)
+    - [Optional](#optional)
+  - [Getting Started](#getting-started)
+  - [Building the Project](#building-the-project)
+  - [Testing](#testing)
+    - [Quick Local Testing](#quick-local-testing)
+  - [Project Structure](#project-structure)
+  - [Code Style](#code-style)
+  - [Questions or Issues?](#questions-or-issues)
 
-## How to Submit Pull Requests
+## Prerequisites
 
+### Required
+
+- **[.NET SDK 8.0+](https://dotnet.microsoft.com/download/dotnet/8.0)** (specified in `src/Directory.Build.props`)
+- **[Docker Desktop](https://www.docker.com/products/docker-desktop)** (required for running services and infrastructure)
+
+### Optional
+
+- **[Node.js](https://nodejs.org/)** (v18+ recommended) - Required if you plan to work on the frontend applications in `src/Apps/`
+- **[Just](https://github.com/casey/just)** - Command runner (if you prefer using automation scripts)
+
+## Getting Started
+
+0. (Optional) Comment on the related issue you want to work on
 1. Fork the repository
-2. Create a new branch for your feature or bugfix (`git checkout -b feature/your-feature-name`)
+2. Make a branch
 3. Make your changes
-4. Test your changes thoroughly
-5. Commit your changes with clear commit messages (see Commit Style below)
-6. Push to your fork
-7. Submit a pull request to the main repository
+4. Push the branch
+5. Make a pull request
 
-## Commit Style
+- There is a [**good first issue**](https://github.com/huynxtb/progcoder-shop-microservices/labels/good%20first%20issue) label for open issues
 
-We follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
-
-### Format
-
-```
-<type>(<scope>): <subject>
-```
-
-### Types
-
-- **feat**: New feature
-- **fix**: Bug fix
-- **docs**: Documentation changes
-- **style**: Code formatting (no logic change)
-- **refactor**: Code restructuring
-- **perf**: Performance improvements
-- **test**: Test changes
-- **build**: Build system changes
-- **ci**: CI/CD changes
-- **chore**: Miscellaneous changes
-
-### Scope (Optional)
-
-Service or component name: `catalog`, `basket`, `order`, `inventory`, `discount`, `notification`, `search`, `report`, `api-gateway`, `frontend`, etc.
-
-### Examples
+## Building the Project
 
 ```bash
-# Feature
-feat(catalog): add MinIO image upload
-
-# Bug fix
-fix(order): correct discount calculation
-
-# Documentation
-docs(readme): update setup instructions
-
-# Multiple services
-refactor(catalog,inventory): extract common validation
-
-# No scope
-chore: update dependencies
+# Builds the whole solution
+dotnet build
 ```
 
-### Rules
+## Testing
 
-- Use imperative mood: "add" not "added"
-- Keep subject under 50 characters
-- No period at the end
-- Reference issues: `Closes #123`, `Fixes #456`
+### Quick Local Testing
+
+For most development work, you can simply run:
+
+```bash
+# Run all tests
+dotnet test
+```
+
+### GitHub Actions Testing
+
+The project uses GitHub Actions for continuous integration:
+
+1. **CI Pipeline** (automatic)
+   - Triggers automatically on pull requests
+   - Runs validation for code quality, formatting, and tests.
+
+## Project Structure
+
+```
+progcoder-shop-microservices/
+├── src/
+│   ├── ApiGateway/          # YARP API Gateway
+│   ├── Apps/                # Frontend Applications (React/Next.js)
+│   ├── JobOrchestrator/     # Background Jobs (Quartz.NET)
+│   ├── Services/            # Microservices (Basket, Catalog, Order, etc.)
+│   └── Shared/              # Shared libraries (Common, BuildingBlocks)
+├── test/                    # Test projects
+├── .github/                 # GitHub Actions workflows
+├── docker-compose.yml       # Docker composition for services
+└── samples/                 # Sample files
+```
 
 ## Code Style
 
-- Follow standard .NET coding conventions
-- Use meaningful variable and method names
-- Add comments for complex logic
-- Ensure your code builds without warnings
-- Run code formatter before committing (if available)
+The project enforces consistent code style:
 
-## Questions?
+- **Formatting**: We follow standard .NET coding conventions.
+- **Editor Configuration**: `.editorconfig` defines coding conventions enforced by the build.
+- **Regions**: We use `#region` directives for organizing code (e.g., `#region using`, `#region Properties`).
 
-If you have questions, feel free to open a GitHub issue or discussion.
+## Questions or Issues?
 
-Thank you for contributing!
+Check out [GitHub Issues](https://github.com/huynxtb/progcoder-shop-microservices/issues) or [discussions](https://github.com/huynxtb/progcoder-shop-microservices/discussions).
 
+Thank you for contributing to ProG Coder Shop Microservices!

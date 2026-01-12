@@ -1,5 +1,9 @@
-﻿using MongoDB.Bson;
+﻿#region using
+
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+
+#endregion
 
 namespace Notification.Domain.Abstractions;
 
