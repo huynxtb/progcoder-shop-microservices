@@ -6,17 +6,17 @@ Your support helps create more high-quality content and maintain this project!
 
 **💳 PayPal**
 
-`[huynx1198@gmail.com]` | [PayPal.me Link](https://paypal.me/huynx11?locale.x=vi_VN&country.x=VN)
+`[@huynx11](https://www.paypal.com/paypalme/huynx11?locale.x=vi_VN&country.x=VN)`
 
 ---
 
-**📱 Momo QR Code**
-
-![Momo QR Code](assets/imgs/donation_methods/momo.JPG)
-
 **🏦 TPBank QR Code**
 
-![TPBank QR Code](assets/imgs/donation_methods/tpbank.JPG)
+![TPBank](assets/imgs/donation_methods/tpbank.JPG)
+
+**📱 Momo**
+
+![Momo](assets/imgs/donation_methods/momo.JPG)
 
 *Thank you for your support!* 🙏
 
