@@ -82,6 +82,7 @@ Overall picture of the **microservices implementation** in the **ProG Coder Shop
 ### Back-end
 
 - **[`.NET Core 8`](https://dotnet.microsoft.com/download)** - .NET Framework and .NET Core, including ASP.NET and ASP.NET Core.
+- **[`Minimal API`](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis)** - Architected to create HTTP APIs with minimal dependencies.
 - **[`Keycloak`](https://www.keycloak.org)** - Open-source Identity and Access Management solution.
 - **[`YARP`](https://github.com/microsoft/reverse-proxy)** - A toolkit for developing high-performance HTTP reverse proxy applications.
 - **[`FluentValidation`](https://github.com/FluentValidation/FluentValidation)** - Popular .NET validation library for building strongly-typed validation rules.
@@ -102,6 +103,10 @@ Overall picture of the **microservices implementation** in the **ProG Coder Shop
 - **[`OpenTelemetry`](https://opentelemetry.io)** - OpenTelemetry provides observability frameworks for cloud-native software.
 - **[`Quartz.NET`](https://www.quartz-scheduler.net)** - Job scheduling library for .NET.
 - **[`NEST`](https://github.com/elastic/elasticsearch-net)** - Official Elasticsearch .NET client for full-text search and analytics.
+- **[`Dapper`](https://github.com/DapperLib/Dapper)** - Micro-ORM for .NET.
+- **[`SignalR`](https://dotnet.microsoft.com/apps/aspnet/signalr)** - Library for adding real-time web functionality to apps.
+- **[`Refit`](https://github.com/reactiveui/refit)** - The automatic type-safe HTTP library for .NET Core.
+- **[`Feature Management`](https://github.com/microsoft/FeatureManagement-Dotnet)** - Library for feature flags management in .NET.
 
 ### Front-end
 
@@ -110,6 +115,14 @@ Overall picture of the **microservices implementation** in the **ProG Coder Shop
 - **[`Vite`](https://vitejs.dev)** - Next generation frontend tooling for fast development.
 - **[`i18next`](https://www.i18next.com)** - Internationalization framework.
 - **[`Keycloak-js`](https://www.keycloak.org/docs/latest/securing_apps/#_javascript_adapter)** - JavaScript adapter for Keycloak.
+- **[`Redux Toolkit`](https://redux-toolkit.js.org)** - The official, opinionated, batteries-included toolset for efficient Redux development.
+- **[`Axios`](https://axios-http.com)** - Promise based HTTP client for the browser and node.js.
+- **[`React Hook Form`](https://react-hook-form.com)** - Performant, flexible and extensible forms.
+- **[`Formik`](https://formik.org)** - Build forms in React, without the tears.
+- **[`Yup`](https://github.com/jquense/yup)** - Schema builder for value parsing and validation.
+- **[`Material UI`](https://mui.com)** - Move faster with intuitive React UI tools.
+- **[`ApexCharts`](https://apexcharts.com)** - Modern & Interactive Open-source Charts.
+- **[`Chart.js`](https://www.chartjs.org)** - Simple yet flexible JavaScript charting for designers & developers.
 
 ### Design Patterns
 
