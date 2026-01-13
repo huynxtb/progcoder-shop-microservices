@@ -6,7 +6,7 @@ Clean Architecture • DDD • CQRS • Event-Driven • Docker • Kubernetes �
 
 Created by [**ProG Coder**](https://www.progcoder.com)
 
-[**🎥 Quick Demo**](https://youtu.be/snSgH7385tA) • [**💝 Support the Project**](DONATE.md) • [**⭐ Give a Star**](https://github.com/huynxtb/progcoder-shop-microservices) • [**📺 Watch Tutorials**](https://www.youtube.com/playlist?list=PLIbiRai7ofZ1M-ijpIhXST3ZvxEIAJcBr) • [**💬 Facebook Group**](https://www.facebook.com/groups/progcoder)
+[**🎥 Quick Demo**](https://youtu.be/snSgH7385tA) • [**💝 Support the Project**](DONATE.md) • [**⭐ Give a Star**](https://github.com/huynxtb/progcoder-shop-microservices) • [**💬 Discussions**](https://github.com/huynxtb/progcoder-shop-microservices/discussions) • [**📺 Watch Tutorials**](https://www.youtube.com/playlist?list=PLIbiRai7ofZ1M-ijpIhXST3ZvxEIAJcBr) • [**💬 Facebook Group**](https://www.facebook.com/groups/progcoder)
 
 > *If you find this project useful, please **star the repository** to help us reach more developers!*
 
