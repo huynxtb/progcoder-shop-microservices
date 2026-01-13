@@ -14,5 +14,5 @@ currently being supported with security updates.
 
 Use this section to tell people how to report a vulnerability.
 
-Please report sensitive security issues via email to progcoder.com@gmail.com.
+Please report sensitive security issues via email to admin@progcoder.com.
 You expect to get an update on a reported vulnerability within 24 hours.
