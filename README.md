@@ -18,8 +18,8 @@ Created by [**ProG Coder**](https://www.progcoder.com)
   - [Architecture Diagram](#architecture-diagram)
 - [Technology Stack, Design Patterns, Infrastructure & Architecture](#technology-stack-design-patterns-infrastructure--architecture)
   - [Infrastructure](#infrastructure)
-  - [Back-end](#back-end)
-  - [Front-end](#front-end)
+  - [Back-end [src/Services]](#back-end-srcservices)
+  - [Front-end [src/Apps]](#front-end-srcapps)
   - [Design Patterns](#design-patterns)
   - [Architecture](#architecture)
 - [Microservices Overview](#microservices-overview)
@@ -79,7 +79,7 @@ Overall picture of the **microservices implementation** in the **ProG Coder Shop
 - **[`GitHub Actions`](https://github.com/features/actions)** - CI/CD automation platform for building, testing, and deploying applications.
 - **[`Helm`](https://helm.sh)** - ⚠️ **Under Development** - Package manager for Kubernetes applications.
 
-### Back-end
+### Back-end [src/Services]
 
 - **[`.NET Core 8`](https://dotnet.microsoft.com/download)** - .NET Framework and .NET Core, including ASP.NET and ASP.NET Core.
 - **[`Minimal API`](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis)** - Architected to create HTTP APIs with minimal dependencies.
@@ -107,8 +107,9 @@ Overall picture of the **microservices implementation** in the **ProG Coder Shop
 - **[`SignalR`](https://dotnet.microsoft.com/apps/aspnet/signalr)** - Library for adding real-time web functionality to apps.
 - **[`Refit`](https://github.com/reactiveui/refit)** - The automatic type-safe HTTP library for .NET Core.
 - **[`Feature Management`](https://github.com/microsoft/FeatureManagement-Dotnet)** - Library for feature flags management in .NET.
+- **[`FusionCache`](https://github.com/ZiggyCreatures/FusionCache)** - Easy to use, fast and robust hybrid cache with advanced features (Will be applied in User Service soon).
 
-### Front-end
+### Front-end [src/Apps]
 
 - **[`Node.js 18.x`](https://nodejs.org/en/download)** - JavaScript runtime built on Chrome's V8 JavaScript engine.
 - **[`ReactJS`](https://reactjs.org)** - A JavaScript library for building user interfaces.
