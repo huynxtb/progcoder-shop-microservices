@@ -10,6 +10,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Common.Configurations;
 using System.Diagnostics;
+using Json.Formater;
 
 #endregion
 
@@ -38,7 +39,7 @@ public static class DistributedTracingExtension
                 .AddAttributes(new Dictionary<string, object>
                 {
                     ["deployment.environment"] = cfg["ASPNETCORE_ENVIRONMENT"] ?? "Production",
-                    ["host.name"] = Environment.MachineName
+                    ["host.name"] = Environment.MachineName.Format()
                 }))
             .WithTracing(tracingBuilder =>
             {
@@ -50,7 +51,7 @@ public static class DistributedTracingExtension
                         opts.RecordException = true;
                         opts.EnrichWithException = (activity, exception) =>
                         {
-                            activity.SetTag("exception.type", exception.GetType().FullName);
+                            activity.SetTag("exception.type", exception.GetType().FullName.Format());
                             activity.SetTag("exception.message", exception.Message);
                         };
                     })

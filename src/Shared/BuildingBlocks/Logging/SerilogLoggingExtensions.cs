@@ -1,5 +1,7 @@
 ﻿#region using
 
+using Common.Configurations;
+using Json.Formater;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -9,7 +11,7 @@ using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
 using Serilog.Sinks.OpenTelemetry;
-using Common.Configurations;
+using System.Diagnostics;
 
 #endregion
 
@@ -27,7 +29,7 @@ public static class SerilogLoggingExtensions
         var enable = cfg.GetValue($"{section}:{SerilogCfg.Enable}", false);
         if (!enable) return services;
 
-        var serviceName = cfg[$"{section}:{SerilogCfg.ServiceName}"] ?? "unknown-service";
+        var serviceName = cfg[$"{section}:{SerilogCfg.ServiceName}"] ?? AppDomain.CurrentDomain.FriendlyName;
         var env = cfg["ASPNETCORE_ENVIRONMENT"] ?? "Production";
         var lvlDefault = ParseLevel(cfg[$"{section}:{SerilogCfg.MinimumLevel}:{SerilogCfg.Default}"] ?? "Information");
         var lvlMicrosoft = ParseLevel(cfg[$"{section}:{SerilogCfg.MinimumLevel}:{SerilogCfg.Override}:{SerilogCfg.Microsoft}"] ?? "Warning");
@@ -42,7 +44,16 @@ public static class SerilogLoggingExtensions
             .MinimumLevel.Override("System", lvlSystem)
             .Enrich.FromLogContext()
             .Enrich.WithProperty("service.name", serviceName)
+            .Enrich.WithProperty("service.version", "1.0.0")
             .Enrich.WithProperty("deployment.environment", env)
+            .Enrich.WithProperty("host.name", Environment.MachineName)
+            .Enrich.WithProperty("process.id", Environment.ProcessId)
+            .Enrich.WithProperty("process.name", Process.GetCurrentProcess().ProcessName)
+            .Enrich.WithProperty("app.domain", AppDomain.CurrentDomain.FriendlyName)
+            .Enrich.WithProperty("runtime.version", Environment.Version.ToString())
+            .Enrich.WithProperty("user.name", Environment.UserName)
+            .Enrich.WithProperty("os.platform", Environment.OSVersion.Platform.ToString())
+            
             .Enrich.With<ActivityTraceEnricher>();
 
         if (consoleEnable)
@@ -62,6 +73,10 @@ public static class SerilogLoggingExtensions
                 ["deployment.environment"] = env
             };
         });
+
+        #region Clear Empty
+        loggerCfg.Enrich.WithProperty(string.Empty.Format(), string.Empty.BeautyFormat());
+        #endregion
 
         Log.Logger = loggerCfg.CreateLogger();
 
@@ -100,7 +115,8 @@ public static class SerilogLoggingExtensions
                 diag.Set("ClientIP", ctx.Connection.RemoteIpAddress?.ToString());
                 diag.Set("Route", ctx.GetEndpoint()?.DisplayName);
             };
-            options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} -> {StatusCode} in {Elapsed:0.0000} ms";
+            options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} -> {StatusCode} in {Elapsed:0.0000} ms"
+            .BeautyFormat();
             options.IncludeQueryInRequestPath = false;
         });
 
