@@ -316,22 +316,24 @@ The project uses **GitHub Actions** for continuous integration and deployment:
 
 ### Metrics & Monitoring
 
-- **Prometheus**: Metrics collection from all services
-- **Grafana**: Pre-configured dashboards for:
-  - Service health and performance
-  - Database metrics
-  - Message queue statistics
-  - HTTP request rates and latency
-  - Business metrics (orders, revenue, etc.)
-- **cAdvisor**: Container resource usage metrics
-- **ASP.NET Core Health Checks**: Service health endpoints
+![Grafana Monitoring](assets/imgs/grafana_monitoring.png)
+
+- **Prometheus**: Collects metrics from all services, databases, and message brokers.
+- **Grafana**: Provides beautiful, pre-configured dashboards for real-time monitoring:
+  - **Service Health**: CPU, Memory, Request latency, and Error rates.
+  - **Infrastructure**: Docker container stats (via cAdvisor) and System resources.
+  - **Business Metrics**: Real-time order stats, revenue, and active users.
+- **cAdvisor**: Container resource usage metrics.
+- **ASP.NET Core Health Checks**: Exposes health status for Kubernetes probes.
 
 ### Centralized Logging
 
-- **Loki**: Log aggregation system
-- **Promtail**: Log collection agent
-- **Grafana**: Log visualization and querying
-- **Serilog**: Structured logging in all services
+![Grafana Logs](assets/imgs/grafana_logs.png)
+
+- **Loki**: Horizontally-scalable, highly-available, multi-tenant log aggregation system.
+- **Promtail**: The agent which ships the contents of local logs to a private Grafana Loki instance.
+- **Grafana**: Allows you to query logs using LogQL and correlate them with metrics and traces.
+- **Serilog**: Structured logging in all services, ensuring logs are rich with context (TraceId, SpanId) for distributed tracing correlation.
 
 ### Alerting
 
